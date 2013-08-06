@@ -1,0 +1,184 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:u="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core"
+         xmlns:i="jelly:interaction">
+
+#set($open = "${")
+#set($end = "}")
+
+    <goal name="install">
+        <j:set var="goal" value="install"/>
+        <attainGoal name="multiproject:goal"/>
+    </goal>
+
+    <postGoal name="clean:clean">
+        <u:available file="${basedir}/../modelo/compartilhado/target">
+            <ant:delete dir="${basedir}/../modelo/compartilhado/target"/>
+        </u:available>
+    </postGoal>
+
+    <goal name="deploy">
+        <j:set var="goal" value="deploy"/>
+        <attainGoal name="multiproject:goal"/>
+    </goal>
+
+    <goal name="undeploy">
+        <j:set var="goal" value="undeploy"/>
+        <attainGoal name="multiproject:goal"/>
+    </goal>
+
+    <goal name = "help:install">
+        <u:available file="${basedir}/help">
+        <maven:maven
+           descriptor="${basedir}/help/project.xml"
+           goals="help:install"/>
+        </u:available>
+    </goal>
+
+    <goal name = "help:deploy">
+        <u:available file="${basedir}/help">
+        <maven:maven
+           descriptor="${basedir}/help/project.xml"
+           goals="deploy"/>
+        </u:available>
+    </goal> 
+
+    <goal name = "help:undeploy">
+        <u:available file="${basedir}/help">
+        <maven:maven
+           descriptor="${basedir}/help/project.xml"
+           goals="undeploy"/>
+        </u:available>
+    </goal>
+
+    <goal name = "layout:install">
+        <u:available file="${basedir}/layout">
+        <maven:maven
+           descriptor="${basedir}/layout/project.xml"
+           goals="layout:install"/>
+        </u:available>
+    </goal>
+
+    <goal name = "layout:deploy">
+        <u:available file="${basedir}/layout">
+        <maven:maven
+           descriptor="${basedir}/layout/project.xml"
+           goals="deploy"/>
+        </u:available>
+    </goal> 
+
+    <goal name = "layout:undeploy">
+        <u:available file="${basedir}/layout">
+        <maven:maven
+           descriptor="${basedir}/layout/project.xml"
+           goals="undeploy"/>
+        </u:available>
+    </goal>
+
+    <goal name = "test:install">
+        <u:available file="${basedir}/test">
+            <maven:maven
+                descriptor="${basedir}/test/project.xml"
+                goals="jar:install"/>
+        </u:available>
+    </goal>
+
+    <goal name = "test:deploy">
+        <u:available file="${basedir}/test">
+            <maven:maven
+                descriptor="${basedir}/test/project.xml"
+                goals="testDeploy"/>
+        </u:available>
+    </goal> 
+
+    <goal name = "test:undeploy">
+        <u:available file="${basedir}/test">
+            <maven:maven
+                descriptor="${basedir}/test/project.xml"
+                goals="testUndeploy"/>
+        </u:available>
+    </goal>
+
+#foreach($package in $packages)
+#foreach($subPackage in $package.subPackages)
+#if(!$package.hasStereotype("$moduloWebPrincipal"))
+    <goal name="${subPackage.name}:install">
+        <maven:maven
+            descriptor="${basedir}/${package.name}/project.xml"
+            goals="${subPackage.name}:install"/>
+    </goal>
+
+#end
+#end
+    <goal name="${package.name}:install">
+        <maven:maven
+            descriptor="${basedir}/${package.name}/project.xml"
+            goals="${package.name}:install"/>
+    </goal>
+
+    <goal name="${package.name}:lib">
+        <maven:maven
+            descriptor="${basedir}/${package.name}/project.xml"
+            goals="lib"/>
+    </goal>
+
+    <goal name="${package.name}:deploy">
+        <maven:maven
+            descriptor="${basedir}/${package.name}/project.xml"
+            goals="deploy"/>
+    </goal>
+
+#end
+
+    <ant:property environment="env"/>
+
+    <j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
+
+    <goal name="lib">
+        <j:forEach var="dep" items="${open}pom.dependencies${end}">
+            <j:if test= "${open}dep.getProperty('application.dependency') == 'true'${end}">
+                <ant:delete includeEmptyDirs="false">
+                    <ant:fileset dir="${open}libDirectory${end}">
+                        <ant:include name="${open}dep.artifactId${end}*.${open}dep.type${end}"/>
+                    </ant:fileset>
+                </ant:delete>
+                <ant:copy todir="${open}libDirectory${end}">
+                    <fileset dir="${open}user.home${end}/.maven/repository/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                        <include name="${open}dep.artifact${end}"/>
+                    </fileset>
+                </ant:copy>
+            </j:if>
+        </j:forEach>
+    </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo> 
+
+maven install - Compila o conteudo desta pasta web e gera o war (e o equivalente ao maven web na raiz, e o default desta pasta)
+
+maven deploy - Copia os war desta pasta para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target
+
+        </ant:echo>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <ant:delete>
+            <fileset dir="modelo/compartilhado/src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+        <j:set var="goal" value="nuke"/>
+        <attainGoal name="multiproject:goal"/>
+        <attainGoal name="clean"/>
+    </goal>
+</project>

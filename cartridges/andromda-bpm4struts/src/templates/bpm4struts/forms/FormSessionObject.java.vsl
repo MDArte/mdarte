@@ -1,0 +1,45 @@
+#set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/FormSessionObject.java")
+package $servletPackage;
+
+import java.io.Serializable;
+
+public class FormSessionObject implements Serializable
+{
+    public final String SESSION_KEY;
+    
+    private Integer counter;
+    
+    private final Integer iterations;
+    
+    private Object form;
+    
+    public FormSessionObject(String sessionKey, Object form, int iterations){
+    	this.SESSION_KEY = sessionKey;
+    	this.iterations = iterations;
+    	this.form = form;
+    	
+    	this.resetCounter();
+    }
+    
+    public void setForm(Object form){
+    	this.form = form;
+    	resetCounter();
+    }
+    
+    public Object getForm(){
+    	resetCounter();
+    	return form;
+    }
+    
+    public void resetCounter(){
+    	this.counter = this.iterations;
+    }
+    
+    public void decrementCounter(){
+    	--counter;
+    }
+    
+    public Integer getCounter(){
+    	return counter;
+    }
+}

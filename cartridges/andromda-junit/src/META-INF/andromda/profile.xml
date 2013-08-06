@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<profile>
+	<elements>
+		<elementGroup name="Stereotypes">
+			<element name="TEST_MODULE">
+				<documentation>
+					Instructs the JUnit cartridge to process the package.
+				</documentation>
+				<value>Test Module</value>
+				<appliedOnElement>package</appliedOnElement>
+			</element>
+			<element name="TEST_PROCESS">
+				<documentation>
+					Instructs the JUnit cartridge to process the contents of this use-case.
+				</documentation>
+				<value>Test Process</value>
+				<appliedOnElement>use-case</appliedOnElement>
+			</element>
+		</elementGroup>
+		<elementGroup name="Tagged Values">
+			<element name="IGNORE">
+				<documentation>
+					Specifies if a test must be ignored.
+				</documentation>
+				<value>@andromda.test.ignore</value>
+				<appliedOnElement>action-state</appliedOnElement>
+				<allowedValues>
+					<value>true</value>
+					<value>false</value>
+				</allowedValues>
+			</element>
+			<element name="PASSWORD">
+				<documentation>
+					Specifies the password of the service's user.
+				</documentation>
+				<value>@andromda.test.password</value>
+				<appliedOnElement>partition</appliedOnElement>
+			</element>
+			<element name="PROJECT_NAME">
+				<documentation>
+					Specifies the service's package name.
+				</documentation>
+				<value>@andromda.test.project.name</value>
+				<appliedOnElement>partition</appliedOnElement>
+			</element>
+			<element name="SERVICE_NAME">
+				<documentation>
+					Specifies the service's name related to the test case.
+				</documentation>
+				<value>@andromda.test.service.name</value>
+				<appliedOnElement>action-state</appliedOnElement>
+			</element>
+			<element name="SERVICE_PACKAGE">
+				<documentation>
+					Specifies the service's package related to the test case.
+				</documentation>
+				<value>@andromda.test.service.package</value>
+				<appliedOnElement>action-state</appliedOnElement>
+			</element>
+			<element name="USE_CASE_NAME">
+				<documentation>
+					Specifies the use case's name related to the test case.
+				</documentation>
+				<value>@andromda.test.use.case.name</value>
+				<appliedOnElement>action-state</appliedOnElement>
+			</element>
+			<element name="USE_CASE_PACKAGE">
+				<documentation>
+					Specifies the use case's package related to the test case.
+				</documentation>
+				<value>@andromda.test.use.case.package</value>
+				<appliedOnElement>action-state</appliedOnElement>
+			</element>
+		</elementGroup>
+	</elements>
+</profile>

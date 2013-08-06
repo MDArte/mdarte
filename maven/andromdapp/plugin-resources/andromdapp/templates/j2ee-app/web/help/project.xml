@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../project.xml</extend>
+    <artifactId>${pom.groupId}-help-web</artifactId>
+    <name>${projectName} help Web</name>
+    <currentVersion>${application.web.help.version}</currentVersion>
+    <shortDescription>${pom.name} help Web Component</shortDescription>
+    <description>
+        Contains the ${pom.name}-help's web module.
+    </description>
+</project>

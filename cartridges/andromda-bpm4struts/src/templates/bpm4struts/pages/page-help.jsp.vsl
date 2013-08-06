@@ -1,0 +1,82 @@
+#if ($jsp.onlineHelp)
+#set ($generatedFile = "${jsp.onlineHelpPagePath}.jsp")
+##
+##  START TEMPLATE
+##
+<%@ include file="/taglib-imports.jspf" %>
+
+<tiles:insert definition="help.layout">
+
+    <tiles:put name="title" type="string">
+        <bean:message key="online.help.title"/>
+        <bean:message key="$jsp.messageKey"/>
+    </tiles:put>
+
+    <tiles:put name="body" type="string">
+        <h1><bean:message key="$jsp.messageKey"/></h1>
+        <p>
+            <bean:message key="$jsp.onlineHelpKey"/>
+        </p>
+#foreach ($action in $jsp.actions)
+#if ($action.onlineHelp)
+#if (!$action.tableLink && $action.formPost)
+#set ($trigger = $action.trigger)
+        <br/>
+        <h2><bean:message key="$trigger.triggerKey"/></h2>
+        <p>
+            <bean:message key="$action.onlineHelpKey"/>
+        </p>
+        <br/>
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) )
+#if ($securityEnabled)
+        <logic:notPresent role="$action.actionRoles">
+            <p class="highlight">
+                <bean:message key="$trigger.notAllowedTitleKey"/>
+            </p>
+            <br/>
+        </logic:notPresent>
+        <logic:present role="$action.actionRoles">
+#end
+#set ($parameters = $action.actionParameters)
+#if ($parameters.empty == false)
+#set ($parametersHeader = false)
+#foreach ($parameter in $parameters)
+#if ($parameter.onlineHelp)
+#set ($parametersHeader = true)
+#end
+#end
+#if ($parametersHeader)
+            <table>
+                <tr class="even">
+                    <th><bean:message key="online.help.inputfield"/></th>
+                    <th><bean:message key="online.help.description"/></th>
+                </tr>
+#foreach ($parameter in $parameters)
+#if ($parameter.onlineHelp)
+#if ($parameter.widgetType != 'hidden')
+#if ($velocityCount % 2 == 1)
+                <tr class="odd">
+#else
+                <tr class="even">
+#end
+                    <td><bean:message key="$parameter.messageKey"/></td>
+                    <td><bean:message key="$parameter.onlineHelpKey"/></td>
+                </tr>
+#end
+#end
+#end
+            </table>
+            <br/>
+#end
+#end
+#end
+#if ($securityEnabled)
+        </logic:present>
+#end
+#end
+#end
+    </tiles:put>
+
+</tiles:insert>
+
+#end

@@ -1,0 +1,31 @@
+##
+##  CONSTANTS
+##
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)#set($applicationUseCases = $pacote.useCases)#end
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#if ($pacote)#set($useCases = $pacote.useCases)#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if (($applicationUseCase.applicationValidationRequired && $validationDesired) || ($securityEnabled))
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+
+<!DOCTYPE form-validation PUBLIC
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+#end
+#end

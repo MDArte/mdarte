@@ -1,0 +1,29 @@
+#set ($generatedFile = "LoginControllerImpl.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+import javax.servlet.http.HttpServletRequest;
+
+#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+import ${packageUtil}.Constantes;
+import ${packageUtil}.CriptoUtils;
+import org.apache.commons.lang.StringUtils;
+import java.util.HashMap;
+import java.util.Collection;
+#if($oAuthServer == "true")
+import net.oauth.OAuth;
+#end
+
+import accessControl.ControleAcesso;
+import accessControl.Operador;
+
+public class LoginControllerImpl extends LoginController
+{
+
+    public void handlePosLogin(Operador operador, HttpServletRequest request) throws Exception {
+    
+    }
+
+}

@@ -1,0 +1,35 @@
+#set($gerar = true)
+#if($finalStates)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if($pacote)
+#set($finalStates = $pacote.finalStates)
+#end
+#if($gerar)
+#foreach($finalState in $finalStates)
+	#if ($finalState.actions.size()>0)
+#set ($finalStateAction = $finalState.actions.get(0))
+#if($finalState.findTaggedValue("$externalHyperlinkModulo"))
+$bpmUtils.add("${finalStateAction.useCase.package.webModuleName}${finalStateAction.useCase.actionPath}.do;$finalState.findTaggedValue($externalHyperlinkModulo)$finalState.findTaggedValue($externalHyperlink)")
+#else
+$bpmUtils.add("${finalStateAction.useCase.package.webModuleName}${finalStateAction.useCase.actionPath}.do;${finalStateAction.useCase.package.webModuleName}$finalState.fullPath")
+#end
+#end
+#end
+#if($pacote)
+#set($itens = $bpmUtils.useCaseRemove("web/${pacote.webModuleName}${useCaseuseCaseRemove}" , $bpmUtils.itens))
+#foreach($item in $itens)
+$item
+#end
+# useCaseuseCase-${pacote.webModuleName} merge point
+#else
+#set($itens = $bpmUtils.useCaseRemove("web${useCaseuseCaseRemove}" , $bpmUtils.itens))
+#foreach($item in $itens)
+$item
+#end
+# useCaseuseCase merge point
+#end
+${bpmUtils.clear()}
+#end

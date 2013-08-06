@@ -1,0 +1,104 @@
+##
+##  CONSTANTS
+##
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)#set($applicationUseCases = $pacote.useCases)#end
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#if ($pacote)#set($useCases = $pacote.useCases)#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if (($applicationUseCase.applicationValidationRequired && $validationDesired) || ($securityEnabled))
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+
+<!DOCTYPE form-validation PUBLIC
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+		#if($oAuthServer == "true")
+		<form name="loginOAuthUCPaginaDeLoginLoginForm">
+
+            <field property="senha" depends="genericValidator">
+                <arg position="0" key="login.oauth.uc.pagina.de.login.login.param.senha" />
+            </field>
+
+            <field property="login" depends="genericValidator">
+                <arg position="0" key="login.oauth.uc.pagina.de.login.login.param.login" />
+            </field>
+        </form>
+		#end
+#foreach ($useCase in $useCases)
+#foreach ($action in $useCase.actions)
+#if ($action.validationRequired)
+        <form name="$action.formBeanName">
+#set ($actionParameters = $action.actionParameters)
+#foreach ($field in $action.actionFormFields)
+#if ($field.validationRequired && $actionParameters.contains($field))
+#set ($validatorTypes = $field.validatorTypes)
+#set($fieldName = $field.name)
+#if ($field.combobox && $field.type.collectionType)
+#set($fieldName="${field.name}AsArray")
+#end
+
+            <field property="$fieldName" depends="$stringUtils.join($validatorTypes.iterator(),",")">
+                <arg position="0" key="$field.validatorMsgKey" />
+#if ($field.validWhen)
+                <msg name="validwhen" key="${field.validatorMsgKey}_validwhen" />
+#end
+#foreach ($validatorType in $validatorTypes)
+#foreach ($validatorArg in $field.getValidatorArgs($validatorType))
+                <arg position="${velocityCount}" name="$validatorType" key="$validatorArg" resource="false"/>
+#end
+#end
+#foreach ($validatorVar in $field.validatorVars)
+                <var>
+                    <var-name>$validatorVar.get(0)</var-name>
+                    <var-value><![CDATA[$validatorVar.get(1)]]></var-value>
+                </var>
+#end
+            </field>
+#end
+#end
+        </form>
+#end
+#end
+#end
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+        <form name="loginEntrarLoginValidarForm">
+            <field property="login" depends="required,genericValidator">
+                <arg position="0" key="login.entrar.login.param.login" />
+            </field>
+            <field property="senha" depends="required">
+                <arg position="0" key="login.entrar.login.param.senha" />
+            </field>            
+        </form>
+        <form name="loginTrocaDeSenhaObrigatoriaProcessarForm">
+            <field property="senha" depends="required">
+                <arg position="0" key="login.troca.de.senha.obrigatoria.param.senha" />
+            </field>         
+            <field property="novaSenha" depends="required">
+                <arg position="0" key="login.troca.de.senha.obrigatoria.param.nova.senha" />
+            </field>
+            <field property="confirmacao" depends="required">
+                <arg position="0" key="login.troca.de.senha.obrigatoria.param.confirmacao" />
+            </field>           
+        </form>
+#end        
+    </formset>
+
+</form-validation>
+#end
+#end

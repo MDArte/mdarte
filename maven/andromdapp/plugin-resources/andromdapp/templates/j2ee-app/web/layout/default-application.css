@@ -1,0 +1,388 @@
+#container
+{
+   
+    position: relative;
+    width: 770px;
+    text-align: left;
+    margin-right: auto; margin-left: auto;   
+    background: #F7F7F7;      
+    font-family : trebuchet ms, verdana, tahoma, arial;
+    font-size: 12px;
+    line-height: 1.5em;
+    color: #333;
+  
+}
+
+#content { width: 770px; }
+
+#error {
+	color: #0033CC;
+}
+#error #title
+{ 
+    font-weight: bold;
+    color: #043DBC;
+    border-bottom: 1px dotted #3D7DC7;
+    margin-bottom: 20px;
+}
+#error .details
+{
+    background-color: #ffffdd;
+    border: #333 solid 1px;
+    text-align: left;
+}
+#sidebar { float: right; padding: 30px 5px 0 0; margin-top: 20px; width: 170px; font-size: 86%; }
+#sidebar h5
+{
+    font-size: 86%; font-weight: bold;
+    color: #fff;
+    margin-bottom: 1em;
+    padding: 1px 8px 1px 8px;
+    background-color: #2947AC;
+}
+#sidebar h5 a:link, #sidebar h5 a:visited, #sidebar h5 a:hover
+{
+    color: #fff;
+    text-decoration: none;
+    border-bottom: #2947AC;
+}
+#sidebar h5.main { background-color: #4E7AC8; }
+#sidebar h5.main a:link, #sidebar h5.main a:visited, #sidebar h5.main a:hover
+{
+    color: #fff;
+    text-decoration: none;
+    border-bottom: #4E7AC8;
+}
+#sidebar span { display: none; }
+#sidebar p { margin-left: 20px; margin-right: 20px;  padding-bottom: 0.2em; }
+
+div.action { line-height: 1.7em; margin-bottom: 2.5em; }
+div.action h3
+{
+   font-size: 86%; font-weight: bold;
+   letter-spacing: 1px;
+   padding: 0.3em 0.3em 0.3em 2.2em;
+   margin-bottom: 1em;
+   background: #F0F0F0;
+}
+
+div.action div.trigger { border: 0; margin: 0px 20px 15px 0px; }
+div.action div.trigger form label { display: inline; }
+div.action div.trigger form field { display: inline; }
+#sidebar div.box1
+{
+   width: 170px;
+   font-family: trebuchet ms, tahoma, verdana, arial;
+   border: #ccc solid 1px;
+   padding: 0.5em 0 1em 0;
+   margin: 0;
+}
+
+#sidebar div.box1 h4
+{
+   height: 40px;
+   padding-left: 60px; padding-top: 12px;
+   font-size: 110%;
+}
+
+#sidebar div.box2
+{
+   border: #DADADA solid 1px;
+   padding: 0.8em 0.5em 0.8em 1em;
+   margin-bottom: 1.5em;
+}
+
+#sidebar div.box2 h4 { color: #999; padding-bottom: 1em; font-size: 100%; font-weight: normal;}
+#sidebar div.box2 ul { margin-bottom: 1em; margin-top: 0.3em; }
+#sidebar div.box2 li { padding: 5px 0 5px 0; list-style-type: none; }
+#sidebar div.box2 li a:link, #sidebar div.box2 li a:visited, #sidebar div.box2 li a:hover { padding: 0; }
+
+#sidebar div.box3
+{
+   background: #F7F7F7;
+   padding: 0.8em 0 0.8em 0;
+   margin-bottom: 1.5em;
+}
+#sidebar div.box3 a:link, #sidebar div.box3 a:visited, #sidebar div.box3 a:hover { border: 0; }
+
+#messages
+{
+    
+    margin: 15px 5px 5px;
+}
+
+#messages div
+{
+	margin: 0.5em 0;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 16px;
+	padding-left: 20px;
+}
+
+#messages .messages
+{
+    color: green;
+    border: 1px dashed green;
+    background-color: #dfd;
+}
+
+#messages .errors
+{
+	color: red;
+	border: 1px dashed red;
+	background-color: #fee;
+}
+
+#messages .warnings
+{
+    color: #555;
+    border: 1px dashed #555;
+    background-color: #ffa;
+}
+
+#messages .message, #messages .warning, #messages .error
+{
+    display: block;
+}
+
+
+
+
+.hide { display: none; }
+br.clr { clear: left; }
+
+.hintsClass
+{
+    background-color: #ffd;
+    font-size: 68%;
+    font-weight: normal;
+    border: 1px solid #333;
+    padding: 4px;
+    margin: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.important
+{
+    color: red;
+    display: inline;
+    font-weight: bold;
+    font-family: courier;
+}
+
+div.col-a1 { width: 46%; float: left; padding-top: 1.5em; }
+div.col-a2 { width: 46%; float: right; padding-top: 1.5em; }
+div.col-a1 h3, div.col-a2 h3 { color: #043DBC; border-bottom: 1px dotted #3D7DC7; margin-bottom: 1.0em; }
+
+div.login { background-color: #F7F7F7; padding: 0.5em; }
+div.login div.submit { margin: 1.5em 0 0.5em 0; }
+div.login input.login { width: 90%; }
+div.login p.error { width: 90%; padding: 0.5em; font-weight: bold; color: red;}
+
+
+div.help
+{
+    padding: 0 20px 20px 20px;
+    text-align: left;
+}
+
+div.help #close
+{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+div.help p
+{
+    padding: 0 20px 0 20px;
+}
+
+div.help .highlight
+{
+    font-weight: bold;
+    border: 2px dotted #ccc;
+    background: url(warning.gif) #ffd no-repeat 20px 50%;
+    text-indent: 20px;
+    padding: 10px 20px 10px 20px;
+    margin: 0 20px 0 20px;
+}
+
+div.help table
+{
+    width: 100%;
+    padding: 0 20px 0 20px;
+}
+
+
+
+div.help table th
+{
+    text-align: center;
+    font-weight: bolder;
+}
+
+div.help table td
+{
+    text-align: left;
+    vertical-align: top;
+}
+
+#pageHelp
+{
+    text-align: right;
+    vertical-align: top;
+    margin-left: 480px;
+}
+
+
+img.calendar
+{
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+}
+
+/* table classes (<display:*> taglib) */
+
+div.exportlinks { margin: 15px 0; }
+span.export
+{
+    padding: 3px 4px 3px 20px;
+    display: inline;
+    cursor: pointer;
+}
+span.excel { background-image: url(botao_excel.gif); background-repeat: no-repeat; }
+span.csv { background-image: url(botao_csv.gif); background-repeat: no-repeat; }
+span.xml { background-image: url(botao_xml.gif); background-repeat: no-repeat; }
+span.pdf { background-image: url(botao_pdf.gif); background-repeat: no-repeat; }
+
+table.list { width: 100%; padding-right: 25px; }
+
+table#row th { margin: 6px; margin-top: 2px; }
+table#row td { padding: 0 14px 0 14px; }
+
+table#row th a { margin-right: 14px;}
+
+tr.odd { background-color: #eeeeff; padding: 2px; 	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;}
+tr.even { background-color: #fffffd; padding: 2px; 	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;}
+th.sorted { background-color: #fff; font-weight: bold; 	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;}
+th.sorted, th.sortable { background-position: top right;	 font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px; }
+th.sortable { background: url(none.gif) no-repeat top right; 	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;}
+th.order1 { background: url(descending.gif) no-repeat top right; }
+th.order2 { background: url(ascending.gif) no-repeat top right; }
+
+span.pagebanner
+{
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px;
+	margin: 5px 5px 0 5;
+	display: block;
+	border-bottom: none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+span.pagelinks
+{
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px 4px 2px 4px;
+    display: block;
+    border-top: none;
+    margin: 0 5px 5px 5px;
+    	font-family: Arial, Helvetica, sans-serif;
+	   	 font-size: 12px;
+}
+
+/* create a button look for links */
+a:link.buttonLink, a:visited.buttonLink
+{
+    background-color: #0099ff;
+    border-top: #99ccff solid 1px;
+    border-right: #003399 solid 1px;
+    border-bottom: #003399 solid 1px;
+    border-left: #99ccff solid 1px;
+    color: white;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 1px 5px 1px 6px;
+    text-decoration: none;
+    text-align: center;
+}
+a:hover.buttonLink
+{
+    background-color: #9999ff;
+    color: white;
+}
+/* depress effect on click */
+a:active.buttonLink , a:focus.buttonLink
+{
+    border-top: #003399 solid 1px;
+    border-right: #99ccff solid 1px;
+    border-bottom: #99ccff solid 1px;
+    border-left: #003399 solid 2px;
+}
+
+img.calendar { vertical-align: top; }
+
+a.imageLink { border-width: 0; text-decoration: none; padding: 0; margin: 0; }
+
+#OrgLayout {
+	position: absolute;
+	top: 100px;
+	left: 10px;
+	right: 10px;
+}
+
+
+#Menu{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border: 1px none #990000;
+	position: absolute;
+	left: 110px;
+	top: 5px;
+	font-size: 10px;
+	color: #009933;
+	font-weight: normal;
+}
+#Menu a:link, #Menu a:hover {
+	color: #006600;
+	text-decoration: none;
+	font-size: 11px;
+	font-weight: bold;
+	padding-left: 10px;
+	background-image: url(layout/setaMenu.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 4px;
+}
+#Menu a:hover {
+	text-decoration: underline;
+}
+
+#Ajuda {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border: 1px none #990000;
+	position: absolute;
+	left: 200px;
+	top: 5px;
+	font-size: 10px;
+	color: #0066CC;
+	font-weight: normal;
+}
+#logotipo {
+	top: 5px;
+	position: absolute;
+	left: 10px;
+	margin-right: 20px;
+}

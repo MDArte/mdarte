@@ -1,0 +1,15 @@
+
+<%@ include file="/taglib-imports.jspf" %>
+
+<tiles:insert definition="login.layout">
+
+    <tiles:put name="title" type="string">
+        <bean:message key="saida.sistema.title"/>
+    </tiles:put>
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($controleAcessoDir, ".", "/")))
+<tiles:put name="body" type="string">
+   <tiles:insert page="${login}/saida-sistema-actions.jsp" flush="false"/>
+</tiles:put>
+
+</tiles:insert>

@@ -1,0 +1,54 @@
+#parse("templates/ejb/Globals.vm")
+<?xml version="1.0" encoding="$xmlEncoding"?>
+<!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 3.0//EN"
+                       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
+#set($context = $projectId)
+#if($pacote)
+#set($services = $pacote.sessions)
+#set($messageBeans = $pacote.messageDrivenBeans)
+#set($contextModule = $pacote.serviceModuleName)
+#end
+
+<jboss>
+
+##if ($ejbSecurityEnabled)
+##    <security-domain>java:/jaas/$securityRealm</security-domain>
+##end
+    <enterprise-beans>
+#foreach ($service in $services)
+
+        <session>
+            <ejb-name>$service.name</ejb-name>
+            <jndi-name>${service.fullyQualifiedName}</jndi-name>
+            <local-jndi-name>${service.fullyQualifiedName}Local</local-jndi-name>
+#if ($ejbSecurityEnabled && !$service.hasStereotype("$webSrv") && !$service.jaxws && !${service.openAccess})
+            <security-proxy>accessControl.SecurityProxyImpl</security-proxy> 
+#end
+#if($service.hasStereotype("$webSrv") && !$service.jaxws)
+            <port-component>
+                <port-component-name>${service.name}Srv</port-component-name>
+                <port-component-uri>${context}-services#if($contextModule)-${contextModule}#end/${service.name}Srv</port-component-uri>
+            </port-component>
+#end
+        </session>
+#end
+#if($modulo == 'false')
+        <session>
+            <ejb-name>UtilServiceHandler</ejb-name>
+            <jndi-name>${customTypesPackage}.UtilServiceHandler</jndi-name>
+            <local-jndi-name>${customTypesPackage}.UtilServiceHandlerLocal</local-jndi-name>
+        </session>
+#end
+#foreach ($messageBean in $messageBeans)
+        <message-driven>
+            <ejb-name>$messageBean.name</ejb-name>
+
+#if($messageBean.findTaggedValue("$JMSQueue"))
+            <destination-jndi-name>queue/$messageBean.findTaggedValue("$JMSQueue")</destination-jndi-name>
+#else
+            <destination-jndi-name>queue/${defaultQueue}</destination-jndi-name>
+#end
+        </message-driven>
+#end
+    </enterprise-beans>
+</jboss>

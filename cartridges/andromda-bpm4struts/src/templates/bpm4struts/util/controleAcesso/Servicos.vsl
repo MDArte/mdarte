@@ -1,0 +1,100 @@
+#set($gerar = true)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+
+
+#if($pacote)
+#set($useCases = $pacote.useCases)
+#set($finalStates = $pacote.finalStates)
+#set($gerar = true)
+#end
+
+#if($gerar)
+#set ($const_tipo_sv_caso_uso = "CASO_USO_MODELADO")
+#set ($const_tipo_sv_funcionalidade = "FUNCIONALIDADE")
+#set ($generatedFile = "Servicos.txt")
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+
+################Codigo Velho #################
+###foreach ($useCase in $useCases)
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION)
+##VALUES (SEQ_SV.NEXTVAL,'$useCase.titleKey','$useCase.titleKey',0,0);
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION)
+##VALUES (SEQ_SV.NEXTVAL,'$useCase.actionPath','$useCase.actionPath',0,0);
+###foreach($jsp in $useCase.pages)
+###foreach($action in $jsp.actions)
+###set ($trigger = $action.actionTrigger)
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION)
+##VALUES (SEQ_SV.NEXTVAL,'$trigger.triggerKey','$trigger.triggerKey',0,0);
+###foreach ($field in $action.actionParameters)
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION)
+##VALUES (SEQ_SV.NEXTVAL,'$field.messageKey','$field.messageKey',0,0);
+###end
+###end
+###end
+###end
+################FIM CODIGO VELHO###############
+
+################CODIGO NOVO#############
+###foreach($finalState in $finalStates)
+###set ($finalStateAction = $finalState.actions.get(0))
+###if($finalStateAction.actionClassName == $action.actionClassName)
+###if($finalState.findTaggedValue("$externalHyperlinkModulo"))
+###set ($codigoEAgrupado = $finalState.findTaggedValue("$externalHyperlinkModulo"))
+###set ($codigoEAgrupado = $codigoEAgrupado.concat($finalState.findTaggedValue("$externalHyperlink")))
+###else
+###set ($codigoEAgrupado = $finalStateAction.useCase.package.webModuleName)
+###set ($codigoEAgrupado = $codigoEAgrupado.concat($finalState.fullPath))
+###end
+###end
+###end
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,TIPO)
+##VALUES (SEQ_SV.NEXTVAL,'$codigoEAgrupado','$codigoEAgrupado',0,0,'$const_tipo_sv_caso_uso');
+##
+##INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+##VALUES
+##((select id from sv where CODIGO = '$codigoAgrupa'), (select id from sv where CODIGO = '$codigoEAgrupado'));
+##
+###end
+###end
+###end
+###end
+#######################FIM CODIGO NOVO#############
+#foreach ($useCase in $useCases)
+
+-- Servicos do caso de uso $useCase.name
+
+##INSERT INTO SV (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION, TIPO)
+##VALUES (SEQ_SV.NEXTVAL,'$useCase.titleKey','$useCase.titleKey',0,0, '$const_tipo_sv_caso_uso');
+INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,TIPO,SIS_CA_FK)
+VALUES (SV_CA_SEQ.NEXTVAL,'$useCase.actionPath','$useCase.actionPath',0,0, '$const_tipo_sv_caso_uso', (select id from sis_ca where nome ='$projectId'));
+
+#set ($codigoEAgrupado = $useCase.actionPath)
+#foreach($jsp in $useCase.pages)
+#foreach($action in $jsp.actions)
+#set ($trigger = $action.actionTrigger)
+#set ($codigoAgrupa = $trigger.triggerKey)
+
+INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,TIPO,SIS_CA_FK)
+VALUES (SV_CA_SEQ.NEXTVAL,'$codigoAgrupa','$codigoAgrupa',0,0,'$const_tipo_sv_funcionalidade', (select id from sis_ca where nome ='$projectId'));
+
+#end
+#end
+#end
+#foreach ($useCase in $useCases)
+#set ($codigoEAgrupado = $useCase.actionPath)
+-- Servicos agrupados do caso de uso $useCase.name
+#foreach($jsp in $useCase.pages)
+#foreach($action in $jsp.actions)
+#set ($trigger = $action.actionTrigger)
+#set ($codigoAgrupa = $trigger.triggerKey)
+
+INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+VALUES
+((select id from sv where CODIGO = '$codigoAgrupa'), (select id from sv where CODIGO = '$codigoEAgrupado'));
+
+#end
+#end
+#end
+#end

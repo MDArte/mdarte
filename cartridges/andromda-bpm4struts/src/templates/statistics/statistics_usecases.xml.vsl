@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<statistics>
+	<application>${projectId}</application>
+	<type>usecases</type>
+	<modules>
+#set ($useCasesTotal = 0)
+#foreach($package in $packages)
+		<module>
+			<name>${package.webModuleName}</name>
+			<useCases>
+				<size>${package.UseCases.size()}</size>
+#set ($useCasesTotal = $useCasesTotal + ${package.UseCases.size()})
+#foreach($useCase in ${package.UseCases})
+#foreach($initialStateOutgoing in ${useCase.activityGraph.initialState.outgoing})
+#set ($firstStateName = ${initialStateOutgoing.name})
+#end
+				<useCase>
+					<name>${useCase.packageName}.${useCase.name}</name>
+					<activityDiagram>${useCase.activityGraph.name}</activityDiagram>
+					<views>
+#foreach($view in ${useCase.views})
+						<view#if (${stringUtils.equals(${view.name}, ${firstStateName})}) first="true"#end>
+							<name>${view.name}</name>
+							<actions>
+#foreach($action in ${view.actions})
+								<action#if (${action.lookupGrid}) lookupGrid="true"#end #if (${action.tableLink}) tableLink="true"#end>
+									<name>${action.name}</name>
+#if (${action.target})
+#set ($isFinalState = false)
+## different approach to work with instanceof and velocity
+#if (${stringUtils.equals(${action.target.class.name},"org.andromda.cartridges.bpm4struts.metafacades.StrutsFinalStateLogicImpl")})
+#set ($isFinalState = true)
+#end
+									<target#if (${isFinalState}) finalState="true"#end>
+#if (${action.target.name})
+										<name>${action.target.name}</name>
+#end
+#if (${isFinalState})
+#set ($hyperlinkApplicationName = "")
+#set ($hyperlinkModulo = "")
+#set ($hyperlink = "")
+#set ($hyperlinkApplicationName = ${action.target.findTaggedValue($externalHyperlinkApplicationName)})
+#set ($hyperlinkModulo = ${action.target.findTaggedValue($externalHyperlinkModulo)})
+#set ($hyperlink = ${action.target.findTaggedValue($externalHyperlink)})
+#if ($stringUtils.isNotBlank(${hyperlinkApplicationName}) || $stringUtils.isNotBlank(${hyperlinkModulo}) || $stringUtils.isNotBlank(${hyperlink}))
+										<tags>
+#if ($stringUtils.isNotBlank(${hyperlinkApplicationName}))
+											<hyperlinkApplicationName>${hyperlinkApplicationName}</hyperlinkApplicationName>
+#end
+#if ($stringUtils.isNotBlank(${hyperlinkModulo}))
+											<hyperlinkModulo>${hyperlinkModulo}</hyperlinkModulo>
+#end
+#if ($stringUtils.isNotBlank(${hyperlink}))
+											<hyperlink>${hyperlink}</hyperlink>
+#end
+										</tags>
+#end
+#end
+									</target>
+#end
+#if (${action.actionParameters.size()} > 0)
+									<parameters>
+#foreach($param in ${action.actionParameters})
+										<parameter#if (${stringUtils.equals(${param.widgetType},"plaintext")}) plainText="true"#end #if (${param.readOnly}) readOnly="true"#end #if (${param.hiddenField}) hiddenField="true"#end>
+											<name>${param.name}</name>
+											<type>${param.type.fullyQualifiedName}</type>
+										</parameter>
+#end
+									</parameters>
+#end
+								</action>
+#end
+							</actions>
+#if (${view.variables.size()} > 0)
+							<variables>
+#foreach($variable in ${view.variables})
+								<variable#if (${variable.table}) table="true"#end>
+									<name>${variable.name}</name>
+#if (${variable.table})
+									<columns>
+#foreach ($column in ${variable.tableColumns})
+#if(${column.name})#set($columnName=$column.name)#else#set($columnName=$column)#end
+										<column>${columnName}</column>
+#end
+									</columns>
+#end
+								</variable>
+#end
+							</variables>
+#end
+						</view>
+#end
+					</views>
+					<states>
+#foreach($state in ${useCase.activityGraph.states})
+#if (${stringUtils.equals(${state.class.name},"org.andromda.cartridges.bpm4struts.metafacades.StrutsActionStateLogicImpl")})
+						<state#if (${stringUtils.equals(${state.name}, ${firstStateName})}) first="true"#end>
+							<name>${state.name}</name>
+#if (${state.forward} && ${state.forward.target})
+							<target#if (${state.forward.enteringFinalState}) finalState="true"#end>
+#if (${state.forward.target.name})
+								<name>${state.forward.target.name}</name>
+#end
+#if (${state.forward.enteringFinalState})
+#set ($hyperlinkApplicationName = "")
+#set ($hyperlinkModulo = "")
+#set ($hyperlink = "")
+#set ($hyperlinkApplicationName = ${state.forward.target.findTaggedValue("@andromda.presentation.view.external_hyperlink.application.name")})
+#set ($hyperlinkModulo = ${state.forward.target.findTaggedValue("@andromda.presentation.view.external_hyperlink.modulo")})
+#set ($hyperlink = ${state.forward.target.findTaggedValue("@andromda.presentation.view.external_hyperlink")})
+#if ($stringUtils.isNotBlank(${hyperlinkApplicationName}) || $stringUtils.isNotBlank(${hyperlinkModulo}) || $stringUtils.isNotBlank(${hyperlink}))
+								<tags>
+#if ($stringUtils.isNotBlank(${hyperlinkApplicationName}))
+									<hyperlinkApplicationName>${hyperlinkApplicationName}</hyperlinkApplicationName>
+#end
+#if ($stringUtils.isNotBlank(${hyperlinkModulo}))
+									<hyperlinkModulo>${hyperlinkModulo}</hyperlinkModulo>
+#end
+#if ($stringUtils.isNotBlank(${hyperlink}))
+									<hyperlink>${hyperlink}</hyperlink>
+#end
+								</tags>
+#end
+#end
+							</target>
+#end
+#if (${state.deferrableEvents.size()} > 0)
+							<events>
+#foreach($event in ${state.deferrableEvents})
+								<event>
+									<name>${event.operation.name}</name>
+								</event>
+#end
+							</events>
+#end
+						</state>
+#end
+#end
+					</states>
+#if (${useCase.controller})
+					<controller>
+						<name>${useCase.controller.packageName}.${useCase.controller.name}</name>
+						<implementationName>${useCase.controller.packageName}.${useCase.controller.name}Impl</implementationName>
+						<methods>
+							<size>${useCase.controller.operations.size()}</size>
+#foreach ($operation in $useCase.controller.operations)
+							<method>
+								<name>${operation.name}</name>
+								<return>
+									<type>${operation.returnType.fullyQualifiedName}</type>
+								</return>
+								<parameters>
+									<size>4</size>
+									<parameter>
+										<name>mapping</name>
+										<type>org.apache.struts.action.ActionMapping</type>
+									</parameter>
+									<parameter>
+										<name>form</name>
+										<type>$operation.interfaceType</type>
+									</parameter>
+									<parameter>
+										<name>request</name>
+										<type>javax.servlet.http.HttpServletRequest</type>
+									</parameter>
+									<parameter>
+										<name>response</name>
+										<type>javax.servlet.http.HttpServletResponse</type>
+									</parameter>
+								</parameters>
+							</method>
+#end
+						</methods>
+					</controller>
+#end
+				</useCase>
+#end
+			</useCases>
+		</module>
+#end
+	</modules>
+	<useCasesTotal>${useCasesTotal}</useCasesTotal>
+</statistics>

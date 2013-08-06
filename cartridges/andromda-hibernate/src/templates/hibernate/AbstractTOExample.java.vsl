@@ -1,0 +1,11 @@
+#set ($generatedFile = "AbstractTOExample.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${transferPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${transferPackageName}/${generatedFile}")
+#end
+public abstract class AbstractTOExample{
+	public boolean equals(Object object){
+        if(this.getClass().equals(object.getClass())) return true;
+        return false;
+    }
+}

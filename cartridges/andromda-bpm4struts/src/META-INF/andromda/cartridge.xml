@@ -1,0 +1,1714 @@
+<cartridge>
+    <templateEngine>
+        <!-- library of macros used in template engine -->
+        <macrolibrary name="templates/bpm4struts/pages/page.jsp.vm"/>
+        <macrolibrary name="templates/bpm4struts/pages/crud/manageable.jsp.vm"/>
+        <macrolibrary name="templates/bpm4struts/actions/Action.java.vm"/>
+        <macrolibrary name="templates/bpm4struts2/pages/page.jsp.vm"/>
+        <!-- shared (meaning across subdirectories) macros -->
+        <macrolibrary name="templates/bpm4struts/macros/populateCurrentFormOnError.vm"/>
+        <!-- cartridge-macrolibrary merge-point-->
+    </templateEngine>
+
+    <!-- define the template objects that are made available to the template -->
+    <templateObject name="bpmUtils" className="org.andromda.cartridges.bpm4struts.Bpm4StrutsUtils"/>
+    <templateObject name="dateUtils" className="org.andromda.utils.DateUtilsHelper"/>
+    <templateObject name="stringUtils" className="org.andromda.utils.StringUtilsHelper"/>
+
+    <!-- cartridge-templateObject merge-point-->
+
+    <property reference="breadCrumbInput"/>
+    <property reference="breadCrumbLabel"/>
+    <property reference="serviceLocatorName"/>
+    <property reference="controleAcessoDir" />
+    <property reference="mainDir" />
+    <property reference="xhtml"/>
+    <property reference="securityRealm"/>
+    <property reference="clientValidation"/>
+    <property reference="serverValidation"/>
+    <property reference="welcomeFileName"/>
+    <property reference="maxBreadCrumbs" />
+    <property reference="dummyData"/>
+    <property reference="onlineHelp"/>
+    <property reference="hints"/>
+    <property reference="defaultDateFormat"/>
+    <property reference="defaultTimeFormat"/>
+    <property reference="warningMessagesKey"/>
+    <property reference="successMessagesKey"/>
+    <property reference="exceptionHandlerPattern"/>
+    <property reference="exceptionHandlerPackage"/>
+    <property reference="validatorPackage"/>
+    <property reference="servletPackage"/>
+    <property reference="errorMessagesKey"/>
+    <property reference="formName"/>
+    <property reference="manageableFormName"/>
+    <property reference="xmlEncoding"/>
+    <property reference="pageEncoding"/>
+    <property reference="languages"/>
+    <property reference="customServlets"/>
+    <property reference="generateWebXmlIds"/>
+    <property reference="manageableFieldMaxLength"/>
+    <property reference="manageableReferenceParameterPrefix"/>
+    <property reference="setPageVariablesInPageScope"/>
+    <property reference="preventDirectPageAccess"/>
+    <property reference="cadastroSessionObjectName"/>    
+	<property reference="maxRows"/>
+	<property reference="utilDir"/>
+	<property reference="servicePackageName"/>
+	<property reference="webPackageName"/>  
+	<property reference="modulo"/>
+	<property reference="moduloWebPrincipal"/>
+	<property reference="compartilhadoJarDir"/>
+	<property reference="homeURI"/>
+	<property reference="inputOperationMode"/> 
+	<property reference="keepOperationMode"/> 	
+	<property reference="operationMode"/>
+	<property reference="fieldOperationMode"/>
+	<property reference="customTypesPackage"/>
+	<property reference="modelPackageName"/>
+	<property reference="maxSizeClass"/>
+	<property reference="contextoPrincipal"/>
+	<property reference="servletContext"/>
+	<property reference="keepSO"/>
+	<property reference="radioSelected"/>
+	<property reference="sessionKey"/>
+	<property reference="enterAction"/>
+	<property reference="simpleUseCase"/>
+	<property reference="fieldLink"/> 
+	<property reference="secureDir"/> 
+	<property reference="enableHttpsRequest"/>
+	<property reference="secureServerPort"/>
+	<property reference="serverPort"/>
+	<property reference="cleanTable"/>
+	<property reference="descriptionDestination"/>
+	<property reference="pageDefaultSOIterations"/>
+	<property reference="pageSOIterations"/>
+	<property reference="sessionObjectCounter"/>
+	<property reference="externalModuleName"/>
+	<property reference="externalHyperlinkApplicationName"/>
+	<property reference="externalHyperlinkModulo"/>
+	<property reference="externalHyperlink"/>
+	<property reference="projectId"/>
+	<property reference="server"/>
+	<property reference="reportPropertiesPath"/>
+	<property reference="useCaseuseCaseRemove"/>
+	<property reference="timeout"/>
+	<property reference="ServiceFactorySelectNodeName"/>
+	<property reference="confirmMessage"/>
+	<property reference="demanda"/>
+	<property reference="copy"/>
+	<property reference="loggerName"/>
+	<property reference="loggerPackage"/>
+	<property reference="invalidInputCharacters"/>
+	<property reference="tarefasAgendadas"/>
+	<property reference="aplicacaoDistribuida"/>
+	<property reference="enableCaptcha"/>
+	<property reference="maxTentativasLogin"/>
+	<property reference="oAuthServer"/>
+	<property reference="viewTestEnabled"/>
+	<property reference="viewTestPageLoad"/>
+	<property reference="viewTestServerHost"/>
+	<property reference="viewTestServerPort"/>
+	<property reference="viewTestBrowser"/>
+	<property reference="viewTestApplicationHost"/>
+	<property reference="viewTestApplicationPort"/>
+	<property reference="viewTestAccessControlDir"/>
+	<property reference="viewTestBasicDir"/>
+	
+	
+	
+	
+
+    <!-- cartridge-property merge-point -->
+
+    <!-- copy resources -->
+    <resource
+        path="resources/struts-tld/*.*"
+        outputPattern="{0}"
+        outlet="messages"
+        overwrite="true"/>
+            
+    <resource
+        path="resources/WEB-INF/lib/*.jar"
+        outputPattern="lib/{0}"
+        outlet="shared-configuration"
+        overwrite="true"/>
+
+    <!-- cartridge-resource merge-point -->
+
+    <!-- process templates on model elements -->
+    
+       
+    <template
+        path="templates/bpm4struts/util/layout/LayoutConfiguration.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="layout-util"
+        overwrite="false">
+    </template>
+    
+    <template
+        path="templates/bpm4struts/util/layout/LayoutConfigurationImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="layout-util-impl"
+        overwrite="false">
+    </template>
+    
+    <template
+        path="templates/bpm4struts/actions/ForwardAction.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/bpm4struts/actions/ForwardForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true">
+    </template>
+    
+
+     <template
+        path="templates/bpm4struts/pages/calendar-js.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+    
+    <template
+        path="templates/bpm4struts/actions/Action.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    
+    <template
+        path="templates/bpm4struts/modulo/maven.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+      
+    <template
+        path="templates/bpm4struts/modulo/jboss-web.xml.vsl"
+        outputPattern="jboss-web.xml"
+        outlet="configuration"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/modulo/webMaven.xml.vsl"
+        outputPattern="maven.xml"
+        outlet="project-configuration"
+        overwrite="true"
+        outputToSingleFile="true">
+        <modelElements variable="packages">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/modulo/project.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="false">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/modulo/project.properties.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="false">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/actions/ExceptionHandler.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/util/ExceptionUtil.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts2/interceptor/ExceptionInterceptor.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/pages/page-actions.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/forms/ActionForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                    <property name="actionFormFields"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/forms/ActionFormInterface.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true">
+        <modelElements variable="operation">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsControllerOperation"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/controllers/ControllerImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controller-impls"
+        overwrite="false">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <!-- if this property is not present it's no use generating the controller -->
+                    <property name="useCase"/>
+                    <!-- only useful generating if we have at least one operation -->
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/controllers/Controller.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controllers"
+        overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <!-- if this property is not present it's no use generating the controller -->
+                    <property name="useCase"/>
+                    <!-- only useful generating if we have at least one operation -->
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/controllers/ControllerFactory.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controllers"
+        overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <!-- if this property is not present it's no use generating the controller -->
+                    <property name="useCase"/>
+                    <!-- only useful generating if we have at least one operation -->
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/controllers/SessionObject.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="session-objects"
+        overwrite="true">
+        <modelElements variable="sessionObject">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsSessionObject"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/page.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/error-page.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false">
+    </template>
+        
+    <template
+        path="templates/bpm4struts/pages/page-javascript.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/page-variables.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        generateEmptyFiles="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/page-hidden-parameters.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                    <property name="tableLink">false</property>
+                    <property name="hiddenActionParameters"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/pages/page-control-parameters.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        generateEmptyFiles="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/page-table.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="table">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+                    <property name="table"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/form-validation.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        generateEmptyFiles="false"
+        outputToSingleFile="true">
+        <modelElements variable="applicationUseCases">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/configuration/validator-rules.xml.vsl"
+        outputPattern="validator-rules.xml"
+        outlet="shared-configuration"
+        overwrite="true"
+        generateEmptyFiles="false"
+        outputToSingleFile="true">
+        <modelElements variable="applicationUseCases">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/actions/StrutsValidator.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/actions/CoppetecStrutsValidator.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/pages/index.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        outputToSingleFile="true">
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity">
+                    <property name="manageable"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+
+    <template
+        path="templates/bpm4struts/messages/application-resources-global.properties.vsl"
+        outputPattern="application-resources-global.properties"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+            <modelElement variable="enumerations">
+                <type name="org.andromda.metafacades.uml.EnumerationFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/messages/application-resources-global.csv.vsl"
+        outputPattern="application-resources-global.csv"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+            <modelElement variable="enumerations">
+                <type name="org.andromda.metafacades.uml.EnumerationFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/messages/application-resources-uc.properties.vsl"
+        outputPattern="application-resources-uc-${useCase.name}.properties"
+        outlet="messages-modulo"
+        overwrite="true">
+        <modelElements variable="useCase">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/messages/application-resources.properties.vsl"
+        outputPattern="application-resources-modulo.properties"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <!-- the crud entity messages are also generated in this bundle -->
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+   <template
+        path="templates/bpm4struts/messages/Struts-Layout_default.properties.vsl"
+        outputPattern="Struts-Layout_default.properties"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"/>    
+        
+    <template
+        path="templates/bpm4struts/messages/application-resources.csv.vsl"
+        outputPattern="application-resources-modulo.csv"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <!-- the crud entity messages are also generated in this bundle -->
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/messages/application-resources.csv.vsl"
+        outputPattern="application-resources-modulo.csv"
+        outlet="messages-modulo"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+
+    <template
+        path="templates/bpm4struts/messages/displaytag.properties.vsl"
+        outputPattern="displaytag.properties"
+        outlet="messages"
+        overwrite="true"
+        outputToSingleFile="true"/>
+
+    <template
+        path="templates/bpm4struts/configuration/web.xml.vsl"
+        outputPattern="web.xml"
+        outlet="shared-configuration"
+        overwrite="true"
+        outputToSingleFile="true"/>
+        
+    <template
+        path="templates/bpm4struts/configuration/web.xml.vsl"
+        outputPattern="web.xml"
+        outlet="configuration"
+        overwrite="true">
+        <modelElements variable="pacote">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/actions/ActionServlet.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+        
+    <template
+        path="templates/bpm4struts/actions/UtilServlet.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions-impl"
+        overwrite="false"/>
+        
+    <!-- 
+    <template
+        path="templates/bpm4struts/forms/FormSessionObject.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="session-objects"
+        overwrite="true"/> -->
+        
+    <template
+        path="templates/bpm4struts/util/PageSessionObjectUtil.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+    
+    <template
+        path="templates/bpm4struts/util/SessionObjectUtil.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+        
+    <template
+	path="templates/bpm4struts/util/ShareSessionUtil.vsl"
+	outputPattern="$generatedFile"
+	outlet="shared-actions"
+        overwrite="true"/>
+    
+    <template
+        path="templates/bpm4struts/actions/ActionServletFilter.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/actions/SessionFilter.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"
+        outputOnEmptyElements="false"/>
+
+	<template
+        path="templates/bpm4struts/pages/menu.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        outputToSingleFile="true"/>
+        
+    <template
+        path="templates/bpm4struts/pages/main-layout.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"/>
+	<template
+        path="templates/bpm4struts/pages/simple-layout.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"/>
+
+    <template
+        path="templates/bpm4struts/configuration/tiles-defs.xml.vsl"
+        outputPattern="tiles-defs.xml"
+        outlet="shared-configuration"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/configuration/tiles-defs-impl.xml.vsl"
+        outputPattern="WEB-INF/tiles-defs-impl.xml"
+        outlet="shared-pages-impl"
+        overwrite="false"/>
+
+    <template
+        path="templates/bpm4struts/configuration/struts-config.xml.vsl"
+        outputPattern="struts-config.xml"
+        outlet="shared-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                	<property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity">
+                    <property name="manageable"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+     <template
+        path="templates/bpm4struts/configuration/struts-config-actions-uc.xml.vsl"
+        outputPattern="$generatedFile"
+		outlet="configuration"		
+        overwrite="true">
+        <modelElements variable="useCase">
+           <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+     <template
+        path="templates/bpm4struts/configuration/struts-config-forms-uc.xml.vsl"
+        outputPattern="$generatedFile"
+		outlet="configuration"		
+        overwrite="true">
+        <modelElements variable="useCase">
+           <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+     <template
+        path="templates/bpm4struts/configuration/struts-config-global.xml.vsl"
+        outputPattern="struts-config.xml"
+		outlet="configuration"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/configuration/validation.xml.vsl"
+        outputPattern="validation.xml"
+        outlet="shared-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="applicationUseCases">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+ 
+    <template
+        path="templates/bpm4struts/configuration/validation-uc.xml.vsl"
+        outputPattern="validation-uc-${useCase.name}.xml"
+        outlet="configuration"
+        overwrite="true">
+        <modelElements variable="useCase">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+     <template
+        path="templates/bpm4struts/configuration/validation-cabecalho.xml.vsl"
+        outputPattern="validation-cabecalho.xml"
+		outlet="configuration"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+     <template
+        path="templates/bpm4struts/configuration/validation-rodape.xml.vsl"
+        outputPattern="validation-rodape.xml"
+		outlet="configuration"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>   
+
+    <template
+        path="templates/bpm4struts/pages/page.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        generateEmptyFiles="true">
+        <modelElements variable="page">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/messages.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        outputToSingleFile="true"/>
+
+    <template
+        path="templates/bpm4struts/server/users.properties.vsl"
+        outputPattern="users.properties"
+        outlet="server"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+
+    <template
+        path="templates/bpm4struts/server/roles.properties.vsl"
+        outputPattern="roles.properties"
+        outlet="server"
+        overwrite="true"
+        generateEmptyFiles="true"
+        outputToSingleFile="true">
+        <modelElements variable="applicationUseCases">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/breadcrumbs.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+
+    <template
+        path="templates/bpm4struts/pages/taglib-imports.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        generateEmptyFiles="true"/>
+
+    <template
+        path="templates/bpm4struts/pages/page-help.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        generateEmptyFiles="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/help-layout.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        generateEmptyFiles="false"/>
+
+    <template
+        path="templates/bpm4struts/pages/layout-configuration.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        generateEmptyFiles="true"/>
+
+    <template
+        path="templates/bpm4struts/util/ModoOperacao.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                	<property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+     <template
+        path="templates/bpm4struts/util/ModoOperacao.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+
+    <template
+        path="templates/bpm4struts/decorators/TableDecorator.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="decorators"
+        overwrite="false"
+        generateEmptyFiles="false">
+        <modelElements variable="table">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
+                    <property name="tableDecoratorRequired"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+	<template path="templates/bpm4struts/controllers/ReportDataSource.java.vsl"
+		outputPattern="${generatedFile}.java" outlet="controllers"
+		overwrite="false">
+		<modelElements variable="report">
+			<modelElement>
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
+					<property name="report">true</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+	
+	<template path="templates/bpm4struts/controllers/ReportDataSourceImpl.java.vsl"
+		outputPattern="${generatedFile}.java" outlet="controller-impls"
+		overwrite="false">
+		<modelElements variable="report">
+			<modelElement>
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+					<property name="report">true</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>    
+
+    <!--
+            C R U D
+    -->
+
+    <template
+        path="templates/bpm4struts/actions/crud/CrudAction.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/forms/crud/CrudForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/crud/manageable.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/crud/manageable-help.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/pages/crud/default-manageable.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        outputToSingleFile="true"
+        generateEmptyFiles="false">
+        <modelElements>
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity">
+                    <property name="manageable"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+   <template
+        path="templates/bpm4struts/messages/custom-resources.properties.vsl"
+        outputPattern="custom-resources.properties"
+        outlet="custom-messages"
+        overwrite="false"
+        outputToSingleFile="true"/>
+        
+    <template
+        path="templates/bpm4struts/messages/custom-resources.csv.vsl"
+        outputPattern="custom-resources.csv"
+        outlet="custom-messages"
+        overwrite="false"
+        outputToSingleFile="true"/>
+
+
+	<!--  Templates de controle de acesso -->
+
+    
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/EntrarLoginValidar.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+        
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/ActionServletImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+        
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/Login.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts2/actions/controleAcesso/Login2.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/actions/Main.java.vsl"
+        outputPattern="main/Main.java"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="applicationUseCase">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/NovaConexao.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/modulo/NovaConexao.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/modulo/ApagaSessao.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>         
+
+    <template
+        path="templates/bpm4struts/forms/MainFormImpl.java.vsl"
+        outputPattern="main/MainFormImpl.java"
+        outlet="shared-actions"
+        overwrite="true"/>          
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/NovaConexaoForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>                      
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/TrocaDeSenhaObrigatoriaProcessar.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/EntrarLoginValidarFormImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/> 
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/LoginFormImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>   
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/PossuiLoginSenhaForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>   
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/SessaoValidaForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>       
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/VerificarLoginForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>                              
+
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/PrecisaTrocarSenhaForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>  
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/TrocaDeSenhaObrigatoriaProcessarFormImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>  
+        
+    <template
+        path="templates/bpm4struts/forms/controleAcesso/TrocaEfetuadaComSucessoForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+        
+    <template
+        path="templates/bpm4struts/controllers/controleAcesso/LoginController.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/> 
+        
+    <template
+        path="templates/bpm4struts/controllers/controleAcesso/LoginControllerFactory.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>         
+        
+    <template
+        path="templates/bpm4struts/controllers/controleAcesso/LoginControllerImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>  
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/entrar-login.css.vsl"
+        outputPattern="$secureDir/entrar-login.css"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>        
+
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/entrar-login.jsp.vsl"
+        outputPattern="$secureDir/entrar-login.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>   
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/entrar-login-actions.jsp.vsl"
+        outputPattern="$secureDir/entrar-login-actions.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>      
+
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/troca-de-senha-obrigatoria.css.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria.css"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>    
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/troca-de-senha-obrigatoria.jsp.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>  
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/troca-de-senha-obrigatoria-actions.jsp.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria-actions.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>   
+        
+    <template
+        path="templates/bpm4struts/pages/controleAcesso/login-layout.jsp.vsl"
+        outputPattern="accessControl/login-layout.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"
+        outputToSingleFile="true">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>        
+    </template>  
+    
+      
+    <template
+        path="templates/bpm4struts/util/controleAcesso/UseCaseXUseCase.vsl"
+        outputPattern="UseCaseXUseCase"
+        outlet="controleAcesso-config"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+		    <modelElement variable="finalStates">
+			    <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsFinalState"/>
+		    </modelElement>
+	    </modelElements>
+    </template>
+    
+     <template
+        path="templates/bpm4struts/util/controleAcesso/UseCaseXUseCase.vsl"
+        outputPattern="UseCaseXUseCase"
+		outlet="controleAcesso-config"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/util/controleAcesso/ControlClasses.vsl"
+        outputPattern="controlClasses"
+        outlet="controleAcesso-config"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/util/controleAcesso/ControlClasses.vsl"
+        outputPattern="controlClasses"
+		outlet="controleAcesso-config"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/util/controleAcesso/Servicos.vsl"
+        outputPattern="Servicos.txt"
+        outlet="controleAcesso-config"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="useCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+	    <modelElement variable="finalStates">
+		    <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsFinalState"/>
+	    </modelElement>
+        </modelElements>        
+    </template>
+    
+    <template
+        path="templates/bpm4struts/util/controleAcesso/Servicos.vsl"
+        outputPattern="Servicos.txt"
+        outlet="controleAcesso-config"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/pages/stackTrace.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="true">
+    </template>
+
+    <!--  fim dos templates de login -->
+
+	<!--  inicio - view test templates -->
+
+	<template
+		path="templates/selenium/module/maven.xml.vsl"
+		outputPattern="maven.xml"
+		outlet="view-test-configuration"
+		overwrite="false"
+		outputOnEmptyElements="false"/>
+
+	<template
+		path="templates/selenium/module/project.xml.vsl"
+		outputPattern="project.xml"
+		outlet="view-test-configuration"
+		overwrite="false"
+		outputOnEmptyElements="false"/>
+
+	<template
+		path="templates/selenium/usecases/UsecaseViewTest.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="view-test"
+		overwrite="true"
+		outputOnEmptyElements="false">
+		<modelElements variable="useCase">
+			<modelElement>
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/selenium/usecases/UsecaseViewTestImpl.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="view-test-impl"
+		overwrite="false"
+		outputOnEmptyElements="false">
+		<modelElements variable="useCase">
+			<modelElement>
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/selenium/accessControl/AccessControlViewTest.java.vsl"
+		outputPattern="$viewTestAccessControlDir/AccessControlViewTest.java"
+		outlet="view-test"
+		overwrite="false"
+		outputOnEmptyElements="false"/>
+
+	<template
+		path="templates/selenium/accessControl/AccessControlViewTestImpl.java.vsl"
+		outputPattern="$viewTestAccessControlDir/AccessControlViewTestImpl.java"
+		outlet="view-test-impl"
+		overwrite="false"
+		outputOnEmptyElements="false"/>
+
+	<template
+		path="templates/selenium/default/BasicViewTestController.java.vsl"
+		outputPattern="$viewTestBasicDir/BasicViewTestController.java"
+		outlet="view-test"
+		overwrite="false"
+		outputOnEmptyElements="false"/>
+
+	<!--  fim - view test templates -->
+	 <!-- struts 2 templates -->
+    
+   <template
+        path="templates/bpm4struts2/configuration/struts-actions-uc.xml.vsl"
+        outputPattern="$generatedFile"
+		outlet="shared-configuration-struts2"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="useCase">
+           <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>
+	
+	
+	<template
+        path="templates/bpm4struts2/configuration/struts-global.xml.vsl"
+        outputPattern="struts.xml"
+		outlet="shared-configuration-struts2"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+	<template
+        path="templates/bpm4struts2/configuration/struts.xml.vsl"
+        outputPattern="struts.xml"
+        outlet="shared-configuration-struts2"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                	<property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity">
+                    <property name="manageable"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts2/actions/Action.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+            </modelElement>
+        </modelElements>
+    </template>
+      <template
+        path="templates/bpm4struts2/configuration/validation.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-configuration-struts2"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+            </modelElement>
+        </modelElements>
+    </template> 
+    
+    <template
+        path="templates/bpm4struts2/controllers/Controller.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controllers"
+        overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <property name="useCase"/>
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template> 
+    
+    <template
+        path="templates/bpm4struts2/controllers/ControllerImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controller-impls"
+        overwrite="false">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <property name="useCase"/>
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/controllers/ControllerFactory.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controllers"
+        overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <!-- if this property is not present it's no use generating the controller -->
+                    <property name="useCase"/>
+                    <!-- only useful generating if we have at least one operation -->
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-actions.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+       <template
+        path="templates/bpm4struts2/pages/page-table.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="table">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+                    <property name="table"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template> 
+        <template
+        path="templates/bpm4struts2/forms/ActionForm.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                    <property name="actionFormFields"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/bpm4struts2/forms/ActionFormInterface.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="forms"
+        overwrite="true">
+        <modelElements variable="operation">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsControllerOperation"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/bpm4struts2/pages/page-tables.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+       <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/bpm4struts2/actions/ActionUtil.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+   <template
+        path="templates/bpm4struts2/controllers/ViewContainer.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+   <template
+        path="templates/bpm4struts2/controllers/Struts2ViewContainer.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+   <template
+        path="templates/bpm4struts2/util/SessionObjectUtilStruts2.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true"/>
+    
+    <!-- end of struts 2 templates -->
+	
+	<!--  inicio - statistics templates -->
+
+	<template
+		path="templates/statistics/statistics_usecases.xml.vsl"
+		outputPattern="statistics_usecases.xml"
+		outlet="statistics"
+		overwrite="true"
+		outputToSingleFile="true"
+		outputOnEmptyElements="false">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!--  fim - statistics templates -->
+	
+	<!-- início oAuth templates -->
+	
+    <template
+        path="templates/bpm4struts/actions/oAuth/ReqTokenUC.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/actions/oAuth/AccTokenUC.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/actions/oAuth/LoginOAuthUC.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/actions/oAuth/PaginaDeLoginLogin.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/pages/oAuth/pagina-de-login.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/pages/oAuth/pagina-de-login.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/pages/oAuth/pagina-de-login-javascript.jspf.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/forms/oAuth/PaginaDeLoginLoginFormImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>
+    <template
+        path="templates/bpm4struts/forms/oAuth/LoginOAuthUCFormImpl.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"/>        
+	<!-- fim oAuth templates -->
+
+</cartridge>
+<!-- cartridge-template merge-point -->

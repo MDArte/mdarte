@@ -1,0 +1,101 @@
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.custom.i18n.resources" value="application-resources" />
+	<constant name="struts.ui.theme" value="simple" /> 
+##	<!-- including default fowards properties -->
+##    <include file="struts-default.xml" />	
+<!-- including actions from respective modules -->
+#foreach ($useCase in $useCases)
+#set($useCaseName = "$stringUtils.upperCamelCaseName(${useCase.name})")
+
+	<include file="struts-actions-uc-${useCaseName}.xml" />
+#end
+
+#set($naoEntrou = true)
+#foreach($manageable in $manageables)
+#if($naoEntrou == true)
+#set($naoEntrou = false)
+	<package name="" namespace="/" extends="${bpmUtils.getStrutsDefaultNameConfig()}">##TODO verificar nome do pacote dos manageable
+#end
+		<action name="$manageable.actionPath" class="$manageable.actionType">
+				<result>$manageable.pageFullPath</result>
+				<exception-mapping result="error.exception.message" exception="java.lang.Throwable"></exception-mapping>
+				<result name="error.exception.messager">$manageable.exceptionPath</result>
+		</action>
+	</package>
+
+	<!-- It is supposed to work such as FowardAction. It takes the name of the HelpAction and
+	redirects to the jsp page-->
+#if($onlineHelp == "true")
+	<package name="" namespace="/" extends="${bpmUtils.getStrutsDefaultNameConfig()}">
+		<action name="${manageable.onlineHelpActionPath}">
+			<result>${manageable.onlineHelpPagePath}.jsp</result>
+		</action>
+
+		<action name="/applicationHelp">
+			<result>/application-help.jsp</result>
+		</action>
+#end	
+	</package>
+#end
+
+	<package name="" namespace="/" extends="${bpmUtils.getStrutsDefaultNameConfig()}">
+		<action name="treeview" class="fr.improve.struts.taglib.layout.treeview.TreeviewAction">
+		</action>
+	</package>
+
+	<package name="${bpmUtils.getStrutsDefaultNameConfig()}" extends="struts-default">
+		<interceptors>
+			<interceptor name="MDArteExceptionInterceptor" class="${exceptionHandlerPackage}.ExceptionInterceptor"></interceptor>
+			<interceptor-stack name="mdarteStack">
+				<interceptor-ref name="MDArteExceptionInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="mdarteStack"></default-interceptor-ref>
+
+		<global-results>
+			<result name="entrar.login" type="redirect">
+				<param name="location">/secure/entrar-login.jsp</param>
+				<param name="parse">true</param> 
+				<param name="nextPath">${nextPath}</param>
+			</result>
+			<result name="troca.de.senha.obrigatoria">/secure/troca-de-senha-obrigatoria.jsp</result>
+		</global-results>
+	</package>
+</struts>
+#end

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    #if(!$modulos)
+    <classpathentry kind="src" path="core/src/java"/>
+    <classpathentry kind="src" path="core/target/src"/>
+    <classpathentry kind="src" path="web/src/java"/>
+    <classpathentry kind="src" path="web/target/src"/>
+    #else
+    <classpathentry kind="src" path="core/cd/src/java"/>
+    <classpathentry kind="src" path="core/cd/target/src"/>
+    #end
+    <classpathentry kind="src" path="common/src/java"/>
+    <classpathentry kind="src" path="common/target/src"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="output" path="target/classes"/>
+</classpath>

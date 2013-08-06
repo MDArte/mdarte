@@ -1,0 +1,3 @@
+<jboss-web>
+	<context-root>/${projectId}/help</context-root>
+</jboss-web>

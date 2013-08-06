@@ -1,0 +1,41 @@
+<%@ include file="/taglib-imports.jspf" %>
+
+
+<tiles:insert definition="login.layout">
+
+    <tiles:put name="title" type="string">
+        <bean:message key="login.entrar.login.title"/>
+    </tiles:put>
+
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+
+    <tiles:put name="style" type="string">
+        <link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${login}/entrar-login.css"/>"></link>
+    </tiles:put>
+
+    <tiles:put name="javascript" type="string">
+        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/form-validation.jsp"/>"></script>
+        <html:javascript formName="loginEntrarLoginValidarForm" method="validateEntrarLoginValidarFormImpl" dynamicJavascript="true" staticJavascript="false" htmlComment="true" cdata="false"/>
+    	<script type="text/javascript" language="Javascript1.1">
+        //<!--
+            var HINTS_ITEMS = {
+                'login.entrar.login.param.login.title':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.param.login.title"/></formatting:escape>',
+                'login.entrar.login.param.senha.title':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.param.senha.title"/></formatting:escape>',
+                'validar':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title"/></formatting:escape>',
+                'validar_no':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.notallowed"/></formatting:escape>',
+                'validar_reset':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.reset"/></formatting:escape>',
+                'validar_noreset':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.reset.not.allowed"/></formatting:escape>',
+                'calendar.popup':'<formatting:escape language="javascript"><bean:message key="calendar.popup"/></formatting:escape>'
+            };
+
+            var hints = new Hints (HINTS_ITEMS);
+        //-->
+    	</script>
+    </tiles:put>
+
+<tiles:put name="body" type="string">
+   <tiles:insert page="${login}/entrar-login-actions.jsp" flush="false"/>
+</tiles:put>
+
+</tiles:insert>

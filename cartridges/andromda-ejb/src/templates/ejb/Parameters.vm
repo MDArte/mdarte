@@ -1,0 +1,121 @@
+#macro (renderParametersWSPaginacao $operation $listaAtributos $nome)
+#foreach($parametro in $operation.parameters)
+#if(!$parametro.return)
+#set($classe = $parametro.type.fullyQualifiedName)
+#set($classe = $stringUtils.replace("${classe}", "$modelPackageName", "$wsdPackageName"))
+#if($stringUtils.indexOf("$classe", "$wsdPackageName") > 0)
+#set($classe = "${classe}WS")
+#set($name = "${parametro.name}")
+#else
+#set($name = "${parametro.name}")
+#end
+#if($nome)
+#set($attName = "$classe $name")
+#else
+#set($attName = "$classe")
+#end
+#if($stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$attName")
+#else
+#set($listaAtributos = "$listaAtributos, $attName")
+#end
+#end
+#end  ##fim foreach $parametro
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#if($nome)
+#set($attName = "java.lang.Integer paginacao")
+#else
+#set($attName = "java.lang.Integer")
+#end
+#if(!$stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$listaAtributos, $attName")
+#else
+#set($listaAtributos = "$attName")
+#end
+#end
+#end
+
+#macro (renderReturnWS $operation $return)
+#set($classe = $operation.returnType.fullyQualifiedName)
+#set($classe = $stringUtils.replace("${classe}", "$modelPackageName", "$wsdPackageName"))
+#if($stringUtils.indexOf("$classe", "$wsdPackageName") > 0)
+#set($return = "${classe}WS")
+#else
+#set($return = ${classe})
+#end
+#end
+
+#macro (renderParametersWS $operation $listaAtributos $nome)
+#foreach($parametro in $operation.parameters)
+#if(!$parametro.return)
+#set($classe = $parametro.type.fullyQualifiedName)
+#set($classe = $stringUtils.replace("${classe}", "$modelPackageName", "$wsdPackageName"))
+#if($stringUtils.indexOf("$classe", "$wsdPackageName") > 0)
+#set($classe = "${classe}WS")
+#set($name = "${parametro.name}")
+#else
+#set($name = "${parametro.name}")
+#end
+#if($nome)
+#set($attName = "$classe $name")
+#else
+#set($attName = "$classe")
+#end
+#if($stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$attName")
+#else
+#set($listaAtributos = "$listaAtributos, $attName")
+#end
+#end
+#end  ##fim foreach $parametro
+#end
+
+#macro (renderParametersPaginacao $operation $listaAtributos $nome)
+#foreach($parametro in $operation.parameters)
+#if(!$parametro.return)
+#set($classe = $parametro.type.fullyQualifiedName)
+#set($name = "${parametro.name}")
+#if($nome)
+#set($attName = "$classe $name")
+#else
+#set($attName = "$classe")
+#end
+#if($stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$attName")
+#else
+#set($listaAtributos = "$listaAtributos, $attName")
+#end
+#end
+#end  ##fim foreach $parametro
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#if($nome)
+#set($attName = "java.lang.Integer paginacao")
+#else
+#set($attName = "java.lang.Integer")
+#end
+#if(!$stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$listaAtributos, $attName")
+#else
+#set($listaAtributos = "$attName")
+#end
+#end
+#end
+
+#macro (renderParameters $operation $listaAtributos $nome)
+#foreach($parametro in $operation.parameters)
+#if(!$parametro.return)
+#set($classe = $parametro.type.fullyQualifiedName)
+#set($name = "${parametro.name}")
+#if($nome)
+#set($attName = "$classe $name")
+#else
+#set($attName = "$classe")
+#end
+#if($stringUtils.isEmpty($listaAtributos))
+#set($listaAtributos = "$attName")
+#else
+#set($listaAtributos = "$listaAtributos, $attName")
+#end
+#end
+#end  ##fim foreach $parametro
+#end

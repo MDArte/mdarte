@@ -1,0 +1,87 @@
+
+
+
+
+
+
+
+
+
+
+#if($oAuthServer == "true")
+// license-header java merge-point
+#set ($generatedFile = "AccTokenUC.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+/**
+ * 
+ */
+ 
+import java.util.ArrayList;
+import java.util.Iterator; 
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import accessControl.OAuthImpl;
+
+import java.io.OutputStream;
+
+import net.oauth.OAuth;
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthMessage;
+import net.oauth.SimpleOAuthValidator;
+import net.oauth.server.OAuthServlet;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+public final class AccTokenUC extends Action
+{
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+		//Tem que receber a mensagem e validá-la, depois gerar o token
+		
+		
+		try{
+			OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
+			OAuthAccessor accessor = OAuthImpl.getInstance().gerarAccessToken(requestMessage);
+			
+			if(accessor==null){
+				//Usuário inválido
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			}
+				
+			
+            
+
+    
+            
+            
+            response.setContentType(OAuth.FORM_ENCODED);
+    		response.setHeader("Cache-Control", "no-cache");
+    		
+            OutputStream out = response.getOutputStream();
+            OAuth.formEncode(OAuth.newList(OAuth.OAUTH_TOKEN, accessor.accessToken,
+            							   OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret),out);
+            out.flush();
+            out.close();
+			
+			}catch (Exception e){
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+			return null;
+    }
+
+	
+
+}
+#end

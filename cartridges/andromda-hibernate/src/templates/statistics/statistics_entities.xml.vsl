@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<statistics>
+	<application>${projectId}</application>
+	<type>entities</type>
+	<entities>
+#foreach($entity in $entities)
+		<entity>
+			<name>${entity.packageName}.${entity.name}</name>
+			<implementationName>${entity.fullyQualifiedEntityImplementationName}</implementationName>
+#if($entity.generalization)
+			<extends>${entity.generalization.packageName}.${entity.generalization.name}</extends>
+#end
+			<attributes>
+				<size>${entity.attributes.size()}</size>
+#foreach ($attribute in $entity.attributes)
+#set ($typeName = $attribute.type.fullyQualifiedName)
+#if ($attribute.containsEmbeddedObject)
+#set ($typeName = $attribute.type.fullyQualifiedEntityName)
+#end
+#set ($identifier = "false")
+#if (${attribute.identifier})
+#set ($identifier = "true")
+#end
+				<attribute identifier="${identifier}">
+					<name>${attribute.name}</name>
+					<type>${typeName}</type>
+				</attribute>
+#end
+			</attributes>
+			<methods>
+#set ($methodsTotal = ${entity.attributes.size()} * 2)
+				<size>${methodsTotal}</size>
+#foreach ($attribute in $entity.attributes)
+#set ($typeName = $attribute.type.fullyQualifiedName)
+#if ($attribute.containsEmbeddedObject)
+#set ($typeName = $attribute.type.fullyQualifiedEntityName)
+#end
+				<method modifier="true">
+					<name>${attribute.setterName}</name>
+					<return>
+						<type>void</type>
+					</return>
+					<parameters>
+						<size>1</size>
+						<parameter>
+							<name>${attribute.name}</name>
+							<type>${typeName}</type>
+						</parameter>
+					</parameters>
+				</method>
+				<method modifier="false">
+					<name>${attribute.getterName}</name>
+					<return>
+						<type>$typeName</type>
+					</return>
+					<parameters>
+						<size>0</size>
+					</parameters>
+				</method>
+#end
+			</methods>
+			<dao>
+				<name>${entity.packageName}.${entity.name}DAO</name>
+				<implementationName>${entity.packageName}.${entity.name}DAOImpl</implementationName>
+				<methodNames>
+					<methodName>filter(br.ufrj.coppetec.DataObject, java.lang.Integer)</methodName>
+					<methodName>select(long)</methodName>
+					<methodName>list(java.lang.Integer, java.lang.String, java.lang.Boolean)</methodName>
+					<methodName>list()</methodName>
+					<methodName modifier="true">insert(${customTypesPackage}.${modelPackageName}.AbstractEntity)</methodName>
+					<methodName modifier="true">update(${customTypesPackage}.${modelPackageName}.AbstractEntity)</methodName>
+					<methodName modifier="true">insertOrUpdate(${customTypesPackage}.${modelPackageName}.AbstractEntity)</methodName>
+					<methodName modifier="true" delete="true">delete(${customTypesPackage}.${modelPackageName}.AbstractEntity)</methodName>
+				</methodNames>
+			</dao>
+#if (${entity.associationEnds.size()} > 0)
+			<associations>
+#foreach ($sourceEnd in ${entity.associationEnds})
+#set ($otherEnd = ${sourceEnd.otherEnd})
+				<association#if (${sourceEnd.one2One}) oneToOne="true"#elseif ($sourceEnd.one2Many) oneToMany="true"#elseif ($sourceEnd.many2One) manyToOne="true"#elseif ($sourceEnd.many2Many) manyToMany="true"#end #if (${otherEnd.navigable}) navigable="true"#end>${otherEnd.name}</association>
+#end
+			</associations>
+#end
+		</entity>
+#end
+	</entities>
+	<entitiesTotal>${entities.size()}</entitiesTotal>
+</statistics>

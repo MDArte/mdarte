@@ -1,0 +1,10 @@
+## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($modulo == 'true')
+#foreach ($message in $useCase.messages.entrySet())
+#if ($message.value)
+$message.key=$message.value
+#else
+$message.key=
+#end
+#end
+#end

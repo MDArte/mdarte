@@ -1,0 +1,11 @@
+#set ($generatedFile = "$stringUtils.replace($customTypesPackage, '.', '/')/UtilServiceHandler.java")
+package ${customTypesPackage};
+
+public interface UtilServiceHandler extends javax.ejb.EJBObject, UtilServiceHandlerBI{
+
+	public void clearSecondCache() throws java.rmi.RemoteException;
+
+#if ($securityRealm)
+	public void reloadAccessControl() throws java.rmi.RemoteException;
+#end
+}

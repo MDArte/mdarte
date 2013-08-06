@@ -1,0 +1,167 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:u="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+
+#set($open = "${")
+#set($end = "}")
+
+    <goal name="install" prereqs="layout:install"/>
+
+    <goal name="layout:install">
+        <ant:mkdir dir="${open}basedir${end}/target/src"/>
+        <ant:mkdir dir="${open}basedir${end}/target/classes"/>
+        <ant:mkdir dir="${open}basedir${end}/src/java"/>    
+
+        <ant:path id="web.classpath">
+            <ant:path refid="maven.dependency.classpath"/>
+            <ant:path location="${maven.build.dest}"/>
+        </ant:path>
+
+        <ant:path id="compile">
+            <ant:pathelement path="${open}basedir${end}/target/src"/>
+            <ant:pathelement path="${open}basedir${end}/src/java/"/>
+        </ant:path>
+
+        <ant:javac destdir="${open}basedir${end}/target/classes" includes="**/*.java" debug="on">
+            <ant:src>
+                <ant:path refid="compile"/>
+            </ant:src>
+            <ant:classpath>
+                <ant:path refid="maven.dependency.classpath"/>
+            </ant:classpath>
+        </ant:javac>
+
+        <maven:maven
+            descriptor="${open}basedir${end}/project.xml"
+            goals="war:install"/>
+    </goal>
+
+    <ant:property environment="env"/>
+
+    <j:set var="deployDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy"/>
+    <goal name="deploy" prereqs="undeploy">
+        <j:choose>
+           <j:when test="${deployExploded}">
+               <ant:copy todir="${deployDirectory}/${pom.artifactId}${artifactIdSuffix}">
+                   <ant:fileset dir="${maven.war.webapp.dir}"/>
+               </ant:copy>
+           </j:when>
+           <j:otherwise>
+               <ant:copy file="${user.home}/.maven/repository/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"
+                       tofile="${deployDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"/>
+           </j:otherwise>
+       </j:choose>
+    </goal>
+
+    <goal name="undeploy">
+        <ant:delete includeEmptyDirs="true">
+            <ant:fileset dir="${deployDirectory}">
+                <ant:include name="${pom.artifactId}${artifactIdSuffix}*.war"/>
+            </ant:fileset>
+        </ant:delete>
+    </goal>
+
+    <preGoal name="layout:install">
+        <ant:copy todir="${open}basedir${end}">
+            <fileset dir="${open}basedir${end}/../modelo/compartilhado/">
+                <include name="**/*layout-configuration.jsp"/>
+                <include name="**/*LayoutConfiguration*.java"/>
+            </fileset>
+        </ant:copy>
+        <ant:copy todir="${maven.war.webapp.dir}/WEB-INF/classes" overwrite="true">
+            <ant:fileset dir="${open}basedir${end}/../modelo/compartilhado/target/src/WEB-INF/classes">
+                <include name="**/*.tld"/>
+            </ant:fileset>
+        </ant:copy>
+        <ant:copy todir="${maven.war.webapp.dir}/WEB-INF/lib" overwrite="true">
+            <ant:fileset dir="${open}basedir${end}/../modelo/compartilhado/target/src/WEB-INF/lib">
+                <include name="**/*"/>
+            </ant:fileset>
+        </ant:copy>
+        <u:available file="${maven.src.dir}/java">
+            <ant:copy todir="${maven.war.webapp.dir}" overwrite="true">
+                <ant:fileset dir="${maven.src.dir}/java">
+                    <include name="**/*"/>
+                    <exclude name="**/*.java"/>
+                </ant:fileset>
+            </ant:copy>
+        </u:available>
+        <u:available file="${maven.src.dir}/jsp">
+            <ant:copy todir="${maven.war.webapp.dir}" overwrite="true">
+                <ant:fileset dir="${maven.src.dir}/jsp">
+                    <include name="**/*"/>
+                    <exclude name="**/*.java"/>
+                </ant:fileset>
+            </ant:copy>
+        </u:available>
+    </preGoal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <ant:delete>
+            <fileset dir="src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+        <attainGoal name="clean"/>
+    </goal>
+
+    <goal name="earInstall">
+        <j:set var="earDirectory" value="${open}basedir${end}/../../target/ear"/>
+
+        <!-- Copia libs necessarias para o ear -->
+        <j:if test="${packDependencies}">
+            <j:forEach var="dep" items="${open}pom.dependencies${end}">
+                <j:if test= "${open}dep.type == 'jar'${end}">
+                    <j:if test= "${open}dep.groupId != pom.groupId${end}">
+                        <j:if test= "${open}dep.getProperty('jar.manifest.classpath') == 'true'${end}">
+                            <ant:copy todir="${earDirectory}">
+                                <fileset dir="${maven.repo.local}/${dep.groupId}/jars/">
+                                    <include name="${dep.artifact}"/>
+                                    <exclude name="*commons-logging*"/>
+                                </fileset>
+                            </ant:copy>
+                        </j:if>
+                    </j:if>
+                </j:if>
+            </j:forEach>
+        </j:if>
+
+        <!-- Copia .war para a pasta do ear -->
+        <ant:copy file="${maven.repo.local}/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"
+                    tofile="${earDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"/>
+
+        <!-- Gera trecho do arquivo application.xml -->
+        <j:set var="earTempDirectory" value="${open}basedir${end}/../../target/ear/temp"/>
+        <j:file name="${earTempDirectory}/web-layout.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+<module>
+    <web>
+        <web-uri>${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war</web-uri>
+        <context-root>/${projectId}/layout</context-root>
+    </web>
+</module>]]></j:file>
+    </goal>
+
+    <!-- ==================================================================
+       Shows help
+     ================================================================== -->
+    <goal name="help">
+        <ant:echo> 
+
+maven deploy - Copia o war do layout para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target
+
+maven layout:install - Compila o modulo layout e gera o war
+
+        </ant:echo>
+    </goal>
+</project>

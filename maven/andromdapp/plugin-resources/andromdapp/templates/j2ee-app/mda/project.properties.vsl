@@ -1,0 +1,99 @@
+#set($open = "${")
+#set($end = "}")
+
+maven.multiproject.type=pom
+
+projeto=${projectNameNoWhitespace}
+maven.andromda.model.uri=file:${maven.src.dir}/uml/${open}projeto${end}.xml
+
+# Configures AndroMDA
+maven.andromda.configuration.uri=file:${maven.conf.dir}/andromda.xml
+
+# Tells the AndroMDA maven plugin to not use Ant when running (speeds initialization)
+maven.andromda.run.without.ant=true
+
+# Define the output locations for the cartridge dependencies in the project.xml
+
+#if($modulos)
+maven.andromda.module.name.outlet.replace=modulo
+
+maven.andromda.core.dominio.generated.dir=${maven.src.dir}/../../core/cd/target/src
+maven.andromda.core.dominio.manual.dir=${maven.src.dir}/../../core/cd/src/java
+
+maven.andromda.core.ejb.generated.dir=${maven.src.dir}/../../core/cs/compartilhado/target/src
+maven.andromda.core.ejb.manual.dir=${maven.src.dir}/../../core/cs/compartilhado/src/java
+
+maven.andromda.core.modulo.ejb.generated.dir=${maven.src.dir}/../../core/cs/${maven.andromda.module.name.outlet.replace}/target/src
+maven.andromda.core.modulo.ejb.manual.dir=${maven.src.dir}/../../core/cs/${maven.andromda.module.name.outlet.replace}/src/java
+
+maven.andromda.core.initial.generated.dir=${maven.src.dir}/../../core/cs/initial/target/src
+maven.andromda.core.initial.manual.dir=${maven.src.dir}/../../core/cs/initial/src/java
+
+maven.andromda.statistics.dir=${maven.src.dir}/../../statistics/
+
+maven.andromda.web.dir=${maven.src.dir}/../../web/
+maven.andromda.ejb.dir=${maven.src.dir}/../../core/cs
+
+maven.andromda.web.modulo.generated.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/target/src
+maven.andromda.web.modulo.manual.java.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/src/java
+
+maven.andromda.web.manual.jsp.dir=${maven.src.dir}/../../web/modelo/compartilhado/src/jsp
+
+maven.andromda.web.generated.dir=${maven.src.dir}/../../web/modelo/compartilhado/target/src
+maven.andromda.web.manual.java.dir=${maven.src.dir}/../../web/modelo/compartilhado/src/java
+
+maven.andromda.web.modulo.jar.generated.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/compartilhado/target/src
+maven.andromda.web.modulo.jar.manual.java.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/compartilhado/src/java
+maven.andromda.web.jar.generated.dir=${maven.src.dir}/../../web/compartilhado/target/src
+
+maven.andromda.web.controle.acesso.principal.dir=${maven.src.dir}/../../web/controleAcessoPrincipal/target/src
+
+maven.andromda.web.modulo.manual.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/src
+
+maven.andromda.web.src.dir=${maven.src.dir}/../../web/conf
+#else
+maven.andromda.core.generated.dir=${maven.src.dir}/../../core/target/src
+maven.andromda.core.manual.dir=${maven.src.dir}/../../core/src/java
+
+maven.andromda.web.generated.dir=${maven.src.dir}/../../web/target/src
+maven.andromda.web.manual.java.dir=${maven.src.dir}/../../web/src/java
+maven.andromda.web.manual.jsp.dir=${maven.src.dir}/../../web/src/jsp/layout/default
+maven.andromda.web.controle.acesso.principal.dir=${maven.src.dir}/../../web/target/src
+maven.andromda.web.src.dir=${maven.src.dir}/../../web/src/java
+#end
+
+maven.andromda.web.view.test.dir=${maven.src.dir}/../../web/test
+maven.andromda.web.view.test.generated.dir=${maven.src.dir}/../../web/test/target/src
+maven.andromda.web.view.test.manual.dir=${maven.src.dir}/../../web/test/src/java
+
+#if ($workflow)
+maven.andromda.workflow.generated.dir=${maven.src.dir}/../../workflow/target/src
+maven.andromda.workflow.manual.dir=${maven.src.dir}/../../workflow/src
+#end
+
+maven.andromda.test.dir=${maven.src.dir}/../../test
+maven.andromda.test.modulo.generated.dir=${maven.src.dir}/../../test/${maven.andromda.module.name.outlet.replace}/target/src
+maven.andromda.test.modulo.manual.dir=${maven.src.dir}/../../test/${maven.andromda.module.name.outlet.replace}/src/java
+maven.andromda.test.generated.dir=${maven.src.dir}/../../test/model/shared/target/src
+maven.andromda.test.manual.dir=${maven.src.dir}/../../test/model/shared/src/java
+
+maven.andromda.common.manual.dir=${maven.src.dir}/../../common/src/java
+maven.andromda.common.generated.dir=${maven.src.dir}/../../common/target/src
+
+#if ($hibernate || $spring)
+#if ($hibernate)
+# The hibernate transaction manager to use.
+#if ($hibernateVersion == "2")
+hibernate.transaction.manager.lookup=net.sf.hibernate.transaction.JBossTransactionManagerLookup
+#else
+hibernate.transaction.manager.lookup=org.hibernate.transaction.JBossTransactionManagerLookup
+#end
+#end
+# The default strategy to use when using inhertiance
+hibernate.inheritance.strategy=subclass
+hibernate.db.showSql=true
+#if ($spring)
+# The hibernate generator class to use for identifiers
+hibernate.generatorClass=native
+#end
+#end

@@ -1,0 +1,33 @@
+#if ($viewTestEnabled == "true")
+package ${viewTestAccessControlDir};
+
+import ${viewTestBasicDir}.BasicViewTestController;
+
+public class AccessControlViewTest {
+	protected BasicViewTestController viewTestController;
+
+	public AccessControlViewTest(BasicViewTestController viewTestController) {
+		this.viewTestController = viewTestController;
+
+		this.viewTestController.open("/${projectId}/");
+	}
+
+	public void login(String usuario, String senha) {
+		if (usuario != null)
+			viewTestController.type("validarLogin", usuario);
+
+		if (senha != null)
+			viewTestController.type("validarSenha", senha);
+
+		viewTestController.click("//input[@id='form_submit']");
+
+		viewTestController.waitForPageToLoad("${viewTestPageLoad}");
+	}
+
+	public void logout() {
+		viewTestController.open("/${projectId}/secure/NovaConexao.do");
+
+		viewTestController.waitForPageToLoad("${viewTestPageLoad}");
+	}
+}
+#end

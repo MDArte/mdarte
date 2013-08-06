@@ -1,0 +1,68 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+
+#set($open = "${")
+#set($end = "}")
+
+    <goal name="install">
+        <maven:maven
+            descriptor="${open}basedir${end}/cd/project.xml"
+            goals="jar:install"/>
+        <maven:maven
+            descriptor="${open}basedir${end}/cs/project.xml"
+            goals="install"/>
+    </goal>
+
+    <goal name="deploy">
+        <maven:maven
+            descriptor="${open}basedir${end}/cd/project.xml"
+            goals="deploy"/>
+        <maven:maven
+            descriptor="${open}basedir${end}/cs/project.xml"
+            goals="deploy"/>
+    </goal>
+
+    <goal name="lib">
+        <maven:maven
+            descriptor="${open}basedir${end}/cd/project.xml"
+            goals="lib"/>
+        <maven:maven
+            descriptor="${open}basedir${end}/cs/project.xml"
+            goals="lib"/>
+     </goal>
+
+    <goal name="undeploy">
+        <maven:maven
+            descriptor="${open}basedir${end}/cd/project.xml"
+            goals="undeploy"/>
+        <maven:maven
+            descriptor="${open}basedir${end}/cs/project.xml"
+            goals="undeploy"/>
+     </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo> 
+
+maven install - Compila o conteudo da pasta core e gera os jars (e equivalente a executar um maven core na raiz,e o default desta pasta)
+
+maven deploy - Copia os jars do core para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target 
+
+        </ant:echo>
+    </goal>
+
+    <!-- ==================================================================
+             Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+     <goal name="nuke">
+         <j:set var="goal" value="nuke"/>
+         <attainGoal name="multiproject:goal"/>
+         <attainGoal name="clean"/>
+     </goal>
+</project>

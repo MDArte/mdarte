@@ -1,0 +1,102 @@
+#set ($generatedFile = "error-page.jsp")
+<%@ page session="true" isErrorPage="true" %>
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+
+#if ($xhtml == "true")
+#*
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+*#
+<html:xhtml/>
+
+#else
+#*
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+*#
+
+#end
+<html:html lang="true">
+
+    <head>
+        <title><bean:message key="error.${param.code}.title"/></title>
+        <html:base/>
+#if ($xhtml == "true")
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset:utf-8" />
+#else
+        <meta http-equiv="Content-Type" content="text/html; charset:utf-8" />
+#end
+<%-- uncomment this to enable the browser 'favorites' icons
+        <link rel="shortcut icon" href="my-custom-image.ico"></link>
+        <link rel="icon" type="image/gif" href="my-custom-image.gif"></link>
+--%>
+        <link rel="stylesheet" type="text/css" media="screen" href="${strURL}${contextoPrincipal}/layout/${layout}/default-application.css"></link>
+        <link rel="stylesheet" type="text/css" media="screen" href="${strURL}${contextoPrincipal}/layout/${layout}/default/style-default.css"></link>
+    </head>
+
+    <body>
+    <div id="messages">
+    <logic:messagesPresent message="true" property="$errorMessagesKey">
+        <div class="errors">
+            <html:messages id="error" message="true" property="$errorMessagesKey">
+                <div class="error">${error}</div>
+            </html:messages>
+        </div>
+    </logic:messagesPresent>
+    ## prints warning messages stored by the controllers
+    <logic:messagesPresent message="true" property="$warningMessagesKey">
+        <div class="warnings">
+            <html:messages id="warning" message="true" property="$warningMessagesKey">
+                <div class="warning">${warning}</div>
+            </html:messages>
+        </div>
+    </logic:messagesPresent>
+    </div>
+    
+        <div id="error">
+            <div id="title"><bean:message key="error.${param.code}.title"/></div>
+            <div id="message"><bean:message key="error.${param.code}.message"/></div>
+            <div id="link"><html:link page="/$welcomeFileName" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
+#set ($quote = '"')
+#set ($requestScopePrefix = "requestScope[${quote}")
+#set ($requestScopeSuffix = "${quote}]")
+#set ($requestUri = "${requestScopePrefix}javax.servlet.error.request_uri${requestScopeSuffix}")
+#set ($exception = "${requestScopePrefix}javax.servlet.error.exception${requestScopeSuffix}")
+            <c:if test="${param.exception}">
+                <div class="details">
+                    <code>${${exception}}</code>
+                </div>
+            </c:if>
+            <c:if test="${param.resource}">
+                <div class="details">
+                    ${${requestUri}}
+                </div>
+            </c:if>
+        </div>
+        
+<!--        <%Exception e = 
+                    	(Exception)request.getAttribute("javax.servlet.error.exception");
+    			          if(e != null){
+    			          	       java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+    			          	       java.io.PrintStream ps = new java.io.PrintStream(baos);
+    			          	       e.printStackTrace(ps);
+    			          	       String stackTrace = baos.toString();
+    			          	       request.getSession().getServletContext().getContext("${contextoPrincipal}").setAttribute("stackTrace", stackTrace);
+					 		           %> 
+							            <script> 
+    					            function stackTrace(){ 
+    				                   	window.open('${contextoPrincipal}/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
+    				            	    }	
+    				        </script>
+    				             <div style="text-align:left;">
+    				<a href="javascript:stackTrace();void(0);"\>
+    				             <bean:message key="error.stack.trace"/></a>
+   			</div> 
+    				-->         
+            
+    			<%}%>
+        
+    </body>
+
+</html:html>

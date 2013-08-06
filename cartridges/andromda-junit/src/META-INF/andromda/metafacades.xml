@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+	<!-- contains the junit cartridge metafacade mappings -->
+<metafacades>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitPackageLogicImpl">
+		<mapping>
+			<stereotype>TEST_MODULE</stereotype>
+		</mapping>
+		<property reference="testContext"/>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitProcessDefinitionLogicImpl">
+		<mapping>
+			<stereotype>TEST_PROCESS</stereotype>
+		</mapping>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitActivityGraphLogicImpl">
+		<mapping
+			class="org.omg.uml.behavioralelements.activitygraphs.ActivityGraph$Impl">
+			<property name="containedInProcess" />
+		</mapping>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitSwimlaneLogicImpl">
+		<mapping>
+			<property name="containedInProcess" />
+		</mapping>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitPseudostateLogicImpl">
+		<mapping
+			class="org.omg.uml.behavioralelements.statemachines.Pseudostate$Impl">
+			<property name="containedInProcess" />
+		</mapping>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitNodeLogicImpl">
+		<mapping
+			class="org.omg.uml.behavioralelements.activitygraphs.ActionState$Impl">
+			<property name="containedInProcess" />
+		</mapping>
+	</metafacade>
+
+	<metafacade
+		class="org.andromda.cartridges.junit.metafacades.JUnitTransitionLogicImpl">
+		<mapping
+			class="org.omg.uml.behavioralelements.statemachines.Transition$Impl">
+			<property name="containedInProcess" />
+		</mapping>
+	</metafacade>
+
+</metafacades>

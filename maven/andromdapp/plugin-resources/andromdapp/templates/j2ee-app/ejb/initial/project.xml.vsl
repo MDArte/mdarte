@@ -1,0 +1,64 @@
+#set($generatedFile = "initial/project.xml")
+##
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <extend>../project.xml</extend>
+    <artifactId>${pom.groupId}-initial</artifactId>
+    <name>${projectName} Initial Service</name>
+    <currentVersion>${application.version}</currentVersion>
+    <shortDescription>${pom.name} Component</shortDescription>
+    <description>
+        Contains the ${pom.name}-initial SAR.
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>${pom.groupId}-mda</artifactId>
+            <version>${pom.currentVersion}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>${pom.groupId}-compartilhado</artifactId>
+            <version>${application.version}</version>
+            <type>ejb</type>
+            <properties>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-system</artifactId>
+            <version>${jboss.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>jbossall-client</artifactId>
+            <version>${jboss.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>security</groupId>
+            <artifactId>security</artifactId>
+            <version>${security.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+    </build>
+</project>

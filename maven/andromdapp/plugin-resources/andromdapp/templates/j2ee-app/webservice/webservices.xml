@@ -1,0 +1,20 @@
+<webservices xmlns="http://java.sun.com/xml/ns/j2ee"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd" version="1.1">
+<!--Quando usar web Service lembrar de descomentar a linha do wsCompile no core/maven.xml--> 
+
+<!--<webservice-description>
+		<webservice-description-name>String de descricao do Servico</webservice-description-name>
+		<wsdl-file>META-INF/wsdl/Nome do arquivo WSDL, gerado automaticamente</wsdl-file>
+		<jaxrpc-mapping-file>META-INF/ControleMensagensHandler-mapping.xml</jaxrpc-mapping-file>
+		<port-component>
+			<port-component-name>nome interface remota do Session bean</port-component-name>
+			<wsdl-port>Nome do elemento "PORT" do arquivo WSDL</wsdl-port>
+			<service-endpoint-interface>Identificador da interface Remota do Session bean</service-endpoint-interface>
+			<service-impl-bean>
+				<ejb-link>Identificador da classe que implementa o Session bean</ejb-link>
+			</service-impl-bean>
+		</port-component>
+	</webservice-description>-->
+
+</webservices>

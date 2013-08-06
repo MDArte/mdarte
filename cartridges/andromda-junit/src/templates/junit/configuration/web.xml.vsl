@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+   PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+   "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+	<servlet>
+		<servlet-name>TestflowServlet</servlet-name>
+		<servlet-class>br.ufrj.testflow.web.servlet.TestflowServlet</servlet-class>
+
+		<!-- test cases -->
+##
+#foreach ($testCase in $package.testCases)
+#set ($testCaseName = "$stringUtils.upperCamelCaseName($testCase.name)")
+#set ($className = "${testCaseName}JUnit")
+#set ($packageName = $testCase.packageName)
+		<init-param>
+			<param-name>${testCaseName}</param-name>
+			<param-value>${packageName}.${innerJUnitPackage}.${className}</param-value>
+		</init-param>
+#end
+##
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>TestflowServlet</servlet-name>
+		<url-pattern>/${testWebRoot}/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+</web-app>

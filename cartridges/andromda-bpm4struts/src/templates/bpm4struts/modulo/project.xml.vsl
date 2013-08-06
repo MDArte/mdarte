@@ -1,0 +1,29 @@
+#set($generatedFile = "${package.name}/project.xml")
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../project.xml</extend>
+#set ($artifactIdSuffix = "-web")
+    <artifactId>${pom.groupId}-${package.name}${artifactIdSuffix}</artifactId>
+    <name>${projectName} ${package.name} Web</name>
+    <currentVersion>${application.version}</currentVersion>
+    <shortDescription>${pom.name} ${package.name} Web Component</shortDescription>
+    <description>
+        Contains the ${pom.name}-${package.name}'s web module.
+    </description>
+	#if($oAuthServer  == "true")
+  <dependencies>
+        <dependency>
+            <groupId>oauth</groupId>
+            <artifactId>oauth-core</artifactId>
+            <version>${oauthcore.version}</version>
+            <type>jar</type>
+        </dependency>
+		<dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
+            <type>jar</type>
+        </dependency>
+  </dependencies>
+  #end
+</project>

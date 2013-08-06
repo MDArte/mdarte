@@ -1,0 +1,162 @@
+#if($oAuthServer == "true")
+package $controleAcessoDir;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.security.auth.Subject;
+
+import net.oauth.OAuth;
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthException;
+import net.oauth.OAuthMessage;
+import net.oauth.SimpleOAuthValidator;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+/*
+	Esta classe contém uma implementação BÁSICA sugerida, seu código deve
+	ser adaptado para que fique adequado às necessidades do projeto
+*/
+public class OAuthImpl {
+	private static OAuthImpl INSTANCE;
+	private OAuthImpl(){
+	}
+	public static OAuthImpl getInstance(){
+		if(INSTANCE==null){
+			INSTANCE=new OAuthImpl();
+		}
+		return INSTANCE;
+	}
+	//Mapa Request token e accessor
+	private Map<String , OAuthAccessor> tokens = new HashMap<String , OAuthAccessor>();
+	// Mapa Request token e verifier
+	private Map<String , String> autorizados = new HashMap<String , String>();
+	//Mapa Request token e subjects
+	private Map<String , Subject> subjects = new HashMap<String , Subject>();
+	//Mapa Access token e subjects
+	private Map<String , Subject> subjectsAutorizados = new HashMap<String , Subject>();
+	
+	public void gerarRequestToken(OAuthAccessor accessor){
+		
+		String consumer_key = (String) accessor.consumer.getProperty("name");
+        
+		/*
+		 * Gerando Token, como exemplo é utilizado o md5 da chave + tempo atual
+		 */
+        String token_data = consumer_key + System.nanoTime();
+        String token = DigestUtils.md5Hex(token_data);
+        
+        /*
+		 * Gerando TokenSecret, como exemplo é utilizado o md5 da
+		 *  chave + tempo atual +token
+		 */
+        String secret_data = consumer_key + System.nanoTime() + token;
+        String secret = DigestUtils.md5Hex(secret_data);
+        
+        accessor.requestToken = token;
+        accessor.tokenSecret = secret;
+        accessor.accessToken = null;
+		
+		
+        synchronized (tokens) {
+        	tokens.put(token,accessor);
+        }
+	}
+	public OAuthAccessor gerarAccessToken(OAuthMessage requestMessage) throws IOException,URISyntaxException,OAuthException{
+		/*
+		 * A mensagem contém o "consumerKey" este deve ser utilizado para
+		 * buscar numa base de dados o "callbackUrl" e o "consumetSecret"
+		 */
+		OAuthAccessor accessor = getAccessor(requestMessage.getToken());
+		new SimpleOAuthValidator().validateMessage(requestMessage, accessor);
+		
+		
+		
+		/*
+		 * Depois de validar a mensagem devo utilizar o verifier para 
+		 * verificar se o usuário que está fazendo a requisição é o mesmo
+		 * que autorizou
+		 * 
+		 */
+		String reqToken = requestMessage.getToken();
+		removeAccessor(reqToken);
+		if(!validaUsuario(requestMessage.getParameter(OAuth.OAUTH_TOKEN),requestMessage.getParameter(OAuth.OAUTH_VERIFIER))){
+			return null;
+		}
+		
+		
+		// generate oauth_token and oauth_secret
+        String consumer_key = (String) accessor.consumer.getProperty("name");
+        // generate token and secret based on consumer_key
+        
+        // for now use md5 of name + current time as token
+        String token_data = consumer_key + System.nanoTime()+"access";
+        String token = DigestUtils.md5Hex(token_data);
+        // for now use md5 of name + current time + token as secret
+        String secret_data = consumer_key + System.nanoTime() + token+"access";
+        String secret = DigestUtils.md5Hex(secret_data);
+        
+        accessor.requestToken = null;
+        accessor.tokenSecret = secret;
+        accessor.accessToken = token;
+        
+        Subject subject = subjects.get(reqToken);
+        subjects.remove(reqToken);
+        
+        subjectsAutorizados.put(accessor.accessToken, subject);
+        
+        return accessor;
+		
+	}
+	public String getConsumerSecret(String consumerKey){
+		/*
+		 * A chave secreta deve estar acessível no servidor de alguma forma.
+		 * Provavelmente armazenada no banco, no momento em que o consumer
+		 * se cadastrou.
+		 */
+		//Estou retornando uma String estática como exemplo
+		return "secret";
+	}
+	public OAuthAccessor getAccessor(String requestToken){
+		synchronized (tokens) {
+			return tokens.get(requestToken);
+		}
+	}
+	public void removeAccessor(String requestToken){
+		synchronized (tokens) {
+			tokens.remove(requestToken);
+		}
+	}
+	public void addAutorizado(String token, String verifier){
+		autorizados.put(token, verifier);
+	}
+	public void addSubject(String reqToken, Subject subject){
+		subjects.put(reqToken, subject);
+	}
+	public Subject getSubject(String accToken){
+		return subjectsAutorizados.get(accToken);
+	}
+	public boolean validaUsuario(String token, String verifier) {
+		String verificadorSalvo = autorizados.get(token);
+		if(verificadorSalvo!=null && verificadorSalvo.equals(verifier)){
+			return true;
+		}
+		return false;
+	}
+	private static final String ALFABETO="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public String gerarVerifier(){
+		//Estou gerando uma String aleatória como verificador
+		StringBuffer resposta = new StringBuffer();
+		for(long tempo = System.currentTimeMillis();tempo>0;tempo/=10){
+			char letra = ALFABETO.charAt((int)(Math.random()*ALFABETO.length()));
+			resposta.append(letra);
+			resposta.append(tempo%10);
+		}
+		return resposta.toString();
+	}
+
+}
+#end

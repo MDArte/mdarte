@@ -1,0 +1,17 @@
+#set ($generatedFile = "DAOException.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+public class DAOException extends Exception {
+
+	public DAOException(Exception e) {
+		super(e);
+	}
+
+	public DAOException(String message) {
+		super(message);
+	}
+
+}

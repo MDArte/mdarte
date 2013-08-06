@@ -1,0 +1,849 @@
+<cartridge>
+	<templateEngine>
+        <macrolibrary name="templates/ejb/Parameters.vm"/>
+        <macrolibrary name="templates/ejb/SessionEJBGlobals.vm"/>
+        
+        <!-- cartridge-macrolibrary merge-point-->
+    </templateEngine>
+
+    <!-- define the template objects that are made availble to the template -->
+    <templateObject name="stringUtils" className="org.andromda.utils.StringUtilsHelper"/>
+    <templateObject name="transform" className="org.andromda.cartridges.ejb.EJBScriptHelper"/>
+    <templateObject name="ejbUtils" className="org.andromda.cartridges.ejb.EJBUtils"/>
+    <!-- cartridge-templateObject merge-point-->
+
+    <!-- cartridge-property merge-point-->
+    <property reference="exportPackageName"/>
+	<property reference="modelPackageName"/>
+	<property reference="wsdPackageName"/>
+	<property reference="servicePackageName"/>
+	<property reference="webPackageName"/>     
+	<property reference="transferPackageName"/>     
+	<property reference="actionPackageName"/>     
+    <property reference="serviceLocatorName" />  
+    <property reference="CRUDStereotype" />  
+    <property reference="xmlEncoding" /> 
+    <property reference="customTypesPackage"/>    
+    <property reference="securityRealm"/>       
+    <property reference="webSrv"/>
+    <property reference="JMSConnectionFactory"/>
+    <property reference="JMSQueue"/>
+    <property reference="defaultQueue"/>
+    <property reference="controleAcessoDir" />
+    <property reference="modulo"/>
+    <property reference="utilDir" />
+	<property reference="loggerPackage"/>
+    <property reference="loggerName"/>    
+	<property reference="maxSizeClass"/>
+	<property reference="operationSecurityImplicit"/>
+	<property reference="operationSecurityCode"/>	
+	<property reference="projectId"/>
+	<property reference="projectVersion"/>
+	<property reference="JMSQueueRedeliveryDelay"/>
+	<property reference="JMSQueueRedeliveryLimit"/>
+	<property reference="JMSQueueMaxDepth"/>
+	<property reference="JMSQueueMessageCounterHistoryDayLimit"/>
+	<property reference="ServiceFactorySelectNodeName"/>
+	<property reference="mavenRepoProject"/>
+	<property reference="demanda"/>
+	<property reference="webServiceComAutenticacao"/>
+	<property reference="oAuthServer"/>
+	<property reference="dataSourceName"/>
+	<property reference="ejb3"/>
+
+	<!-- cartridge-resource merge-point -->    
+    
+    <template
+        path="templates/ejb/modulo/maven.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/modulo/project.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="false">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/modulo/EJBMaven.xml.vsl"
+        outputPattern="maven.xml"
+        outlet="project-configuration"
+        overwrite="true"
+        outputToSingleFile="true">
+        <modelElements variable="packages">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/modulo/compartilhadoProject.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="false">
+    </template>
+    
+    <template
+        path="templates/ejb/modulo/compartilhadoMaven.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="true"
+        outputToSingleFile="true">
+    </template>
+
+    <template
+        path="templates/ejb/entityBean/EntityBean.vsl"
+        outputPattern="{0}/{1}Bean.java"
+        outlet="entity-beans"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.EJBEntityFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/entityBean/EntityLocal.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="entity-beans"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.EJBEntityFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/entityBean/EntityHome.vsl"
+        outputPattern="{0}/{1}LocalHome.java"
+        outlet="entity-beans"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.EJBEntityFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/entityBean/EntityBeanImpl.vsl"
+        outputPattern="{0}/{1}BeanImpl.java"
+        outlet="entity-impls"
+        overwrite="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.EJBEntityFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+<!--
+     The following definitions map services to session beans.
+     The templates map a service to a session bean
+     and the template itself decides to generate a stateless or stateful
+     session bean, based on the fact that the UML class contains attributes or not.
+     (Matthias Bohlen)
+-->
+
+    <template
+        path="templates/ejb/webservice/webServiceInterface.vsl"
+        outputPattern="{0}/{1}Srv.java"
+        outlet="session-beans"
+        overwrite="true">
+        <modelElements>
+            <modelElement variable="service">
+            	<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/mdb/MessageDrivenBean.vsl"
+        outputPattern="{0}/{1}Bean.java"
+        outlet="messageDriven-beans"
+        overwrite="true">
+        <modelElements variable="messageDriven">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/mdb/MessageDrivenBeanImpl.vsl"
+        outputPattern="{0}/{1}BeanImpl.java"
+        outlet="messageDriven-impls"
+        overwrite="false">
+        <modelElements variable="messageDriven">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/mdb/MessageDrivenBeanClient.vsl"
+        outputPattern="{0}/{1}MDBClient.java"
+        outlet="shared-messageDrivenClient-beans"
+        overwrite="true">
+		<modelElements variable="messageDrivenClient">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanClientFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/mdb/MessageDrivenBeanClientImpl.vsl"
+        outputPattern="{0}/{1}MDBClientImpl.java"
+        outlet="shared-messageDrivenClient-impls"
+        overwrite="true">
+		<modelElements variable="messageDrivenClient">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanClientFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/AbstractService.java.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecAbstractServiceFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/AbstractServiceBI.java.vsl"
+        outputPattern="{0}/{1}BI.java"
+        outlet="shared-session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecAbstractServiceFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/AbstractServiceImpl.java.vsl"
+        outputPattern="{0}/{1}Impl.java"
+        outlet="session-impls"
+        overwrite="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecAbstractServiceFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/ServiceFactory.java.vsl"
+        outputPattern="{0}/{1}Factory.java"
+        outlet="shared-session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/ServiceFactoryHandleSelectNode.java.vsl"
+        outputPattern="{0}/{1}FactoryHandleSelectNode.java"
+        outlet="shared-session-beans-impl"
+        overwrite="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/SessionBean.vsl"
+        outputPattern="{0}/{1}Bean.java"
+        outlet="session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    
+    <template
+        path="templates/ejb/SessionLocal.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.Service"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+
+    <template
+        path="templates/ejb/Session.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"
+        generateEmptyFiles="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade">
+                    <property name="viewType">remote</property>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+ 
+    <template
+        path="templates/ejb/SessionLocalHome.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.Service"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+
+    <template
+        path="templates/ejb/SessionHome.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"
+        generateEmptyFiles="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade">
+                    <property name="viewType">remote</property>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/SessionBeanImpl.vsl"
+        outputPattern="{0}/{1}BeanImpl.java"
+        outlet="session-impls"
+        overwrite="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+  
+    <template
+        path="templates/ejb/ejb-jar.xml.vsl"
+        outputPattern="META-INF/ejb-jar.xml"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+           <modelElement variable="services">
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement variable="messageBeans">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanFacade"/>
+            </modelElement>
+
+        </modelElements>
+    </template>
+    
+     <template
+        path="templates/ejb/ejb-jar.xml.vsl"
+        outputPattern="META-INF/ejb-jar.xml"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+	<template
+        path="templates/ejb/jboss.xml.vsl"
+        outputPattern="META-INF/jboss.xml"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/jboss.xml.vsl"
+        outputPattern="META-INF/jboss.xml"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="services">
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement variable="messageBeans">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/config.xml.vsl"
+        outputPattern="config.xml"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/config.xml.vsl"
+        outputPattern="config.xml"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="webServices">
+           		<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/config-client.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+            <modelElement variable="client">
+           		<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceClientFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/config-client.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="true">
+        <modelElements>
+            <modelElement variable="client">
+           		<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceClientFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/webservices.xml.vsl"
+        outputPattern="META-INF/webservices.xml"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/webservice/webservices.xml.vsl"
+        outputPattern="META-INF/webservices.xml"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="webServices">
+            	<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/SessionEJBLocator.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="services">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/ejb/SessionBI.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true">
+        <modelElements variable="service">          
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+        </modelElements> 
+    </template>   
+
+    <template
+        path="templates/ejb/controleAcesso/ControleAcessoImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcessoImpl"
+        overwrite="false"
+        outputToSingleFile="true"
+        outputOnEmptyElements="true">
+        <modelElements variable="services">          
+            <modelElement stereotype="DynamicRestriction" />
+        </modelElements>         
+    </template>     
+    
+    <template
+        path="templates/ejb/controleAcesso/LoginModuleImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/ejb/controleAcesso/GenericLoginModule.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/ejb/controleAcesso/GenericLoginModuleImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcessoImpl"
+        overwrite="false">
+    </template>
+    
+    <template
+        path="templates/ejb/controleAcesso/ControleAcessoUtil.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true">
+    </template>     
+
+    <template
+        path="templates/ejb/controleAcesso/Servicos.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="services">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecAbstractServiceFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/controleAcesso/Servicos.json.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcesso"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="services">
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecAbstractServiceFacade"/>
+            </modelElement>
+            <modelElement>
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/ejb/controleAcesso/AccessControlGetterServiceMethods.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcessoPerfilParser"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="services">
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement variable="factories">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+        </modelElements>
+    </template> 
+    
+    <template
+        path="templates/ejb/controleAcesso/AccessControlServiceCode.vsl"
+        outputPattern="$generatedFile"
+        outlet="controleAcessoPerfilParser"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="services">
+                <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
+            </modelElement>
+            <modelElement variable="factories">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecServiceFactoryFacade"/>
+            </modelElement>
+            
+        </modelElements>
+    </template>
+
+    
+   <template
+        path="templates/ejb/util-service/ejb-jar.xml.vsl"
+        outputPattern="META-INF/ejb-jar.xml"
+        outlet="shared-session-beans"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+        
+   <template
+        path="templates/ejb/util-service/jboss.xml.vsl"
+        outputPattern="META-INF/jboss.xml"
+        outlet="shared-session-beans"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+        
+   <template
+        path="templates/ejb/util-service/Session.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans-impl"
+        overwrite="true"/>
+        
+   <template
+        path="templates/ejb/util-service/SessionBean.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans-impl"
+        overwrite="true"/>
+
+   <template
+        path="templates/ejb/util-service/SessionBeanImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans-impl"
+        overwrite="false"/>
+ 
+   <template
+        path="templates/ejb/util-service/SessionBI.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans-impl"
+        overwrite="true"/>
+        
+   <template
+        path="templates/ejb/util-service/SessionLocalHome.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"/>
+
+    <template
+        path="templates/ejb/util-service/SessionHome.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"/>   
+
+	<template
+        path="templates/ejb/util-service/SessionLocal.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-session-beans"
+        overwrite="true"/>
+       
+      <template
+        path="templates/ejb/mdb/queues-service.xml.vsl"
+        outputPattern="jms/${projectId}-queues-service.xml"
+        outlet="jboss-config"
+        overwrite="true"
+        outputToSingleFile="true">
+        <modelElements>
+            <modelElement variable="messageBeans">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecMessageDrivenBeanFacade"/>
+            </modelElement>
+        </modelElements>
+     </template> 
+     
+     <template
+        path="templates/ejb/jboss-config/maven.xml.vsl"
+        outputPattern="maven.xml"
+        outlet="jboss-config"
+        overwrite="true"
+        outputToSingleFile="true">
+     </template>
+     
+     <template
+        path="templates/ejb/jboss-config/project.xml.vsl"
+        outputPattern="project.xml"
+        outlet="jboss-config"
+        overwrite="true"
+        outputToSingleFile="true">
+     </template>
+     <template
+        path="templates/ejb/modulo/ExcSharedMaven.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="true"
+        outputToSingleFile="true">
+     </template>
+     <template
+        path="templates/ejb/modulo/ExcSharedProject.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="project-configuration"
+        overwrite="true"
+        outputToSingleFile="true">
+     </template>
+
+    <template
+        path="templates/ejb/webservice/handlers.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="module-ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="service">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/ejb/webservice/handlers.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="ejb-configuration"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="service">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template path="templates/ejb/webservice/webServiceMessageHandler.java.vsl"
+        outputPattern="{0}/{1}MessageHandler.java"
+        outlet="session-beans"
+        overwrite="true"
+        generateEmptyFiles="false"> 
+        <modelElements>
+            <modelElement variable="service">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template path="templates/ejb/webservice/webServiceMessageHandlerImpl.java.vsl"
+        outputPattern="{0}/{1}MessageHandlerImpl.java"
+        outlet="session-impls"
+        overwrite="true"
+        generateEmptyFiles="false"> 
+        <modelElements>
+            <modelElement variable="service">
+                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <!--  inicio - Initial Service -->
+
+    <template
+        path="templates/ejb/initial/InitialService.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="initial-service"
+        overwrite="true"/>
+
+    <template
+        path="templates/ejb/initial/InitialServiceMBean.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="initial-service"
+        overwrite="true"/>
+
+    <template
+        path="templates/ejb/initial/jboss-service.xml.vsl"
+        outputPattern="META-INF/jboss-service.xml"
+        outlet="initial-service"
+        overwrite="true"
+        generateEmptyFiles="false"/>
+
+	<!--  fim - Initial Service -->
+	<!--  inicio - statistics templates -->
+
+	<template
+		path="templates/statistics/statistics_services.xml.vsl"
+		outputPattern="statistics_services.xml"
+		outlet="statistics"
+		overwrite="true"
+		outputToSingleFile="true"
+		outputOnEmptyElements="false">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!--  fim - statistics templates -->
+	<!--  inicio templates oAuth -->  
+	<template
+        path="templates/ejb/oAuth/OAuthImpl.java.vsl"
+        outputPattern="$controleAcessoDir/OAuthImpl.java"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>	
+    <!--  fim templates oAuth -->
+
+</cartridge>

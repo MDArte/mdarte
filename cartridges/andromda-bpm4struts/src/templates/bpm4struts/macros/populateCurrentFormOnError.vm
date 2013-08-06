@@ -1,0 +1,43 @@
+##
+## A shared macro that performs population of the previous form with 
+## the request parameters
+##
+## We populate the current form with only request parameters (we don't want the new
+## form set within the request, because we'll lose things like select lists, and any other
+## collections on the form)
+##
+#macro (populateCurrentFormOnError)
+#set ($pageKey = "${action.useCase.name}")
+#if ($stringUtils.isNotBlank(${action.source.name}))
+#set ($pageKey = "${pageKey}.${action.source.name}")
+#end
+            Object formObj = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${pageKey}");
+
+            if (formObj != null)
+            {
+                try
+                {
+                    formObj.getClass().getMethod("resetCheckBoxes", new Class[] {org.apache.struts.action.ActionMapping.class, javax.servlet.http.HttpServletRequest.class}).invoke(formObj, new Object[]{null, null});
+                }
+                catch (Exception e2)
+                {
+                    // ignoring
+                }
+
+                final java.util.Map parameters = new java.util.HashMap();
+                for (final java.util.Enumeration names = request.getParameterNames(); names.hasMoreElements();)
+                {
+                    final String name = String.valueOf(names.nextElement());
+##                    parameters.put(name, request.getParameter(name));
+                    parameters.put(name, request.getParameterValues(name));
+                }
+                try
+                {
+                    org.apache.commons.beanutils.BeanUtils.populate(formObj, parameters);
+                }
+                catch (java.lang.Exception populateException)
+                {
+                    // ignore if we have an exception here (we just don't populate).
+                }
+            }
+#end

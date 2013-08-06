@@ -1,0 +1,24 @@
+#set ($generatedFile = "ActionException.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+
+public class ActionException extends javax.ejb.EJBException {
+
+	public ActionException(Exception e) {
+		super(e);
+	}
+
+	public ActionException(String message) {
+		super(message);
+	}
+
+	public ActionException(String message, Exception cause) {
+		super(message, cause);
+	}
+
+}
+
+

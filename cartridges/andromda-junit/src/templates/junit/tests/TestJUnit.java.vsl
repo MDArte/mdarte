@@ -1,0 +1,164 @@
+#set ($processName = "$stringUtils.upperCamelCaseName($processDefinition.name)")
+#set ($className = "${processName}JUnit")
+#set ($generatedFile = "${className}.java")
+#set ($packageName = $processDefinition.packageName)
+#if ($stringUtils.isNotBlank($packageName))
+#set ($generatedFile = "${processDefinition.packagePath}/${innerJUnitPackage}/${generatedFile}")
+##
+package ${packageName}.${innerJUnitPackage};
+##
+#end
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+
+import ${packageName}.${processName};
+import ${packageName}.${processName}Impl;
+
+#foreach ($decision in $processDefinition.decisions)
+#if ($decision.name)
+#set ($decisionName = "$stringUtils.upperCamelCaseName($decision.name)")
+#set ($decisionImportPackage = "${decision.decisionPackageName}.${decisionName}Impl")
+##
+import ${decisionImportPackage};
+##
+#end
+#end
+
+import br.ufrj.testflow.node.DecisionNode;
+import br.ufrj.testflow.node.Node;
+import br.ufrj.testflow.node.TestNode;
+import br.ufrj.testflow.runners.TestflowRunner;
+
+/**
+ * This class provides the methods to be used with JUnit.
+ */
+@RunWith(TestflowRunner.class)
+public class ${className} {
+	private static ${processName} test = new ${processName}Impl();
+
+	private static Node node = null;
+
+	/**
+	 * Method called by the test runner.
+	 *
+	 * @return Node the test to be executed.
+	 */
+	public Node getNode() {
+		return node;
+	}
+
+	/* setUp and tearDown for classes */
+
+	@BeforeClass
+	public static void oneTimeSetUp() {
+##
+#foreach ($state in $processDefinition.nodes)
+#if ($state.name)
+#set ($stateName = "$stringUtils.lowerCamelCaseName($state.name)")
+		Node ${stateName}TestNode = new TestNode("${stateName}");
+#if ($state.ignored)
+		${stateName}TestNode.setIgnored(true);
+#end
+
+#end
+#end
+##
+##
+#foreach ($decision in $processDefinition.decisions)
+#if ($decision.name)
+#set ($decisionName = "$stringUtils.lowerCamelCaseName($decision.name)")
+		Node ${decisionName}DecisionNode = new DecisionNode("${decisionName}", new ${stringUtils.upperCamelCaseName(${decisionName})}Impl(), $decision.decisionTransionsNumber);
+
+#end
+#end
+##
+##
+#foreach ($state in $processDefinition.nodes)
+#if ($state.name)
+#set ($stateName = "$stringUtils.lowerCamelCaseName($state.name)")
+#foreach ($transition in $state.outgoing)
+#if ($transition.target.name)
+#set ($targetName = "$stringUtils.lowerCamelCaseName($transition.target.name)")
+#set ($optionIndex = $velocityCount - 1)
+#if ($transition.target.decisionPoint)
+		${stateName}TestNode.setNode(${optionIndex}, ${targetName}DecisionNode);
+#elseif ($transition.target.node)
+		${stateName}TestNode.setNode(${optionIndex}, ${targetName}TestNode);
+#end
+#end
+#end
+#end
+#end
+##
+
+#foreach ($decision in $processDefinition.decisions)
+#if ($decision.name)
+#set ($decisionName = "$stringUtils.lowerCamelCaseName($decision.name)")
+#foreach ($transition in $decision.outgoing)
+#if ($transition.target.name)
+#set ($targetName = "$stringUtils.lowerCamelCaseName($transition.target.name)")
+#set ($optionIndex = $velocityCount - 1)
+#if ($transition.target.decisionPoint)
+		${decisionName}DecisionNode.setNode(${optionIndex}, ${targetName}DecisionNode);
+#elseif ($transition.target.node)
+		${decisionName}DecisionNode.setNode(${optionIndex}, ${targetName}TestNode);
+#end
+#end
+#end
+#end
+#end
+##
+
+#if ($processDefinition.startState.initialState)
+#foreach ($transition in $processDefinition.startState.outgoing)
+#if ($transition.target.name)
+#set ($targetName = "$stringUtils.lowerCamelCaseName($transition.target.name)")
+#if ($transition.target.decisionPoint)
+		node = ${targetName}DecisionNode;
+#else
+		node = ${targetName}TestNode;
+#end
+#end
+#end
+#end
+
+		test.oneTimeSetUp();
+	}
+
+	@AfterClass
+	public static void oneTimeTearDown() {
+		test.oneTimeTearDown();
+	}
+
+	/* setUp and tearDown for test methods */
+
+	@Before
+	public void setUp() {
+		test.setUp();
+	}
+
+	@After
+	public void tearDown() {
+		test.tearDown();
+	}
+
+	/* test methods */
+
+#foreach ($state in $processDefinition.nodes)
+#if ($state.name)
+#set ($methodName = "$stringUtils.lowerCamelCaseName($state.name)")
+	@org.junit.Test
+#if ($state.ignored)
+	@org.junit.Ignore
+#end
+	public void ${methodName}() {
+		test.${methodName}();
+	}
+
+#end
+#end
+}

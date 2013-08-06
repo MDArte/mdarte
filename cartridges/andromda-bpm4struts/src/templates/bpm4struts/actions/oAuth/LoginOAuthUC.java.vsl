@@ -1,0 +1,47 @@
+
+
+
+
+
+
+
+
+
+
+#if($oAuthServer  == "true")
+// license-header java merge-point
+#set ($generatedFile = "LoginOAuthUC.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+/**
+ * 
+ */
+ 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+public final class LoginOAuthUC extends Action
+{
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+		RequestDispatcher rd = request.getRequestDispatcher("/$controleAcessoDir/pagina-de-login.jsp");
+		if(rd!=null){
+			rd.forward(request, response);
+		}
+		return null;
+    }
+
+}
+#end

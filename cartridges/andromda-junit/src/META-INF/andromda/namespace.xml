@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<namespace name="junit">
+	<components>
+		<component name="cartridge">
+			<path>META-INF/andromda/cartridge.xml</path>
+		</component>
+		<component name="metafacades">
+			<path>META-INF/andromda/metafacades.xml</path>
+		</component>
+		<component name="profile">
+			<path>META-INF/andromda/profile.xml</path>
+		</component>
+	</components>
+	<properties>
+		<!-- namespace-propertyGroup merge-point -->
+		<propertyGroup name="Outlets">
+			<documentation>
+				Defines the locations to which output is generated.
+			</documentation>
+			<property name="project-configuration">
+				<documentation>
+					The location to which the tests modules are placed.
+				</documentation>
+			</property>
+			<property name="tests">
+				<documentation>
+					The location to which the tests are written.
+				</documentation>
+			</property>
+			<property name="tests-impl">
+				<documentation>
+					The location to which the tests are written.
+				</documentation>
+			</property>
+			<property name="configuration">
+				<documentation>
+					The location to which the test's configurations are placed.
+				</documentation>
+			</property>
+			<property name="util" required="false">
+				<documentation>
+					The location to which the util files are placed.
+				</documentation>
+			</property>
+			<property name="images" required="false">
+				<documentation>
+					The location to which the images for the web test are
+					placed.
+				</documentation>
+			</property>
+			<property name="pages" required="false">
+				<documentation>
+					The location to which the pages for the web test are
+					placed.
+				</documentation>
+			</property>
+		</propertyGroup>
+		<propertyGroup name="JSP pages">
+			<property name="welcomeFileName">
+				<default>index.jsp</default>
+				<documentation>
+					The name of the JSP that is the welcome file.
+				</documentation>
+			</property>
+			<property name="testContext">
+				<default>test</default>
+				<documentation>
+					The test context to be used.
+				</documentation>
+			</property>
+			<property name="testWebRoot">
+				<default>web-test</default>
+				<documentation>
+					The test web root to be used.
+				</documentation>
+			</property>
+			<property name="sharedModel">
+				<default>model/shared</default>
+				<documentation>
+					The directory used to share the files.
+				</documentation>
+			</property>
+		</propertyGroup>
+		<propertyGroup name="Selenium">
+			<property name="seleniumAccessControlDir">
+				<default>accessControl</default>
+				<documentation>
+					Selenium access control directory.
+				</documentation>
+			</property>
+			<property name="seleniumDir">
+				<default>basic</default>
+				<documentation>
+					Selenium directory.
+				</documentation>
+			</property>
+		</propertyGroup>
+		<propertyGroup name="Other">
+			<property name="innerJUnitPackage">
+				<default>junit</default>
+				<documentation>
+					The package name where the test case will be placed.
+				</documentation>
+			</property>
+		</propertyGroup>
+	</properties>
+</namespace>

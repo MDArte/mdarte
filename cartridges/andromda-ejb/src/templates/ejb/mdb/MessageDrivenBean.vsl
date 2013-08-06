@@ -1,0 +1,91 @@
+#if ($stringUtils.isNotBlank($messageDriven.packageName))
+package $messageDriven.packageName;
+#end
+
+import javax.ejb.EJBException;
+import javax.ejb.MessageDrivenBean;
+import javax.ejb.MessageDrivenContext;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+import javax.jms.MessageListener;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.naming.InitialContext;
+
+
+/**
+$messageDriven.getDocumentation(" * ")
+ */
+public abstract class ${messageDriven.name}Bean
+#if ($messageDriven.generalization)
+    extends ${messageDriven.generalization.fullyQualifiedName}
+#end
+    implements MessageDrivenBean, MessageListener
+{
+
+	private MessageDrivenContext context = null;
+	private QueueConnection connection = null;
+	private QueueSession session = null;
+	
+	public void ${messageDriven.name}Bean(){
+		
+	}
+
+	public void setMessageDrivenContext(MessageDrivenContext arg0) throws EJBException {
+		this.context = arg0;
+	}
+
+	public void ejbCreate() throws EJBException {
+		try{
+			InitialContext initialContext = new InitialContext();
+			
+			QueueConnectionFactory qcf = (QueueConnectionFactory)
+				initialContext.lookup("$JMSConnectionFactory");
+			
+			connection = qcf.createQueueConnection();
+			
+			session = connection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+			
+			connection.start();
+			
+		}catch(Exception e){
+			throw new EJBException("Falha ao inicializar MDB", e);
+		}
+
+	}
+	
+	public void ejbRemove() throws EJBException {
+		context = null;
+		
+		try{
+			if(session != null)
+				session.close();
+			if(connection != null)
+				connection.close();
+		}catch(JMSException e){
+			e.printStackTrace();
+		}
+
+	}
+
+	public void onMessage(Message arg0) throws EJBException{
+		boolean responsibleSession= false;
+		try{	
+			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
+			ObjectMessage message = (ObjectMessage)arg0;
+			handleOnMessage(message.getObject());
+		}catch(JMSException e){
+			throw new EJBException(e.getMessage());
+		}finally {			
+			if(responsibleSession)
+				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
+		}
+	}
+
+	public abstract void handleOnMessage(Object object);
+
+}

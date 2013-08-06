@@ -1,0 +1,37 @@
+## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($modulo == 'true')
+#foreach ($action in $useCase.actions)
+#if ($action.validationRequired)
+        <form name="$action.formBeanName">
+#set ($actionParameters = $action.actionParameters)
+#foreach ($field in $action.actionFormFields)
+#if ($field.validationRequired && $actionParameters.contains($field))
+#set ($validatorTypes = $field.validatorTypes)
+#set($fieldName = $field.name)
+#if ($field.combobox && $field.type.collectionType)
+#set($fieldName="${field.name}AsArray")
+#end
+
+            <field property="$fieldName" depends="$stringUtils.join($validatorTypes.iterator(),",")">
+                <arg position="0" key="$field.validatorMsgKey" />
+#if ($field.validWhen)
+                <msg name="validwhen" key="${field.validatorMsgKey}_validwhen" />
+#end
+#foreach ($validatorType in $validatorTypes)
+#foreach ($validatorArg in $field.getValidatorArgs($validatorType))
+                <arg position="${velocityCount}" name="$validatorType" key="$validatorArg" resource="false"/>
+#end
+#end
+#foreach ($validatorVar in $field.validatorVars)
+                <var>
+                    <var-name>$validatorVar.get(0)</var-name>
+                    <var-value><![CDATA[$validatorVar.get(1)]]></var-value>
+                </var>
+#end
+            </field>
+#end
+#end
+        </form>
+#end
+#end
+#end

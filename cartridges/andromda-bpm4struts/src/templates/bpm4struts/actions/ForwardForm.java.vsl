@@ -1,0 +1,46 @@
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/ForwardForm.java")
+package $servletPackage;
+
+public class ForwardForm
+#if ($securityEnabled) 
+    extends ${controleAcessoDir}.LoginFormImpl
+#else
+    extends org.apache.struts.validator.ValidatorForm
+#end    
+    implements java.io.Serializable
+{
+    private String applicationName = "";
+    private String modulo = "";
+    private String path = "";
+
+    public void setApplicationName(String applicationName)
+    {
+        this.applicationName = applicationName;
+    }
+
+    public void setModulo(String modulo)
+    {
+        this.modulo = modulo;
+    }
+
+    public void setPath(String path)
+    {
+        this.path = path;
+    }
+
+    public String getApplicationName()
+    {
+        return this.applicationName;
+    }
+
+    public String getModulo()
+    {
+        return this.modulo;
+    }
+
+    public String getPath()
+    {
+        return this.path;
+    }
+}

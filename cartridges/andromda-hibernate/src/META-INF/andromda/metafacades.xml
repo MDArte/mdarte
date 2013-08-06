@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- contains the hibernate cartridge metafacade mappings -->
+<metafacades>
+    <property reference="hibernateVersion"/>
+    <property reference="maxSqlNameLength"/>
+    <property reference="entityNamePattern"/>
+    <property reference="entityImplementationNamePattern"/>
+    <property reference="defaultHibernateGeneratorClass"/>
+    <property reference="hibernateDefaultCascade"/>
+    <property reference="hibernateCompositionCascade"/>
+    <property reference="hibernateAggregationCascade"/>
+    <property reference="hibernateEntityCache"/>
+    <property reference="hibernateEntityDynamicInsert"/>
+    <property reference="hibernateEntityDynamicUpdate"/>
+    <property reference="hibernateProxy"/>
+    <property reference="hibernateQueryUseNamedParameters"/>
+    <property reference="hibernateInheritanceStrategy"/>
+    <property reference="hibernateUseQueryCache"/>
+    <property reference="ehCacheMaxElementsInMemory"/>
+    <property reference="ehCacheEternal"/>
+    <property reference="ehCacheTimeToIdleSeconds"/>
+    <property reference="ehCacheTimeToLiveSeconds"/>
+    <property reference="ehCacheOverflowToDisk"/>
+    <property reference="compositionDefinesEagerLoading"/>
+    <property reference="ejbJndiNamePrefix"/>
+    <property reference="ejbViewType"/>
+    <property reference="hibernateAssociationCollectionType"/>
+    <property reference="hibernateAssociationSortType"/>
+    <property reference="enumerationNamePattern"/>
+    <property reference="hibernateQueryUseSpecializedSetters"/>
+    <property reference="versionProperty"/>
+    <property reference="hibernateEntityAuditoria"/>
+    <property reference="securityRealm"/>
+    <property reference="tamanhoAssociacao"/>
+    <property reference="enumTypesPackage"/>
+    <property reference="useCodeConstraint"/>
+
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateVisitorAdapterLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>VISITOR_ADAPTER_ROOT</stereotype>
+            <stereotype>ENTITY</stereotype>
+        </mapping>
+        <property reference="sqlMappingsUri"/>
+    </metafacade>
+
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntityLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>ENTITY</stereotype>
+        </mapping>
+        <property reference="sqlMappingsUri"/>
+    </metafacade>
+
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateAssociationEndLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.AssociationEnd$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
+        </mapping>
+        <property reference="hibernateAssociationEndOuterJoin"/>
+        <property reference="listTypeImplementation"/>
+        <property reference="setTypeImplementation"/>
+        <property reference="mapTypeImplementation"/>
+        <property reference="bagTypeImplementation"/>
+        <property reference="specificCollectionInterfaces"/>
+        <property reference="defaultCollectionInterface"/>
+        <property reference="associationEndCollectionIndexName"/>
+        <property reference="associationEndCollectionIndexType"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateAssociationLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.UmlAssociation$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
+        </mapping>
+        <property reference="hibernateAssociationCache"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateFinderMethodLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.Operation$Impl">
+            <stereotype>FINDER_METHOD</stereotype>
+            <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateFinderMethodLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.Operation$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
+            <property name="query"/>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateServiceOperationLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.Operation$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.HibernateService</context>
+        </mapping>
+        <property reference="serviceOperationTransactionType"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateFinderMethodArgumentLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.Parameter$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.HibernateFinderMethod</context>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateServiceLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>SERVICE</stereotype>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateTypeLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.DataType$Impl"/>
+        <property reference="hibernateTypeMappingsUri"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateEnumerationLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>ENUMERATION</stereotype>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateEntityAttributeLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.Attribute$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValueLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>EMBEDDED_VALUE</stereotype>
+        </mapping>
+        <property reference="embeddedValueImplementationNamePattern"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.HibernateEntityAttributeLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.Attribute$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValue</context>
+        </mapping>
+        <property reference="sqlMappingsUri"/>
+        <property reference="jdbcMappingsUri"/>
+    </metafacade>
+</metafacades>

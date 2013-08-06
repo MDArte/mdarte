@@ -1,0 +1,50 @@
+#set ($className = "$stringUtils.upperCamelCaseName($decision.name)")
+#set ($packageName = $decision.decisionPackageName)
+#set ($generatedFile = "${decision.decisionFullPath}.java")
+
+##
+package ${packageName};
+
+import br.ufrj.testflow.Decision;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public abstract class ${className} implements Decision {
+	private Log log;
+
+	/* decision return values */
+
+#foreach ($transition in $decision.outgoing)
+#if ($transition.condition)
+#set ($targetName = "$stringUtils.upperCase($transition.condition)")
+#set ($targetName = "$stringUtils.replaceChars($targetName, ' .-!?#%&|*(){}<>+=', '__________________')")
+	public static final String ${targetName} = "${transition.condition}";
+#end
+#end
+
+	/* methods */
+
+	public abstract String handleDecision();
+
+	public String decision() {
+		String decisionValue = handleDecision();
+
+		if (decisionValue == null || decisionValue.equals("")) {
+			log = LogFactory.getLog(${className}.class);
+			log.error("The decision point should be implemented correctly: ${packageName}.${className}Impl#handleDecision()");
+			throw new RuntimeException("[ERRO] The decision point should be implemented correctly: ${packageName}.${className}Impl#handleDecision()");
+		}
+
+#foreach ($transition in $decision.outgoing)
+#if ($transition.condition)
+#set ($targetName = "$stringUtils.lowerCamelCaseName($transition.target.name)")
+##
+		if (decisionValue.equals(${className}.${targetName})) {
+			return "${targetName}";
+		}
+
+#end
+#end
+		return null;
+	}
+}

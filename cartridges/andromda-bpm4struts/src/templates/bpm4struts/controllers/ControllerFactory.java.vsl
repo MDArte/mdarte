@@ -1,0 +1,23 @@
+#set ($generatedFile = "${controller.fullPath}Factory.java")
+##
+##  START TEMPLATE
+##
+#set ($sessionObjects = $controller.sessionObjects)
+#set($gerar = false)
+#if(${controller.useCase.useCaseOldStruts})
+#set($gerar = true)
+#end
+#if($gerar)
+// license-header java merge-point
+package $controller.packageName;
+
+public class ${controller.name}Factory
+{
+    private final static ${controller.name} INSTANCE = new ${controller.name}Impl();
+
+    public final static ${controller.name} get${controller.name}Instance()
+    {
+        return INSTANCE;
+    }
+}
+#end

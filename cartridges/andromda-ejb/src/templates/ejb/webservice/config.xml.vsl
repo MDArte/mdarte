@@ -1,0 +1,40 @@
+#if($ejb3 == 'false')
+#if($pacote)
+#set($webServices = $pacote.webServices)
+#set($serviceName = $stringUtils.capitalize("$pacote.serviceModuleName"))
+#set($moreSpecificPackageName = $pacote.moreSpecificPackageName)
+#set($package = $pacote.fullyQualifiedName)
+#else
+#set($serviceName = $stringUtils.capitalize("$projectId"))
+#set($moreSpecificPackageName = $ejbUtils.moreSpecificPackageName("$customTypesPackage"))
+#set($package = $customTypesPackage)
+#end
+#if($webServices.size() > 0)
+<?xml version="1.0" encoding="$xmlEncoding"?>
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">		
+    <service name="${serviceName}Handler"
+             targetNamespace="http://${moreSpecificPackageName}"
+             typeNamespace="http://${moreSpecificPackageName}/types"
+             packageName="$package">
+        #foreach($webService in $webServices)
+        <interface name="${webService.fullyQualifiedName}Srv"
+        		           servantName="${webService.fullyQualifiedName}Bean"/>
+        #end
+	        <typeMappingRegistry>
+    		        <additionalTypes>
+    			            #set($webServiceDatas = $ejbUtils.getWebServiceData())
+    			            #foreach($webServiceData in $webServiceDatas)
+    			            #set($package = $webServiceData.package.fullyQualifiedName)
+							#if($stringUtils.indexOf("$package", "$modelPackageName") > 0)
+							#set($package = $stringUtils.replace("${package}", "$modelPackageName", "$wsdPackageName"))
+							#set($package = $package.concat("."))
+							#set($name = $package.concat("${webServiceData.name}WS"))
+    				            <class name="${name}"/>
+    			            #end
+    			            #end
+	    	        </additionalTypes>
+        </typeMappingRegistry> 
+    </service>
+</configuration>
+#end
+#end

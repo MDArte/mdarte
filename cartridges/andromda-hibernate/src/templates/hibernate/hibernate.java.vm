@@ -1,0 +1,332 @@
+##
+##  This macro will render the equals() method
+##  If an entity is rendered, the attributeSet consists of the identifiers,
+##
+#macro (renderEqualsMethod $class $className $attributeSet)
+    public boolean equals(Object object)
+    {
+#if ($attributeSet.empty)
+        return super.equals(object);
+#else
+        if (this == object)
+        {
+            return true;
+        }
+        if (!(object instanceof $className))
+        {
+            return false;
+        }
+        final $className that = ($className)object;
+#foreach ($attribute in $attributeSet)
+#set ($idType = $attribute.type)
+#if ($idType.primitive)
+        if (this.$attribute.name != that.$attribute.name)
+        {
+            return false;
+        }
+#elseif ($idType.arrayType)
+        if (!java.util.Arrays.equals(this.$attribute.name, that.$attribute.name))
+        {
+            return false;
+        }
+#else
+        if (this.get${stringUtils.capitalize(${attribute.name})}() == null || that.get${stringUtils.capitalize(${attribute.name})}() == null || !this.get${stringUtils.capitalize(${attribute.name})}().equals(that.get${stringUtils.capitalize(${attribute.name})}()))
+        {
+            return false;
+        }
+#end
+#end
+        return true;
+#end
+    }
+#end
+##
+##  This macro will render the hashCode() method
+##  If an entity is rendered, the attributeSet consists of the identifiers,
+##  if an value type is renderer, the attributeSet consists of all attributes
+##
+#macro (renderHashCodeMethod $class $attributeSet)
+    public int hashCode()
+    {
+#if ($attributeSet.empty)
+        return super.hashCode();
+#else
+        int hashCode = super.hashCode();
+#foreach ($attribute in $attributeSet)
+#set ($attrType = $attribute.type)
+#if  ($attribute.getterSetterTypeName == "boolean")
+        hashCode = 29 * hashCode + (${attribute.name} ? 1 : 0);
+#elseif ($attrType.arrayType)
+        // arrays are not part of the hashCode calculation
+#elseif ($attrType.primitive)
+        hashCode = 29 * hashCode + (int)${attribute.name};
+#else
+        hashCode = 29 * hashCode + (${attribute.name} == null ? 0 : ${attribute.name}.hashCode());
+#end## if
+#end## foreach
+
+        return hashCode;
+#end## $attributeSet.empty
+    }
+#end
+
+#macro (renderConstructorMethod $class $className $attributeSet)
+		    public $className (#foreach($attribute in $attributeSet) #if($velocityCount != 	1), #end $attribute.getterSetterTypeName $attribute.name #end){
+		    #foreach($attribute in $attributeSet)
+						    ${attribute.setterName}(${attribute.name});    
+		    #end
+		    }
+#end
+
+#macro (renderConstructorImplMethod $class $className $attributeSet)
+		    public $className (#foreach($attribute in $attributeSet) #if($velocityCount != 	1), #end $attribute.getterSetterTypeName $attribute.name #end){
+		    	   super(#foreach($attribute in $attributeSet) #if($velocityCount != 	1), #end $attribute.name #end);
+		    }
+#end
+
+
+#macro ( renderPropertiesGeneralization $_class )
+#foreach ($property in $_class.properties)
+#set ($tipo = $property.getterSetterTypeName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+	   #set ($tipo = $tipo.concat("TO"))
+   #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+   $tipo ${property.name}
+#else
+   $property.getterSetterTypeName ${property.name}
+#end
+   #if($velocityCount != $_class.properties.size() || $_class.generalization),
+   #elseif(!$_class.generalization))
+   #end
+#end
+
+#if ($_class.generalization)
+	#renderPropertiesGeneralization($_class.generalization)
+
+
+#end
+#end  
+
+#macro ( renderPropertiesGeneralization2 $_class )
+#foreach ($property in $_class.properties)
+	#set ($nome = $stringUtils.capitalize(${property.name}))
+        set$nome(${property.name});
+#end
+#if ($_class.generalization)
+	#renderPropertiesGeneralization2($_class.generalization)
+#end
+
+#end  
+
+#macro ( renderPropertiesGeneralization3 $_class )
+#foreach ($attribute in $_class.attributes)
+	#set ($nomeAttibute = $stringUtils.capitalize(${attribute.name}))
+	set${nomeAttibute}(otherBean.${attribute.getterName}());
+#end
+#foreach ($associationEnd in $_class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+ #set ($nomeTarget = $stringUtils.capitalize(${target.name}))
+	  #if ($target.navigable || ($associationEnd.child && $_class.foreignHibernateGeneratorClass))
+  #set ($tipo = $target.getterSetterTypeName)
+    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
+     #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+      if(get${nomeTarget}()!=null) {
+     set${nomeTarget}(new ${tipo}TOImpl ((${target.getterSetterTypeName}Impl) otherBean.${target.getterName}()));
+    }
+    #elseif ($target.many)
+      // set${nomeTarget}(construct$stringUtils.capitalize(${target.name})(otherBean.${target.getterName}()));
+    #else
+    	#set ($nomeTarget = $stringUtils.capitalize(${target.name}))
+       set${nomeTarget}(otherBean.${target.getterName}());
+	    #end
+  #end
+#end
+#if ($_class.generalization)
+	#renderPropertiesGeneralization3($_class.generalization)
+#end
+#end 
+
+#macro(renderAttributes  $_class)
+#foreach ($attribute in $_class.attributes)
+	#set ($nomeAttibute = $stringUtils.capitalize(${attribute.name}))
+	to.set${nomeAttibute}(otherBean.${attribute.getterName}());
+#end
+#if ($_class.generalization)
+	#renderAttributes($_class.generalization)
+#end
+#end
+
+#macro(renderAttributesTO $entity)
+#foreach ($attribute in $_class.attributes)
+bean.${attribute.setterName}(to.${attribute.getterName}());	
+#end
+#if ($_class.generalization)
+	#renderAttributes($_class.generalization)
+#end
+#end
+
+#macro(renderAssocationEnds $class)
+#foreach ($associationEnd in $class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+	  #if ($target.navigable || ($associationEnd.child && $class.foreignHibernateGeneratorClass))
+    #set ($tipo = $target.type.fullyQualifiedName)
+    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
+    #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+    #end
+    #if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+     if(exemploTO.${target.getterName}()!=null){     	
+	  if(map.get(${target.type.fullyQualifiedName}.getClass().toString() + otherBean.${target.getterName}().getId().toString()) == null){
+	  ${tipo}TO toTemp = ${target.type.fullyQualifiedName}.buildTO(otherBean.${target.getterName}(), exemploTO.${target.getterName}(), map);
+	  to.${target.setterName}(toTemp);     	
+	  map.put(${target.type.fullyQualifiedName}.getClass().toString() + otherBean.${target.getterName}().getId().toString(), to);
+	  }else{
+	  to.${target.setterName}((${tipo}TO)map.get(${target.type.fullyQualifiedName}.getClass().toString() + otherBean.${target.getterName}().getId().toString()));
+	  }       	
+     }
+    #elseif ($target.many)
+	if(exemploTO.${target.getterName}()!=null){  
+		if(!exemploTO.${target.getterName}().isEmpty()){
+		${tipo}TO $target.name = (${tipo}TO)exemploTO.${target.getterName}().iterator().next();        				
+		to.${target.setterName}( construct$stringUtils.capitalize(${target.name})(otherBean.${target.getterName}(), $target.name, map));        		
+		}
+	}        
+    #end
+  #end
+#end
+#end
+
+#macro(renderAssocationEndsTO $class)
+#foreach ($associationEnd in $class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+	  #if ($target.navigable || ($associationEnd.child && $class.foreignHibernateGeneratorClass))
+    #set ($tipo = $target.type.fullyQualifiedName)
+    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
+    #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+    #end
+    #if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+     if(to.getExemploTO().${target.getterName}()!=null){     	     	  
+     	  #if($semId.equals("true"))
+	  if(map.get(${target.type.fullyQualifiedName}.getClass().toString() + to.hashCode()) == null){     	  
+     	  #else	
+	  if(map.get(${target.type.fullyQualifiedName}.getClass().toString() + to.${target.getterName}().getId().toString()) == null){
+	  #end
+	  $target.type.fullyQualifiedName cdTemp = (${target.type.fullyQualifiedName})AbstractEntity.getEntityInstanceFromTO(to.${target.getterName}(), map);
+	  bean.${target.setterName}(cdTemp);  
+	  #if($semId.equals("true"))   
+	  map.put(${target.type.fullyQualifiedName}.getClass().toString() + to.hashCode(), cdTemp);	
+	  #else	  
+	  map.put(${target.type.fullyQualifiedName}.getClass().toString() + to.${target.getterName}().getId().toString(), cdTemp);
+	  #end
+	  }else{	  
+	  #if($semId.equals("true"))
+	  bean.${target.setterName}(($target.type.fullyQualifiedName)map.get("${target.type.fullyQualifiedName}.getClass().toString()" + to.hashCode());
+	  #else
+	  bean.${target.setterName}(($target.type.fullyQualifiedName)map.get("${target.type.fullyQualifiedName}.getClass().toString()" + to.${target.getterName}().getId().toString()));
+	  #end
+	  }        		
+     	}
+    	#elseif ($target.many)
+	if(to.getExemploTO().${target.getterName}()!=null){  
+		if(!to.getExemploTO().${target.getterName}().isEmpty()){
+		bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), map));       		
+		}
+	}              
+    #end
+  #end
+#end
+#end
+
+
+#macro ( renderPropertiesGeneralization4 $_class )
+#foreach ($attribute in $_class.attributes)
+	#set ($nomeAttibute = $stringUtils.capitalize(${attribute.name}))
+	set${nomeAttibute}(otherBean.${attribute.getterName}());
+#end
+#foreach ($associationEnd in $_class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+  #set ($nomeTarget = $stringUtils.capitalize(${target.name}))
+	  #if ($target.navigable || ($associationEnd.child && $_class.foreignHibernateGeneratorClass))
+  #set ($tipo = $target.getterSetterTypeName)
+    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
+	#set ($tipo = $tipo.concat("TO"))    
+     #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))   
+     if(get${nomeTarget}()!=null) {
+     set${nomeTarget}(new ${target.getterSetterTypeName}Impl ((${tipo}Impl) otherBean.${target.getterName}()));
+     }
+    #elseif ($target.many)
+      set${nomeTarget}(construct$stringUtils.capitalize(${target.name})(otherBean.${target.getterName}()));
+    #else
+    	#set ($nomeTarget = $stringUtils.capitalize(${target.name}))
+       set${nomeTarget}(otherBean.${target.getterName}());
+	    #end
+  #end
+#end
+#if ($_class.generalization)
+	#renderPropertiesGeneralization4($_class.generalization)
+#end
+#end 
+
+#macro(renderConstructorBody $semId)
+	#if($semId.equals("false") && $entity.attributes.size() > 0)
+	if(to.isUpdated()){
+	#end
+	#foreach ($attribute in $entity.attributes) 
+	bean.${attribute.setterName}(to.${attribute.getterName}());
+	#end
+	#if($semId.equals("false") && $entity.attributes.size() > 0)
+	}
+	#end
+	
+  
+	#foreach ($associationEnd in $entity.associationEnds)
+	#set ($target = $associationEnd.otherEnd)
+	#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorentity))
+    	#set ($tipo = $target.type.fullyQualifiedName)
+    	#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+    	#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+    	#end
+    	
+	#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+     	#if($semId.equals("false"))
+	if(to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()){
+	#end
+	   if(to.${target.getterName}() == null) 
+	   	bean.${target.setterName}(null);
+	   else{     		
+     	   	${target.type.fullyQualifiedName} cdTemp = bean.${target.getterName}();
+     	   	if(map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode()) == null){     
+     	   		#set ($tipoTO = $stringUtils.replace(${target.type.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+   			#set ($tipoTO = $tipoTO.concat("TO"))	  
+     			cdTemp = (${target.type.fullyQualifiedName})AbstractEntity.getEntityInstanceFromTO((${tipoTO})to.${target.getterName}(), map);
+	  	}else{	  
+			cdTemp = (${target.type.fullyQualifiedName})map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode());
+	  	}
+	  	
+	  	if(TOUtil.isEntityChanged(to, (AbstractEntity)bean.${target.getterName}())) bean.${target.setterName}(cdTemp);
+	  }        		
+     	#if($semId.equals("false"))
+     	}
+     	#end
+    	
+	#elseif ($target.many)
+	#if($semId.equals("false"))
+	if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())){  
+	#end
+			bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));       		
+		#if($semId.equals("false"))
+		}        
+	#end
+#end
+	#end
+	#end	
+	
+		
+	#if($entity.generalization)
+	#set ($tipoTO = $stringUtils.replace(${entity.generalization.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+   	#set ($tipoTO = $tipoTO.concat("TO"))
+	super.getEntityFromTO(($tipoTO)to, bean, map);
+	#end  
+	
+#end
+
+

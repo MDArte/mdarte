@@ -1,0 +1,15 @@
+#if ($viewTestEnabled == "true")
+package ${viewTestAccessControlDir};
+
+import ${viewTestBasicDir}.BasicViewTestController;
+
+public class AccessControlViewTestImpl extends AccessControlViewTest {
+
+	public AccessControlViewTestImpl(BasicViewTestController viewTestController)
+	{
+		super(viewTestController);
+	}
+
+	/* Implement here your own operations. */
+}
+#end

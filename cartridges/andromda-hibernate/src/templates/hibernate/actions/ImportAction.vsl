@@ -1,0 +1,38 @@
+#set ($generatedFile = "ImportAction.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import br.ufrj.coppetec.ValueObject;
+import ${customTypesPackage}.${exportPackageName}.Import;
+
+
+
+public class ImportAction extends Action{
+
+	private ValueObject vo;
+	private Import importa;
+	
+	
+	public ImportAction(ValueObject vo, Import importa){
+		this.vo = vo;
+		this.importa = importa;
+	}
+	
+	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
+		importa.importa(dao, this.vo);
+		return null;
+	}
+
+	public Import getImport(){
+		return importa;
+	}
+	
+	public ValueObject getVo(){
+		return vo;
+	}	
+}

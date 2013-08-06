@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<statistics>
+	<application>${projectId}</application>
+	<type>services</type>
+	<modules>
+#set ($servicesTotal = 0)
+#foreach($package in $packages)
+		<module>
+			<name>${package.serviceModuleName}</name>
+			<services>
+				<size>${package.services.size()}</size>
+#set ($servicesTotal = $servicesTotal + ${package.services.size()})
+#foreach($service in ${package.services})
+				<service#if (${service.hasStereotype("WebSrv")}) webService="true" #end>
+					<name>${service.packageName}.${service.name}</name>
+					<implementationName>${service.packageName}.${service.name}BeanImpl</implementationName>
+					<otherNames>
+						<size>2</size>
+						<value>${service.packageName}.${service.name}BI</value>
+						<value>${service.packageName}.pbi.${service.name}PBI</value>
+					</otherNames>
+					<methods>
+						<size>${service.operations.size()}</size>
+#foreach ($operation in $service.operations)
+						<method>
+							<name>${operation.name}</name>
+							<implementationName>handle${stringUtils.capitalize(${operation.name})}</implementationName>
+							<return>
+								<type>${operation.returnType.fullyQualifiedName}</type>
+							</return>
+							<parameters>
+#set ($parametersTotal = ${operation.parameters.size()} - 1)
+								<size>${parametersTotal}</size>
+#foreach($param in $operation.parameters)
+#if(!$param.return)
+								<parameter>
+									<name>${param.name}</name>
+									<type>${param.type.fullyQualifiedName}</type>
+								</parameter>
+#end
+#end
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+								<parameter>
+									<name>paginacao</name>
+									<type>java.lang.Integer</type>
+								</parameter>
+#end
+							</parameters>
+						</method>
+#end
+					</methods>
+				</service>
+#end
+			</services>
+		</module>
+#end
+	</modules>
+	<servicesTotal>${servicesTotal}</servicesTotal>
+</statistics>

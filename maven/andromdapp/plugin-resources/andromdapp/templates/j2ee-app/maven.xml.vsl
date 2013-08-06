@@ -1,0 +1,442 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core"
+         xmlns:util="jelly:util"
+         xmlns:i="jelly:interaction">
+
+#set($open = "${")
+#set($end = "}")
+
+    <ant:property environment="env"/>
+
+    <!-- ==================================================================
+           Builds everything and installs it into the local Maven repository
+         ================================================================== -->
+    <goal name="install">
+        <maven:maven
+            descriptor="mda/project.xml"
+            goals="pom:install"/>
+
+        <maven:maven
+            descriptor="common/project.xml"
+            goals="jar:install"/>
+
+        <maven:maven
+            descriptor="core/project.xml"
+            goals="install"/>
+
+        <maven:maven
+            descriptor="web/project.xml"
+            goals="install"/>
+
+#if(!$modulos)
+        <maven:maven
+            descriptor="app/project.xml"
+            goals="ear:install"/>
+#end
+    </goal>
+
+    <goal name="compile">
+        <maven:maven
+            descriptor="common/project.xml"
+            goals="jar:install"/>
+
+        <maven:maven
+            descriptor="core/project.xml"
+            goals="install"/>
+
+        <maven:maven
+            descriptor="web/project.xml"
+            goals="install"/>
+
+#if(!$modulos)
+        <maven:maven
+            descriptor="app/project.xml"
+            goals="ear:install"/>
+#end
+    </goal>
+
+    <goal name="lib">
+        <j:set var="goal" value="lib"/>
+        <attainGoal name="multiproject:goal"/>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything
+         ================================================================== -->
+    <goal name="clean"
+        prereqs="clean:clean">
+
+        <attainGoal name="multiproject:clean"/>
+        <!-- get rid of all the log files -->
+        <ant:delete>
+            <ant:fileset dir=".">
+                <ant:include name="**/*.log*"/>
+                <ant:exclude name="maven.log"/>
+                <ant:exclude name="**/*andromda*.log"/>
+            </ant:fileset>
+        </ant:delete>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <i:ask question="This will also clean out all implementation classes, are you sure (y/n) ?"
+               answer="nukeit"/>
+        <j:choose>
+#set ($test = "nukeit eq 'y'")
+            <j:when test="${${test}}">
+                <ant:echo>Nuking source code...</ant:echo>
+#if ($workflow)
+                <util:available file="workflow/src/java">
+                    <ant:delete>
+                        <fileset dir="workflow/src/java">
+                            <include name="**/*Impl.java"/>
+                        </fileset>
+                    </ant:delete>
+                </util:available>
+#end
+                <maven:reactor
+                    includes="common/project.xml,core/project.xml,web/project.xml"
+                    banner="Nuking source code..."
+                    goals="nuke"
+                    basedir="${open}basedir${end}"/>
+                <attainGoal name="clean"/>
+                <ant:echo>Finished nuke.</ant:echo>
+            </j:when>
+            <j:otherwise>
+                <ant:echo>Nuke was canceled by user.</ant:echo>
+            </j:otherwise>
+        </j:choose>
+    </goal>
+
+#set ($appModule = "app")
+#if ($tomcat)
+#set ($appModule = "web")
+#end
+
+    <!-- ==================================================================
+            Deploy the Application
+         ================================================================== -->
+    <goal name="deploy">
+#if($modulos)
+        <maven:maven
+            descriptor="common/project.xml"
+            goals="deploy"/>
+
+        <maven:maven
+            descriptor="core/project.xml"
+            goals="deploy"/>
+
+        <maven:maven
+            descriptor="web/project.xml"
+            goals="deploy"/>
+#else
+        <maven:maven
+            descriptor="app/project.xml"
+            goals="deploy"/>
+#end
+    </goal>
+
+    <!-- ==================================================================
+           Undeploy the Application
+         ================================================================== -->
+    <goal name="undeploy">
+        <maven:maven
+            descriptor="common/project.xml"
+            goals="undeploy"/>
+
+        <maven:maven
+            descriptor="core/project.xml"
+            goals="undeploy"/>
+
+        <maven:maven
+            descriptor="web/project.xml"
+            goals="undeploy"/>
+    </goal>
+
+#if ($web)
+    <!-- ==================================================================
+           Builds the Web component
+         ================================================================== -->
+    <goal name="web">
+        <maven:maven
+            descriptor="web/project.xml"
+            goals="install"/>
+    </goal>
+
+#end
+    <!-- ==================================================================
+            Builds the Core component
+         ================================================================== -->
+    <goal name="core">
+        <maven:maven
+            descriptor="core/project.xml"
+            goals="install"/>
+    </goal>
+
+    <!-- ==================================================================
+            Builds the Common component
+         ================================================================== -->
+    <goal name="common">
+        <maven:maven
+        descriptor="common/project.xml"
+        goals="jar:install"/>
+    </goal>
+
+    <!-- ==================================================================
+            Runs the MDA component
+         ================================================================== -->
+    <goal name="mda">
+        <maven:maven
+            descriptor="mda/project.xml"
+            goals="pom:install"/>
+    </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo>
+
+maven mda - Valida o modelo e gera o codigo fonte.
+
+maven install - Valida o modelo, gera o codigo fonte e compila todos os modulos (e o default desta pasta).
+
+maven compile - Semelhante ao 'maven instal', contudo nao gera o codigo fonte, apenas compila.
+
+maven clean - apaga todas as pastas target (as pastas target contem os arquivos que sao sempre sobreescritos quando executamos um maven mda).
+
+maven deploy - copia os seus jars/wars para o seu Jboss.
+
+maven earInstall - Gera um ear contendo todos os jars/wars do seu projeto.
+
+maven lib - Baixa as dependencias do seu projeto e as copia para o diretorio lib do seu Jboss.
+
+maven nuke - Basicamente apaga o seu projeto, ele apaga as pastas target e as suas implementacoes (seu uso e desencorajado).
+
+maven common - Compila o conteudo da pasta common e gera um jar.
+
+maven core - Compila a pasta core e gera os jars.
+
+maven web - Compila a pasta web e gera os wars.
+
+maven create-schema  - Executa o script da base de dados (schema-create.sql gerado na pasta core/cd/target), criando as tabelas no seu banco de dados.
+
+maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado na pasta core/cd/target), apagando as tabelas no seu banco de dados. 
+
+        </ant:echo>
+
+    </goal>
+
+#if ($workflow)
+    <!-- ==================================================================
+            Builds the Workflow component
+         ================================================================== -->
+    <goal name="workflow">
+        <maven:maven
+            descriptor="workflow/project.xml"
+            goals="jar:install"/>
+    </goal>
+
+#end
+    <!-- ==================================================================
+            Starts the AndroMDA server
+         ================================================================== -->
+    <goal name="start-andromda-server">
+        <maven:maven
+            descriptor="mda/project.xml"
+            goals="andromda:start-server"/>
+    </goal>
+
+    <!-- ==================================================================
+            Stops the AndroMDA server
+         ================================================================== -->
+    <goal name="stop-andromda-server">
+        <maven:maven
+            descriptor="mda/project.xml"
+            goals="andromda:stop-server"/>
+    </goal>
+
+#if ($webservice)
+    <!-- ==================================================================
+            Builds the WebService component
+         ================================================================== -->
+    <goal name="webservice">
+        <maven:maven
+            descriptor="webservice/project.xml"
+            goals="war:install"/>
+    </goal>
+
+#end
+    <!-- ============================================================
+             Initializes the database schema for this application
+         ============================================================ -->
+    <goal name="create-schema">
+        <j:set var="script" value="${dataSource.sql.init}"/>
+        <attainGoal name="execute-script"/>
+    </goal>
+
+    <!-- ============================================================
+             Drops the database schema for this application
+         ============================================================ -->
+    <goal name="drop-schema">
+        <j:set var="script" value="${dataSource.sql.drop}"/>
+        <attainGoal name="execute-script"/>
+    </goal>
+
+    <goal name="load-dummy-data">
+        <j:set var="script" value="${dataSource.sql.load}"/>
+        <attainGoal name="execute-script"/>
+    </goal>
+
+    <j:set var="generatedSourceDir" value="${maven.build.dir}"/>
+    <ant:available
+        file="${maven.build.src}"
+        type="dir"
+        property="generatedSrcAvailable"/>
+
+     <!-- ============================================================
+            Adds the generated source to the compile path for
+            each subproject (if any exists)
+          ============================================================ -->
+    <preGoal name="java:compile">
+        <!-- only attempt to add the generated source to the classpath
+             if we have a source directory -->
+        <j:set var="sourceDirectory" value="${pom.build.sourceDirectory}"/>
+        <j:if test="${!empty sourceDirectory}">
+            <j:if test="${generatedSrcAvailable}">
+                <ant:available
+                    file="${sourceDirectory}"
+                    type="dir"
+                    property="srcAvailable"/>
+                <j:choose>
+                    <j:when test="${srcAvailable}">
+                        <!-- add the paths of the generated source to the
+                             maven compile path -->
+                        <ant:path
+                            id="andromda.java.gen.src"
+                            location="${generatedSourceDir}/src"/>
+                        <maven:addPath
+                            id="maven.compile.src.set"
+                            refid="andromda.java.gen.src"/>
+                    </j:when>
+                    <j:otherwise>
+                        <ant:path id="maven.compile.src.set">
+                            <!-- need to set sources present to true since
+                                 maven thinks no source exist if the directory
+                                 specified by pom.build.sourceDirectory doesn't exist -->
+                            <j:set var="sourcesPresent" value="true"/>
+                            <ant:pathelement location="${generatedSourceDir}/src"/>
+                        </ant:path>
+                    </j:otherwise>
+                </j:choose>
+            </j:if>
+        </j:if>
+    </preGoal>
+
+    <!-- ============================================================
+             Executes the given DDL script
+         ============================================================ -->
+    <goal name="execute-script">
+#set ($condition = '${script != null}')
+        <j:if test="$condition">
+            <util:file var="scriptFile" name="${script}"/>
+            <j:if test="${scriptFile.exists()}">
+                <ant:sql driver="${dataSource.driver.class}"
+                         src="${scriptFile}"
+                         url="${dataSource.url}"
+                         userid="${dataSource.user}"
+                         password="${dataSource.password}"
+                         onerror="${dataSource.sql.onError}">
+                    <ant:classpath>
+                        <ant:pathelement location="${dataSource.driver.jar}"/>
+                    </ant:classpath>
+                </ant:sql>
+            </j:if>
+        </j:if>
+    </goal>
+
+    <!-- ============================================================
+             Gera arquivo EAR contendo todos os modulos
+         ============================================================ -->
+    <goal name="earInstall">
+        <j:set var="targetDirectory" value="${open}basedir${end}/target"/>
+        <j:set var="earDirectory" value="${open}basedir${end}/target/ear"/>
+
+        <!-- apaga arquivos previamente gerados -->
+        <util:available file="${targetDirectory}/${pom.artifactId}.ear">
+            <ant:delete file="${targetDirectory}/${pom.artifactId}.ear"/>
+        </util:available>
+        <util:available file="${earDirectory}">
+            <ant:delete dir="${earDirectory}"/>
+        </util:available>
+
+        <!-- cria diretorios -->
+        <ant:mkdir dir="${targetDirectory}"/>
+        <ant:mkdir dir="${earDirectory}"/>
+        <ant:mkdir dir="${earDirectory}/META-INF"/>
+        <ant:mkdir dir="${earDirectory}/temp"/>
+
+        <j:set var="includesList" value="common/project.xml,core/cd/project.xml,core/cs/*/project.xml"/>
+        <j:if test= "${packWar}">
+            <j:set var="includesList" value="${includesList},web/*/project.xml"/>
+        </j:if>
+
+        <maven:reactor
+            includes="${includesList}"
+            banner="Building EAR"
+            goals="earInstall"
+            basedir="${open}basedir${end}"/>
+
+        <ant:concat destfile="${earDirectory}/temp/temp-meio.xml" binary="true">
+            <ant:fileset dir="${earDirectory}/temp" includes="*"/>
+        </ant:concat>
+
+        <!-- cria arquivo application.xml -->
+        <j:file name="${earDirectory}/temp/temp-inicio.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+
+<application>
+    <display-name>${pom.artifactId}</display-name>
+]]></j:file>
+
+        <j:file name="${earDirectory}/temp/temp-fim.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+</application>]]></j:file>
+
+        <ant:concat destfile="${earDirectory}/META-INF/application.xml" binary="true">
+            <ant:filelist dir="${earDirectory}/temp" files="temp-inicio.xml,temp-meio.xml,temp-fim.xml"/>
+        </ant:concat>
+
+        <!-- gera arquivo de configuracao do jboss para isolamento de classes -->
+        <j:file name="${earDirectory}/META-INF/jboss-app.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE jboss-app PUBLIC '-//JBoss//DTD J2EE Application 1.3V2//EN' 'http://www.jboss.org/j2ee/dtd/jboss-app_3_2.dtd'>
+
+<jboss-app>
+    <loader-repository>
+        jboss.loader:loader=${pom.artifactId}.ear
+        <loader-repository-config> 
+            java2ParentDelegation=false 
+        </loader-repository-config>
+    </loader-repository>
+</jboss-app>
+]]></j:file>
+
+        <ant:delete dir="${earDirectory}/temp"/>
+        <ant:zip compress="false" basedir="${earDirectory}" destfile="${targetDirectory}/${pom.artifactId}.ear"/>
+    </goal>
+</project>

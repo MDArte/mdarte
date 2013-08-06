@@ -1,0 +1,16 @@
+#set ($decisionName = "$stringUtils.upperCamelCaseName($decision.name)")
+#set ($className = "${decisionName}Impl")
+#set ($generatedFile = "${decision.decisionFullPath}Impl.java")
+#set ($packageName = $decision.decisionPackageName)
+##
+package ${packageName};
+
+public class ${className} extends ${decisionName} {
+	/**
+	 * @see ${packageName}.${decisionName}#decision()
+	 */
+	public String handleDecision() {
+		// TODO: add your implementation here!
+		return null;
+	}
+}

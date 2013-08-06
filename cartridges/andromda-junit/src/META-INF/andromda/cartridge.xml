@@ -1,0 +1,223 @@
+<cartridge>
+
+	<templateEngine>
+        
+		<!-- cartridge-macrolibrary merge-point-->
+	</templateEngine>
+
+	<!-- define the template objects that are made available to the template -->
+	<templateObject name="stringUtils" className="org.andromda.utils.StringUtilsHelper"/>
+
+	<!-- cartridge-templateObject merge-point-->
+	<property reference="welcomeFileName"/>
+	<property reference="testContext"/>
+	<property reference="testWebRoot"/>
+	<property reference="sharedModel"/>
+	<property reference="innerJUnitPackage"/>
+	<property reference="seleniumAccessControlDir"/>
+	<property reference="seleniumDir"/>
+
+	<!-- cartridge-property merge-point -->
+
+	<resource
+		path="resources/images/*.*"
+		outputPattern="{0}"
+		outlet="images"
+		overwrite="true"/>
+
+	<!-- cartridge-resource merge-point -->
+
+	<template
+		path="templates/junit/configuration/jboss-web.xml.vsl"
+		outputPattern="jboss-web.xml"
+		outlet="configuration"
+		overwrite="true">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/configuration/web.xml.vsl"
+		outputPattern="web.xml"
+		outlet="configuration"
+		overwrite="true">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/JUnitMaven.xml.vsl"
+		outputPattern="maven.xml"
+		outlet="project-configuration"
+		overwrite="true"
+		outputToSingleFile="true">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/JUnitProject.properties.vsl"
+		outputPattern="project.properties"
+		outlet="project-configuration"
+		overwrite="false"
+		outputToSingleFile="true">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/JUnitProject.xml.vsl"
+		outputPattern="project.xml"
+		outlet="project-configuration"
+		overwrite="false"
+		outputToSingleFile="true">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/maven.xml.vsl"
+		outputPattern="$generatedFile"
+		outlet="project-configuration"
+		overwrite="true">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/project.properties.vsl"
+		outputPattern="$generatedFile"
+		outlet="project-configuration"
+		overwrite="true">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/module/project.xml.vsl"
+		outputPattern="$generatedFile"
+		outlet="project-configuration"
+		overwrite="false">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/pages/index.jsp.vsl"
+		outputPattern="$generatedFile"
+		outlet="pages"
+		overwrite="true">
+		<modelElements variable="package">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>	
+
+	<template
+		path="templates/junit/util/ServiceUtil.java.vsl"
+		outputPattern="ServiceUtil.java"
+		outlet="util"
+		overwrite="true"
+		outputToSingleFile="true">
+		<modelElements variable="packages">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPackage"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/tests/TestJUnit.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="tests"
+		overwrite="true"
+		generateEmptyFiles="false">
+		<modelElements variable="processDefinition">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitProcessDefinition"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/tests/Test.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="tests"
+		overwrite="true"
+		generateEmptyFiles="false">
+		<modelElements variable="processDefinition">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitProcessDefinition"/>
+			</modelElement>
+		</modelElements>
+	</template>
+	
+	<template
+		path="templates/junit/tests/TestImpl.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="tests-impl"
+		overwrite="false"
+		generateEmptyFiles="false">
+		<modelElements variable="processDefinition">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitProcessDefinition"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/decisions/Decision.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="tests"
+		overwrite="true">
+		<modelElements variable="decision">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPseudostate">
+					<property name="decisionPoint"/>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template
+		path="templates/junit/decisions/DecisionImpl.java.vsl"
+		outputPattern="$generatedFile"
+		outlet="tests-impl"
+		overwrite="false">
+		<modelElements variable="decision">
+			<modelElement>
+				<type name="org.andromda.cartridges.junit.metafacades.JUnitPseudostate">
+					<property name="decisionPoint"/>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- cartridge-template merge-point -->
+
+</cartridge>

@@ -1,0 +1,92 @@
+
+
+
+
+
+
+
+
+
+
+#if($oAuthServer == "true")
+// license-header java merge-point
+#set ($generatedFile = "ReqTokenUC.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+/**
+ * 
+ */
+ 
+
+import java.io.OutputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import java.util.ArrayList;
+import java.util.Iterator; 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.oauth.OAuth;
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthConsumer;
+import net.oauth.OAuthMessage;
+import net.oauth.SimpleOAuthValidator;
+import net.oauth.server.OAuthServlet;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import accessControl.OAuthImpl;
+
+
+
+
+public final class ReqTokenUC extends Action
+{
+	
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+		OAuthImpl oImpl  =OAuthImpl.getInstance();
+		try{
+			OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
+			
+			
+			String consumerKey = requestMessage.getConsumerKey();
+			String consumerSecret = oImpl.getConsumerSecret(consumerKey);
+			OAuthConsumer consumer = new OAuthConsumer(
+					requestMessage.getParameter(OAuth.OAUTH_CALLBACK), 
+					consumerKey, 
+					consumerSecret, 
+	                null);
+			OAuthAccessor accessor = new OAuthAccessor(consumer);
+			new SimpleOAuthValidator().validateMessage(requestMessage, accessor);
+			
+			oImpl.gerarRequestToken(accessor);
+
+	        
+	        response.setContentType(OAuth.FORM_ENCODED);
+			response.setHeader("Cache-Control", "no-cache");
+			
+	        OutputStream out = response.getOutputStream();
+	        OAuth.formEncode(OAuth.newList(OAuth.OAUTH_TOKEN, accessor.requestToken,
+	        							   OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret,
+	        							   OAuth.OAUTH_CALLBACK_CONFIRMED,"true"),out);
+	        out.flush(); 
+	        out.close();
+		
+		}catch (Exception e){
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+    }
+ 
+}
+#end

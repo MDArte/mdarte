@@ -1,0 +1,11 @@
+#set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/LayoutConfigurationImpl.java")
+package $servletPackage;
+
+public class LayoutConfigurationImpl extends LayoutConfiguration{
+	
+	protected LayoutConfigurationImpl(){}
+	
+	protected String handleGetLayoutConfiguration(){
+		return null;
+	}
+}

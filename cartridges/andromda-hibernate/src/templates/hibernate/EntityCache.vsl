@@ -1,0 +1,41 @@
+#set ($generatedFile = "EntityCache.vsl.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import java.util.Map;
+import java.util.HashMap;
+
+import $customTypesPackage.${modelPackageName}.Entity;
+import $customTypesPackage.${modelPackageName}.AbstractEntity;
+import $customTypesPackage.${modelPackageName}.AbstractTO;
+
+public abstract class EntityCache {
+	public static final ThreadLocal entityCache = new ThreadLocal(); 
+
+	private Map cache = new HashCode();
+
+	public void put(AbstractTO to, AbstractEntity entity){
+		cache.put(to.getClass().toString() + to.hashCode(), entity);
+		
+	}
+	
+	public AbstractTO get(AbstractTO to){
+		return (AbstractEntity)cache.get(to.getClass().toString() + to.hashCode());
+	}
+	
+	public void invalidade(){
+		EntityCache ec = (EntityCache) entityCache.get();
+		ec.set(new HashMap());
+	}
+	
+	public EntityCache currentCache(){
+		EntityCache ec = (EntityCache) entityCache.get();
+		if (ec == null) {
+			ec = new EntityCache();
+			entityCache.set(ec);
+		}
+		return ec;
+	}
+}

@@ -1,0 +1,37 @@
+// license-header java merge-point
+#if ($stringUtils.isNotBlank($messageDrivenClient.packageName))
+package $messageDrivenClient.packageName;
+#end
+
+public class ${messageDrivenClient.name}MDBClientImpl extends ${messageDrivenClient.name}MDBClient
+{
+
+    public ${messageDrivenClient.name}MDBClientImpl() throws javax.naming.NamingException, javax.jms.JMSException{
+		super();
+	}
+
+#foreach ($operation in $messageDrivenClient.businessOperations)
+
+#set ($returnType = $operation.returnType)
+
+#set ($signature = $operation.signature)
+
+#set ($listaAtributos = $operation.typedArgumentList)
+
+    #if ($operation.exceptionsPresent)
+    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
+    #else
+    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
+    #end
+	
+    #if ($operation.returnTypePresent)
+        return $operation.returnType.javaNullString;    
+    #end
+        }
+        
+  
+
+
+#end
+
+}

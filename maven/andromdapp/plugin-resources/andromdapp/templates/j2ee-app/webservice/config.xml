@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+
+<!--Quando usar web Service lembrar de descomentar a linha do wsCompile no core/maven.xml--> 
+
+<!--	<service name="String que identifica o Servico"
+		 targetNamespace="http://<nome do pacote iniciando pelo contexto mais especifico>"
+		 typeNamespace="<targetNamespace>/types"
+		 packageName="<pacote do Session bean que implementa o servico>">
+					
+		<interface name="Identificador da Interface Remota do Session que implementa o Servico"
+			   servantName="Identificador do Session bean"/>
+			  <typeMappingRegistry>
+				<additionalTypes>
+					<class name="nome classe"/>
+				</additionalTypes>
+			  </typeMappingRegistry> 
+	</service>-->
+</configuration> 

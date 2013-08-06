@@ -1,0 +1,965 @@
+#if($oAuthServer == "true")
+// license-header java merge-point
+#set ($generatedFile = "LoginOAuthUCFormImpl.java")
+#set ($sharp = "#")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
+public class LoginOAuthUCFormImpl
+    extends accessControl.LoginFormImpl
+    implements java.io.Serializable
+{
+
+    private final static DecimalFormatSymbols simbolosDecimais = new DecimalFormatSymbols(Locale.US);
+    static 
+    {
+        simbolosDecimais.setGroupingSeparator('.');
+        simbolosDecimais.setDecimalSeparator(',');
+    }
+
+    private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
+    
+    private java.lang.String senha;
+
+    private java.lang.Object[] senhaValueList;
+    private java.lang.Object[] senhaLabelList;
+    private java.lang.Object[] senhaLabelListDouble;    
+    private java.lang.Object[] senhaLabelListHints;
+    private java.lang.Object[] senhaLabelListDestination;    
+    private java.lang.String login;
+
+    private java.lang.Object[] loginValueList;
+    private java.lang.Object[] loginLabelList;
+    private java.lang.Object[] loginLabelListDouble;    
+    private java.lang.Object[] loginLabelListHints;
+    private java.lang.Object[] loginLabelListDestination;    
+
+    public LoginOAuthUCFormImpl(){
+                        
+    
+    
+    }
+
+    /**
+     * Resets the given <code>senha</code>.
+     */
+    public void resetSenha()
+    {
+	this.senha = null;
+    	    }
+
+
+    public void setSenha(java.lang.String senha)
+    {
+        this.senha = senha;
+        
+    }
+
+    /**
+     * 
+     */
+    public java.lang.String getSenha()
+    {
+        return this.senha;
+    }
+    
+    public java.lang.Object[] getSenhaBackingList()
+    {
+        java.lang.Object[] values = this.senhaValueList;
+        java.lang.Object[] labels = this.senhaLabelList;
+        java.lang.Object[] hints = this.senhaLabelListHints;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+
+        if (hints == null || hints.length == 0)
+        {
+            hints = labels;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValue(labels[i], values[i], hints[i]);
+        }
+
+        return backingList;
+    }
+    
+    public java.lang.Object[] getSenhaBackingListDouble()
+    {
+        java.lang.Object[] values = this.senhaValueList;
+        java.lang.Object[] labels = this.senhaLabelList;
+        java.lang.Object[] labelsDouble = this.senhaLabelListDouble;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDouble == null || labelsDouble.length == 0)
+        {
+            labelsDouble = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDouble(labels[i], labelsDouble[i], values[i]);
+        }
+
+        return backingList;
+    }
+    
+    public java.lang.Object[] getSenhaBackingListDestination()
+    {
+        java.lang.Object[] values = this.senhaValueList;
+        java.lang.Object[] labels = this.senhaLabelList;
+        java.lang.Object[] labelsDestination = this.senhaLabelListDestination;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDestination == null || labelsDestination.length == 0)
+        {
+            labelsDestination = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDestination(labels[i], labelsDestination[i], values[i]);
+        }
+
+        return backingList;
+    }
+
+    public java.lang.Object[] getSenhaValueList()
+    {
+        return this.senhaValueList;
+    }
+
+    public void setSenhaValueList(java.lang.Object[] senhaValueList)
+    {
+        this.senhaValueList = senhaValueList;
+    }
+
+    public java.lang.Object[] getSenhaLabelList()
+    {
+        return this.senhaLabelList;
+    }
+
+    public java.lang.Object[] getSenhaLabelListDouble()
+    {
+        return this.senhaLabelListDouble;
+    }
+    
+    public java.lang.Object[] getSenhaLabelListDestination()
+    {
+        return this.senhaLabelListDestination;
+    }
+
+    public java.lang.Object[] getSenhaLabelListHints()
+    {
+        return this.senhaLabelListHints;
+    }
+
+    public void setSenhaLabelList(java.lang.Object[] senhaLabelList)
+    {
+        this.senhaLabelList = senhaLabelList;
+    }
+
+    public void setSenhaLabelListDouble(java.lang.Object[] senhaLabelListDouble)
+    {
+        this.senhaLabelListDouble = senhaLabelListDouble;
+    }
+    
+    public void setSenhaLabelListDestination(java.lang.Object[] senhaLabelListDestination)
+    {
+        final int length = senhaLabelListDestination != null ? senhaLabelListDestination.length : 0;
+        java.lang.Object[] tempListaDestination = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            Object tempDestination = senhaLabelListDestination[i];
+            if (tempDestination instanceof String) {
+                String tempStringDestination = (String) tempDestination;
+                if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                {
+                    tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                    tempDestination = tempStringDestination;
+                }
+            }
+            tempListaDestination[i] = tempDestination;
+        }
+
+        this.senhaLabelListDestination = tempListaDestination;
+    }
+
+    public void setSenhaLabelListHints(java.lang.Object[] senhaLabelListHints)
+    {
+        this.senhaLabelListHints = senhaLabelListHints;
+    }
+
+    public void setSenhaBackingListDouble(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDoubleProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setSenhaBackingListDouble requires non-null property arguments");
+        }
+
+        this.senhaValueList = null;
+        this.senhaLabelList = null;
+        this.senhaLabelListDouble = null;        
+
+        if (items != null)
+        {
+            this.senhaValueList = new java.lang.Object[items.size()];
+            this.senhaLabelList = new java.lang.Object[items.size()];
+            this.senhaLabelListDouble = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.senhaValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.senhaLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.senhaLabelListDouble[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDoubleProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setSenhaBackingListDouble encountered an exception", ex);
+            }
+        }
+    }
+    
+    
+    public void setSenhaBackingListDestination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDestinationProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setSenhaBackingListDestination requires non-null property arguments");
+        }
+
+        this.senhaValueList = null;
+        this.senhaLabelList = null;
+        this.senhaLabelListDestination = null;        
+
+        if (items != null)
+        {
+            this.senhaValueList = new java.lang.Object[items.size()];
+            this.senhaLabelList = new java.lang.Object[items.size()];
+            this.senhaLabelListDestination = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.senhaValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.senhaLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+
+                    Object tempDestination = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDestinationProperty);
+                    if (tempDestination instanceof String) {
+                        String tempStringDestination = (String) tempDestination;
+                        if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                        {
+                            tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                            tempDestination = tempStringDestination;
+                        }
+                    }
+                    this.senhaLabelListDestination[i] = tempDestination;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setSenhaBackingListDestination encountered an exception", ex);
+            }
+        }
+    }
+
+    public void setSenhaBackingListInternationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
+	setSenhaBackingList(items, valueProperty, labelProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.senhaLabelList.length; i++){
+		Object label = this.senhaLabelList[i];
+		if(messageResources.isPresent(locale, this.senhaLabelList[i].toString()))
+        		this.senhaLabelList[i] = messageResources.getMessage(locale, this.senhaLabelList[i].toString());
+	}
+    }	    
+    
+    public void setSenhaBackingListInternationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
+	setSenhaBackingList(items, valueProperty, labelProperty, labelHintProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.senhaLabelList.length; i++){
+		Object label = this.senhaLabelList[i];
+		if(messageResources.isPresent(locale, this.senhaLabelList[i].toString()))
+        		this.senhaLabelList[i] = messageResources.getMessage(locale, this.senhaLabelList[i].toString());
+	}
+	for(int i = 0; i < this.senhaLabelListHints.length; i++){
+		Object label = this.senhaLabelListHints[i];
+		if(messageResources.isPresent(locale, this.senhaLabelListHints[i].toString()))
+        		this.senhaLabelListHints[i] = messageResources.getMessage(locale, this.senhaLabelListHints[i].toString());
+	}
+    }	    
+    
+    public void setSenhaBackingList(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
+    {
+        if (valueProperty == null || labelProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setSenhaBackingList requires non-null property arguments");
+        }
+
+        this.senhaValueList = null;
+        this.senhaLabelList = null;
+
+        if (items != null)
+        {
+            this.senhaValueList = new java.lang.Object[items.size()];
+            this.senhaLabelList = new java.lang.Object[items.size()];
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.senhaValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.senhaLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setSenhaBackingList encountered an exception", ex);
+            }
+        }
+    }
+
+    public void setSenhaBackingList(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelHintProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setSenhaBackingList requires non-null property arguments");
+        }
+
+        this.senhaValueList = null;
+        this.senhaLabelList = null;
+        this.senhaLabelListHints = null;        
+
+        if (items != null)
+        {
+            this.senhaValueList = new java.lang.Object[items.size()];
+            this.senhaLabelList = new java.lang.Object[items.size()];
+            this.senhaLabelListHints = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.senhaValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.senhaLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.senhaLabelListHints[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelHintProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setSenhaBackingList encountered an exception", ex);
+            }
+        }
+    }
+
+
+    /**
+     * Resets the given <code>login</code>.
+     */
+    public void resetLogin()
+    {
+	this.login = null;
+    	    }
+
+
+    public void setLogin(java.lang.String login)
+    {
+        this.login = login;
+        
+    }
+
+    /**
+     * 
+     */
+    public java.lang.String getLogin()
+    {
+        return this.login;
+    }
+    
+    public java.lang.Object[] getLoginBackingList()
+    {
+        java.lang.Object[] values = this.loginValueList;
+        java.lang.Object[] labels = this.loginLabelList;
+        java.lang.Object[] hints = this.loginLabelListHints;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+
+        if (hints == null || hints.length == 0)
+        {
+            hints = labels;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValue(labels[i], values[i], hints[i]);
+        }
+
+        return backingList;
+    }
+    
+    public java.lang.Object[] getLoginBackingListDouble()
+    {
+        java.lang.Object[] values = this.loginValueList;
+        java.lang.Object[] labels = this.loginLabelList;
+        java.lang.Object[] labelsDouble = this.loginLabelListDouble;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDouble == null || labelsDouble.length == 0)
+        {
+            labelsDouble = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDouble(labels[i], labelsDouble[i], values[i]);
+        }
+
+        return backingList;
+    }
+    
+    public java.lang.Object[] getLoginBackingListDestination()
+    {
+        java.lang.Object[] values = this.loginValueList;
+        java.lang.Object[] labels = this.loginLabelList;
+        java.lang.Object[] labelsDestination = this.loginLabelListDestination;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDestination == null || labelsDestination.length == 0)
+        {
+            labelsDestination = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDestination(labels[i], labelsDestination[i], values[i]);
+        }
+
+        return backingList;
+    }
+
+    public java.lang.Object[] getLoginValueList()
+    {
+        return this.loginValueList;
+    }
+
+    public void setLoginValueList(java.lang.Object[] loginValueList)
+    {
+        this.loginValueList = loginValueList;
+    }
+
+    public java.lang.Object[] getLoginLabelList()
+    {
+        return this.loginLabelList;
+    }
+
+    public java.lang.Object[] getLoginLabelListDouble()
+    {
+        return this.loginLabelListDouble;
+    }
+    
+    public java.lang.Object[] getLoginLabelListDestination()
+    {
+        return this.loginLabelListDestination;
+    }
+
+    public java.lang.Object[] getLoginLabelListHints()
+    {
+        return this.loginLabelListHints;
+    }
+
+    public void setLoginLabelList(java.lang.Object[] loginLabelList)
+    {
+        this.loginLabelList = loginLabelList;
+    }
+
+    public void setLoginLabelListDouble(java.lang.Object[] loginLabelListDouble)
+    {
+        this.loginLabelListDouble = loginLabelListDouble;
+    }
+    
+    public void setLoginLabelListDestination(java.lang.Object[] loginLabelListDestination)
+    {
+        final int length = loginLabelListDestination != null ? loginLabelListDestination.length : 0;
+        java.lang.Object[] tempListaDestination = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            Object tempDestination = loginLabelListDestination[i];
+            if (tempDestination instanceof String) {
+                String tempStringDestination = (String) tempDestination;
+                if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                {
+                    tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                    tempDestination = tempStringDestination;
+                }
+            }
+            tempListaDestination[i] = tempDestination;
+        }
+
+        this.loginLabelListDestination = tempListaDestination;
+    }
+
+    public void setLoginLabelListHints(java.lang.Object[] loginLabelListHints)
+    {
+        this.loginLabelListHints = loginLabelListHints;
+    }
+
+    public void setLoginBackingListDouble(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDoubleProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setLoginBackingListDouble requires non-null property arguments");
+        }
+
+        this.loginValueList = null;
+        this.loginLabelList = null;
+        this.loginLabelListDouble = null;        
+
+        if (items != null)
+        {
+            this.loginValueList = new java.lang.Object[items.size()];
+            this.loginLabelList = new java.lang.Object[items.size()];
+            this.loginLabelListDouble = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.loginValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.loginLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.loginLabelListDouble[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDoubleProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setLoginBackingListDouble encountered an exception", ex);
+            }
+        }
+    }
+    
+    
+    public void setLoginBackingListDestination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDestinationProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setLoginBackingListDestination requires non-null property arguments");
+        }
+
+        this.loginValueList = null;
+        this.loginLabelList = null;
+        this.loginLabelListDestination = null;        
+
+        if (items != null)
+        {
+            this.loginValueList = new java.lang.Object[items.size()];
+            this.loginLabelList = new java.lang.Object[items.size()];
+            this.loginLabelListDestination = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.loginValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.loginLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+
+                    Object tempDestination = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDestinationProperty);
+                    if (tempDestination instanceof String) {
+                        String tempStringDestination = (String) tempDestination;
+                        if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                        {
+                            tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                            tempDestination = tempStringDestination;
+                        }
+                    }
+                    this.loginLabelListDestination[i] = tempDestination;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setLoginBackingListDestination encountered an exception", ex);
+            }
+        }
+    }
+
+    public void setLoginBackingListInternationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
+	setLoginBackingList(items, valueProperty, labelProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.loginLabelList.length; i++){
+		Object label = this.loginLabelList[i];
+		if(messageResources.isPresent(locale, this.loginLabelList[i].toString()))
+        		this.loginLabelList[i] = messageResources.getMessage(locale, this.loginLabelList[i].toString());
+	}
+    }	    
+    
+    public void setLoginBackingListInternationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
+	setLoginBackingList(items, valueProperty, labelProperty, labelHintProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.loginLabelList.length; i++){
+		Object label = this.loginLabelList[i];
+		if(messageResources.isPresent(locale, this.loginLabelList[i].toString()))
+        		this.loginLabelList[i] = messageResources.getMessage(locale, this.loginLabelList[i].toString());
+	}
+	for(int i = 0; i < this.loginLabelListHints.length; i++){
+		Object label = this.loginLabelListHints[i];
+		if(messageResources.isPresent(locale, this.loginLabelListHints[i].toString()))
+        		this.loginLabelListHints[i] = messageResources.getMessage(locale, this.loginLabelListHints[i].toString());
+	}
+    }	    
+    
+    public void setLoginBackingList(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
+    {
+        if (valueProperty == null || labelProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setLoginBackingList requires non-null property arguments");
+        }
+
+        this.loginValueList = null;
+        this.loginLabelList = null;
+
+        if (items != null)
+        {
+            this.loginValueList = new java.lang.Object[items.size()];
+            this.loginLabelList = new java.lang.Object[items.size()];
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.loginValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.loginLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setLoginBackingList encountered an exception", ex);
+            }
+        }
+    }
+
+    public void setLoginBackingList(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelHintProperty == null)
+        {
+            throw new IllegalArgumentException("LoginOAuthUCFormImpl.setLoginBackingList requires non-null property arguments");
+        }
+
+        this.loginValueList = null;
+        this.loginLabelList = null;
+        this.loginLabelListHints = null;        
+
+        if (items != null)
+        {
+            this.loginValueList = new java.lang.Object[items.size()];
+            this.loginLabelList = new java.lang.Object[items.size()];
+            this.loginLabelListHints = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.loginValueList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.loginLabelList[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.loginLabelListHints[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelHintProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("LoginOAuthUCFormImpl.setLoginBackingList encountered an exception", ex);
+            }
+        }
+    }
+
+
+    public void reset(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
+    {
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.commons.lang.builder.ToStringBuilder builder =
+            new org.apache.commons.lang.builder.ToStringBuilder(this);
+        builder.append("senha", "***");
+        builder.append("login", this.login);
+        return builder.toString();
+    }
+
+    /**
+     * Allows you to clean all values from this form. Objects will be set to <code>null</code>, numeric values will be
+     * set to zero and boolean values will be set to <code>false</code>. Backinglists for selectable fields will
+     * also be set to <code>null</code>.
+     */
+    public void clean()
+    {
+        this.senha = null;
+        this.senhaValueList = null;
+        this.senhaLabelList = null;
+        this.senhaLabelListDouble = null;        
+        this.senhaLabelListHints = null;                
+        this.login = null;
+        this.loginValueList = null;
+        this.loginLabelList = null;
+        this.loginLabelListDouble = null;        
+        this.loginLabelListHints = null;                
+    }
+
+    /**
+     * Override to provide population of current form with request parameters when validation fails.
+     *
+     * @see org.apache.struts.action.ActionForm${sharp}validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
+     */
+    public org.apache.struts.action.ActionErrors validate(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
+    {
+        final org.apache.struts.action.ActionErrors errors = super.validate(mapping, request);
+        if (errors != null && !errors.isEmpty())
+        {
+            Object formObj = org.andromda.presentation.bpm4struts.PageSessionObjectUtil.getPageForm(request, "LoginOAuthUC");
+
+            if (formObj != null)
+            {
+                final java.util.Map parameters = new java.util.HashMap();
+                for (final java.util.Enumeration names = request.getParameterNames(); names.hasMoreElements();)
+                {
+                    final String name = String.valueOf(names.nextElement());
+                    parameters.put(name, request.getParameterValues(name));
+                }
+                try
+                {
+                    org.apache.commons.beanutils.BeanUtils.populate(formObj, parameters);
+                }
+                catch (java.lang.Exception populateException)
+                {
+                    // ignore if we have an exception here (we just don't populate).
+                }
+            }
+        }
+        return errors;
+    }
+
+    public final static class LabelValue
+    {
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+        private java.lang.Object hint = null;        
+
+        public LabelValue(Object label, java.lang.Object value)
+        {
+            this.label = label;
+            this.value = value;
+        }
+
+        public LabelValue(Object label, java.lang.Object value, Object hint)
+        {
+            this.label = label;
+            this.value = value;
+            this.hint = hint;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+        
+	public java.lang.Object getHint()
+        {
+            return this.hint;
+        }        
+
+        public java.lang.String toString()
+        {
+            return label + "=" + value;
+        }
+    }
+    
+    public final static class LabelValueDouble
+    {
+        private java.lang.Object labelDouble = null;
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+
+        public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
+        {
+            this.label = label;
+            this.labelDouble = labelDouble;
+            this.value = value;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+        
+        public java.lang.Object getLabelDouble()
+        {
+            return this.labelDouble;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+
+        public java.lang.String toString()
+        {
+            return label + "," + labelDouble + "=" + value;
+        }
+    }
+    
+    
+    public final static class LabelValueDestination
+    {
+        private java.lang.Object labelDestination = null;
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+
+        public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
+        {
+            this.label = label;
+            this.labelDestination = labelDestination;
+            this.value = value;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+        
+        public java.lang.Object getLabelDestination()
+        {
+            return this.labelDestination;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+
+        public java.lang.String toString()
+        {
+            return label + "," + labelDestination + "=" + value;
+        }
+    }
+ 
+    /** Verifica se o campo esta sendo exibido na tela */
+    public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
+	String modoPermitido = null;
+	java.util.StringTokenizer tokenizerModosPermitidos = null;
+        java.util.StringTokenizer tokenizerModosPossuidos = null;
+
+        return true;
+    }
+}
+#end

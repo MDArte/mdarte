@@ -1,0 +1,129 @@
+#set ($modelPackage = ".${modelPackageName}")
+#set ($transferPackage = ".${transferPackageName}")
+#set ($generatedFile = "${stringUtils.replace(${stringUtils.replace($class.packageName,$modelPackage,$transferPackage)}, '.', '/')}/${class.name}TOExample.java")
+#if ($stringUtils.isNotBlank($class.packageName))
+package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${transferPackageName}")};
+#end
+
+public class ${class.name}TOExample
+#if($class.generalization)
+#set ($generalizacao = ${class.generalization.fullyQualifiedName})
+#if ($generalizacao.indexOf(".${modelPackageName}.") > 0)
+#set ($generalizacao = $generalizacao.concat("TOExample"))
+#set ($generalizacao = $stringUtils.replace($generalizacao, ".${modelPackageName}.", ".${transferPackageName}."))
+#end
+extends $generalizacao
+#else
+extends br.ufrj.coppetec.to.AbstractTOExample
+#end
+{
+    	public static ${class.name}TOExample newInstance()
+        {
+            return new ${class.name}TOExample();
+        }
+ 	
+ 	#foreach ($attribute in $class.attributes)
+	#set ($tipo = $attribute.type.fullyQualifiedName)
+	#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+	#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))	  
+	private ${tipo}TO $attribute.name;
+
+	$attribute.visibility $tipo ${attribute.getterName}(){
+        	return this.${attribute.name};
+    	}
+
+    	$attribute.visibility void ${attribute.setterName}($tipo $attribute.name){
+        	this.${attribute.name} = $attribute.name;
+        }    
+	#else
+    	private $tipo $attribute.name;
+
+	$attribute.visibility $tipo ${attribute.getterName}(){
+        	return this.${attribute.name};
+    	}
+
+    	$attribute.visibility void ${attribute.setterName}($tipo $attribute.name){
+        	this.${attribute.name} = $attribute.name;
+        }
+	#end
+	#end
+	
+
+	#foreach ($associationEnd in $class.associationEnds)
+	#set ($target = $associationEnd.otherEnd)
+	#if ($target.navigable)
+	
+	#set($rtipo = $target.type.fullyQualifiedName)
+	#if($rtipo.indexOf(".${modelPackageName}.") > 0)
+	#set($rtipo = $rtipo.concat("TOExample"))
+	#set($rtipo = $stringUtils.replace($rtipo, ".${modelPackageName}.", ".${transferPackageName}."))
+	#end
+	
+	#set($tipo = 'java.util.Collection')   
+	
+	private $tipo $target.name = new java.util.ArrayList<$rtipo>();
+	
+	public ${tipo}<$rtipo> ${target.getterName}(){
+    		return this.$target.name;
+    	}
+
+    	public void ${target.setterName}(${tipo}<$rtipo> $target.name){
+    		this.${target.name} = ${target.name};
+        }
+    
+    	#if ($associationEnd.navigable)
+    
+    
+	public void ${target.setterName}Inverse(${tipo}<$rtipo> ${target.name}){  
+    		$tipo<$rtipo> temp = this.${target.name};
+		this.${target.name} = ${target.name};
+		if(temp != null){
+			for(java.util.Iterator it = temp.iterator(); it.hasNext();){
+				$rtipo ${stringUtils.uncapitalize($target.type.name)}Next = ($rtipo)it.next();
+				if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
+					${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+			}
+		}
+
+		if(${target.name} != null){
+			for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
+        			$rtipo ${stringUtils.uncapitalize($target.type.name)}Next = ($rtipo)it.next();
+        			if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
+        				${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
+        		}
+        	}
+       }
+    	
+    	
+    	
+    	
+    	public void add${stringUtils.capitalize($target.name)}($rtipo ${stringUtils.uncapitalize($target.type.name)}Temp){
+		if(${target.name} == null)
+			${target.setterName}(new java.util.ArrayList());	
+    		if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
+    			${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
+    	
+    		$tipo<${class.name}TOExample> $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
+	
+		if(!${associationEnd.name}.contains(this))
+			${associationEnd.name}.add(this);	
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+		this.${target.setterName}(${target.name});
+    	}
+    
+    	public void remove${stringUtils.capitalize($target.name)}($rtipo ${stringUtils.uncapitalize($target.type.name)}Temp){
+    		$tipo<$rtipo> ${target.name} = this.${target.getterName}();
+		if(${target.name} != null){
+    			${target.name}.remove(${stringUtils.uncapitalize($target.type.name)}Temp);
+		}
+    		java.util.Collection $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
+		if(${associationEnd.name} != null)
+			${associationEnd.name}.remove(this);	
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+	
+		this.${target.setterName}(${target.name});
+    	}    
+    	#end
+    	#end
+    	#end	 	
+}

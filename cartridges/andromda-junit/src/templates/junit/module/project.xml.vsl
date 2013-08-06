@@ -1,0 +1,12 @@
+#set($generatedFile = "${package.name}/project.xml")
+##
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<extend>../project.xml</extend>
+#set ($artifactIdSuffix = "-junit")
+	<artifactId>${pom.groupId}-${package.name}${artifactIdSuffix}</artifactId>
+	<name>${projectName} ${package.name} Module</name>
+	<description>
+		Contains the ${pom.name}-${package.name}'s module.
+	</description>
+</project>

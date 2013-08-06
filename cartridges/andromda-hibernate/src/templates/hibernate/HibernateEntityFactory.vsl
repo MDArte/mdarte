@@ -1,0 +1,966 @@
+// license-header java merge-point
+/**
+ * Attention: Generated source! Do not modify by hand!
+ */
+#if ($entity.packageName)
+package $entity.packageName;
+
+#end
+
+import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.Session;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+
+import org.hibernate.CallbackException;
+import org.apache.commons.beanutils.PropertyUtils;
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import br.ufrj.coppetec.ValueObject;
+import br.ufrj.coppetec.DataObject;
+#if ($entity.auditoria)
+import ${customTypesPackage}.${modelPackageName}.AuditoriaEntity;
+
+import org.hibernate.HibernateException;
+
+import util.CriptoUtils;
+
+import java.util.Date;
+import java.util.Collection;
+
+import accessControl.ControleAcesso;
+
+#end
+import org.hibernate.CacheMode;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+
+/**
+ * <p>
+ * Factory class.
+ * Is able to find and create objects of type ${entity.name}.
+ * The Hibernate <em>$entity.hibernateInheritanceStrategy</em> inheritance
+ * strategy is followed.
+ * Those can be described as follows:
+ * </p>
+ * @see $entity.fullyQualifiedName
+ */
+public abstract class ${entity.name}DAO 
+#if($entity.generalization)
+    extends ${entity.generalization.fullyQualifiedName}DAOImpl
+#else
+    extends AbstractDAO 
+#end    
+{
+
+
+	protected void removeRelations(AbstractEntity obj)throws DAOException{
+	#set($vetoException = "java.beans.PropertyVetoException")
+#set($throwsVeto = "false")
+
+		try {
+			#if($entity.generalization)
+			super.removeRelations(obj);
+			#end
+			${entity.entityName}Abstract entidade = (${entity.entityName}Abstract)obj; 		
+			Session session = currentSession();
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
+#if ($associationEnd.navigable)
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
+#set($throwsVeto = "true")
+#end
+	  entidade.${target.setterName}Inverse(null);
+#end
+#end
+#end
+		
+	}catch (HibernateException e) {
+		throw new DAOException(e);
+	} 
+	
+	#if($throwsVeto.equals("true"))
+catch($vetoException ve){
+	throw new RuntimeException(ve);
+}
+#end
+}
+
+
+
+#if (!$entity.abstract)
+	  public List<AbstractEntity> select(long id) throws DAOException {
+		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
+		try {
+			Session session = currentSession();
+			${entity.name}Abstract res = (${entity.name}Abstract) session.load(${entity.entityImplementationName}.class, new Long(id));
+			org.hibernate.Hibernate.initialize(res);
+			lista.add(res);
+		} catch (ObjectNotFoundException onfe) {
+			throw new DAOException(onfe);
+		} catch (HibernateException he1) {
+			throw new DAOException(he1);
+		} 		
+		return lista;
+	}	
+
+	public List<AbstractEntity> insert(AbstractEntity obj) throws DAOException {
+		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
+		#if($stringUtils.isNotBlank($procedureName))
+		try{
+		this.executarProcedure("$procedureName");
+		}catch(Exception e){
+		e.printStackTrace();
+		//TODO
+		}
+		#end
+
+		try {
+#if ($entity.auditoria)		
+## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
+##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
+String login;
+			try {
+	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e)	 {
+    login = "NA";
+}
+		String operacao = "INSERCAO";
+			java.util.Date dataOperacao = new java.util.Date();
+
+			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
+			((AuditoriaEntity) obj).setAuditoriaLogin(login);
+			((AuditoriaEntity) obj).setAuditoriaOperacao(operacao);
+			
+#end
+			Session session = currentSession();
+			session.setCacheMode(CacheMode.GET);
+			session.save(obj);
+			session.flush();
+			lista.add(obj);
+			return lista;
+		} catch (HibernateException e) {
+			throw new DAOException(e);
+		} 
+	}
+	
+	public List<AbstractEntity> insertOrUpdate(AbstractEntity obj) throws DAOException {
+		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
+				#if($stringUtils.isNotBlank($procedureName))
+		try{
+		this.executarProcedure("$procedureName");
+		}catch(Exception e){
+		e.printStackTrace();
+		//TODO
+		}
+				#end
+
+		try {
+#if ($entity.auditoria)		
+## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
+##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
+String login;
+try {
+	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e)	 {
+    login = "NA";
+}
+					String operacao = obj.getId() == null ? "INSERCAO" : "ATUALIZACAO";
+			java.util.Date dataOperacao = new java.util.Date();
+
+			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
+			((AuditoriaEntity) obj).setAuditoriaLogin(login);
+			((AuditoriaEntity) obj).setAuditoriaOperacao(operacao);
+			
+#end
+			Session session = currentSession();
+			session.setCacheMode(CacheMode.GET);
+			session.saveOrUpdate(obj);
+			session.flush();
+			lista.add(obj);
+			return lista;
+		} catch (HibernateException e) {
+			throw new DAOException(e);
+		} 
+	}
+	
+	public List<AbstractEntity> update(AbstractEntity obj) throws DAOException {
+		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
+				#if($stringUtils.isNotBlank($procedureName))
+		try{
+		this.executarProcedure("$procedureName");
+		}catch(Exception e){
+		e.printStackTrace();
+		//TODO
+		}
+				#end
+		try {
+#if ($entity.auditoria)		
+## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
+##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
+String login;
+try {
+	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e)	 {
+    login = "NA";
+}
+								String operacao = "ATUALIZACAO";
+			java.util.Date dataOperacao = new java.util.Date();
+
+			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
+			((AuditoriaEntity) obj).setAuditoriaLogin(login);
+			((AuditoriaEntity) obj).setAuditoriaOperacao(operacao);
+			
+#end
+			Session session = currentSession();
+			session.setCacheMode(CacheMode.GET);
+			session.update(obj);
+			session.flush();
+			lista.add(obj);
+			return lista;
+} catch (HibernateException e) {
+			throw new DAOException(e);
+		} 
+	}
+
+	public List<AbstractEntity> delete(AbstractEntity obj) throws DAOException {
+		try{
+			Session session = currentSession();
+			removeRelations(obj);
+			session.delete(obj);
+			session.flush();
+			return null;
+		} catch (HibernateException e) {
+			throw new DAOException(e);
+		}
+	}
+	
+
+	/**
+	 * Lista todos os objetos.
+	 * 
+	 * @return Lista de objetos
+	 */
+	## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.
+	public List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException { 
+		try {
+			Session session = currentSession();
+			
+			String hql = "from ${entity.fullyQualifiedName}";
+			
+			if(propriedade != null && !propriedade.equals("")){
+				String order = desc.booleanValue()?" desc":" asc";
+				hql += " order by " + propriedade + order;
+			}
+
+			org.hibernate.Query qry = session.createQuery(hql);
+			
+			if (paginacao != null){
+				qry.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+				qry.setMaxResults($maxRows*$maxPages);
+			}
+			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+			qry.setCacheable(true);
+			#end
+			List res = qry.list();
+			return res;
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+	}
+	
+	## Fim
+	
+	public List<AbstractEntity> list() throws DAOException { 
+		try {
+			Session session = currentSession();
+			org.hibernate.Query qry = session.createQuery("from ${entity.fullyQualifiedName}");
+			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+			qry.setCacheable(true);
+			#end
+			List res = qry.list();
+			return res;
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+	}	
+	
+	
+	protected abstract Object handleFilter (DataObject vo) throws DAOException;
+
+	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
+		try {
+            		Object obj = handleFilter(vo);
+            
+            		if(obj instanceof org.hibernate.Query){
+            		org.hibernate.Query res = (org.hibernate.Query)obj;
+            			if (paginacao != null){
+            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+					res.setMaxResults($maxRows*$maxPages);
+				}
+			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+			res.setCacheable(true);
+			#end		
+			return res.list();
+            		}
+            		else if(obj instanceof org.hibernate.Criteria){
+            			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+            			if (paginacao != null){
+            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+					res.setMaxResults($maxRows*$maxPages);
+				}
+			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+			res.setCacheable(true);
+			#end		
+			return res.list();
+	    		}
+            		else
+            			return null;
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+	}
+	
+	protected abstract org.hibernate.Criteria handleXmlExport (ValueObject vo, org.hibernate.Session session) throws DAOException;
+	
+	public org.hibernate.Criteria xmlExport(ValueObject vo, org.hibernate.Session session) throws DAOException {
+		return handleXmlExport(vo, session);
+	} 	 	
+	
+	public int xmlImportEntity(org.dom4j.Element raiz) throws DAOException 
+	{
+		Session session = currentSession();
+## Procura entidade atraves do codigo (ExportId)
+		org.hibernate.Criteria critBusca_Entidade = session.createCriteria(${entity.entityImplementationName}.class);
+#macro( macroCriterioBusca $entrada $stringBusca $stringRaiz)
+#foreach ( $attribute in $entrada.attributes )
+#if ($attribute.hasExactStereotype($exportId))
+#if($attribute.type.fullyQualifiedName == "java.util.Date")
+		
+		try { 
+			java.util.Date eidValor_${stringBusca}_${attribute.name} =  java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).parse(${stringRaiz}.valueOf("./$attribute.name"));
+			critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "${attribute.name}" , eidValor_${stringBusca}_${attribute.name} ) );	
+		}
+		catch (Exception e) { e.printStackTrace(); }
+#elseif($attribute.type.enumeration)
+		#if ($enumeration.literalType.primitive)
+		#set($enumeration = $attribute.type)
+		$enumeration.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.wrapperName}.valueOf(${stringRaiz}.valueOf("./$attribute.name")));		
+		#else
+		$enumeration.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.fullyQualifiedName}.valueOf(${stringRaiz}.valueOf("./$attribute.name")));		
+		#end
+		critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "$attribute.name" , eidValor_${stringBusca}_$attribute.name ) );
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
+		$attribute.type.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(${stringRaiz}.valueOf("./$attribute.name").charAt(0));
+		critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "$attribute.name" , eidValor_${stringBusca}_$attribute.name ) );
+#else
+		$attribute.type.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(${stringRaiz}.valueOf("./$attribute.name"));
+		critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "$attribute.name" , eidValor_${stringBusca}_$attribute.name ) );
+#end
+#end
+#end
+#if ($entrada.generalization)
+#macroCriterioBusca( $entrada.generalization $stringBusca $stringRaiz )
+#end
+#end
+#macroCriterioBusca( $entity 'Entidade' 'raiz' )
+		
+		java.util.List listaRes = critBusca_Entidade.setMaxResults(2).list();
+		if (listaRes.size() > 1)
+			throw new DAOException("error.default.exportid.notunique.exception" + "," + listaRes.get(0).toString() + "," + listaRes.get(1).toString());
+		
+		${entity.entityImplementationName} entidade;
+
+		if (listaRes.size() == 0)
+			entidade = new ${entity.entityImplementationName}();
+		else
+			entidade = (${entity.entityImplementationName}) listaRes.get(0);
+## Atribui atributos da entidade
+#macro( macroImportaAtributos $entrada )
+#foreach ( $attribute in $entrada.attributes )
+#if (!$attribute.hasExactStereotype("Identifier"))
+
+#if($attribute.findTaggedValue($throwsVetoException).equals("true"))
+		try {
+#end		
+#if(${attribute.type.fullyQualifiedName}!="byte[]")
+	## ignorando atributos modelados como Blob
+		if (raiz.selectNodes("./$attribute.name").size() != 0) {
+#if($attribute.type.fullyQualifiedName == "java.util.Date")
+			try { 
+				java.util.Date valor${attribute.name} =  java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).parse(raiz.valueOf("./$attribute.name"));		
+				entidade.${attribute.setterName}(valor${attribute.name});
+			}
+			catch (Exception e) { e.printStackTrace(); }
+
+#elseif($attribute.type.enumeration)
+			#set($enumeration = $attribute.type)
+			#if ($enumeration.literalType.primitive)
+			$enumeration.fullyQualifiedName valor$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.wrapperName}.valueOf(raiz.valueOf("./$attribute.name")));		
+			#else
+			$enumeration.fullyQualifiedName valor$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name")));		
+			#end
+			entidade.${attribute.setterName}(valor${attribute.name});
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
+			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name").charAt(0));		
+			entidade.${attribute.setterName}(valor${attribute.name});
+#else
+			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name"));		
+			entidade.${attribute.setterName}(valor${attribute.name});
+#end
+		}
+#end
+#if($attribute.findTaggedValue($throwsVetoException).equals("true"))
+		}
+		catch (java.beans.PropertyVetoException exp${attribute.name}) { throw new DAOException(exp${attribute.name}); }
+#end
+#end
+#end
+#if ($entrada.generalization)
+#macroImportaAtributos( $entrada.generalization )
+#end
+#end
+#macroImportaAtributos( $entity )
+## Busca e atribui relacionamentos da entidade
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)	
+#if(!$target.many && !$target.hibernateInverse)
+
+		Element raiz_$target.name = (Element) raiz.selectSingleNode("./$target.name");
+		if (raiz_${target.name}.elements().size() != 0)
+		{
+		
+		org.hibernate.Criteria critBusca_$target.name = session.createCriteria(${target.type.packageName}.${target.type.entityImplementationName}.class);
+#macroCriterioBusca( $target.type $target.name "raiz_$target.name" )
+
+		java.util.List listaResAss_$target.name = critBusca_${target.name}.setMaxResults(2).list();
+		if (listaResAss_${target.name}.size() > 1) // Encontrou mais de uma entidade para o mesmo código
+			throw new DAOException("error.default.exportid.notunique.exception" + "," + listaResAss_${target.name}.get(0).toString() + "," + listaResAss_${target.name}.get(1).toString());
+		if (listaResAss_${target.name}.size() == 0) // Nao encontrou entidade associada
+			return 1;
+		if (listaResAss_${target.name}.size() == 1) 
+		{
+			${target.type.packageName}.${target.type.entityImplementationName}	entidade_ass_$target.name;
+			entidade_ass_$target.name = (${target.type.packageName}.${target.type.entityImplementationName}) listaResAss_${target.name}.get(0);
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+			try {
+#end
+			entidade.${target.setterName}(entidade_ass_$target.name);
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+			}
+			catch (java.beans.PropertyVetoException exp${target.name}) { throw new DAOException(exp${target.name}); }
+#end
+		}
+		
+		}
+		else { 
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+			try {
+#end
+			entidade.${target.setterName}(null); 
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+			}
+			catch (java.beans.PropertyVetoException exp${target.name}) { throw new DAOException(exp${target.name}); }
+#end
+		}
+#end
+#if ($target.many && !$target.hibernateInverse)
+
+		Element raiz_$target.name = (Element) raiz.selectSingleNode("./$target.name");
+		$target.getterSetterTypeName collection$target.name = $target.collectionTypeImplementation;
+
+		Element raiz_sub_$target.name;
+		
+		for (int i=0; i < raiz_${target.name}.elements().size(); i++)
+		{
+		
+		raiz_sub_$target.name = (Element) raiz_${target.name}.elements().get(i);
+		
+		org.hibernate.Criteria critBusca_$target.name = session.createCriteria(${target.type.packageName}.${target.type.entityImplementationName}.class);
+#macroCriterioBusca( $target.type $target.name "raiz_sub_$target.name" )
+
+		java.util.List listaResAss_$target.name = critBusca_${target.name}.setMaxResults(2).list();
+		if (listaResAss_${target.name}.size() > 1)
+			throw new DAOException("error.default.exportid.notunique.exception" + "," + listaResAss_${target.name}.get(0).toString() + "," + listaResAss_${target.name}.get(1).toString());
+		if (listaResAss_${target.name}.size() == 0)
+			return 1;
+		if (listaResAss_${target.name}.size() == 1)
+		{
+			${target.type.packageName}.${target.type.entityImplementationName}	entidade_ass_$target.name;
+			entidade_ass_$target.name = (${target.type.packageName}.${target.type.entityImplementationName}) listaResAss_${target.name}.get(0);
+			collection${target.name}.add(entidade_ass_$target.name);
+		}
+		
+		}
+
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+		try {
+#end		
+		entidade.${target.setterName}(collection${target.name});
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+		}
+		catch (java.beans.PropertyVetoException exp${target.name}) { throw new DAOException(exp${target.name}); }
+#end
+#end
+#end
+#end
+		insertOrUpdate(entidade);
+	
+		return 0;
+	}
+
+	public Element xmlExportEntity(AbstractEntity entity) throws DAOException 
+	{
+		Element raiz = org.dom4j.DocumentHelper.createElement("raiz_elemento");		
+		return xmlExportEntity(entity, raiz);
+	}
+
+	public Element xmlExportEntity(AbstractEntity entity, Element raiz) throws DAOException 
+	{
+		try
+		{
+			$entity.entityImplementationName obj = ($entity.entityImplementationName) entity; 
+			
+## Adiciona cada atributo
+#foreach ( $attribute in $entity.attributes )
+#if (!$attribute.hasExactStereotype("Identifier"))
+			if (obj.${attribute.getterName}() != null)
+			{
+#if($attribute.type.fullyQualifiedName == "java.util.Date")
+				try { 
+					Element att$attribute.name = raiz.addElement("$attribute.name");
+					att${attribute.name}.addText(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).format(obj.${attribute.getterName}()));
+				}
+				catch (Exception e) { e.printStackTrace(); }
+#else
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+				att${attribute.name}.addText(obj.${attribute.getterName}().toString());
+#end
+			}			
+#end			
+#end
+## Adiciona cada associacao
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)	
+#if (!$target.many && !$target.hibernateInverse)
+			
+			${target.type.packageName}.$target.type.entityImplementationName assEntity$target.name = (${target.type.packageName}.$target.type.entityImplementationName) obj.${target.getterName}();
+			Element ass$target.name = raiz.addElement("$target.name");
+			if (assEntity$target.name != null)
+			{
+## Adiciona cada atributo com o estereotipo ExportId
+#macro( getAssExportId $entrada )
+#foreach ( $association_attribute in $entrada.attributes )
+#if ($association_attribute.hasExactStereotype($exportId))
+#if($association_attribute.type.fullyQualifiedName == "java.util.Date")
+				try { 
+					Element assAtt$association_attribute.name = ass${target.name}.addElement("$association_attribute.name");
+					assAtt${association_attribute.name}.addText(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).format(assEntity${target.name}.${association_attribute.getterName}()));
+				}
+				catch (Exception e) { e.printStackTrace(); }
+#else
+				Element assAtt$association_attribute.name = ass${target.name}.addElement("$association_attribute.name");
+				assAtt${association_attribute.name}.addText(assEntity${target.name}.${association_attribute.getterName}().toString());
+#end			
+#end
+#end
+#if ($entrada.generalization)
+#getAssExportId ( $entrada.generalization )
+#end
+#end
+#getAssExportId( $target.type )
+			}
+#end
+#if ($target.many && !$target.hibernateInverse)
+			
+			$target.getterSetterTypeName assEntityMany$target.name = $target.collectionTypeImplementation;
+			assEntityMany$target.name = obj.${target.getterName}();
+			
+			Object[] array${target.name} = assEntityMany${target.name}.toArray();
+			
+			Element ass$target.name = raiz.addElement("$target.name");
+			for (int i=0; i < array${target.name}.length; i++)
+			{
+				Element assIdx$target.name = ass${target.name}.addElement("$target.type.entityImplementationName");
+## Adiciona cada atributo com o estereotipo ExportId
+#macro( getAssExportIdMany $entrada )
+#foreach ( $association_attribute in $entrada.attributes )
+#if ($association_attribute.hasExactStereotype($exportId))
+#if($association_attribute.type.fullyQualifiedName == "java.util.Date")
+
+				try { 
+					Element assAtt$association_attribute.name = assIdx${target.name}.addElement("$association_attribute.name");
+					assAtt${association_attribute.name}.addText(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).format(((${target.type.packageName}.$target.type.entityImplementationName) array${target.name}[i]).${association_attribute.getterName}()));
+				}
+				catch (Exception e) { e.printStackTrace(); }
+#else
+
+				Element assAtt$association_attribute.name = assIdx${target.name}.addElement("$association_attribute.name");
+				assAtt${association_attribute.name}.addText(((${target.type.packageName}.$target.type.entityImplementationName) array${target.name}[i]).${association_attribute.getterName}().toString());
+#end			
+#end
+#end
+#if ($entrada.generalization)
+#getAssExportIdMany ( $entrada.generalization )
+#end
+#end
+#getAssExportIdMany ( $target.type )
+			}
+#end
+#end
+#end
+## Adiciona atributos e associacoes da classe pai
+#if($entity.generalization)
+
+			super.xmlExportEntity(entity, raiz);
+#end
+
+		}
+		catch(Exception e) { e.printStackTrace(); }
+		
+		return raiz;
+	}
+	
+#end
+
+
+## Generate finderByAssociations
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
+
+    /**
+$target.getDocumentation("     * ")
+     */
+## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
+#if ($target.many)
+	#set($argumentList = ", Integer paginacao")
+#else
+		#set($argumentList = "")
+#end;
+     
+     
+    public static $target.getterSetterTypeName ${target.getterName}By${entity.name}(long id $argumentList) throws DAOException {		
+		try {
+			Session session = currentSession();
+			#if ($target.many)
+			//org.hibernate.Query qry = session.createQuery("select t2 from ${entity.fullyQualifiedName} as t1 inner join t1.${target.name} as t2 where t1.id = " + id);
+			org.hibernate.Query qry = session.createQuery("select elements(t1.${target.name}) from ${entity.fullyQualifiedName} as t1 where t1.id = " + id);
+			#else
+			org.hibernate.Query qry = session.createQuery("select a.${target.name} from ${entity.fullyQualifiedName} a where a.id = " + id);
+			#end
+			#if ($target.many)
+			   if(paginacao != null){
+			   	qry.setFirstResult((paginacao -1)*$maxRows*$maxPages);
+			   	qry.setMaxResults($maxRows*$maxPages);
+			   }
+			   #if($hibernateEnableCache.equalsIgnoreCase("true"))
+			   qry.setCacheable(true);
+			   #end
+			   List res = qry.list();
+			   return res;
+			#else
+			   #if($hibernateEnableCache.equalsIgnoreCase("true"))
+			   qry.setCacheable(true);
+			   #end
+			   List res = qry.list();	
+			   if(res.isEmpty()) {
+			     return null;
+			   } else {
+			     return ($target.getterSetterTypeName)res.get(0);
+			   }
+			#end
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+    }
+## Fim
+#end
+#end
+
+#foreach ($operation in $entity.businessOperations)
+#set ($returnType = $operation.returnType)
+#set ($signature = $operation.signature)
+#set ($listaAtributos = $operation.typedArgumentList)
+
+#if(!$operation.findTaggedValue($daoMethod) ||( $operation.findTaggedValue($daoMethod) && $operation.findTaggedValue($daoMethod).equals("true")))
+
+#if ($stringUtils.isBlank($listaAtributos))
+#set ($parameters = "org.hibernate.Session session")
+#else
+#set ($parameters = "org.hibernate.Session session, ${listaAtributos}")
+#end
+
+## (MDArte) Modificacao do tipo de retorno de um metodo que retorne uma colecao para Object, permitindo assim uma paginacao
+## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
+#if($returnType.collectionType)
+	#set($return = "Object")
+#else
+	#set($return = $returnType.fullyQualifiedName)
+#end
+
+## Fim
+
+#if ($operation.exceptionsPresent)
+
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters)
+        throws DAOException, $operation.exceptionList;
+#else
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws DAOException;
+#end
+    /**
+$operation.getDocumentation("     * ")
+     */
+## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
+###if ($stringUtils.contains($returnType.fullyQualifiedName, "Collection"))
+#if($returnType.collectionType || $returnType.listType || $returnType.setType )
+	#if(!$stringUtils.isEmpty($operation.typedArgumentList))
+		#set($argumentList = "$operation.typedArgumentList , Integer paginacao")
+	#else
+		#set($argumentList = "Integer paginacao")
+	#end;
+#else
+	#set($argumentList = $operation.typedArgumentList)
+	
+#end
+
+## Fim
+     
+#if ($operation.exceptionsPresent)
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList)
+        throws DAOException, $operation.exceptionList {
+#else
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList) throws DAOException {
+#end
+try{
+			          Session session = currentSession();
+	#set ($parameterList = $operation.argumentNames)
+#if ($stringUtils.isBlank($parameterList))
+#set ($parameters = "session")
+#else
+#set ($parameters = "session, ${parameterList}")
+#end
+
+#if ($operation.returnTypePresent && !$operation.returnType.collectionType)
+            return handle${stringUtils.capitalize($operation.name)}($parameters);
+#elseif($operation.returnTypePresent && $operation.returnType.collectionType)
+            Object obj = handle${stringUtils.capitalize($operation.name)}($parameters);
+            
+            if(obj instanceof org.hibernate.Query){
+            	org.hibernate.Query res = (org.hibernate.Query)obj;
+            	if (paginacao != null){
+            		res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+			res.setMaxResults($maxRows*$maxPages);
+		}
+		#if($hibernateEnableCache.equalsIgnoreCase("true"))
+		res.setCacheable(true);
+		#end		
+		return res.list();
+            }
+            else if(obj instanceof org.hibernate.Criteria){
+            	org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+            	if (paginacao != null){
+            		res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+			res.setMaxResults($maxRows*$maxPages);
+		}
+		#if($hibernateEnableCache.equalsIgnoreCase("true"))
+		res.setCacheable(true);
+		#end		
+		return res.list();
+	    }
+            else
+            	return null;
+            	
+#else
+            handle${stringUtils.capitalize($operation.name)}($parameters);
+            session.flush();
+#end
+			       } catch (ObjectNotFoundException onfe) {
+			               throw new DAOException(onfe);
+		       } catch (HibernateException he1) {
+			                        throw new DAOException(he1);
+		       } 
+    }
+
+#end
+
+#end
+
+
+#foreach ($finder in $entity.getQueryOperations(true))
+#set ($returnType = $finder.returnType)
+
+
+    /**
+$finder.getDocumentation("     * ")
+     *
+     * Finds ${entity.name} instance(s) using a query.
+     */
+## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
+###if ($stringUtils.contains($returnType,"Collection"))
+#if($returnType.collectionType || $returnType.listType || $returnType.setType )
+	#if(!$stringUtils.isEmpty($finder.typedArgumentList))
+		#set($argumentList = "$finder.typedArgumentList, Integer paginacao")
+	#else
+		#set($argumentList = "Integer paginacao")
+	#end
+#else
+	#set($argumentList = "$finder.typedArgumentList")
+#end
+
+## Fim
+
+    $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
+        throws  DAOException
+    {
+    try{
+        Session session = currentSession();      
+        org.hibernate.Query query = session.createQuery("$finder.query");
+##
+#foreach($argument in $finder.arguments)
+#set ($index = $velocityCount - 1)
+#if ($finder.useNamedParameters)
+        query.${argument.queryArgumentNameSetter}("${argument.name}", ${argument.name});
+#else
+        query.${argument.queryArgumentNameSetter}(${index}, ${argument.name});
+#end
+#end
+#if ($finder.useQueryCache)
+        query.setCacheable(true);
+#end
+##
+#if ($finder.returnType.primitive)
+        return (($finder.returnType.wrapperName)query.uniqueResult()).${returnType.fullyQualifiedName}Value();
+#elseif (!$finder.returnType.collectionType)
+        return ($returnType.fullyQualifiedName)query.uniqueResult();
+#else
+	if(paginacao != null){
+		query.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+		query.setMaxResults($maxRows*$maxPages);
+	}
+	#if($hibernateEnableCache.equalsIgnoreCase("true"))
+	query.setCacheable(true);
+	#end	
+        return query.list();
+#end
+			        } catch (HibernateException h) {
+			            throw new DAOException(h);
+		        } 
+    }
+
+#end##foreach operation
+#if(${entity.auditoria} && (!$entity.abstract) && (!$entity.view))
+	public void logEvent(String msg , AbstractEntity entity) throws CallbackException {
+		
+		Session tempSession=AbstractDAO.currentSession();
+		try {
+			${entity.packageName}.${entity.name}LogRec record = new ${entity.packageName}.${entity.name}LogRec();
+			${entity.entityName} ent = (${entity.entityName})entity;
+			String hash = "";
+			byte[] hashBytes = null;
+			record.setEntityId(ent.getId());
+			hash += ent.getId().toString();
+			record.setVersion(new Long(ent.getHibernate_version()));
+			hash += (new Integer(ent.getHibernate_version())).toString();
+			record.setAuditoriaOperacao(msg);
+			hash += msg;
+			record.setAuditoriaDataHora(new Date());
+			String login;
+			try {
+				login = ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e)	 {
+				login = "NA";
+			}
+			hash += login;
+			record.setAuditoriaLogin(login);
+#foreach($attribute in ${entity.attributes})
+#if(!($attribute.name.equals("id")))
+			record.${attribute.setterName}(ent.${attribute.getterName}());
+			hash +=  ent.${attribute.getterName}();
+#end
+#end
+#foreach($attributeGen in ${entity.getInheritedAttributes()})
+#if(!($attributeGen.name.equals("id")))
+			record.${attributeGen.setterName}(ent.${attributeGen.getterName}());
+			hash +=  ent.${attributeGen.getterName}();
+#end
+#end
+			if (!msg.equals("delete")) {
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+#if($associationEnd.one2One || $associationEnd.many2One )
+				$target.getterSetterTypeName ${target.name}Log = ent.${target.getterName}();
+				if(${target.name}Log != null){
+					record.add${stringUtils.capitalize($target.name)}Log(${target.name}Log.getId().toString());
+					hash+=record.${target.getterName}Log();
+				}
+#else
+				Collection ${target.name}Log = ent.${target.getterName}();
+				if(${target.name}Log != null){
+					if(!(${target.name}Log.isEmpty())){
+						for(Iterator<AbstractEntity>it=${target.name}Log.iterator();it.hasNext() ; ){
+							Long tempId = it.next().getId();
+							record.add${stringUtils.capitalize($target.name)}Log(tempId.toString());
+							hash+=record.${target.getterName}Log();
+							while(record.${target.getterName}Log().length()>${tamanhoAssociacao}){
+								String temp = record.${target.getterName}Log().substring(0,record.${target.getterName}Log().lastIndexOf(','));
+								String temp2 = record.${target.getterName}Log().substring(record.${target.getterName}Log().lastIndexOf(','));
+								record.${target.setterName}Log(temp);
+								${entity.packageName}.${entity.name}LogRec newrecord = new ${entity.packageName}.${entity.name}LogRec();
+								PropertyUtils.copyProperties(newrecord,record);
+			
+								hashBytes = CriptoUtils.digest(hash.getBytes());
+#if ($auditoriaUsaAssinaturaDigital.equalsIgnoreCase("true"))
+								hashBytes = CriptoUtils.createSignature(hashBytes);
+#end
+								record.setHash(CriptoUtils.byteArrayToHexString(hashBytes));
+			
+								tempSession.save(record);
+##		tempSession.flush();
+								record = newrecord;
+								record.${target.setterName}Log(temp2);
+							}
+							if(it.hasNext()){
+								record.add${stringUtils.capitalize($target.name)}Log(",");
+							}
+						}
+					}
+				}
+#end
+#end
+#end
+			}
+		        
+		        
+			hashBytes = CriptoUtils.digest(hash.getBytes());
+#if ($auditoriaUsaAssinaturaDigital.equalsIgnoreCase("true"))
+			hashBytes = CriptoUtils.createSignature(hashBytes);
+#end
+			record.setHash(CriptoUtils.byteArrayToHexString(hashBytes));
+			
+			tempSession.save(record);
+##		        tempSession.flush();			
+		} catch (Exception ex) {
+			throw new CallbackException(ex);
+		}
+	} 
+	
+#else
+	public void logEvent(String msg , AbstractEntity entity) throws CallbackException {
+	}
+#end
+}
+

@@ -1,0 +1,21 @@
+#set ($generatedFile = "stackTrace.jsp")
+<%@ page session="true" isErrorPage="true" %>
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+
+<html:html lang="true">
+	<head>
+        <title>StackTrace</title>
+        <html:base/>
+	<link rel="stylesheet" type="text/css" media="screen" href="${layoutPath}/default-application.css"></link>
+        <link rel="stylesheet" type="text/css" media="screen" href="${layoutPath}/default.css"></link>
+    </head>
+    
+    <body>
+    	<div id="error">
+    		<div class="details">
+    			<code><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%> 
+			</div>
+		</div>
+	</body>
+</html:html>    

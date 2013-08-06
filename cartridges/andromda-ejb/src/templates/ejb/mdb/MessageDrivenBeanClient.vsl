@@ -1,0 +1,180 @@
+// license-header java merge-point
+#if ($stringUtils.isNotBlank($messageDrivenClient.packageName))
+package $messageDrivenClient.packageName;
+#end
+
+import javax.jms.DeliveryMode;
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.io.Serializable;
+
+public abstract class ${messageDrivenClient.name}MDBClient
+{
+	private Context context = null;
+	private Queue queue = null;
+	private QueueConnectionFactory queueConnectionFactory = null;
+	private QueueConnection queueConnection = null;
+	static private ${messageDrivenClient.name}MDBClient _instance = null;
+	
+	
+	
+#foreach ($attribute in $messageDrivenClient.attributes )
+
+#set ($typeName = $attribute.type.fullyQualifiedName)
+
+#if ($attribute.containsEmbeddedObject)
+#set ($typeName = $attribute.type.fullyQualifiedEntityName)
+#end
+
+	private $typeName $attribute.name;
+
+    /**
+$attribute.getDocumentation("     * ")
+     */
+    $attribute.visibility $typeName ${attribute.getterName}()
+    {
+        return this.${attribute.name};
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name)
+    {
+	this.${attribute.name} = $attribute.name;
+    }    
+#end
+
+
+#foreach ($associationEnd in $messageDrivenClient.associationEnds)
+
+#set ($target = $associationEnd.otherEnd)
+
+#if ($target.navigable)
+
+#if ($target.many)
+    private $target.getterSetterTypeName $target.name = $target.collectionTypeImplementation;
+#else
+    private $target.getterSetterTypeName $target.name;
+#end
+
+    /**
+$target.getDocumentation("     * ")
+     */
+    public $target.getterSetterTypeName ${target.getterName}()
+    {
+    	return ${target.name};
+    }
+    
+    public void ${target.setterName}($target.getterSetterTypeName ${target.name})
+    {
+        this.${target.name} = ${target.name};
+    }
+#end
+#end
+
+#foreach ($operation in $messageDrivenClient.businessOperations)
+#set ($returnType = $operation.returnType)
+#set ($signature = $operation.signature)
+#set ($listaAtributos = $operation.typedArgumentList)
+
+
+#if ($operation.exceptionsPresent)
+
+    protected abstract $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos)
+        throws $operation.exceptionList;
+#else
+    protected abstract $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos);
+#end
+
+
+
+#if ($operation.exceptionsPresent)
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($listaAtributos)
+        throws $operation.exceptionList {
+        	try{
+#else
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($listaAtributos){
+#end
+
+#if ($operation.returnTypePresent)
+            return handle${stringUtils.capitalize($operation.name)}($operation.argumentNames);
+#else
+            handle${stringUtils.capitalize($operation.name)}($operation.argumentNames);
+#end
+
+
+#if ($operation.exceptionsPresent)
+	}
+#foreach ( $exception in $operation.exceptions )
+        catch ($exception.fullyQualifiedName e)
+        {
+           throw e;
+        }
+#end
+#end
+	}	
+
+#end
+
+	
+	
+	
+	public ${messageDrivenClient.name}MDBClient() throws NamingException, JMSException{
+	    try{		
+		context = new InitialContext();
+			
+		queueConnectionFactory = (QueueConnectionFactory)context.lookup("$JMSConnectionFactory");
+			
+		
+		#foreach($mdb in $messageDrivenClient.sourceDependencies)
+		#if($mdb.targetElement.findTaggedValue("$JMSQueue"))
+		#set($fila = $mdb.targetElement.findTaggedValue("$JMSQueue"))
+		queue = (Queue)context.lookup("queue/${fila}");
+		#else
+		queue = (Queue)context.lookup("queue/${defaultQueue}");
+		#end
+		#end
+		
+		
+		
+			
+		queueConnection = queueConnectionFactory.createQueueConnection();
+	    }catch(NamingException e){
+	    	    throw e;
+	    }catch(JMSException e){
+	    	    throw e;
+	    }
+	}
+	
+	public synchronized void send(Serializable object) throws JMSException{
+		try{
+			QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+			QueueSender queueSender = queueSession.createSender(queue);
+			
+			ObjectMessage message = queueSession.createObjectMessage();
+			message.setObject(object);
+			queueSender.setDeliveryMode(DeliveryMode.PERSISTENT);
+			queueSender.setTimeToLive(0);
+			queueSender.send(message);
+			
+			queueSender.close();
+			queueSession.close();
+		}catch(JMSException e){
+			    throw e;
+		}
+	}
+	
+	
+	public static ${messageDrivenClient.name}MDBClient instance() throws javax.naming.NamingException, javax.jms.JMSException{
+		if(null == _instance) {
+         		_instance = new ${messageDrivenClient.name}MDBClientImpl();
+      		}
+      		return _instance;
+   	}
+}

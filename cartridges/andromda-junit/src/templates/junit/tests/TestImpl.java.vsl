@@ -1,0 +1,83 @@
+#set ($processName = "$stringUtils.upperCamelCaseName($processDefinition.name)")
+#set ($interfaceName = "${processName}")
+#set ($className = "${processName}Impl")
+#set ($generatedFile = "${className}.java")
+#set ($packageName = $processDefinition.packageName)
+#if ($stringUtils.isNotBlank($packageName))
+#set ($generatedFile = "${processDefinition.packagePath}/${generatedFile}")
+##
+package ${packageName};
+##
+#end
+
+public class ${className} extends ${interfaceName} {
+
+	/**
+	 * It will to be run after each test methods in the class.
+	 * 
+	 * @see br.ufrj.test.first.FirstTest#handleOneTimeSetUp()
+	 */
+	public void handleOneTimeSetUp() {
+		// TODO: add your implementation here!
+	}
+
+	/**
+	 * It will to be run once after all the test methods in the class.
+	 * 
+	 * @see br.ufrj.test.first.FirstTest#handleOneTimeTearDown()
+	 */
+	public void handleOneTimeTearDown() {
+		// TODO: add your implementation here!
+	}
+
+	/**
+	 * It will to be run before each test methods in the class.
+	 * 
+	 * @see br.ufrj.test.first.FirstTest#handleSetUp()
+	 */
+	public void handleSetUp() {
+		// TODO: add your implementation here!
+	}
+
+	/**
+	 * It will to be run after each test methods in the class.
+	 * 
+	 * @see br.ufrj.test.first.FirstTest#handleTearDown()
+	 */
+	public void handleTearDown() {
+		// TODO: add your implementation here!
+	}
+
+	/* Test Methods */
+##
+#foreach ($state in $processDefinition.nodes)
+#if ($state.name)
+#set ($methodName = "$stringUtils.lowerCamelCaseName($state.name)")
+#if ($state.serviceName)
+
+	/**
+	 * @see ${packageName}.${interfaceName}#handle${stringUtils.capitalize(${methodName})}(${state.servicePackage}.${state.serviceName}BI)
+	 */
+	public void handle${stringUtils.capitalize(${methodName})}(${state.servicePackage}.${state.serviceName}BI ${stringUtils.uncapitalize(${state.serviceName})}) {
+		// TODO: add your implementation here!
+	}
+#elseif ($state.useCaseName)
+
+	/**
+	 * @see ${packageName}.${interfaceName}#handle${stringUtils.capitalize(${methodName})}()
+	 */
+	public void handle${stringUtils.capitalize(${methodName})}(${state.useCasePackage}.${stringUtils.upperCamelCaseName(${state.useCaseName})}ViewTest ${stringUtils.uncapitalize(${state.useCaseName})}) {
+		// TODO: add your implementation here!
+	}
+#else
+	
+	/**
+	 * @see ${packageName}.${interfaceName}#handle${stringUtils.capitalize(${methodName})}()
+	 */
+	public void handle${stringUtils.capitalize(${methodName})}() {
+		// TODO: add your implementation here!
+	}
+#end
+#end
+#end
+}

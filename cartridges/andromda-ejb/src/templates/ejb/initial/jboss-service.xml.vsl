@@ -1,0 +1,11 @@
+<server>
+	<mbean code="${customTypesPackage}.InitialService" 
+		name="mdarte:service=${projectId}InitialService">
+#if ($stringUtils.isNotBlank($dataSourceName))
+		<depends>jboss.jca:service=DataSourceBinding,name=$dataSourceName</depends>
+#else
+		<depends>jboss.j2ee:module=${projectId}-compartilhado-${projectVersion}.jar,service=EjbModule</depends>
+#end
+	</mbean>
+</server>
+

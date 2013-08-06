@@ -1,0 +1,11 @@
+#set($generatedFile = "${package.name}/project.properties")
+##
+maven.war.webapp.dir=${maven.build.dir}/${pom.artifactId}-${pom.currentVersion}.war
+
+maven.multiproject.type=war
+
+maven.war.classes.excludes=*/WEB-INF/*
+
+maven.war.src=${maven.build.src}
+maven.war.src.excludes=**/*.java
+

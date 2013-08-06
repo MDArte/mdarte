@@ -1,0 +1,9 @@
+#set ($generatedFile = "Auditable.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+public interface Auditable {
+	public java.lang.Long getId();
+}

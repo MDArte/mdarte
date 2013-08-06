@@ -1,0 +1,26 @@
+#set($generatedFile = "shared/project.xml")
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <extend>../project.xml</extend>
+    <artifactId>${pom.groupId}-shared</artifactId>
+    <name>${projectName} shared</name>
+    <shortDescription>${pom.name} Component</shortDescription>
+    <description>
+          Contains the ${pom.name} module.
+    </description>
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>${pom.groupId}-common</artifactId>
+            <version>${pom.currentVersion}</version>
+            <type>jar</type>
+            <properties>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+    </dependencies>
+</project>

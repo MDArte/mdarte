@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC
+    "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+	"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+    <tlib-version>1.2</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>security</short-name>
+    <uri>http://www.andromda.org/tags-security</uri>
+
+    <tag>
+        <name>containsPermission</name>
+        <tag-class>org.andromda.taglibs.security.ContainsPermission</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            This tag verify if the user contains permission to view the service. 
+            The service can be a use case, a button or a field.
+        </description>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                The value of the service. The service can be a use case, a button or a field.
+            </description>
+        </attribute>
+    </tag>
+    <tag>
+        <name>containsOperationMode</name>
+        <tag-class>org.andromda.taglibs.security.ContainsOperationMode</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            This tag verify if the user contains operation mode to view the service. 
+            Today, a service can be a button
+        </description>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                The value of operation mode. 
+            </description>
+        </attribute>
+        <attribute>
+            <name>useCase</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                The value of the page use case
+            </description>
+        </attribute>        
+    </tag>    
+</taglib>

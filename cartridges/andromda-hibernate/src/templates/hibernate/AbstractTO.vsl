@@ -1,0 +1,16 @@
+#set ($generatedFile = "AbstractTO.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${transferPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${transferPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.*;
+
+public abstract class AbstractTO implements br.ufrj.coppetec.Entity, DataObject{
+	public abstract String getEntityClassName();
+	public abstract Boolean isUpdated();
+	public abstract void beginInitialization();
+	public abstract void finishInitialization();
+	public abstract Boolean isInitializing();
+	public abstract Long getId();
+}

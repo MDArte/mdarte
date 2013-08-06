@@ -1,0 +1,91 @@
+
+
+
+
+
+
+
+
+
+
+#if($oAuthServer == "true")
+// license-header java merge-point
+#set ($generatedFile = "PaginaDeLoginLogin.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+package $controleAcessoDir;
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+/**
+ * 
+ */
+ 
+
+import java.io.IOException;
+
+import javax.security.auth.Subject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.oauth.OAuth;
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthConsumer;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import util.Constantes;
+import accessControl.EntrarLoginValidarFormImpl;
+import accessControl.LoginControllerFactory;
+import accessControl.OAuthImpl;
+
+public final class PaginaDeLoginLogin extends Action
+{
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+		
+		final PaginaDeLoginLoginFormImpl specificForm = (PaginaDeLoginLoginFormImpl)form;
+		
+		String login = specificForm.getLogin();
+		String senha = specificForm.getSenha();
+		
+		EntrarLoginValidarFormImpl entrarLoginForm = new EntrarLoginValidarFormImpl();
+		
+		entrarLoginForm.setLogin(login);
+		entrarLoginForm.setSenha(senha);
+		
+		boolean loginVerificado = LoginControllerFactory.getLoginControllerInstance().verificarLogin(mapping, entrarLoginForm, request, response, servlet);
+		if(!loginVerificado){
+			request.getSession().removeAttribute(Constantes.FORWARD);  
+            return mapping.findForward("entrar.login");
+		}
+		
+		Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);
+		
+		String token = request.getParameter("oauth_token");
+		OAuthImpl oImpl = OAuthImpl.getInstance();
+		String verifier=oImpl.gerarVerifier();
+			
+		
+		OAuthAccessor accessor = oImpl.getAccessor(token);
+		OAuthConsumer consumer = accessor.consumer;
+		String callbackUrl = consumer.callbackURL+"?"+
+					OAuth.OAUTH_TOKEN+"="+token+"&"+
+					OAuth.OAUTH_VERIFIER+"="+verifier;
+		
+		oImpl.addAutorizado(token, verifier);
+		oImpl.addSubject(token,subject);
+		try { 
+			response.sendRedirect(callbackUrl);
+		} catch (IOException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+    }
+	
+ 
+}
+#end

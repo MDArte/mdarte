@@ -1,0 +1,149 @@
+<project default="jar:install"
+         xmlns:ant="jelly:ant"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+
+#set($open = "${")
+#set($end = "}")
+
+    <ant:property environment="env"/>
+
+#if($jboss)
+    <j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
+#else
+    <j:set var="libDirectory" value="${env.CATALINA_HOME}/lib"/>
+#end
+
+    <goal name="lib">
+        <j:forEach var="dep" items="${open}pom.dependencies${end}">
+            <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
+                <ant:delete includeEmptyDirs="false">
+                    <ant:fileset dir="${open}libDirectory${end}">
+                        <ant:include name="${open}dep.artifactId${end}*.${open}dep.type${end}"/>
+                    </ant:fileset>
+                </ant:delete>
+                <ant:copy todir="${open}libDirectory${end}">
+                    <fileset dir="${open}user.home${end}/.maven/repository/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                        <include name="${open}dep.artifact${end}"/>
+                    </fileset>
+                </ant:copy>
+            </j:if>
+        </j:forEach>
+    </goal>
+
+#if (!$jboss)
+    <j:set var="deployDirectory" value="${env.CATALINA_HOME}/lib"/>
+
+    <goal name="deploy" prereqs="undeploy">
+        <ant:copy file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-${pom.CurrentVersion}.jar"
+            tofile="${deployDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
+    </goal>
+
+    <goal name="undeploy">
+        <ant:delete includeEmptyDirs="true">
+            <ant:fileset dir="${deployDirectory}">
+                <ant:include name="${pom.artifactId}*.jar"/>
+            </ant:fileset>
+        </ant:delete>
+    </goal>
+#else
+    <j:set var="deployDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy"/>
+
+    <goal name="deploy" prereqs="undeploy">
+        <ant:copy file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-${pom.CurrentVersion}.jar"
+            tofile="${deployDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
+    </goal>
+
+    <goal name="undeploy">
+        <ant:delete includeEmptyDirs="true">
+            <ant:fileset dir="${deployDirectory}">
+                <ant:include name="${pom.artifactId}*.jar"/>
+            </ant:fileset>
+        </ant:delete>
+    </goal>
+#end
+
+    <preGoal name="jar:jar">
+        <ant:path id="schema.classpath">
+            <ant:path refid="maven.dependency.classpath"/>
+            <ant:path location="${maven.build.dest}"/>
+        </ant:path>
+
+        <ant:mkdir dir="${hibernate.schema.output.dir}"/>
+
+        <ant:java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+            <ant:arg value="--output=${hibernate.schema.output.dir}/schema-create.sql"/>
+            <ant:arg value="--text"/>
+            <ant:arg value="--quiet"/>
+            <ant:arg value="--delimiter=;"/>
+            <ant:arg value="--format"/>
+            <ant:arg value="--config=${application.id}.cfg.xml"/>
+            <ant:jvmarg value="-Dhibernate.dialect=${hibernate.db.dialect}"/>
+            <ant:classpath refid="schema.classpath" />
+        </ant:java>
+
+        <ant:replaceregexp file="${hibernate.schema.output.dir}/schema-create.sql"
+            match="^(alter table .* drop constraint|drop table)"
+            replace="-- SKIP \1"
+            flags="i"
+            byline="true"/>
+
+        <ant:java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+            <ant:arg value="--output=${hibernate.schema.output.dir}/schema-drop.sql"/>
+            <ant:arg value="--text"/>
+            <ant:arg value="--quiet"/>
+            <ant:arg value="--delimiter=;"/>
+            <ant:arg value="--format"/>
+            <ant:arg value="--drop"/>
+            <ant:arg value="--config=${application.id}.cfg.xml"/>
+            <ant:jvmarg value="-Dhibernate.dialect=${hibernate.db.dialect}"/>
+            <ant:classpath refid="schema.classpath" />
+        </ant:java>
+
+    </preGoal>
+
+    <goal name="earInstall">
+        <j:set var="earDirectory" value="${open}basedir${end}/../../target/ear"/>
+        <j:if test="${open}packDependencies${end}">
+            <j:forEach var="dep" items="${open}pom.dependencies${end}">
+                <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
+                    <ant:copy todir="${open}earDirectory${end}">
+                        <fileset dir="${open}maven.repo.local${end}/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                            <include name="${open}dep.artifact${end}" />
+                        </fileset>
+                    </ant:copy>
+                </j:if>
+            </j:forEach>
+        </j:if>
+        <ant:copy 
+            file="${maven.repo.local}/${pom.groupId}/jars/${pom.artifactId}-${pom.CurrentVersion}.jar"
+            tofile="${earDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
+    </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo> 
+
+maven jar:install - Compila o conteudo da pasta core/cd e gera o jar (e o default desta pasta)
+
+maven deploy - Copia o jar do core/cd para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target
+
+        </ant:echo>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <ant:delete>
+            <fileset dir="src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+        <attainGoal name="clean"/>
+    </goal>
+</project>

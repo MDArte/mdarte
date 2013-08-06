@@ -1,0 +1,153 @@
+<cartridge>
+
+    <templateObject name="stringUtils" className="org.apache.commons.lang.StringUtils"/>
+    <!-- cartridge-templateObject merge-point-->  
+
+	<property reference="projectId"/>
+    <property reference="serializable"/>
+    <property reference="enablePropertyConstructors"/>
+    <property reference="utilDir"/>
+	<property reference="loggerPackage"/>
+    <property reference="loggerName"/>
+    <property reference="customTypesPackage"/>
+    <property reference="modelPackageName"/>
+    <property reference="transferPackageName"/>
+    <property reference="maxSizeClass"/>
+    
+    <!-- cartridge-property merge-point-->  
+
+    <!-- cartridge-resource merge-point -->
+
+    <template
+        path="templates/java/Service.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="services"
+        overwrite="true">
+        <modelElements variable="service">
+            <modelElement stereotype="POJO"/>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/java/ServiceImpl.vsl"
+        outputPattern="{0}/{1}Impl.java"
+        outlet="service-impls"
+        overwrite="false">
+        <modelElements variable="service">
+            <modelElement stereotype="POJO"/>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/java/ValueObject.vsl"
+        outputPattern="$generatedFile"
+        outlet="value-objects"
+        overwrite="true">
+        <modelElements variable="class">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.ValueObject"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <!-- 
+    <template
+        path="templates/java/AbstractValueObject.vsl"
+        outputPattern="$generatedFile"
+        outlet="value-objects"
+        overwrite="true">
+    </template> -->
+    
+    <!-- 
+    <template
+        path="templates/java/DataObject.vsl"
+        outputPattern="$generatedFile"
+        outlet="value-objects"
+        overwrite="true">
+    </template> -->  
+    
+    <template
+        path="templates/java/ProjectLogger.vsl"
+        outputPattern="$generatedFile"
+        outlet="logger"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/java/ApplicationException.vsl"
+        outputPattern="$generatedFile"
+        outlet="exceptions"
+        overwrite="true">
+        <modelElements variable="class">
+            <modelElement stereotype="EXCEPTION"/>
+            <modelElement stereotype="APPLICATION_EXCEPTION"/>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/java/UnexpectedException.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="exceptions"
+        overwrite="true">
+        <modelElements variable="class">
+            <modelElement stereotype="UNEXPECTED_EXCEPTION"/>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/java/Enumeration.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="enumerations"
+        overwrite="true">
+        <modelElements variable="enumeration">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.EnumerationFacade"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+    <template
+        path="templates/java/Interface.vsl"
+        outputPattern="{0}/{1}.java"
+        outlet="interfaces"
+        overwrite="true">
+        <modelElements variable="interface">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.ClassifierFacade">
+                    <property name="interface"/>
+                </type>
+            </modelElement>           
+        </modelElements>  
+    </template>
+
+    <template
+        path="templates/java/Constantes.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/java/CriptoUtils.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/java/zip.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+
+    <template
+        path="templates/java/Util.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+
+    <!-- cartridge-template merge-point -->
+
+</cartridge>

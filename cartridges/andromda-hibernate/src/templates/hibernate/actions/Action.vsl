@@ -1,0 +1,21 @@
+#set ($generatedFile = "Action.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+
+
+
+public abstract class Action {
+	
+	public java.util.List<AbstractEntity> execute (AbstractEntity AbstractEntity) throws DAOException{
+		AbstractDAO dao = AbstractEntity.getDaoImpl();
+		return execute(AbstractEntity, dao);
+	}
+
+	protected abstract java.util.List<AbstractEntity> execute(AbstractEntity cd, AbstractDAO dao) throws DAOException ;
+}

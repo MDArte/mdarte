@@ -1,0 +1,34 @@
+#set ($generatedFile = "AbstractWS.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${wsdPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${wsdPackageName}/${generatedFile}")
+#end
+
+#if($ejb == 'true')
+#set($specific = $hibernateUtils.moreSpecificPackageName("${customTypesPackage}"))
+@javax.xml.bind.annotation.XmlType(name = "AbstractWS", namespace = "http://$specific/types")
+#end
+public abstract class AbstractWS implements java.io.Serializable{
+
+	// Isto garante que todos os WSDatas tenham o getId,
+	// contudo somente aqueles que realmente o implemetam terao
+	// valor valido.	
+	public Long getId() {
+		return null;
+	}
+##
+#if($ejb3 == 'true')
+#set($webServiceDatas = ${hibernateUtils.getWebServiceData()})
+#foreach($webServiceData in $webServiceDatas)
+#set($package = $webServiceData.package.fullyQualifiedName)
+#if($stringUtils.indexOf("$package", "$modelPackageName") > 0)
+#set($package = $stringUtils.replace("${package}", "$modelPackageName", "$wsdPackageName"))
+#set($package = $package.concat("."))
+#set($name = $package.concat("${webServiceData.name}WS"))
+
+	public $name $webServiceData.name;
+#end
+#end
+#end
+##
+}

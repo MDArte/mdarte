@@ -1,0 +1,7 @@
+#set($generatedFile = "initial/project.properties")
+
+#set($sharp = "#")
+
+$sharp defined true in order to put the compartilhado JAR in the Manifest's Classpath
+maven.jar.manifest.classpath.add=true
+

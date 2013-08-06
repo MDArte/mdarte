@@ -1,0 +1,77 @@
+#set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/ActionServletImpl.java")
+package $servletPackage;
+
+## (MDArte) module projects use the initial SAR to load the access control
+#if($modulo != 'true')
+import java.util.HashMap;
+import java.util.Collection;
+import ${utilDir}.Constantes;
+import javax.servlet.ServletException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import ${controleAcessoDir}.ControleAcessoImpl;
+import ${controleAcessoDir}.ServicosSingleton;
+import ${controleAcessoDir}.ControleAcesso;
+import ${controleAcessoDir}.Perfil;
+
+#end
+##
+/**
+ * This servlet is designed to avoid Struts copying zeroes into those form
+ * fields that take numerical values.
+ */
+public final class ActionServletImpl extends ActionServlet {
+#if($modulo != 'true')
+
+    /**
+     * Log da Classe.
+     */
+    private static Log s_log = LogFactory.getLog(ActionServletImpl.class);
+#end
+
+    /**
+     * Call the parent initializer and configure the converter not to convert
+     * <code>null</code> numbers to the corresponding zero value.
+     */
+    public void init( javax.servlet.ServletConfig config ) throws javax.servlet.ServletException {
+        super.init( config );
+
+#if($modulo != 'true')
+        try {
+            ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
+            HashMap<String, ControleAcesso> controles = ServicosSingleton.instance().getControles();
+            if(controles == null) {
+                controles = new HashMap<String, ControleAcesso>();
+            }
+            controles.put("$securityRealm", controleAcesso);
+            ServicosSingleton.instance().setControles(controles);
+##
+#if(!$demanda.equals('true'))
+            HashMap listaServicosProjeto = controleAcesso.listaServicos();
+            HashMap<String, HashMap<String, Collection<Perfil>>> listaServicos = ServicosSingleton.instance().getServicos();
+            if(listaServicos == null) {
+                listaServicos = new HashMap<String, HashMap<String, Collection<Perfil>>>();
+            }
+            listaServicos.put("$securityRealm", listaServicosProjeto);
+            ServicosSingleton.instance().setServicos(listaServicos);
+
+#end
+            HashMap<String, Boolean> demanda = ServicosSingleton.instance().getDemanda();
+            if(demanda == null) {
+                demanda = new HashMap<String, Boolean>();
+            }
+            demanda.put("$securityRealm", $demanda);
+            ServicosSingleton.instance().setDemanda(demanda);
+
+            Boolean tarefasAgendadas = (Boolean)this.getServletContext().getContext("/").getAttribute("tarefasAgendadas");
+            if ((tarefasAgendadas == null) || (tarefasAgendadas == Boolean.FALSE))
+              controleAcesso.agendaTarefas();
+            this.getServletContext().getContext("/").setAttribute("tarefasAgendadas", Boolean.TRUE);
+        } catch( Exception e ) {
+            s_log.error("Nao foi possivel listar os servicos", new ServletException());
+        }
+#end
+    }
+}
+

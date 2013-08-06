@@ -1,0 +1,110 @@
+
+#parse("templates/bpm4struts/pages/page.jsp.vm")
+#set ($generatedFile = "${jsp.fullPath}-javascript.jspf")
+##
+##  SETS THE JAVASCRIPT CONTENT
+##
+#if ($xhtml == "true")
+    <html:xhtml/>
+#end
+
+    <tiles:put name="javascript" type="string">
+## only load the calendar javascript when actually needed
+#if ($jsp.calendarRequired)
+## using page and .do instead of action to avoid Struts2 rewrite
+        <script type="text/javascript" src="<html:rewrite page="/calendar.do"/>"></script>
+#end
+## only load the static javascript when it will actually be used
+#set ($validationDesired = ($clientValidation=='true'))
+
+#if ($jsp.validationRequired && $validationDesired)
+## using page and .do instead of action to avoid Struts2 rewrite
+        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/formValidation.do"/>"></script>
+#foreach ($action in $jsp.actions)
+#if ($action.validationRequired)
+
+        <html:javascript formName="$action.formBeanName" method="$action.formValidationMethodName" dynamicJavascript="true" staticJavascript="false"#if($xhtml=="true") cdata="true"#else htmlComment="true" cdata="false"#end/>
+#end
+#end
+#end
+
+
+ 
+#if ($hints=="true")
+    	<script type="text/javascript" language="Javascript1.1">
+#if ($xhtml == "true")
+        //<![CDATA[
+#else
+        //<!--
+#end
+            var HINTS_ITEMS = {
+#foreach ($parameter in $jsp.allActionParameters)
+                '$parameter.titleKey':'<formatting:escape language="javascript"><bean:message key="$parameter.titleKey"/></formatting:escape>',
+				'$parameter.hintKey':'<formatting:escape language="javascript"><bean:message key="$parameter.hintKey"/></formatting:escape>',
+#end
+#foreach ($action in $jsp.actions)
+#set ($trigger = $action.actionTrigger)
+                '${trigger.name}':'<formatting:escape language="javascript"><bean:message key="$trigger.titleKey"/></formatting:escape>',
+                '${trigger.name}_no':'<formatting:escape language="javascript"><bean:message key="$trigger.notAllowedTitleKey"/></formatting:escape>',
+                '${trigger.name}_reset':'<formatting:escape language="javascript"><bean:message key="$trigger.resetTitleKey"/></formatting:escape>',
+                '${trigger.name}_noreset':'<formatting:escape language="javascript"><bean:message key="$trigger.resetNotAllowedTitleKey"/></formatting:escape>',
+#end
+                'calendar.popup':'<formatting:escape language="javascript"><bean:message key="calendar.popup"/></formatting:escape>'
+            };
+
+            var hints = new Hints (HINTS_ITEMS);
+#if ($xhtml == "true")
+        //]]>
+#else
+        //-->
+#end
+    	</script>
+#end
+## Atualiza outra combo do double select
+<script type="text/javascript">
+function UpdateDoubleSelect(combo, valor) {
+  eval('combo = document.' + 
+    combo + ';');
+  for(index = 0; 
+    index < combo.length; 
+    index++) {
+   if(combo[index].id == valor)
+   {
+     combo.selectedIndex = index;
+	 combo[index].style.display = "inline";
+	 }
+	 else combo[index].style.display = "none";
+   }
+}
+  
+function descriptionDestination(key , componenteNome){
+	
+
+	var HINTS_DESTINATION  = {
+ 
+#foreach ($action in $jsp.actions)
+#set ($formBeanName = $action.useCase.formKey)
+#foreach ($parameter in $action.actionParameters)
+#if ($parameter.findTaggedValue("$descriptionDestination"))
+		<c:if test="${!empty ${formBeanName}.${parameter.labelListName}Destination}">
+		<logic:iterate id="comboitem" indexId="idx" name="${formBeanName}" property="${parameter.backingListName}Destination">
+		'${parameter.titleKey}<%=idx%>':'<bean:write name="comboitem" property="labelDestination"/>',
+		</logic:iterate>
+		</c:if>		
+#end
+#end
+#end
+	} 
+	
+	
+	
+	var componenteDestino = document.getElementsByName(componenteNome);
+
+	if(componenteDestino[0] != null)
+	{
+		
+		componenteDestino[0].value = HINTS_DESTINATION[key];
+	}
+}
+</script>
+    </tiles:put>

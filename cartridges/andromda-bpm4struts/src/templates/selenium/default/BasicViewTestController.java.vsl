@@ -1,0 +1,12 @@
+#if ($viewTestEnabled == "true")
+package ${viewTestBasicDir};
+
+import com.thoughtworks.selenium.DefaultSelenium;
+
+public class BasicViewTestController extends DefaultSelenium {
+
+	public BasicViewTestController() {
+		super("${viewTestServerHost}", ${viewTestServerPort}, "${viewTestBrowser}", "http://${viewTestApplicationHost}:${viewTestApplicationPort}/${projectId}/");
+	}
+}
+#end

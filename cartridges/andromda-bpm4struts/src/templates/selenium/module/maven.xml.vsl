@@ -1,0 +1,81 @@
+#if ($viewTestEnabled == "true")
+<project default="jar:install"
+		xmlns:ant="jelly:ant"
+		xmlns:maven="jelly:maven"
+		xmlns:j="jelly:core">
+
+	<goal name="install">
+		<ant:echo>---------------------------------------------------------</ant:echo>
+		<ant:echo>-- Use 'jar:install' in order to compile the View Test --</ant:echo>
+		<ant:echo>---------------------------------------------------------</ant:echo>
+	</goal>
+
+	<goal name="deploy">
+		<ant:echo>-------------------------------------------------------</ant:echo>
+		<ant:echo>-- Use 'testDeploy' in order to deploy the View Test --</ant:echo>
+		<ant:echo>-------------------------------------------------------</ant:echo>
+	</goal>
+	<goal name="undeploy">
+		<ant:echo>-----------------------------------------------------------</ant:echo>
+		<ant:echo>-- Use 'testUndeploy' in order to undeploy the View Test --</ant:echo>
+		<ant:echo>-----------------------------------------------------------</ant:echo>
+	</goal>
+
+	<ant:property environment="env" />
+	<j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib" />
+
+	<goal name="lib">
+		<j:forEach var="dep" items="${pom.dependencies}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.type == 'jar'}")
+#set($comparacao = "$comparacao1$comparacao2")
+			<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.groupId != ")
+#set($comparacao3 = "pom.groupId}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+				<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.getProperty('application.dependency') == ")
+#set($comparacao3 = "'true'}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+					<j:if test="${comparacao}">
+						<ant:copy todir="${libDirectory}">
+							<fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+								<include name="${dep.artifact}" />
+							</fileset>
+						</ant:copy>
+					</j:if>
+				</j:if>
+			</j:if>
+		</j:forEach>
+	</goal>
+
+	<ant:property environment="env" />
+
+	<j:set var="deployDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy" />
+	<goal name="testDeploy" prereqs="testUndeploy">
+		<ant:copy file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-${pom.CurrentVersion}.jar" tofile="${deployDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar" />
+	</goal>
+
+	<goal name="testUndeploy">
+		<ant:delete includeEmptyDirs="true">
+			<ant:fileset dir="${deployDirectory}">
+				<ant:include name="${pom.artifactId}*.jar" />
+			</ant:fileset>
+		</ant:delete>
+	</goal>
+
+	<!-- ==================================================================
+		Cleans Everything and deletes all implementation classes
+	================================================================== -->
+	<goal name="nuke">
+		<ant:delete>
+			<fileset dir="src/java">
+				<include name="**/*Impl.java" />
+			</fileset>
+		</ant:delete>
+		<attainGoal name="clean" />
+	</goal>
+</project>
+#end

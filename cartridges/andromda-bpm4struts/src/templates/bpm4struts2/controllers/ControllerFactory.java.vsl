@@ -1,0 +1,22 @@
+#set ($generatedFile = "${controller.fullPath}Action2Factory.java")
+##
+##  START TEMPLATE
+##
+#set($gerar = true)
+#if(${controller.useCase.useCaseOldStruts})
+#set($gerar = false)
+#end
+#if($gerar)
+// license-header java merge-point
+package $controller.packageName;
+
+public class ${controller.name}Action2Factory
+{
+    private final static ${controller.name}Action2 INSTANCE = new ${controller.name}Action2Impl();
+
+    public final static ${controller.name}Action2 get${controller.name}Instance()
+    {
+        return INSTANCE;
+    }
+}
+#end

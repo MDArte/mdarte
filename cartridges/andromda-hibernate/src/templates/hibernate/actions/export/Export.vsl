@@ -1,0 +1,23 @@
+#set ($generatedFile = "Export.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${exportPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${exportPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import br.ufrj.coppetec.ValueObject;
+
+import java.io.File;
+
+public abstract class Export {
+
+	java.io.File file;
+	
+	public Export(File file){
+		this.file = file;
+	}
+
+	public abstract void export(AbstractDAO dao, ValueObject vo);
+}

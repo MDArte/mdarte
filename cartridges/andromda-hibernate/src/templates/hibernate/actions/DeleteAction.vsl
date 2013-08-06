@@ -1,0 +1,17 @@
+#set ($generatedFile = "DeleteAction.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+
+
+public class DeleteAction extends Action {
+
+	protected java.util.List<AbstractEntity> execute(AbstractEntity cd, AbstractDAO dao) throws DAOException {
+		return dao.delete(cd);
+	}
+}

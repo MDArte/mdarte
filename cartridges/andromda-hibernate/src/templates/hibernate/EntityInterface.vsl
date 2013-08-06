@@ -1,0 +1,9 @@
+#set ($generatedFile = "Entity.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage;
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${generatedFile}")
+#end
+public interface Entity {
+
+
+}

@@ -1,0 +1,10 @@
+#set ($generatedFile = "$stringUtils.replace($customTypesPackage, '.', '/')/UtilServiceHandlerBI.java")
+package ${customTypesPackage};
+
+public interface UtilServiceHandlerBI {
+	public void clearSecondCache() throws Exception;
+
+#if ($securityRealm)
+	public void reloadAccessControl() throws Exception;
+#end
+}

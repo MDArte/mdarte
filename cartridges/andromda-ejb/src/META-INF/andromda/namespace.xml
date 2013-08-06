@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<namespace name="ejb">
+    <components>
+        <component name="cartridge">
+            <path>META-INF/andromda/cartridge.xml</path>
+        </component>
+        <component name="metafacades">
+            <path>META-INF/andromda/metafacades.xml</path>
+        </component>
+        <component name="profile">
+            <path>META-INF/andromda/profile.xml</path>
+        </component>
+    </components>
+    <properties>
+        <!-- namespace-propertyGroup merge-point -->
+        <propertyGroup name="Outlet Properties">
+            <documentation>
+                Defines the locations to which output is generated.
+            </documentation> 
+            <property name="ejb-configuration" required="false">
+                <documentation>
+                    Diretorio onde as os arquivos de configuracao do ejb serao criados.
+                </documentation>
+            </property> 
+            <property name="jboss-config" required="false">
+                <documentation>
+                    Diretorio onde os arquivos de configuracao relacionados ao jboss serao criados.
+                </documentation>
+			</property> 
+			<property name="module-ejb-configuration">
+                <documentation>
+                    Diretorio onde as os arquivos de configuracao do ejb (modularizados) serao criados.
+                </documentation>
+            </property> 
+			<property name="shared-session-beans">
+                <documentation>
+                    Diretorio onde as classes ejb compartilhadas serão geradas.
+                </documentation>
+            </property>
+			<property name="shared-session-beans-impl">
+                <documentation>
+                    Diretorio onde as classes ejb compartilhadas serão geradas.
+                </documentation>
+            </property>
+            <property name="initial-service">
+                <documentation>
+                    Defines the locations to which the initial service files are generated.
+                </documentation>
+            </property>
+            <property name="initial-service-impl">
+                <documentation>
+                    Defines the locations to which the initial service files are generated.
+                </documentation>
+            </property>
+            <property name="project-configuration">
+                <documentation>
+                    Diretorio onde os arquivos do maven serao gerados
+                </documentation>
+            </property>
+            <property name="controleAcesso">
+                <documentation>
+                    Diretorio onde as classes relacionadas ao controle de acesso sao geradas
+                </documentation>
+            </property>  
+            <property name="controleAcessoPerfilParser" required="false">
+                <documentation>
+                    Diretorio onde os arquivos para configurar os perfis estao
+                </documentation>
+            </property>
+            <property name="controleAcessoImpl">
+                <documentation>
+                    Diretorio onde as classes relacionadas ao controle de acesso sao geradas
+                </documentation>
+            </property>             
+			<property name="entity-beans" required="false">
+                <documentation>
+                    The directory to which Entity EJBs are generated.
+                </documentation>
+            </property>
+            <property name="entity-impls" required="false">
+                <documentation>
+                    The location to which Entity EJB implementation files are generated.
+                </documentation>
+            </property>
+            <property name="session-beans">
+                <documentation>
+                    The directory to which Session Bean files are generated.
+                </documentation>
+            </property>
+            <property name="session-impls">
+                <documentation>
+                    The directory to which Session Bean implementation files are generated.
+                </documentation>
+            </property>
+            <property name="messageDriven-beans">
+                <documentation>
+                    The directory to which Message Driven Bean files are generated.
+                </documentation>
+            </property>
+            <property name="messageDriven-impls">
+                <documentation>
+                    The directory to which Message Driven Bean implementation files are generated.
+                </documentation>
+            </property>
+            <property name="shared-messageDrivenClient-beans">
+                <documentation>
+                    The directory to which Singleton Sender JMS Messages files are generated.
+                </documentation>
+            </property>
+            <property name="shared-messageDrivenClient-impls">
+                <documentation>
+                    The directory to which Singleton Sender implementation JMS Messages files are generated.
+                </documentation>
+            </property>
+            <property name="value-objects" required="false">
+                <documentation>
+                   The directory to which isomorphic value objects are generated.
+                </documentation>
+            </property>
+            <property name="statistics" required="false">
+                <documentation>
+                    Place which the reports will be placed. Use for internal statistics.
+                </documentation>
+            </property>
+        </propertyGroup>
+        <propertyGroup name="Other Properties">
+            <property name="valueObjectPackage">
+                <default>{0}</default>
+            </property>
+            <property name="valueObjectName">
+                <default>{0}</default>
+            </property>
+            <property name="jndiNamePrefix" required="false">
+                <documentation>
+                    The prefix to give to the EJB JNDI names (this allows the same
+                    EJBs to be deployed multiple times in the same container)
+                </documentation>
+            </property>
+            <property name="transactionType">
+                <default>Required</default>
+                <documentation>
+                    The default value to use for transaction types.
+                    <ul>
+                        Permitted values are:
+                        <li>NotSupported</li>
+                        <li>Supports</li>
+                        <li>Required</li>
+                        <li>RequiresNew</li>
+                        <li>Mandatory</li>
+                        <li>Never</li>
+                    </ul>
+                    <strong>NOTE:</strong> Can be overridden on a per entity basis with the
+                    <a href="profile.html#@andromda_ejb_transaction_type">@andromda.ejb.transaction.type</a>
+                    tagged value.
+                </documentation>
+            </property>
+            <property name="serviceLocatorName">
+                <default>ServiceLocator</default>
+                <documentation>
+                    The name to give to the generated service locator class.
+                </documentation>
+            </property> 
+            <property name="securityRealm" required="false">
+                <documentation>
+                    The name of the security realm (i.e. animal-quiz, other, etc).
+                    <strong>NOTE:</strong>This enables EJB security if specified.
+                </documentation>
+            </property>            
+            <property name="modelPackageName">
+                <default>cd</default>
+                <documentation>
+                    Nome do pacote de dominio.
+                </documentation>
+            </property>
+            <property name="servicePackageName">
+                <default>cs</default>
+                <documentation>
+                    Nome do pacote de dominio.
+                </documentation>
+            </property>            
+            <property name="wsdPackageName">
+                <default>ws</default>
+                <documentation>
+                    Nome do pacote de webService.
+                </documentation>
+            </property>
+            <property name="customTypesPackage">
+                <default>org.andromda.persistence.hibernate</default>
+                <documentation>
+                </documentation>
+            </property>              
+            <property name="ServicePackageName">
+                <default>cs</default>
+                <documentation>
+                    Nome do pacote de servicos.
+                </documentation>
+            </property>
+			<property name="webPackageName">
+                <default>web</default>
+                <documentation>
+                    Nome do pacote de apresentacao.
+                </documentation>
+            </property>     
+			<property name="transferPackageName">
+                <default>to</default>
+                <documentation>
+                    Nome do pacote de trasnferencia.
+                </documentation>
+            </property>                                 
+            <property name="controleAcessoDir">
+                <default>accessControl</default>
+                <documentation>
+                    Nome do pacote de controle de acesso.
+                </documentation>
+            </property> 
+            <property name="actionPackageName">
+                <default>action</default>
+                <documentation>
+                    Nome do pacote de acoes.
+                </documentation>
+            </property>                                                
+            <property name="CRUDStereotype">
+                <default>CRUD</default>
+                <documentation>
+                    estereotipo para dependencia entre entidade e servico para criacao de metodos CRUD
+                </documentation>
+            </property>
+             
+            <property name="xmlEncoding">
+                <default>ISO-8859-1</default>
+                <documentation>
+                    encoding do xml
+                </documentation>
+            </property> 
+            <property name="webSrv">
+                <default>WebSrv</default>
+                <documentation>
+                    Name of WebService Sterotype
+                </documentation>
+            </property> 
+			<property name="JMSConnectionFactory">
+                <default>ConnectionFactory</default>
+                <documentation>
+                    Name of JMS Connectionfactory
+                </documentation>
+            </property> 
+			<property name="JMSQueue">
+                <default>@andromda.ejb.JMSQueue</default>
+                <documentation>
+                    Name of JMS queue
+                </documentation>
+            </property>
+            <property name="defaultQueue">
+                <default>DefaultQueue</default>
+                <documentation>
+                    Name of a JMS default queue
+                </documentation>
+            </property>			
+			<property name="webServiceGeneralizationFormat">
+			<default>false</default>
+                <documentation>
+                    teste
+                </documentation>			
+			</property>
+            <property name="utilDir">
+                <default>util</default>
+                <documentation>
+                    Diretorio onde serao gerados os arquivos utilitarios
+                </documentation>
+            </property>  
+            <property name="loggerName">
+                <default>Log</default>
+                <documentation>
+                    Indica o nome do Logger
+                </documentation>
+            </property>
+            <property name="loggerPackage">
+                <default>Log</default>
+                <documentation>
+                    Indica o pacote do logger
+                </documentation>
+            </property>   
+            <property name="modulo">
+                <default>false</default>
+            </property>  
+            <property name="maxSizeClass">
+                <default>200</default>
+            </property>
+            <property name="projectId">
+                <default>project</default>
+            </property>
+            <property name="projectVersion">
+                <default>1.0</default>
+            </property>
+            <property name="operationSecurityImplicit">
+                <default>@andromda.service.operation.security.implicit</default>
+            </property> 
+            <property name="operationSecurityCode">
+                <default>@andromda.service.operation.security.code</default>
+            </property>
+            <property name="exportPackageName">
+                <default>export</default>
+                <documentation>
+                    Nome do pacote de transferencia.
+                </documentation>
+            </property>
+            <property name="JMSQueueRedeliveryDelay">
+                <default>@andromda.ejb.JMSQueue.RedeliveryDelay</default>
+                <documentation>
+                    Tempo em milisegundos de espera antes que a mensagem seja reentregue apos um nack
+                </documentation>
+            </property>
+            <property name="JMSQueueRedeliveryLimit">
+                <default>@andromda.ejb.JMSQueue.RedeliveryLimit</default>
+                <documentation>
+                   O numero maximo de vezes que uma mensagem e nacked antes que ela seja entregue ao DLQ
+                </documentation>
+            </property>
+            <property name="JMSQueueMaxDepth">
+                <default>@andromda.ejb.JMSQueue.MaxDepth</default>
+                <documentation>
+                   Profundidade maxima da fila
+                </documentation>
+            </property>
+            <property name="JMSQueueMessageCounterHistoryDayLimit">
+                <default>@andromda.ejb.JMSQueue.MessageCounterHistoryDayLimit</default>
+                <documentation>
+                   Numero de dias para manter o historico do MessageCounter
+                </documentation>
+            </property>
+            <property name="ServiceFactorySelectNodeName">
+                <default>@andromda.ejb.ServiceFactory.SelectNode.Name</default>
+                <documentation>
+                   Nome que identifica qual Servico sera chamado pela Factory
+                </documentation>
+            </property>
+            <property name="mavenRepoProject">
+                <default>http://localhost:9999</default>
+                <documentation>
+                   URL do repositorio maven do projeto
+                </documentation>
+            </property>
+            <property name="demanda">
+                <default>false</default>
+                <documentation>
+                   Indicacao se o controle de acesso sera feito por demanda ou nao
+                </documentation>
+            </property> 
+            <property name="webServiceComAutenticacao" required="false">
+                <default>false</default>
+                <documentation>
+                   Indicacao se os web services terao autenticacao ou nao
+                </documentation>
+            </property>
+            <property name="oAuthServer" required="false">
+        	<default>false</default>
+            <documentation>
+                Indica que o sistema deve ser um servidor oAuth
+            </documentation>
+        </property>
+            <property name="dataSourceName" required="false">
+                <documentation>
+                    The name of data source.
+                </documentation>
+            </property>
+            <property name="ejb3" required="false">
+                <default>false</default>
+                <documentation>
+                    The name of data source.
+                </documentation>
+            </property>
+        </propertyGroup>
+    </properties>
+</namespace>

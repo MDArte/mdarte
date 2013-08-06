@@ -1,0 +1,24 @@
+#if ($viewTestEnabled == "true")
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+	<extend>../project.xml</extend>
+	<artifactId>${pom.groupId}-view-test</artifactId>
+	<name>${projectName} View Test</name>
+	<shortDescription>${pom.name} Component</shortDescription>
+	<description>
+		Contains the ${pom.name} module.
+    </description>
+	<dependencies>
+		<dependency>
+			<groupId>selenium</groupId>
+			<artifactId>selenium-java-client-driver</artifactId>
+			<version>${selenium.java.client.driver.version}</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>src/java</sourceDirectory>
+	</build>
+</project>
+#end

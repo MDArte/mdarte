@@ -1,0 +1,17 @@
+#set ($generatedFile = "TOException.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${transferPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${transferPackageName}/${generatedFile}")
+#end
+
+public class TOException extends Exception {
+
+	public TOException(Exception e) {
+		super(e);
+	}
+
+	public TOException(String message) {
+		super(message);
+	}
+
+}

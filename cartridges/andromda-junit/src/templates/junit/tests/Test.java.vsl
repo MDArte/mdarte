@@ -1,0 +1,140 @@
+#set ($processName = "$stringUtils.upperCamelCaseName($processDefinition.name)")
+#set ($className = "${processName}")
+#set ($generatedFile = "${className}.java")
+#set ($packageName = $processDefinition.packageName)
+#if ($stringUtils.isNotBlank($packageName))
+#set ($generatedFile = "${processDefinition.packagePath}/${generatedFile}")
+##
+package ${packageName};
+
+#end
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+#set ($hasUseCaseTest = "false")
+#set ($webLoginUsername = "")
+#set ($webLoginPassword = "")
+##
+#foreach ($state in $processDefinition.nodes)
+#if ($hasUseCaseTest.equals("false") && $state.useCaseName)
+#set($hasUseCaseTest = "true")
+#set ($webLoginUsername = "${state.swimlane.name}")
+#set ($webLoginPassword = "${state.swimlane.password}")
+#end
+#end
+##
+public abstract class ${className} {
+	private Log log;
+
+#if ($hasUseCaseTest.equals("true"))
+	protected ${seleniumDir}.BasicViewTestController viewTestController;
+
+	${seleniumAccessControlDir}.AccessControlViewTest accessControl;
+#end
+
+	public ${className}() {
+		this.log = LogFactory.getLog(${className}.class);
+	}
+
+	protected Log getLog() {
+		return this.log;
+	}
+
+	/* setUp and tearDown for classes */
+
+	public abstract void handleOneTimeSetUp();
+
+	public void oneTimeSetUp() {
+		this.getLog().info("@BeforeClass - ${packageName}.${className}:oneTimeSetUp");
+##
+#if ($hasUseCaseTest.equals("true"))
+
+		viewTestController = new ${seleniumDir}.BasicViewTestController();
+		viewTestController.start();
+
+		accessControl = new ${seleniumAccessControlDir}.AccessControlViewTestImpl(viewTestController);
+		accessControl.login("${webLoginUsername}", "${webLoginPassword}");
+#end
+
+		handleOneTimeSetUp();
+	}
+
+	public abstract void handleOneTimeTearDown();
+
+	public void oneTimeTearDown() {
+		this.getLog().info("@AfterClass - ${packageName}.${className}:oneTimeTearDown");
+		handleOneTimeTearDown();
+##
+#if ($hasUseCaseTest.equals("true"))
+
+		accessControl.logout();
+
+		viewTestController.stop();
+#end
+	}
+
+	/* setUp and tearDown for test methods */
+
+	public abstract void handleSetUp();
+
+	public void setUp() {
+		this.getLog().info("@Before - ${packageName}.${className}:setUp");
+		handleSetUp();
+	}
+
+	public abstract void handleTearDown();
+
+	public void tearDown() {
+		this.getLog().info("@After - ${packageName}.${className}:tearDown");
+		handleTearDown();
+	}
+
+	/* test methods */
+##
+#foreach ($state in $processDefinition.nodes)
+#if ($state.name)
+#set ($methodName = "$stringUtils.lowerCamelCaseName($state.name)")
+#if ($state.serviceName)
+
+	public abstract void handle${stringUtils.capitalize(${methodName})} (${state.servicePackage}.${state.serviceName}BI ${stringUtils.uncapitalize(${state.serviceName})});
+
+	public void ${methodName}() {
+		this.getLog().info("@Test - ${packageName}.${className}:${methodName}");
+
+		try
+		{
+			${state.servicePackage}.${state.serviceName}BI ${stringUtils.uncapitalize(${state.serviceName})} = (${state.servicePackage}.${state.serviceName}BI) util.ServiceUtil.getService("${state.swimlane.name}", "${state.swimlane.password}", "${state.swimlane.projectName}", ${state.servicePackage}.${state.serviceName}Home.JNDI_NAME, ${state.servicePackage}.${state.serviceName}Home.class);
+
+			handle${stringUtils.capitalize(${methodName})}(${stringUtils.uncapitalize(${state.serviceName})});
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			org.junit.Assert.fail(e.getClass() + ":" + e.getMessage());
+		}
+	}
+#elseif ($state.useCaseName)
+#set ($useCaseName = "${stringUtils.upperCamelCaseName(${state.useCaseName})}")
+#set ($useCaseVar = "${stringUtils.uncapitalize(${state.useCaseName})}")
+
+	public abstract void handle${stringUtils.capitalize(${methodName})}(${state.useCasePackage}.${useCaseName}ViewTest ${useCaseVar});
+
+	public void ${methodName}() {
+		this.getLog().info("@Test - ${packageName}.${className}:${methodName}");
+
+		${state.useCasePackage}.${useCaseName}ViewTest ${useCaseVar} = new ${state.useCasePackage}.${useCaseName}ViewTestImpl(viewTestController);
+
+		handle${stringUtils.capitalize(${methodName})}(${useCaseVar});
+	}
+#else
+
+	public abstract void handle${stringUtils.capitalize(${methodName})}();
+
+	public void ${methodName}() {
+		this.getLog().info("@Test - ${packageName}.${className}:${methodName}");
+		handle${stringUtils.capitalize(${methodName})}();
+	}
+#end
+#end
+#end
+}

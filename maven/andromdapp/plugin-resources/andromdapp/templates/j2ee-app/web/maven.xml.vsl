@@ -1,0 +1,236 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:u="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+
+#set($open = "${")
+#set($end = "}")
+
+    <goal name="install">
+#if($modulos)
+        <attainGoal name="multiproject:install"/>
+#else
+#set($var1 = "${")
+#set($var2 = "basedir}")
+
+#if ($struts)
+        <!-- Junta message resources -->
+        <ant:concat destfile="$var1$var2/target/src/WEB-INF/classes/application-resources.properties" binary="true">
+            <ant:fileset dir="$var1$var2/target/src/WEB-INF/classes" includes="application-resources-modulo.properties"/>
+        </ant:concat>
+        <ant:concat destfile="$var1$var2/target/src/WEB-INF/classes/application-resources.properties" binary="true" append ="true">
+            <ant:fileset dir="$var1$var2/target/src/WEB-INF/classes" includes="application-resources-global.properties"/>
+        </ant:concat>
+
+        <ant:concat destfile="$var1$var2/target/src/WEB-INF/classes/application-resources.csv" binary="true">
+            <ant:fileset dir="$var1$var2/target/src/WEB-INF/classes" includes="application-resources-modulo.csv"/>
+        </ant:concat>
+        <ant:concat destfile="$var1$var2/target/src/WEB-INF/classes/application-resources.csv" binary="true" append ="true">
+            <ant:fileset dir="$var1$var2/target/src/WEB-INF/classes" includes="application-resources-global.csv"/>
+        </ant:concat>
+#end
+        <maven:maven
+            descriptor="$var1$var2/project.xml"
+            goals="war:install"/>
+#end
+    </goal>
+
+#if(!$modulos)
+    <!-- copying custom web files over the generated ones (or just adding them) -->
+    <!-- uncomment this section and put files in src/jsp to have them copied over the generated ones
+    <preGoal name="war:init">
+        <ant:copy todir="${maven.war.webapp.dir}" overwrite="true">
+            <ant:fileset dir="${maven.src.dir}/jsp">
+                <include name="**/*"/>
+            </ant:fileset>
+        </ant:copy>
+    </preGoal>
+    -->
+
+    <!-- =====================================================================
+             Remove any existing output resulting from precompilation.
+         ===================================================================== -->
+    <preGoal name="war:init">
+        <u:available file="${maven.src.dir}/jsp">
+        <ant:copy todir="${maven.war.webapp.dir}" overwrite="true">
+            <ant:fileset dir="${maven.src.dir}/jsp">
+                <include name="**/*"/>
+            </ant:fileset>
+        </ant:copy>
+        </u:available>
+        
+        <j:if test="${precompileJsps}">
+            <ant:delete dir="${maven.war.build.dir}/precompiled" failonerror="true"/>
+        </j:if>
+    </preGoal>
+
+    <!--
+        | We are going to make a WAR bundle in which the JSPs have been precompiled,
+        | this means we will need to generate the Java source from those JSPs. This is
+        | all done after the war has been generated.
+    -->
+    <postGoal name="war:war">
+        <j:if test="${precompileJsps}">
+            <!-- setting up the directories to work with -->
+            <ant:property name="war.precompile.jsp" location="${maven.war.build.dir}/precompiled"/>
+            <ant:property name="jsp.precompilation.java" location="${war.precompile.jsp}/jsp-java"/>
+            <ant:property name="jsp.precompilation.classes" location="${war.precompile.jsp}/jsp-classes"/>
+            <ant:property name="jsp.precompilation.servlets" location="${war.precompile.jsp}/jsp-servlets.xml"/>
+            <ant:property name="jsp.precompilation.webapp" location="${maven.war.webapp.dir}"/>
+
+            <!-- clearing old garbage from the target directories -->
+            <ant:mkdir dir="${jsp.precompilation.java}"/>
+            <ant:mkdir dir="${jsp.precompilation.classes}"/>
+
+            <!-- the class path for precompilation -->
+            <ant:path id="jsp.precompilation.classpath">
+                <ant:path refid="maven.dependency.classpath"/>
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/classes"/>
+#if ($struts)
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/lib/andromda-breadcrumbs-taglib.jar"/>
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/lib/andromda-formatting-taglib.jar"/>
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/lib/andromda-collections-taglib.jar"/>
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/lib/andromda-security-taglib.jar"/>
+#elseif ($jsf)
+                <ant:pathelement location="${jsp.precompilation.webapp}/WEB-INF/lib/andromda-jsf-cartridge-components.jar"/>
+#end
+            </ant:path>
+
+            <!-- generating java code from the JSPs -->
+            <ant:echo message="Generating Java sources from JSPs"/>
+            <ant:java classname="org.apache.jasper.JspC" fork="true" classpathref="jsp.precompilation.classpath">
+                <ant:arg value="-webapp"/>
+                <ant:arg value="${jsp.precompilation.webapp}"/>
+                <ant:arg value="-d"/>
+                <ant:arg value="${jsp.precompilation.java}"/>
+                <ant:arg value="-webinc"/>
+                <ant:arg value="${jsp.precompilation.servlets}"/>
+                <ant:arg value="-p"/>
+                <ant:arg value="a"/> <!-- to shorten the package name JspC uses to prefix the compiled jsps -->
+            </ant:java>
+
+            <!-- Compiling the sources generated from the JSPs -->
+            <ant:echo message="Compiling generated java sources"/>
+            <ant:javac srcdir="${jsp.precompilation.java}"
+                classpathref="jsp.precompilation.classpath"
+                destdir="${jsp.precompilation.webapp}/WEB-INF/classes"
+                deprecation="on"/>
+
+#if ($struts)
+            <!-- only process the next code when the mda project has generateWebXmlIds set to true as a
+                 bpm4struts namespace property; one could argue the use of a property in /project.properties
+                 and use it in both /mda/project.xml and this /web/maven.xml, but the thing is that it doesn't really
+                 belong in /project.properties unless we move the other web properties there too
+                -->
+#set ($pomFileParent = 'pom.file.parent')
+            <u:file var="mdaProjectFile" name="${${pomFileParent}}/../mda/project.xml"/>
+            <ant:echo>${mdaProjectFile}</ant:echo>
+            <j:invokeStatic var="mdaProject" className="org.apache.maven.MavenUtils" method="getProject">
+                <j:arg type="java.io.File" value="${mdaProjectFile}"/>
+            </j:invokeStatic>
+            <j:if test="${mdaProject.getDependency('andromda:andromda-bpm4struts-cartridge').properties.contains('property:generateWebXmlIds:true')}">
+                <ant:echo message="Adding id attributes to JspC generated servlet and servlet-mapping elements"/>
+                <u:loadText var="webXmlFragment" file="${jsp.precompilation.servlets}"/>
+
+                <!-- add ids to the servlets -->
+                <j:set var="counter" value="1"/>
+#set ($counterIncrement = "counter+1")
+#set ($tokenSearch = "webXmlFragment.indexOf('&lt;servlet&gt;') >= 0")
+#set ($replaceCall = "webXmlFragment.replaceFirst('&lt;servlet&gt;',replaceValue)")
+                <j:while test="${${tokenSearch}}">
+                    <j:set var="replaceValue" value="&lt;servlet id=&quot;servlet_jspc_${counter}&quot;&gt;"/>
+                    <j:set var="webXmlFragment" value="${${replaceCall}}"/>
+                    <j:set var="counter" value="${${counterIncrement}}"/>
+                </j:while>
+
+                <!-- add ids to the servlet-mappings -->
+                <j:set var="counter" value="1"/>
+#set ($tokenSearch = "webXmlFragment.indexOf('&lt;servlet-mapping&gt;') >= 0")
+#set ($replaceCall = "webXmlFragment.replaceFirst('&lt;servlet-mapping&gt;',replaceValue)")
+                <j:while test="${${tokenSearch}}">
+                    <j:set var="replaceValue" value="&lt;servlet-mapping id=&quot;servlet_mapping_jspc_${counter}&quot;&gt;"/>
+                    <j:set var="webXmlFragment" value="${${replaceCall}}"/>
+                    <j:set var="counter" value="${${counterIncrement}}"/>
+                </j:while>
+
+                <!-- write the text back to file -->
+                <j:file omitXmlDeclaration="true" escapeText="false"
+                    name="${jsp.precompilation.servlets}">${webXmlFragment}</j:file>
+            </j:if>
+#end
+
+            <!-- merging additional web.xml directives -->
+            <ant:echo message="Merging additional web.xml directives"/>
+            <ant:loadfile property="jsp.servlets.text" srcFile="${jsp.precompilation.servlets}"/>
+            <ant:replace file="${jsp.precompilation.webapp}/WEB-INF/web.xml"
+                value="${jsp.servlets.text}"
+                token="&lt;!-- precompilation merge-point --&gt;"/>
+
+            <!-- storing this bundle into a new WAR archive -->
+            <ant:echo message="Reconstructing web application WAR bundle"/>
+            <ant:war destfile="${maven.war.build.dir}/${maven.war.final.name}"
+                webxml="${jsp.precompilation.webapp}/WEB-INF/web.xml"
+                update="false">
+                <ant:fileset dir="${jsp.precompilation.webapp}">
+                    <ant:exclude name="*/**/*.jsp*"/> <!-- we don't want the jsp files except for the welcome file -->
+                </ant:fileset>
+            </ant:war>
+        </j:if>
+    </postGoal>
+#end
+    <ant:property environment="env"/>  
+    <j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
+
+    <goal name="lib">
+        <j:forEach var="dep" items="${open}pom.dependencies${end}">
+            <j:if test= "${open}dep.type == 'jar'${end}">
+                <j:if test= "${open}dep.groupId != pom.groupId${end}">
+                    <j:if test= "${open}dep.getProperty('war.manifest.classpath') == 'true'${end}">
+                        <ant:delete includeEmptyDirs="false">
+                            <ant:fileset dir="${libDirectory}">
+                                <ant:include name="${dep.artifactId}*.jar"/>
+                            </ant:fileset>
+                        </ant:delete>
+                        <ant:copy todir="${libDirectory}">
+                            <fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+                                <include name="${dep.artifact}"/>
+                            </fileset>
+                        </ant:copy>
+                    </j:if>
+                </j:if>
+            </j:if>
+        </j:forEach>
+    </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo> 
+
+maven install - Compila o conteudo da pasta web e gera os wars (e equivalente a executar um maven web na raiz, e o default desta pasta)
+
+maven deploy - Copia os wars do web para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target
+
+maven [NOME_DO_MODULO_WEB]:install - Compila o modulo web e gera o war
+
+maven [NOME_DO_MODULO_WEB]:deploy - Copia o war daquele modulo para o seu JBoss 
+
+        </ant:echo>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <ant:delete>
+            <fileset dir="src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+        <attainGoal name="clean"/>
+    </goal>
+</project>

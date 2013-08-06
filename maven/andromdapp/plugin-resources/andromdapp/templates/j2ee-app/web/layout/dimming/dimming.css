@@ -1,0 +1,25 @@
+
+div.dimming {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	background-color: #698B69;
+	position:absolute;
+	/* set z-index higher than possible */
+	z-index:10000;
+	visibility: hidden;
+	border-style: solid;
+	border-color: #2F4F2F;
+	border-width: 6px;
+
+}
+
+table.floatingHeader
+{
+	background-color: #003300;
+	color:#ffffff;
+}
+
+div.conteudoDimming{
+	overflow:scroll;
+}

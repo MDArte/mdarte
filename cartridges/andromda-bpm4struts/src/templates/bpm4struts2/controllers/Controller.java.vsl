@@ -1,0 +1,379 @@
+#set ($generatedFile = "${controller.fullPath}Action2.java")
+#set ($operations = $controller.operations)
+##
+##  CONSTANTS
+##
+#set ($sessionObjects = $controller.sessionObjects)
+#set($gerar = true)
+#if(${controller.useCase.useCaseOldStruts})
+#set($gerar = false)
+#end
+##
+##  START TEMPLATE
+##
+#if($gerar)
+// license-header java merge-point
+package $controller.packageName;
+
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+
+#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+import ${packageUtil}.Constantes;
+import ${servletPackage}.ViewContainer;
+
+/**
+$controller.getDocumentation(" * ")
+ */
+public abstract class ${controller.name}Action2 implements java.io.Serializable
+{
+
+
+
+#foreach ($operation in $operations)
+#set ($parameters = $operation.arguments)
+#set ($visibility = $operation.visibility)
+#set ($returnType = $operation.returnType.fullyQualifiedName)
+#if (!$returnType)
+#set ($returnType = "void")
+#end
+    /**
+$operation.getDocumentation("     * ")
+#if ($operation.callingBackEnd)
+     *
+     * This operation delegates to
+     * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
+#end
+     */
+#if ($operation.callingBackEnd) ## remocao dos parametros actionmapping, request e response
+    $visibility $returnType ${operation.name}($operation.interfaceType form) throws java.lang.Exception
+    {
+        ${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
+#set ($comma = "")
+#foreach ($argument in $operation.backEndServiceOperation.arguments)
+            ${comma}form.${argument.getterName}()
+#set ($comma = ", ")
+#end
+        );
+    }
+#else
+    $visibility abstract $returnType ${operation.name}($operation.interfaceType form,  ViewContainer container) throws java.lang.Exception;
+#end
+
+#set ($returnType = false)
+#end
+#foreach ($sessionObject in $sessionObjects)
+#set ($accessorSuffix = $stringUtils.capitalize($sessionObject.name))
+    /**
+     * Returns the current $sessionObject.name from the session found in the argument request.
+     * <p/>
+     * In case an object was found in the session but it was not of the correct type, this method
+     * will return <code>null</code>.
+     * <p/>
+     * If there is no session, it will be created; if the session would not contain a session-object
+     * the object will be instantiated and subsequently stored in the session.
+     */
+    protected final $sessionObject.fullyQualifiedName get${accessorSuffix}(ViewContainer container)
+    {
+        $sessionObject.fullyQualifiedName object = null;
+
+        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
+        
+       	#set($keep = "false")
+	#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+	#set($keep = "true")
+	#end
+
+	
+       #set($counterSO = false)
+       #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+       #set($counterSO = true)
+       #end
+	    
+        if (attribute instanceof $sessionObject.fullyQualifiedName)
+        {
+            object = ($sessionObject.fullyQualifiedName)attribute;
+            #if($keep.equals("false") && $counterSO)
+            ${servletPackage}.SessionObjectUtilStruts2.resetSessionObjetCounter(container, object.SESSION_KEY, object.getIterations());
+			
+            #end
+        }
+        else if (attribute == null)
+        {
+            object = new $sessionObject.fullyQualifiedName ();
+            set${accessorSuffix}(object, container);
+        }
+
+        return object;
+    }
+
+
+
+    /**
+     * Set the argument $sessionObject.name object in the session corresponding with the argument request.
+     * Any existing object will be overwritten.
+     *
+     * @param createSession denotes whether or not the session should be created automatically in case it
+     * would not yet exist
+     */
+    protected final void set${accessorSuffix}($sessionObject.fullyQualifiedName object, ViewContainer container)
+    {
+        
+        if (container != null)
+        { 
+	    #set($keep = "false")
+	    #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+	    #set($keep = "true")
+	    #end
+	
+	    #set($counterSO = false)
+	    #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+	    #set($counterSO = true)
+	    #end
+	    
+	    #if($keep.equals("true") || !$counterSO)
+	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
+	    #elseif($keep.equals("false") && $counterSO)
+	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
+	    #end	                
+        }
+    }
+
+    /**
+     * Removes the argument $sessionObject.name object from the session corresponding with the argument request.
+     * In any of the following cases this method will do nothing:
+     * <ul>
+     *   <li>No session corresponds to the argument request</li>
+     *   <li>No $sessionObject.name object could be found in the request</li>
+     *   <li>The object is not of the correct type</li>
+     * </ul>
+     */
+    protected final void remove${accessorSuffix}(ViewContainer container)
+    {
+        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
+        if (attribute instanceof $sessionObject.fullyQualifiedName)
+        {
+        	${servletPackage}.SessionObjectUtilStruts2.removeSessionObject(container, ${sessionObject.fullyQualifiedName}.SESSION_KEY);
+        }
+    }
+
+#end
+	## Na verdade acredito que esse direcionamento de paginas nao deveria exisit aqui. Isso e de struts1
+	## Alem disso deveria ser configurado apenas nos arquivos de config do struts.->comentei
+##    /*protected final void setForward(String modulo, String caminho){
+##    	String path = (request.getServerName() + 
+##    		       (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "") + 
+##    		       "$contextoPrincipal" + "/" + modulo + "/" + caminho).replaceAll("//", "/");
+## 	path = request.getScheme() + "://" + path;
+##    	request.setAttribute("$forwardKey", path);
+##    	request.setAttribute("$forwardKeyModule", modulo);
+##    }*/	
+
+	##TODO verificar como e realizado essa parte de mensagens no struts1 e adaptar para struts2
+    /**
+     * Stores a warning message in the session, if any other warning messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param session the session to which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @param arguments any arguments used within the message
+     */
+    protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container)
+    {
+        
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+## EM struts 2 ha s:actionmessenger e s:errormenseger como tags e addActionMenssage,addErrorMenssage		
+    }
+
+    /**
+     * Stores a warning message in the session, if any other warning messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param session the session to which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveWarningMessage(String message, ViewContainer container)
+    {
+        this.saveWarningMessage(message, null, container);
+    }
+
+    /**
+     * Stores a success message in the session, if any other success messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     */
+    protected final void saveSuccessMessage(String message, String[] arguments, ViewContainer container)
+    {
+        
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+    }
+
+	protected final void saveSuccessMessage(String message, ViewContainer container)
+	{
+		this.saveSuccessMessage(message,null,container);
+	}
+
+
+    /**
+     * Stores an error message in the session, if any other error messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveErrorMessage(String message, String[] arguments, ViewContainer container)
+    {
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+    }
+
+    /**
+     * Stores an error message in the session, if any other error messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveErrorMessage(java.lang.String message,ViewContainer container)
+    {
+        this.saveErrorMessage(message, null,container);
+    }
+
+###foreach ($serviceRef in $controller.serviceReferences)
+###if ($stringUtils.isNotBlank($serviceRef.targetElement.accessorImplementation))
+###if ($securityEnabled)
+###set ($pbiPackage = "${serviceRef.targetElement.packageName}.${stringUtils.replace($pbiDir, '/', '.')}")	
+###end
+##	/**
+##	 * Returns a reference to the $serviceRef.name back-end service.
+##	 */
+##	#set($isServiceFactory = false)
+##	#if($serviceRef.hasExactSterotype("ServiceFactory"))
+##		#set($isServiceFactory = true)
+##	#end
+
+##	/**
+##	 * Método a ser utilizado na recuperação de serviços.
+##	 */
+##	protected final #if($securityEnabled) ${pbiPackage}.${serviceRef.targetElement.name}PBI#else${serviceRef.targetElement.fullyQualifiedName}BI #end ${serviceRef.getterName}() throws Exception {
+##	#if ($securityEnabled) 
+##		return new ${pbiPackage}.${serviceRef.targetElement.name}PBI();
+##	#else
+##		#set ($str = "")
+##		#set ($str = $stringUtils.substringBeforeLast($serviceRef.targetElement.accessorImplementation, "()"))
+##		#set ($str = $str.concat("BI();"))
+##		return ${str}
+##	#end
+##	}
+
+##	/**
+##	 * Método utilizado em aplicações legadas.
+##	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
+##	 */
+##	@Deprecated
+##	protected final #if($securityEnabled) ${pbiPackage}.${serviceRef.targetElement.name}PBI#else${serviceRef.targetElement.fullyQualifiedName}BI #end ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {
+##		return ${serviceRef.getterName}();
+##	}
+
+###end
+###end
+
+###foreach($dependencia in  $controller.sourceDependencies)
+###if($dependencia.targetElement.hasExactStereotype("ServiceFactory"))
+##	#set($factorySelectNodeName = false)
+##	#foreach($bean in $dependencia.targetElement.allSpecializations)
+##		#if($factorySelectNodeName == false)
+##			#if(${bean.findTaggedValue("$ServiceFactorySelectNodeName").length()} > 0)
+##				#set($factorySelectNodeName = true)
+##			#end
+##		#end
+##	#end
+##
+##	/**
+##	 * Método a ser utilizado na recuperação de serviços.
+##	 */
+##	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(#if($factorySelectNodeName == false) br.ufrj.coppetec.Entity entity #end)	throws Exception {
+##	#if(!$securityEnabled)
+##		return ${dependencia.targetElement.fullyQualifiedName}Factory.getService(#if($factorySelectNodeName == false) entity #end);
+##	#else
+##		#set ($pbiPackage = "${dependencia.targetElement.packageName}")	
+##		#set ($pbiPackage = "${pbiPackage}.${stringUtils.replace($pbiDir, '/', '.')}")	
+##		return ${pbiPackage}.${dependencia.targetElement.name}FactoryPBI.getService(#if($factorySelectNodeName == false) entity #end);
+##	#end
+##	}
+##
+##	/**
+##	 * Método utilizado em aplicações legadas.
+##	 * Em novas aplicações, utilizar o método ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
+##	 */
+##	@Deprecated
+##	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(javax.servlet.http.HttpServletRequest request#if($factorySelectNodeName == false), br.ufrj.coppetec.Entity entity#end) throws Exception {
+##		return ${dependencia.getterName}(#if($factorySelectNodeName == false)entity#end);
+##	}
+###end
+###end
+	/**
+	 * Método a ser utilizado na recuperação de serviços.
+	 */
+	protected <T> T getService(Class<T> clazz) throws Exception	{
+		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
+	}
+
+	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {
+		return getModoOperacao("${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.do",container);
+	}
+
+	protected java.util.Collection<String> getModoOperacao(String nomeCasoDeUso, ViewContainer container) {
+		java.util.Collection<String> modoOperacao = new java.util.ArrayList();
+		if(container.getFromSession(Constantes.MODO_OPERACAO) != null){
+			java.util.Map map = (java.util.Map)container.getFromSession(Constantes.MODO_OPERACAO);
+			if(nomeCasoDeUso != null){
+				if(map.get(nomeCasoDeUso) != null){
+					String modoOperacaoStr = (String)map.get(nomeCasoDeUso);
+					java.util.StringTokenizer st = new java.util.StringTokenizer(modoOperacaoStr, ",");
+					while(st.hasMoreTokens()){
+						String next = st.nextToken();
+						modoOperacao.add(next);
+					}
+				}
+			}
+		}
+		return modoOperacao;
+	}
+}
+#end

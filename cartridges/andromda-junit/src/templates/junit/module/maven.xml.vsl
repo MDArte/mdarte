@@ -1,0 +1,163 @@
+#set($generatedFile = "${package.name}/maven.xml")
+##
+<project default="install" xmlns:ant="jelly:ant" xmlns:u="jelly:util" xmlns:maven="jelly:maven" xmlns:j="jelly:core">
+
+#set($open = "${")
+#set($end = "}")
+##	
+	<goal name="install" prereqs="${package.name}:install" />
+
+	<goal name="${package.name}:install" prereqs="jar:install,copy:shared">
+
+		<ant:mkdir dir="${basedir}/target/classes" />
+		<ant:mkdir dir="${basedir}/src/java" />
+
+		<ant:path id="web.classpath">
+			<ant:path refid="maven.dependency.classpath" />
+			<ant:path location="${maven.build.dest}" />
+		</ant:path>
+
+		<ant:path id="compile">
+			<ant:pathelement path="${basedir}/target/src" />
+			<ant:pathelement path="${basedir}/src/java" />
+		</ant:path>
+
+		<ant:javac destdir="${basedir}/target/classes" includes="**/*.java" debug="on">
+			<ant:src>
+				<ant:path refid="compile" />
+			</ant:src>
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath" />
+			</ant:classpath>
+		</ant:javac>
+
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.type == 'jar'}")
+#set($comparacao = "$comparacao1$comparacao2")
+		<j:forEach var="dep" items="${pom.dependencies}">
+			<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.groupId != ")
+#set($comparacao3 = "pom.groupId}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+				<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.getProperty('war.manifest.classpath') == ")
+#set($comparacao3 = "'true'}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+					<j:if test="${comparacao}">
+						<ant:copy todir="${maven.war.webapp.dir}/WEB-INF/lib">
+							<fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+								<include name="${dep.artifact}" />
+							</fileset>
+						</ant:copy>
+					</j:if>
+				</j:if>
+			</j:if>
+		</j:forEach>
+
+		<maven:maven descriptor="${basedir}/project.xml" goals="war:install" />
+	</goal>
+
+	<ant:property environment="env" />
+
+	<j:set var="deployDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy" />
+	<goal name="deploy" prereqs="undeploy">
+		<j:choose>
+			<j:when test="${deployExploded}">
+				<ant:copy todir="${deployDirectory}/${pom.artifactId}${artifactIdSuffix}">
+					<ant:fileset dir="${maven.war.webapp.dir}" />
+				</ant:copy>
+			</j:when>
+			<j:otherwise>
+				<ant:copy file="${user.home}/.maven/repository/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war" tofile="${deployDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war" />
+			</j:otherwise>
+		</j:choose>
+	</goal>
+
+	<goal name="undeploy">
+		<ant:delete includeEmptyDirs="true">
+			<ant:fileset dir="${deployDirectory}">
+				<!-- in case previously deployed as a file -->
+				<ant:include name="${pom.artifactId}${artifactIdSuffix}*.war" />
+			</ant:fileset>
+		</ant:delete>
+	</goal>
+
+	<ant:property environment="env" />
+
+	<j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib" />
+
+	<goal name="libaux">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.type == 'jar'}")
+#set($comparacao = "$comparacao1$comparacao2")
+		<j:forEach var="dep" items="${pom.dependencies}">
+			<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.groupId != ")
+#set($comparacao3 = "pom.groupId}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+				<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.getProperty('war.manifest.classpath') == ")
+#set($comparacao3 = "'true'}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+					<j:if test="${comparacao}">
+						<ant:copy todir="${libDirectory}">
+							<fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+								<include name="${dep.artifact}" />
+							</fileset>
+						</ant:copy>
+					</j:if>
+				</j:if>
+			</j:if>
+		</j:forEach>
+	</goal>
+
+	<!-- =====================================================================
+			Remove any existing output resulting from precompilation.
+	===================================================================== -->
+	<goal name="copy:shared">
+		<u:available file="${basedir}/../${sharedModel}/src/java">
+			<ant:copy todir="${basedir}/target/src" overwrite="true">
+				<fileset dir="${basedir}/../${sharedModel}/src/java">
+					<exclude name="jsp/**" />
+				</fileset>
+			</ant:copy>
+		</u:available>
+		<u:available file="${basedir}/../${sharedModel}/target/src">
+			<ant:copy todir="${basedir}/target/src" overwrite="true">
+				<fileset dir="${basedir}/../${sharedModel}/target/src">
+					<include name="**/*.*" />
+				</fileset>
+			</ant:copy>
+		</u:available>
+		<u:available file="${basedir}/../${sharedModel}/src/jsp">
+			<ant:copy todir="${basedir}/target/src" overwrite="true">
+				<fileset dir="${basedir}/../${sharedModel}/src/jsp">
+					<include name="**/*.*" />
+				</fileset>
+			</ant:copy>
+		</u:available>
+		<u:available file="${maven.src.dir}/jsp">
+			<ant:copy todir="${maven.war.webapp.dir}" overwrite="true">
+				<ant:fileset dir="${maven.src.dir}/jsp">
+					<include name="**/*" />
+				</ant:fileset>
+			</ant:copy>
+		</u:available>
+	</goal>
+
+	<!-- ==================================================================
+		Cleans Everything and deletes all implementation classes
+	================================================================== -->
+	<goal name="nuke">
+		<ant:delete>
+			<fileset dir="src/java">
+				<include name="**/*Impl.java" />
+			</fileset>
+		</ant:delete>
+		<attainGoal name="clean" />
+	</goal>
+</project>

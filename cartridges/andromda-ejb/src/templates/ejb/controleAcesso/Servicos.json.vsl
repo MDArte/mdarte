@@ -1,0 +1,212 @@
+#set ($generatedFile = "Servicos.json")
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+##
+{
+    "projeto": "$projectId",
+    "servico":
+    [
+##
+#set ($has_before = "false")
+##
+#foreach ($service in $services)
+#set ($webService = $service.hasStereotype("$webSrv"))
+##
+#foreach ($operation in $service.operations)
+#set ($listaArgumentos = "")
+#set ($return = '')
+##
+#if ($webService)
+#renderParametersWS ($operation $listaArgumentos false)
+#renderReturnWS ($operation $return)
+#else
+#renderParameters ($operation $listaArgumentos false)
+#set ($return = $operation.returnType.fullyQualifiedName)
+#end
+##
+#set ($nome = "${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)")
+##
+#if (!${operation.findTaggedValue("$operationSecurityImplicit")} || ${operation.findTaggedValue("$operationSecurityImplicit").equals("false")})
+#if (${operation.findTaggedValue("$operationSecurityCode")})
+#set ($codigoServico = ${operation.findTaggedValue("$operationSecurityCode")})
+#else
+#set ($codigoServico = $nome)
+#end
+        #if($has_before.equals("true")),#end{
+            "nome"  : "$nome",
+            "codigo": "$codigoServico"
+        }
+#set ($has_before = "true")
+#end
+#if ($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#set ($listaArgumentos = "")
+#set ($return = '')
+#if ($webService)
+#renderParametersWSPaginacao ($operation $listaArgumentos false)
+#renderReturnWS ($operation $return)
+#else
+#renderParametersPaginacao ($operation $listaArgumentos false)
+#set ($return = $operation.returnType.fullyQualifiedName)
+#end
+#set ($nome = "${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)")
+#if (!${operation.findTaggedValue("$operationSecurityImplicit")} || ${operation.findTaggedValue("$operationSecurityImplicit").equals("false")})
+#if (${operation.findTaggedValue("$operationSecurityCode")})
+#set ($codigoServico = ${operation.findTaggedValue("$operationSecurityCode")})
+#else
+#set ($codigoServico = $nome)
+#end
+        #if($has_before.equals("true")),#end{
+            "nome"  : "$nome",
+            "codigo": "$codigoServico"
+        }
+#end
+#end
+#end
+#foreach ($dependencia in $service.sourceDependencies)
+#if ($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
+#set ($codigoServico = "${service.fullyQualifiedName}BI.delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        #if($has_before.equals("true")),#end{
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.filter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.FilterAction)")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.insert${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ListAction)")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.Action)")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.export${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ExportAction)")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        },
+#set ($codigoServico = "${service.fullyQualifiedName}BI.import${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ImportAction)")
+        {
+            "nome"  : "$codigoServico",
+            "codigo": "$codigoServico"
+        }
+#set ($has_before = "true")
+#end
+#end 
+#end
+    ],
+    "agrupamento":
+    [
+##
+#set ($has_before = "false")
+##
+#foreach ($service in $services)
+#set ($webService = $service.hasStereotype("$webSrv"))
+##
+#foreach ($operation in $service.operations)
+#if ($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#set ($listaArgumentos = "")
+#set ($return = '')
+#if ($webService)
+#renderParametersWS ($operation $listaArgumentos false)
+#renderReturnWS ($operation $return)
+#else
+#renderParameters ($operation $listaArgumentos false)
+#set ($return = $operation.returnType.fullyQualifiedName)
+#end
+#set ($codigoAgrupa = "${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)" )
+#set ($listaArgumentos = "")
+#set ($return = '')
+#if ($webService)
+#renderParametersWSPaginacao ($operation $listaArgumentos false)
+#renderReturnWS ($operation $return)
+#else
+#renderParametersPaginacao ($operation $listaArgumentos false)
+#set ($return = $operation.returnType.fullyQualifiedName)
+#end
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)")
+        #if($has_before.equals("true")),#end{
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        }
+#set ($has_before = "true")
+#end
+#end
+##
+#foreach ($dependencia in $service.sourceDependencies)
+#if ($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
+#set ($codigoAgrupa = "${service.fullyQualifiedName}BI.manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.Action)")
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        #if($has_before.equals("true")),#end{
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.filter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.FilterAction)")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.insert${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ListAction)")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.export${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ExportAction)")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        },
+#set ($codigoEAgrupado = "${service.fullyQualifiedName}BI.import${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ImportAction)")
+        {
+            "agrupa"  : "$codigoAgrupa",
+            "agrupado": "$codigoEAgrupado"
+        }
+#set ($has_before = "true")
+#end
+#end
+#end
+    ]
+}

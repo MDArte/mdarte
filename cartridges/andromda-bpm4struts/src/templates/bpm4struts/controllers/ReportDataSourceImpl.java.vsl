@@ -1,0 +1,22 @@
+#set ($generatedFile = "${report.event.transition.packagePath}/$stringUtils.capitalize(${report.name})DataSourceImpl")
+
+package $report.event.transition.packageName;
+
+import java.util.Collection;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
+
+
+public class $stringUtils.capitalize(${report.name})DataSourceImpl extends  $stringUtils.capitalize(${report.name})DataSource
+{
+
+	public $stringUtils.capitalize(${report.name})DataSourceImpl(Collection list) {
+		super(list);	
+		this.setLista((java.util.ArrayList)list);			
+	}
+	
+	
+	public java.util.HashMap 	getParameters() throws Exception{
+		return new java.util.HashMap();
+	}
+}

@@ -1,0 +1,205 @@
+ #parse("templates/bpm4struts/pages/page.jsp.vm")
+#set ($jsp = $table.jsp)
+#set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
+#set ($targetColumns = $table.targettedTableColumnNames)
+#set ($sortable = $table.tableSortable)
+#set ($exportable = $table.tableExportable)
+#set($gerarJSP = false)
+#if($table.oldStruts)
+#set($gerarJSP = true)	
+#end
+#if($gerarJSP)
+## [MOISES-COPPETEC]
+## Acaoo a ser utilizada no link "NEXT" na paginacao.
+<% String acao_${table.name};
+   if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
+	acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+   }else{
+	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+   }
+%>
+
+
+
+## Fim
+<% 
+  String nomeProjeto${table.name} = request.getContextPath(); 
+  out.println("<script>");
+  out.println("function getPath${table.name}(){return \""+nomeProjeto${table.name}+"\";}");
+  out.println("</script>");
+%>
+
+           <script>
+               function setaParametros${table.name}(param1, param2) {
+               		document.${table.name}.action = "";
+			document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
+			document.${table.name}.name=param1;						   
+			document.${table.name}.submit(); 
+			return true;                
+               }
+			function selecionaDeseleciona(){
+				var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
+                var setChecked;
+                if(boxes.length==0){
+                    boxes.checked=!boxes.checked;
+                }else{
+                    setChecked = !boxes[0].checked;
+                }
+               
+                for(var i=0;i<boxes.length;i++)
+                    boxes[i].checked=setChecked;
+            }
+           </script>
+
+<div id="${table.name}" class="table">
+#if (!$table.tableGlobalActions.empty)
+    <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
+#end
+#set ($displayTableName = "form.${table.name}")
+    <display:table name="${${displayTableName}}" id="row"
+        ##requestURIAction -> acao a ser utilizada no link "NEXT" na paginacao
+        requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
+#if ($table.tableDecoratorRequired)
+        decorator="${table.tableDecoratorFullyQualifiedName}"
+#end
+        export="$exportable" pagesize="$maxRows" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
+#if ($exportable)
+#set ($exportFileName = "${jsp.name}-${table.name}")
+#set ($exportFileName = "$bpmUtils.toWebFileName($exportFileName)")
+        <display:setProperty name="export.pdf.filename" value="${exportFileName}.pdf" />
+#end
+##
+##  rendering a checkbox in the first column in case we need to allow the selection of rows
+##
+#if (!$table.tableGlobalActions.empty)
+        <display:column media="html">
+#set ($actionParameter = $table.tableGlobalActionParameter)
+#set ($checkboxValue = "row.$actionParameter.name")
+            <input type="checkbox" name="${actionParameter.name}RowSelectionAsArray" value="${${checkboxValue}}"#if($hints=="true") title='<bean:message key="select.deselect.this.row"/>'#end/>
+        </display:column>
+#end
+##
+##  loop over each column we need to render
+##
+#foreach ($column in $table.tableColumns)
+#if($column.name)#set($columnName=$column.name)#else#set($columnName=$column)#end
+#set ($tableColumnActions = $table.getTableColumnActions($columnName))
+#set ($valueProperty = "row.$columnName")
+#if ($column.type.dateType)
+        <fmt:formatDate var="value" value="<c:out value="${${valueProperty}}"/>" pattern="$column.dateFormat"/>
+#end
+## this column element will make sure the column is properly rendered outside the browser (Excel, XML, ...)
+#if ($exportable)
+        <display:column media="$table.tableExportTypes"
+            titleKey="$table.getTableColumnMessageKey($columnName)"
+            autolink="true" paramId="$columnName">
+#if ($column.type.dateType)
+            <c:out value="${value}"/>
+#else
+            <c:out value="${${valueProperty}}"/>
+#end
+        </display:column>
+#end
+## this column is the HTML representation of the value
+        <display:column media="html"
+            headerClass="$columnName" paramId="$columnName"
+#if (!$table.tableDecoratorRequired && $table.tableSortable && (!$column.actionParameter || $column.sortableBy))
+            sortProperty="$columnName" sortable="true"
+#end
+            titleKey="$table.getTableColumnMessageKey($columnName)">
+#if ($column.actionParameter)
+            <div class="$columnName">
+#renderFormField($column.strutsAction $column '${row_rowNum}' "                ")
+            </div>
+#elseif (!$tableColumnActions.empty)
+#foreach ($tableColumnAction in $tableColumnActions)
+#renderTableHyperlink($tableColumnAction $columnName "            ")
+#end
+#else
+#if ($column.type.dateType)
+            <div class="$columnName"><c:out value="${value}"/></div>
+#else
+            <div class="$columnName"><c:out value="${${valueProperty}}"/></div>
+#end
+#end
+        </display:column>
+#end
+##
+##  any hyperlink actions ?
+##
+#foreach ($tableAction in $table.tableHyperlinkActions)
+#if (!$tableAction.tableLinkColumnName)
+        <display:column media="html">
+#renderTableHyperlink($tableAction false "            ")
+        </display:column>
+#end
+#end
+##
+##  any button actions ?
+##
+#foreach ($tableAction in $table.tableFormActions)
+        <display:column media="html">
+#renderTableButton($tableAction "            " '${row_rowNum}')
+        </display:column>
+#end
+#foreach ($tableAction in $table.TableLookupGridActions)
+        <display:column media="html">
+#renderTableLookupGrid($tableAction "            " '${row_rowNum}')
+        </display:column>
+#end
+    </display:table>
+#if (!$table.tableGlobalActions.empty)
+#set ($test = "!empty ${displayTableName}")
+    <c:if test="${${test}}">
+#foreach ($action in $table.tableGlobalActions)
+##set ($securityEnabled = $stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles))
+###set($useCaseName = $action.useCase.name)
+#set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")
+#set($valueOperationMode = "")
+#set($valueOperationMode = $action.findTaggedValue("$operationMode"))
+#set ($valueConfirmMessage = "")
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
+#if( $valueOperationMode != "")
+<security:containsOperationMode value="$valueOperationMode" useCase="${useCaseName}">
+#end
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
+#end
+            
+            #if($valueConfirmMessage !="")
+            <html:button  #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" onclick="confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false" property="$action.formBeanName">
+	           <bean:message key="$action.actionTrigger.triggerKey"/>
+            </html:button>  
+            #else
+				
+				#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
+			<html:button 
+				onclick="setaAcaoForm('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', this.form )"
+				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
+                property="${action.actionName}"> 
+				<bean:message key="$action.actionTrigger.triggerKey"/>
+			</html:button>
+				#else
+					<html:button 
+				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
+				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
+                property="${action.actionName}"> 
+				<bean:message key="$action.actionTrigger.triggerKey"/>
+			</html:button>
+            #end  
+            #end        
+     
+            <input type="button" value="<bean:message key="select.deselect.all"/>" onclick="selecionaDeseleciona();"/>
+#if ($securityEnabled) 
+${indent}   </security:containsPermission>
+#end    
+#if( $valueOperationMode != "")
+</security:containsOperationMode>
+#end               
+#end
+    </c:if>
+    </form>
+#end
+</div>
+#end

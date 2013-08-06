@@ -1,0 +1,35 @@
+#if($ejb3 == 'false')
+#if($pacote)
+#set($webServices = $pacote.webServices)
+#set($serviceName = $stringUtils.capitalize("$pacote.serviceModuleName"))
+#else
+#set($serviceName = $stringUtils.capitalize("$projectId"))
+#end
+#if($webServices.size() > 0)
+<webservices xmlns="http://java.sun.com/xml/ns/j2ee"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd" version="1.1">
+    <webservice-description>
+        <webservice-description-name>${serviceName}Handler</webservice-description-name>
+        <wsdl-file>META-INF/wsdl/${serviceName}Handler.wsdl</wsdl-file>
+        <jaxrpc-mapping-file>META-INF/${serviceName}Handler-mapping.xml</jaxrpc-mapping-file>
+        #foreach($webService in $webServices)
+        <port-component>
+            <port-component-name>${webService.name}Srv</port-component-name>
+            <wsdl-port>${webService.name}SrvPort</wsdl-port>
+            <service-endpoint-interface>${webService.fullyQualifiedName}Srv</service-endpoint-interface>
+            <service-impl-bean>
+                <ejb-link>${webService.name}</ejb-link>
+            </service-impl-bean>
+#if ($webServiceComAutenticacao.equalsIgnoreCase("true"))
+            <handler>
+                <handler-name>${webService.name}MessageHandler</handler-name> 
+                <handler-class>${webService.fullyQualifiedName}MessageHandlerImpl</handler-class> 
+            </handler>
+#end
+        </port-component>
+        #end
+    </webservice-description>
+</webservices>
+#end
+#end

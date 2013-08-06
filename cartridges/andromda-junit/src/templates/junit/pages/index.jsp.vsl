@@ -1,0 +1,5 @@
+#set ($generatedFile = "${welcomeFileName}")
+##
+<%
+	response.sendRedirect(request.getContextPath() + "/${testWebRoot}/index");
+%>

@@ -1,0 +1,408 @@
+#if ($viewTestEnabled == "true")
+#set ($usecaseName = "$stringUtils.upperCamelCaseName($useCase.name)")
+#set ($className = "${usecaseName}ViewTest")
+#set ($generatedFile = "${className}.java")
+#set ($packageName  = "$stringUtils.replace(${useCase.packagePath}, '/', '.')")
+##
+#set ($generatedFile = "${useCase.packagePath}/${generatedFile}")
+##
+
+package ${packageName};
+##
+
+import ${viewTestBasicDir}.BasicViewTestController;
+
+public class ${className} {
+	private BasicViewTestController viewTestController;
+
+## adiciona todos os parametros do caso de uso em array, sem repeticao.
+#set ($arrayParameters = [])
+#set ($arrayParameterNames = [])
+#foreach ($action in $useCase.actions)
+#if (!$parameter.hiddenField)
+#foreach ($parameter in $action.actionParameters)
+#if (!$arrayParameterNames.contains(${parameter.name}))
+#if ($arrayParameters.add(${parameter}))
+## if vazio. Se o comando for usado sem o if, ele acaba escrevendo true no codigo gerado.
+#end
+#if ($arrayParameterNames.add(${parameter.name}))
+## if vazio. Se o comando for usado sem o if, ele acaba escrevendo true no codigo gerado.
+#end
+#end
+#end
+#end
+#end
+##
+#foreach ($parameter in $arrayParameters)
+#if ($parameter.type.collectionType)
+	private java.lang.String[] ${parameter.name} = null;
+#elseif ($parameter.doubleSelect)
+	private java.lang.String ${parameter.name} = null;
+	privatejava.lang.String ${parameter.name}__Double = null;
+#else
+	private java.lang.String ${parameter.name} = null;
+	#end
+
+#end
+
+	public ${className}(BasicViewTestController viewTestController) {
+		this.viewTestController = viewTestController;
+	}
+
+	/**
+	 * @return The BasicViewTestController.
+	 */
+	public BasicViewTestController getViewTestController() {
+		return viewTestController;
+	}
+
+	/**
+	 * Opens the URL of the use case from the current module.
+	 */
+	public void openUseCase() {
+		this.viewTestController.open("${useCase.package.contexto}${useCase.actionPath}.do");
+	}
+
+	/**
+	 * Opens the URL of the use case from the principal module.
+	 */
+	public void openUseCaseFromPrincipalModule() {
+#set ($stop = "false")
+#foreach ($action in $useCase.actions)
+#if (!$stop.equals("true") && $action.useCaseStart)
+		this.viewTestController.open("${contextoPrincipal}/ForwardAction.do?modulo=&path=${stringUtils.replace(${useCase.package.contexto}, ${contextoPrincipal}, "")}${useCase.actionPath}.do");
+#set($stop = "true")
+#end
+#end
+	}
+
+#set ($actionNumer = 0)
+#foreach ($page in $useCase.pages)
+##
+#foreach ($action in $page.actions)
+##
+#set ($actionNumer = $actionNumer + 1)
+	/**
+	 * ${stringUtils.lowerCamelCaseName(${action.name})}
+	 * Action number ${actionNumer}.
+#if($action.lookupGrid)
+	 * Lookup Grid
+#end
+	 *
+#foreach ($parameter in $action.actionParameters)
+#if ($parameter.radioButton)
+	 * $parameter.name Radio Button.
+#elseif ($parameter.checkbox)
+	 * $parameter.name Checkbox.
+#elseif ($parameter.multibox)
+	 * $parameter.name Multibox.
+#elseif ($parameter.textField || $parameter.password)
+	 * $parameter.name Text or Password.
+#elseif ($parameter.money)
+	 * $parameter.name Money.
+#elseif ($parameter.textArea)
+	 * $parameter.name Text Area.
+#elseif ($parameter.combobox)
+	 * $parameter.name Combobox.
+#elseif ($parameter.doubleSelect)
+	 * $parameter.name Double Select.
+#elseif ($parameter.file)
+	 * $parameter.name File.
+#end
+#end
+	 */
+	public void action${actionNumer}_${stringUtils.lowerCamelCaseName(${action.name})}() {
+## if it is not a lookup
+#if (!$action.lookupGrid && $action.fieldLinkAsList.empty)
+##	
+#foreach ($field in $action.actionParameters)
+##
+#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
+##
+#set ($quote ='"')
+#set ($fieldName = $field.name)
+#set ($formBeanName = $action.useCase.formKey)## used to denote the request scope form
+#set($beanName=$formBeanName)
+#set ($styleId = "$field.styleId")
+##
+##      R A D I O B U T T O N
+##
+#if ($field.radioButton)
+			if ($fieldName != null);
+				viewTestController.click("//input[@id='$styleId' and @name='$fieldName' and @value='" + ${fieldName} + "']");
+
+##
+##      C H E C K B O X
+##
+#elseif ($field.checkbox)
+			if ($fieldName != null)
+				viewTestController.click("//input[@id='${styleId}']");
+
+##
+##      M U L T I B O X
+##
+#elseif ($field.multibox)
+## multiboxes utilizando o @andromda.presentation.view.field.multibox (tabela)
+#if ($field.multiboxPropertyName)
+		/* M U L T I B O X 1 */
+		//<html:multibox name="$formBeanName" property="$field.multiboxPropertyName" $disabled $eventosMouseUp $eventosKeyUp $eventosKeyPress  styleId="$styleId">
+			//<c:out value="${value}"/>
+		//</html:multibox>
+#else
+## multiboxes utilizando o @andromda.presentation.view.field.type
+#if ($field.type.collectionType)#set ($selectProperty="${fieldName}AsArray")#else#set($selectProperty="$fieldName")#end
+		for (int i = 0; ${fieldName} != null && i < ${fieldName}.length; i++) {
+			viewTestController.click("//input[@id='$styleId' and @name='$selectProperty' and @value='" + ${fieldName}[i] + "']");
+		}
+#end
+
+##
+##      T E X T F I E L D       &       P A S S W O R D
+##
+
+#elseif ($field.textField || $field.password)
+		if ($fieldName != null) {
+#if ($field.textField && $field.calendarRequired)
+			java.text.SimpleDateFormat ${fieldName}SimpleDateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+			viewTestController.type("//input[@id='${styleId}']", ${fieldName}SimpleDateFormat.format(${fieldName}));
+#else
+			viewTestController.type("//input[@id='${styleId}']", ${fieldName});
+#end
+		}
+
+##
+##      M O N E Y
+##
+#elseif ($field.money)
+		if ($fieldName != null)
+			viewTestController.type("//input[@id='${styleId}']", ${fieldName});
+
+##
+##      T E X T A R E A
+##
+#elseif ($field.textArea)
+		if ($fieldName != null)
+			viewTestController.type("//textarea[@id='${styleId}']", ${fieldName});
+
+##
+##      C O M B O B O X     &      L I S T
+##
+#elseif ($field.combobox)
+		if ($fieldName != null) {
+			viewTestController.select("//select[@id='${styleId}']", "label=" + ${fieldName});
+			//viewTestController.select("//select[@id='${styleId}']", "value=" + ${fieldName});
+		}
+
+##
+##	D O U B L E   S E L E C T
+##
+#elseif ($field.doubleSelect)
+#if ($field.readOnly)#set ($disabled = 'disabled="true"')#end
+#set ($multiple='')
+#set ($selectProperty="$fieldName")
+		if ($fieldName != null) {
+			viewTestController.select("//select[@name='${fieldName}']", "label=" + ${fieldName});
+		}
+
+		if (${fieldName}__Double != null) {
+			viewTestController.select("//select[@name='${fieldName}__Double']", "label=" + ${fieldName}__Double);
+		}
+##
+##      F I L E
+##
+#elseif ($field.file)
+		if ($fieldName != null)
+			viewTestController.type("//input[@id='${styleId}']", ${fieldName});
+
+#end
+##	
+#end
+#end
+##
+#end
+##
+## S U B M I T
+##
+## table link
+##if ($action.tableLink)
+##		viewTestController.click("//input[@value='${action.name}']");
+## table action
+#if ($action.tableAction)
+		// table action
+## botao
+#elseif ($action.formPost)
+		/* Action Path: ${action.actionPath} */
+		/* viewTestController.click("//input[@id='form_submit' "); */
+		/* viewTestController.click("//input[@value='${action.name}']"); */
+		viewTestController.click("//input[@name='${action.actionName}']");
+## link
+#elseif ($action.hyperlink)
+#set ($fieldLinkValue = "")
+#set ($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+#if ($fieldLinkValue.equals(""))
+#set ($parameters = $action.actionParameters)
+#set ($formBeanName = $action.useCase.formKey)
+#set ($requestPath = "${action.actionPath}")
+#set ($separator = "?")
+#foreach ($parameter in $parameters)
+#if ($parameter.defaultValuePresent)
+#set ($parameterValue = "$parameter.defaultValue")
+#else
+#set ($parameterValue = "${${formBeanName}.${parameter.name}}")
+#end
+#if ($velocityCount > 1)#set($separator = "&")#end
+#set ($requestPath = "${requestPath}${separator}${parameter.name}=${parameterValue}")
+#end
+		/* L I N K */
+		viewTestController.click("//a[contains(@href, '${requestPath}')]");
+#end
+## look up
+#elseif ($action.lookupGrid)
+#if ($action.fieldLinkAsList.empty)
+		viewTestController.click("//input[@name='${action.actionName}']");
+#else
+#set ($aspas = '"')
+#set ($delim = " ")
+#set($i = 0)
+#foreach ($parameter in $action.actionParameters)
+#set($param = $action.getFieldLinkAsList().get($i))
+#set($teste = "var param${i} = window.parent.opener.document.getElementsByName('$param');if(param${i}[0] != null){param${i}[0].value = '$aspas + ${parameter.name} + $aspas'}")
+#set($delim = "${delim}${teste}")
+#set($i = $i + 1)
+#end
+		/* L O O K U P  G R I D */
+		viewTestController.click("//a[@onclick=\"${delim};window.close()\"]");
+#end
+#end
+
+#if ($action.lookupGrid)
+#if ($action.fieldLinkAsList.empty) 
+#set ($pageActionName = "${stringUtils.upperCamelCaseName($page.name)}${stringUtils.upperCamelCaseName($action.name)}")
+		viewTestController.waitForPopUp("${useCase.actionPathRoot}/${pageActionName}", "${viewTestPageLoad}");
+
+		viewTestController.selectWindow("name=${useCase.actionPathRoot}/${pageActionName}");
+#end
+#else
+		viewTestController.waitForPageToLoad("${viewTestPageLoad}");
+#end
+	}
+
+	public void open_action${actionNumer}_${stringUtils.lowerCamelCaseName(${action.name})}() {
+#set ($pageActionName = "${stringUtils.upperCamelCaseName($page.name)}${stringUtils.upperCamelCaseName($action.name)}")
+		this.viewTestController.open("${useCase.package.contexto}${useCase.actionPathRoot}/${pageActionName}.do");
+	}
+
+#end
+##
+#foreach ($variable in $page.pageVariables)
+#if ($variable.table)
+#set ($tableName = "$stringUtils.upperCamelCaseName($variable.name)")
+
+	/* TABLE: $tableName */
+
+#foreach ($column in $variable.tableColumns)
+#if ($column.name)#set($columnName=$column.name)#else#set($columnName=$column)#end
+#set ($columnName = "$stringUtils.upperCamelCaseName($columnName)")
+	/**
+	 * Returns the value of the column '${columnName}'
+	 * for a specific <code>row</code>.
+	 *
+	 * @param The row which the value is retrieved.
+	 * @return The value of the column '${columnName}'.
+	 */
+	public String get${tableName}${columnName}(int row) {
+		return viewTestController.getText("//table[@id='row']/tbody/tr[" + row + "]/td[${velocityCount}]/div");
+	}
+
+#end
+	/**
+	 * @return The number of elements of the table's first page.
+	 */
+	public int get${tableName}() {
+		return viewTestController.getXpathCount("//table[@id='row']/tbody/tr").intValue();
+	}
+
+## gera m�todo para checkbox
+#if (!$variable.tableGlobalActions.empty)
+	/**
+	 * @param The value from the checkbox.
+	 */
+	public void select${tableName}(String value) {
+#set ($actionParameter = $variable.tableGlobalActionParameter)
+		viewTestController.click("//input[@name='${actionParameter.name}RowSelectionAsArray' and @value='" + value + "']");
+	}
+
+	/**
+	 * @param row The row from the checkbox
+	 */
+	public void select${tableName}(int row) {
+		viewTestController.click("//table[@id='row']/tbody/tr[" + row + "]/td[1]/input");
+	}
+#end
+##
+#end
+#end
+
+#end
+
+	/* PARAMETERS */
+
+#foreach ($parameter in $arrayParameters)
+#set ($parameterMethodName = "$stringUtils.upperCamelCaseName($parameter.name)")
+#if ($parameter.type.collectionType)
+	public java.lang.String[] get${parameterMethodName}() {
+		return ${parameter.name};
+	}
+
+	public void set${parameterMethodName}(java.lang.String[] ${parameter.name}) {
+		this.${parameter.name} = ${parameter.name};
+	}
+#elseif ($parameter.doubleSelect)
+	public java.lang.String get${parameterMethodName}() {
+		return ${parameter.name};
+	}
+
+	public void set${parameterMethodName}(java.lang.String ${parameter.name}) {
+		this.${parameter.name} = ${parameter.name};
+	}
+
+	public java.lang.String get${parameterMethodName}__Double() {
+		return ${parameter.name}__Double;
+	}
+
+	public void set${parameterMethodName}__Double(java.lang.String ${parameter.name}__Double) {
+		this.${parameter.name}__Double = ${parameter.name}__Double;
+	}
+
+#else
+	public java.lang.String get${parameterMethodName}() {
+		return ${parameter.name};
+	}
+
+	public void set${parameterMethodName}(java.lang.String ${parameter.name}) {
+		this.${parameter.name} = ${parameter.name};
+	}
+#end
+
+#end
+##
+	/**
+	 * Clear all parameters.
+	 */
+	public void clearAll() {
+#foreach ($parameter in $arrayParameters)
+#if ($parameter.type.collectionType)
+		this.${parameter.name} = null;
+#elseif ($parameter.doubleSelect)
+		this.${parameter.name} = null;
+		this.${parameter.name}__Double = null;
+#else
+		this.${parameter.name} = null;
+#end
+
+#end
+
+	}
+##
+}
+#end

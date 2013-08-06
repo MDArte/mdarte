@@ -1,0 +1,8 @@
+#set ($generatedFile = "getterServiceMethods")
+#foreach($service in $services)
+get${service.name}
+#end
+
+#foreach($factory in $factories)
+${factory.name}Factory.getService
+#end

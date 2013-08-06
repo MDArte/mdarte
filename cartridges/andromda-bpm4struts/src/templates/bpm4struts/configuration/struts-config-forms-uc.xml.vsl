@@ -1,0 +1,12 @@
+##set ($generatedFile = "$stringUtils.upperCamelCaseName($useCase.name)")
+#set ($generatedFile = "struts-config-forms-uc-${stringUtils.upperCamelCaseName(${useCase.name})}.xml")
+## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($modulo == 'true')
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+        <form-bean
+            name="$action.formBeanName"
+            type="$action.formBeanType" />
+#end
+#end
+#end

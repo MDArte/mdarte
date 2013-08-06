@@ -1,0 +1,45 @@
+#set ($generatedFile = "ListAction.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+
+
+
+public class ListAction extends Action{
+
+	private String propriedade;
+	private Boolean desc;
+	private Integer paginacao;
+	
+	public ListAction(){
+		propriedade = null;
+		desc = Boolean.FALSE;
+	}
+	
+	public ListAction(String propriedade, Boolean desc){
+		this.propriedade = propriedade;
+		this.desc = desc;
+	}
+
+	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
+		return dao.list(null, propriedade, desc);
+	}
+	
+	public String getPropriedade(){
+		return propriedade;
+	}
+	
+	public Boolean getDesc(){
+		return desc;
+	}
+		
+	public Integer getPaginacao(){
+		return paginacao;
+	}
+	
+}

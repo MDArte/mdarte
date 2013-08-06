@@ -1,0 +1,21 @@
+#set ($generatedFile = "pagina-de-login.css")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
+
+#if($oAuthServer == "true")
+#ConteudoDiv.LookupGrid{
+overflow: auto ;
+height: 95%;
+}
+#login.action {}
+#login.action #form_submit {}
+
+#login.action .login {}
+#login.action .login .label {}
+#login.action .login .field {}
+#login.action .senha {}
+#login.action .senha .label {}
+#login.action .senha .field {}
+#end
+

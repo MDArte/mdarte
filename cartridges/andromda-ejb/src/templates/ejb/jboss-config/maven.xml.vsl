@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="deploy"
+         xmlns:ant="jelly:ant"
+         xmlns:u="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+		
+	<ant:property environment="env"/>
+	
+	<j:set var="jmsFile" value="jms/${projectId}-queues-service.xml"/>
+	<j:set var="jmsDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy/jms"/>
+	
+	<goal name="deploy">
+		<u:available file="${jmsFile}">
+			<ant:copy  file="${jmsFile}" todir="${jmsDirectory}"/>
+		</u:available>
+	</goal>
+	
+</project>

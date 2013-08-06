@@ -1,0 +1,76 @@
+#set ($generatedFile = "$stringUtils.replace($customTypesPackage, '.', '/')/InitialService.java")
+package $customTypesPackage;
+
+#set($sharp = "#")
+##
+import java.util.HashMap;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+#if ($securityRealm)
+import accessControl.ControleAcesso;
+import ${controleAcessoDir}.ControleAcessoImpl;
+import accessControl.Perfil;
+import accessControl.ServicosSingleton;
+#end
+
+/**
+ * Load the processes when the JBoss is started.
+ * 
+ */
+public class InitialService extends org.jboss.system.ServiceMBeanSupport implements InitialServiceMBean
+{
+	/**
+	 * Log.
+	 */
+	private static Log s_log = LogFactory.getLog(InitialService.class);
+
+	/**
+	 * @see org.jboss.system.ServiceMBeanSupport${sharp}startService()
+	 */
+	public void startService() throws Exception
+	{
+#if ($securityRealm)
+		try
+		{
+			ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
+
+			HashMap<String, ControleAcesso> controles = ServicosSingleton.instance().getControles();
+			if (controles == null)
+			{
+				controles = new HashMap<String, ControleAcesso>();
+			}
+			controles.put("$securityRealm", controleAcesso);
+
+			ServicosSingleton.instance().setControles(controles);
+
+#if(!$demanda.equals('true'))
+			HashMap listaServicosProjeto = controleAcesso.listaServicos();
+			HashMap<String, HashMap<String, java.util.Collection<Perfil>>> listaServicos = ServicosSingleton.instance().getServicos();
+			if (listaServicos == null)
+			{
+				listaServicos = new HashMap<String, HashMap<String, java.util.Collection<Perfil>>>();
+			}
+			listaServicos.put("$securityRealm", listaServicosProjeto);
+			ServicosSingleton.instance().setServicos(listaServicos);
+#end
+
+			HashMap<String, Boolean> demanda = ServicosSingleton.instance().getDemanda();
+			if (demanda == null)
+			{
+				demanda = new HashMap<String, Boolean>();
+			}
+			demanda.put("$securityRealm", $demanda);
+
+			ServicosSingleton.instance().setDemanda(demanda);
+
+			controleAcesso.agendaTarefas();
+		}
+		catch (Exception e)
+		{
+			s_log.error("Nao foi possivel listar os servicos", new RuntimeException());
+		}
+#end
+	}
+}

@@ -1,0 +1,409 @@
+#parse("templates/bpm4struts2/pages/page.jsp.vm")
+#set ($generatedFile = "${jsp.fullPath}-actions.jsp")
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if($action.actionOldStruts)
+#set($gerar = false)
+#end
+#if($gerar)
+##
+##
+## Codigo acrescentado para pegar action que cont�m parametros ##
+#if ($jsp.actions.size() > 0)
+#set ($action = $jsp.actions.get(0))
+#set($gerarJSP = true)
+#if($action.actionOldStruts)
+#set($gerarJSP = false)	
+#end
+#if($gerarJSP)
+#set($achou = "false")
+#foreach($_action in $jsp.actions)
+#if(!$achou.equals("true"))
+#if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
+#set($action = $_action)
+#set($achou = "true")
+#end
+#end
+#end
+<!-- Using struts 2 $action.actionOldStruts -->
+## fim do codigo
+##set ($action = $jsp.actions.get(0))
+#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
+##
+	#set ($clientValidationDesired = ($clientValidation=='true'))
+	#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
+	#set ($formBeanName = $action.formBeanName)
+	###set ($actionParameters = $action.actionParameters)
+	## Considera os par�metros de todas as a��es
+	#set ($actionParameters = $jsp.allUniqueActionParameters )
+	#set ($hints = $hints.equalsIgnoreCase("true"))
+	#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+## Script para setar a a��o correspondente do botao no form
+<% 
+  String nomeProjeto = request.getContextPath(); 
+  out.println("<script>");
+  out.println("function getPath(){return \""+nomeProjeto+"\";}");
+  out.println("</script>");
+%>
+<!-- Gerado utilizando o template bpm4struts2/pages/page-actions.jsp.vsl-->
+<script>
+##	function setaAcao(nomeAcao, fcValidacao, valida , nomeForm, formato){
+##		document.forms[0].action = "";
+##		if (nomeAcao.indexOf("/") == 0) {
+##			document.forms[0].action = getPath() + nomeAcao + formato;
+##		}else{
+##			document.forms[0].action = getPath() + '/' + nomeAcao + formato;
+##		}
+##		document.forms[0].name = nomeForm;
+##		if($clientValidationDesired && valida){
+##			if(eval(fcValidacao + '(document.forms[0])')){
+##				document.forms[0].submit();
+##			}
+##		}else{
+##			document.forms[0].submit();
+##		}
+##	}
+	
+	function setaLocation(nomeAcao){
+
+		var action;
+		if (nomeAcao.indexOf("/") == 0) {
+			action=getPath() + nomeAcao + '.action';
+		}else{
+			action=getPath() + '/' + nomeAcao + '.action';
+		}
+	#set($temLookupGrid="false")
+	#foreach ($_action in $jsp.actions)
+		#if($_action.lookupGrid)
+			#set($temLookupGrid="true")
+		#end
+	#end
+	#if($temLookupGrid=="true")
+		window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
+	#else
+		window.open(action, '', 'width=700,height=500,top=50,left=100');
+	#end
+	}
+	function apaga() {
+               document.forms[0].reset();
+		for (i=0;i<document.forms[0].elements.length;i++)
+               {
+			
+			var strtype = document.forms[0].elements[i].type;
+			if(strtype.match("select")=="select"){
+				document.forms[0].elements[i].selectedIndex=0;
+			}
+                       	if (strtype == "text" || strtype == "password")
+                       	{
+                       	        document.forms[0].elements[i].value="";
+                       	}
+                       	if (strtype == "radio" || strtype == "checkbox")
+                       	{
+                       	        document.forms[0].elements[i].checked=false;
+                       	}
+               }
+       } 
+</script>
+
+#set($achou = false)
+#foreach($jspAction in $jsp.actions)
+#if($jspAction.hasStereotype("$enterAction"))
+#if(!$jspAction.tableLink && $jspAction.formPost && !$achou)
+#set($defaultAction = $jspAction)
+#set($achou = true)
+#end
+#end
+#end
+
+<script>
+	function keySubmit(e){
+		#if($defaultAction)
+		var keycode;
+		if (window.event) 
+			keycode = window.event.keyCode;
+		else if (e) 
+			keycode = e.which;
+		else 
+			return true;
+
+		if (keycode == 13)
+   		{
+   			setaAcao('${defaultAction.actionPath}', '${defaultAction.formValidationMethodName}', ${defaultAction.validationRequired})
+   			return false;
+   		}
+		else
+  			return true;
+  		#end
+	}
+</script>
+
+
+
+
+<script type="text/javascript">
+     <!--Operacao de Habilitar-->
+     function verificaHabilitados() {
+          
+          #foreach ($field in $actionParameters)
+          #if($field.habilitadoPor)
+          if(
+          #foreach($habilitador in $field.habilitadoPor)
+          #if($velocityCount != 1)&&#end document.getElementById('$habilitador.styleId').value != ''
+          #end
+          ){
+     	  	document.getElementById('$field.styleId').disabled = false;
+	  }else {
+            	document.getElementById('$field.styleId').disabled = true;
+		if(document.getElementById('$field.styleId').value != ''){
+       			document.getElementById('$field.styleId').value = '';
+			verificaHabilitados();
+		}
+	 }
+	 #end
+	 #end
+    }
+    <!--Operacao de Desabilitar-->
+    function verificaDesabilitados() {
+          
+          #foreach ($field in $actionParameters)
+          #if($field.desabilitadoPor)
+          if(
+          #foreach($desabilitador in $field.desabilitadoPor)
+          #if($velocityCount != 1)||#end document.getElementById('$desabilitador.styleId').value != ''
+          #end
+          ){
+          	document.getElementById('$field.styleId').disabled = true;
+          	if(document.getElementById('$field.styleId').value != ''){
+       			document.getElementById('$field.styleId').value = '';
+       			verificaDesabilitados();
+       		}
+     	  	
+	  }else {
+            	document.getElementById('$field.styleId').disabled = false;
+	  }
+	 #end
+	 #end
+    }
+    
+    <!--Operacao de tornar visivel-->    
+    function verificaVisiveis() {
+          
+          #foreach ($field in $actionParameters)
+          #if($field.visivelPor)
+          if(
+          #foreach($visivelPor in $field.visivelPor)
+          #if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
+          #end
+          ){
+          	document.getElementById('tr-$field.styleId').style.display ='';
+     	  }else {
+	  	document.getElementById('tr-$field.styleId').style.display ='none';
+	  	if(document.getElementById('tr-$field.styleId').value != ''){
+       			document.getElementById('tr-$field.styleId').value = '';
+			verificaVisiveis();
+		}
+            	
+	 }
+	 #end
+	 #end
+    }
+    
+    <!--Operacao de Esconder-->    
+    function verificaEscondidos() {
+          
+          #foreach ($field in $actionParameters)
+          #if($field.escondidoPor)
+          if(
+          #foreach($escondidoPor in $field.escondidoPor)
+          #if($velocityCount != 1)||#end document.getElementById('$escondidoPor.styleId').value != ''
+          #end
+          ){
+          	document.getElementById('tr-$field.styleId').style.display ='none';
+          	if(document.getElementById('tr-$field.styleId').value != ''){
+       			document.getElementById('tr-$field.styleId').value = '';
+			verificaEscondidos();
+		}
+     	  	
+	  }else {
+            	document.getElementById('tr-$field.styleId').style.display ='';
+	 }
+	 #end
+	 #end
+    }
+    
+    function verifica() {
+     	verificaHabilitados();
+     	verificaDesabilitados();
+     	verificaEscondidos();
+     	verificaVisiveis();
+    }
+	
+</script>
+<script type="text/javascript">
+$(document).ready(function(){			
+				$('textarea').elastic();
+				$('textarea').trigger('update');
+			});
+#foreach ($field in $actionParameters)
+	#if ( ($field.textField) && $field.calendarRequired )
+	$(function() {
+		$( "#${field.name}" ).datepicker({
+			changeMonth: true,
+			changeYear: true,
+			regional:['pt-BR']
+		});
+	});
+	#end
+#end
+</script>
+
+
+
+	#if ($xhtml == "true")
+		<html:xhtml/>
+
+	#end
+
+
+<div id="ConteudoDiv">
+	#set ($messageKey = $action.messageKey)
+	#set ($actionTrigger = $action.actionTrigger)
+	<div id="$action.styleId" class="action">
+    	<div class="trigger">
+	##if ($action.hyperlink)
+	##	#renderHyperlink($action "        ")
+	#if ($action.tableAction)## this means this action allows rows to be selected and sent
+        	<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
+				<s:actionerror />
+##            	<%@ include file="${jsp.fullPath}-control-params.jspf" %>
+            	<%@ include file="${action.input.fullPath}-${action.tableLinkParameter.name}.jspf" %>
+				<div class="FormLinhaBotoes">
+				#foreach ($_action in $jsp.actions)
+				#if(!$_action.tableLink)
+				#if($_action.formPost )
+					#renderFormButtonsCustomizado2($_action "                           ")
+					
+				#elseif ($_action.hyperlink))
+					#set($fieldLinkValue = "")
+					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))					
+					#if($fieldLinkValue.equals(""))				
+					#renderHyperlink2($_action "        ")
+					#end
+				#elseif($_action.lookupGrid)
+					#renderLookupGrid2($_action)
+				#elseif($_action.popup)
+					#renderLookupGrid2($_action)
+				#end
+				#end
+				#end
+				</div>
+        	</s:form>
+	#elseif (($action.formPost || $action.hyperlink))
+		#if ($action.actionParameters.empty)
+		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+        		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">
+				<s:actionerror />
+##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
+				<div class="FormLinhaBotoes">
+				#foreach ($_action in $jsp.actions)
+				#if(!$_action.tableLink)
+				#if($_action.formPost )
+					#renderFormButtonsCustomizado2($_action "                           ")
+				#elseif ($_action.hyperlink)
+					#set($fieldLinkValue = "")				
+					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+					#if($fieldLinkValue.equals(""))				
+					#renderHyperlink2($_action "        ")
+					#end
+				#elseif($_action.lookupGrid)
+					#renderLookupGrid2($_action)
+				#elseif($_action.popup)
+					#renderLookupGrid2($_action)
+				#end
+				#end
+				#end
+				</div>
+        		</s:form>
+		#else
+
+    		<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" >
+				<s:actionerror />
+##        					<%@ include file="${jsp.fullPath}-control-params.jspf" %>
+			#foreach($acao in $jsp.actions)
+			#if (!$acao.hiddenActionParameters.empty)
+            			<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
+			#end
+			#end
+                    	            <table>
+                <tbody>
+
+#foreach ($field in $actionParameters)
+
+#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
+## for now multibox field can only be displayed in tables
+		    #if($field.visivelPor)
+		    #set ($visivel = 'style="display:none"')
+		    #else
+		    #set ($visivel = '')
+		    #end
+		    #set($valueFieldOperationMode = "")
+#set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
+#if( $valueFieldOperationMode != "" && !${action.useCase.openAccess})
+<security:containsOperationMode value="$valueFieldOperationMode" useCase="${action.useCase.package.webModuleName}${action.useCase.actionPath}.action">
+#end		    
+		    #if ($securityEnabled && !${action.useCase.openAccess}) 	
+	   <security:containsPermission name="$field.messageKey">
+	   #end			
+                    <tr class="$field.name" id="tr-$field.styleId" $visivel>
+                        <td class="label">#if ($requiredness && $field.required)<nobr><bean:message key="$field.messageKey"/> <div class="important">*</div></nobr>#else<bean:message key="$field.messageKey"/>#end</td>
+                        <td class="field">
+#renderFormField2($action $field '' "                           ")
+                        </td>
+                    </tr>
+                    #if ($securityEnabled && !${action.useCase.openAccess}) 
+	   </security:containsPermission>      
+	   #end   
+#if( $valueFieldOperationMode != "" && !${action.useCase.openAccess})
+</security:containsOperationMode>
+#end	              
+#end
+#end
+                    <tr>
+                    <td>&nbsp;</td>
+                        				<td class="FormLinhaBotoes">
+				#foreach ($_action in $jsp.actions)
+				#if(!$_action.tableLink)
+				#if($_action.formPost )
+					#renderFormButtonsCustomizado2($_action "                           ")
+					#cleanButton2($_action "                           ")
+				#elseif ($_action.hyperlink)
+					#set($fieldLinkValue = "")
+					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+					#if($fieldLinkValue.equals(""))					
+					#renderHyperlink2($_action "        ")
+					#end
+				#elseif($_action.lookupGrid)
+					#renderLookupGrid2($_action)
+				#elseif($_action.popup)
+					#renderLookupGrid2($_action)					
+				#end
+				#end
+				#end
+                        				</td>
+                    				</tr>
+                		</tbody>
+            		</table>
+    	</s:form>
+		#end
+	#end
+    </div>
+
+</div>
+
+<br class="clr"/>
+#end
+#end
+#end
+#end

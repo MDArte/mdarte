@@ -1,0 +1,5 @@
+<project>
+    <extend>../../project.xml</extend>
+    <name>AndroMDA Test Profile</name>
+    <artifactId>andromda-profile-test</artifactId>
+</project>

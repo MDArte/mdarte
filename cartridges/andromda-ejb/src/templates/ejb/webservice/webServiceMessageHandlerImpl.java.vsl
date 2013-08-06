@@ -1,0 +1,38 @@
+#if ($webServiceComAutenticacao.equalsIgnoreCase("true"))
+#if ($stringUtils.isNotBlank(${service.packageName}))
+package ${service.packageName};
+#end
+##
+#set($sharp = "#")
+
+public class ${service.name}MessageHandlerImpl extends ${service.name}MessageHandler {
+
+	/**
+	 * @see ${service.packageName}.${service.name}MessageHandler${sharp}handleGetPasswordToken(java.lang.String)
+	 */
+	public String handleGetPasswordToken(String username) {
+		/* exemplo de implementação */
+/*
+		OperadorCaVO vo = new OperadorCaVO();
+		OperadorCaDAO dao = new OperadorCaDAOImpl();
+		vo.setLogin(username);
+		List usuarios;
+
+		try {
+			usuarios = dao.filter(vo, null);
+		} catch (Exception e1) {
+			usuarios = new ArrayList();
+		}
+
+		if (usuarios.isEmpty()) {
+			throw new JAXRPCException("Não foi encontrado um usuário no sistema com as credenciais informadas!");
+		}
+
+		OperadorCa opca = (OperadorCa) usuarios.get(0);
+
+		return opca.getSenha();
+*/
+		return null;
+	}
+}
+#end

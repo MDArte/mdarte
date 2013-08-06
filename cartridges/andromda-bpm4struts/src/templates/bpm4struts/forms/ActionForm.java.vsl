@@ -1,0 +1,1111 @@
+#set ($generatedFile = "${action.fullFormBeanPath}.java")
+##
+##  CONSTANTS
+##
+#set ($hash = "#")
+#set ($fields = $action.actionFormFields)
+#set ($actionParameters = $action.actionParameters)
+#set ($formBeanClassName = $action.formBeanClassName)
+##
+##  START TEMPLATE
+##
+#set($gerar = false)
+#if($action.actionOldStruts)
+#set($gerar = true)
+#end
+#if($gerar)
+// license-header java merge-point
+package $action.formBeanPackageName;
+
+import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+##
+#set ($sharp = "#")
+
+public class ${formBeanClassName}
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+    extends ${controleAcessoDir}.LoginFormImpl
+#else
+    extends org.apache.struts.validator.ValidatorForm
+#end    
+    implements java.io.Serializable
+#foreach ($operation in $action.deferredOperations)
+        , $operation.interfaceType
+#end
+{
+
+    private final static DecimalFormatSymbols simbolosDecimaisReal = new DecimalFormatSymbols(Locale.US);
+    static 
+    {
+        simbolosDecimaisReal.setGroupingSeparator('.');
+        simbolosDecimaisReal.setDecimalSeparator(',');
+    }
+
+	private final static DecimalFormatSymbols simbolosDecimaisDolar = new DecimalFormatSymbols(Locale.US);
+    static 
+    {
+        simbolosDecimaisDolar.setGroupingSeparator(',');
+        simbolosDecimaisDolar.setDecimalSeparator('.');
+    }
+
+    private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
+    
+#foreach ($field in $fields)
+#if ($field.file)
+    private org.apache.struts.upload.FormFile $field.name = null;
+#elseif ($field.table)
+    private $field.type.fullyQualifiedName $field.name = null;
+#elseif ($field.strutsAction.tableAction)
+    private java.util.List ${field.name}RowSelection = null;
+#elseif ($field.type.mapType)
+    private java.util.Map $field.name = new java.util.HashMap();
+#elseif($field.widgetType=="money")
+    private java.lang.String $field.name;
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+    private ${enumeration.literalType.wrapperName} $field.name = null;
+#else
+    private ${enumeration.literalType.fullyQualifiedName} $field.name = null;
+#end
+#else
+    private $field.type.fullyQualifiedName $field.name;
+#end
+## Adiciona um double para o caso do doubleSelect
+#if ($field.doubleSelect)
+    private $field.type.fullyQualifiedName ${field.name}__Double;
+    public $field.type.fullyQualifiedName ${field.getterName}__Double()
+    {
+	return this.${field.name}__Double;    
+    }
+    public void ${field.setterName}__Double($field.type.fullyQualifiedName ${field.name}__Double)
+    {
+    	this.${field.name}__Double = ${field.name}__Double;
+    }
+	private java.lang.Object[] ${field.valueListName}Double;
+	private java.lang.Object[] ${field.name}IndexListDouble;
+#end
+
+#if ($field.date)
+#set ($dateFormatter = "${field.name}DateFormatter")
+    private final static java.text.DateFormat $dateFormatter = new java.text.SimpleDateFormat("$field.dateFormat");
+#elseif ($field.time)
+#set ($timeFormatter = "${field.name}TimeFormatter")
+    private final static java.text.DateFormat $timeFormatter = new java.text.SimpleDateFormat("$field.timeFormat");
+#end
+    private java.lang.Object[] $field.valueListName;
+    private java.lang.Object[] $field.labelListName;
+    private java.lang.Object[] ${field.labelListName}Double;    
+    private java.lang.Object[] ${field.labelListName}Hints;
+    private java.lang.Object[] ${field.labelListName}Destination;
+#end
+
+    public ${formBeanClassName}(){
+    #foreach($field in $fields)
+    #if($field.radioButton)
+    #if($field.findTaggedValue("$radioSelected"))
+    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+    #end
+    #end
+    #end
+    
+    
+    
+#foreach ($field in $fields)
+#if ($field.date)
+#set ($dateFormatter = "${field.name}DateFormatter")
+#set ($lenient = !$field.strictDateFormat)
+        ${dateFormatter}.setLenient($lenient);
+#end
+#end
+    }
+
+#foreach ($field in $fields)
+#if ($field.date)
+#set ($dateFormatter = "${field.name}DateFormatter")
+#elseif ($field.time)
+#set ($timeFormatter = "${field.name}TimeFormatter")
+#end
+#set ($fieldType = $field.type.fullyQualifiedName)
+#set ($fieldName = $field.name)
+#if ($field.type.mapType)
+    /**
+     * Resets the given <code>$fieldName</code>.
+     */
+    public void ${field.resetName}()
+    {
+        this.${fieldName}.clear();
+    }
+#elseif ($field.strutsAction.tableAction)
+    /**
+     * Resets the given <code>${fieldName}RowSelection</code>.
+     */
+    public void ${field.resetName}()
+    {
+        this.${fieldName}RowSelection = null;
+    }
+#else
+    /**
+     * Resets the given <code>$fieldName</code>.
+     */
+    public void ${field.resetName}()
+    {
+	this.$fieldName = $field.nullValue;
+    	#if($field.radioButton)
+    	#if($field.findTaggedValue("$radioSelected"))
+    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+        #end
+        #end
+    }
+
+#end
+#if ($field.type.collectionType)
+    public void ${field.setterName}($fieldType $fieldName)
+    {
+        this.$fieldName = $fieldName;
+    }
+
+    /**
+$field.getDocumentation("     * ")
+     */
+    public $fieldType ${field.getterName}()
+    {
+        return this.${fieldName};
+    }
+
+    public void ${field.setterName}AsArray(Object[] $fieldName)
+    {
+        this.$fieldName = ($fieldName == null) ? null : java.util.Arrays.asList($fieldName);
+    }
+
+    /**
+     * Returns this collection as an array, if the collection itself would be <code>null</code> this method
+     * will also return <code>null</code>.
+     *
+     * @see ${action.formBeanType}${hash}${field.getterName}
+     */
+    public java.lang.Object[] ${field.getterName}AsArray()
+    {
+        return ($fieldName == null) ? null : ${fieldName}.toArray();
+    }
+    
+#elseif ($field.strutsAction.tableAction)
+#set ($fieldName = $field.name)
+#if ($field.type.primitive)
+#set ($fieldType = "$field.type.wrapperName")
+#else
+#set ($fieldType = "$field.type.fullyQualifiedName")
+#end
+#set ($accessSuffix = "RowSelection")
+    public void ${field.setterName}${accessSuffix}(java.util.List $fieldName${accessSuffix})
+    {
+        this.$fieldName${accessSuffix} = $fieldName${accessSuffix};
+    }
+
+    public java.util.List ${field.getterName}${accessSuffix}()
+    {
+        return this.$fieldName${accessSuffix};
+    }
+
+    public void ${field.setterName}${accessSuffix}AsArray(${fieldType}[] $fieldName${accessSuffix})
+    {
+        this.$fieldName${accessSuffix} = ($fieldName${accessSuffix} == null) ? null : java.util.Arrays.asList($fieldName${accessSuffix});
+    }
+
+    public ${fieldType}[] ${field.getterName}${accessSuffix}AsArray()
+    {
+        return ($fieldName${accessSuffix} == null) ? null : (${fieldType}[])${fieldName}${accessSuffix}.toArray(new ${fieldType}[${fieldName}${accessSuffix}.size()]);
+    }
+#elseif($field.widgetType=="money")
+#set ($asType = "Double")
+   public void ${field.setterName}As${asType}(java.lang.Double $fieldName){
+       String s = null;
+       try{
+	   if($fieldName != null){
+
+	   	String myFormat = "#,#" + "#" +"#.00";
+        java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, #if($field.moneyReal)simbolosDecimaisReal #elseif($field.moneyDolar)simbolosDecimaisDolar #end);
+        s = myFormatter.format($fieldName);
+
+        if(s.startsWith(#if($field.moneyReal)"," #elseif($field.moneyDolar)"." #end)){
+			s = "0"+s;
+	   	}
+	   	
+           	this.$fieldName = s;
+           }
+       }catch(Exception e)
+       {
+           throw new RuntimeException(e);
+       }
+    	
+    	
+   }
+
+   
+    public java.lang.Double ${field.getterName}As${asType}(){
+    	if(this.$fieldName != null && !this.${fieldName}.equals("")){
+    		java.lang.String $fieldName = this.$fieldName;
+   		
+#if ($field.moneyReal)
+            $fieldName = ${fieldName}.replace(".", "");
+            $fieldName = ${fieldName}.replace(",", ".");
+#elseif ($field.moneyDolar)
+            $fieldName = ${fieldName}.replace(",", "");
+            $fieldName = ${fieldName}.replace(".", ".");
+#end
+
+    		return new java.lang.Double($fieldName);
+    	}
+		return null;
+    }
+
+    
+    public void ${field.setterName}(java.lang.String ${fieldName}){
+	    this.$fieldName = $fieldName;
+    }
+
+   
+    public java.lang.String ${field.getterName}(){
+    	return this.$fieldName;
+    }
+    
+#elseif ($field.date || $field.time)
+#if ($field.date)
+#set ($asType = "Date")
+#else
+#set ($asType = "Time")
+#end
+    public void ${field.setterName}As${asType}($fieldType $fieldName)
+    {
+        this.$fieldName = $fieldName;
+    }
+
+    /**
+     * Returns the Date instance representing the <code>$field.name</code> field.
+     *
+     * @see ${action.formBeanType}${hash}${field.getterName}
+#if ($field.date)
+     * @see ${action.formBeanType}${hash}${dateFormatter}
+#else
+     * @see ${action.formBeanType}${hash}${timeFormatter}
+#end
+     */
+    public $fieldType ${field.getterName}As${asType}()
+    {
+        return this.$fieldName;
+    }
+
+    public void ${field.setterName}(java.lang.String ${fieldName})
+    {
+        if (${fieldName} == null || ${fieldName}.trim().length() == 0)
+        {
+            this.$fieldName = null;
+        }
+        else
+        {
+            try
+            {
+#if ($fieldType == "java.util.Date")
+#if ($field.date)
+                this.$fieldName = ${dateFormatter}.parse(${fieldName});
+#else
+                this.$fieldName = ${timeFormatter}.parse(${fieldName});
+#end
+#else
+## this is an attempt to support descendants of java.util.Date, the class needs <init>(long)
+#if ($field.date)
+                this.$fieldName = new ${fieldType}(${dateFormatter}.parse(${fieldName}).getTime());
+#else
+                this.$fieldName = new ${fieldType}(${timeFormatter}.parse(${fieldName}).getTime());
+#end
+
+#end
+            }
+            catch(java.text.ParseException e)
+            {
+                // we are not throwing an exception, let the validator handle these cases
+                this.$fieldName = null;
+            }
+        }
+    }
+
+    /**
+$field.getDocumentation("     * ")
+     *
+     * This method returns a <code>java.lang.String</code> instance, in order to get the
+     * <code>java.util.Date</code> instance see the <code>${field.getterName}As${asType}()</code>
+     * method.
+     * <p>
+     * The conversion from Date to String (and vice-versa) is done by means of a date formatter, which
+     * can be accessed here: <code>${field.getterName}${asType}Formatter()</code>.
+     *
+     * @see ${action.formBeanType}${hash}${field.getterName}As${asType}
+     * @see ${action.formBeanType}${hash}${field.getterName}${asType}Formatter
+     */
+    public java.lang.String ${field.getterName}()
+    {
+#if ($field.date)
+        return (${fieldName} == null) ? null : ${dateFormatter}.format($fieldName);
+#else
+        return (${fieldName} == null) ? null : ${timeFormatter}.format($fieldName);
+#end
+    }
+
+    /**
+     * Returns the date formatter used for the <code>$field.name</code> property.
+     *
+     * @see ${action.formBeanType}${hash}${field.getterName}
+     * @see ${action.formBeanType}${hash}${field.getterName}As${asType}
+     */
+    public static java.text.DateFormat ${field.getterName}${asType}Formatter()
+    {
+#if ($field.date)
+        return ${formBeanClassName}.${dateFormatter};
+#else
+        return ${formBeanClassName}.${timeFormatter};
+#end
+    }
+
+#elseif ($field.file)
+    public void ${field.setterName}(org.apache.struts.upload.FormFile $fieldName)
+    {
+        this.$fieldName = $fieldName;
+    }
+
+    /**
+$field.getDocumentation("     * ")
+     */
+    public org.apache.struts.upload.FormFile ${field.getterName}()
+    {
+        return this.$fieldName;
+    }
+#elseif ($field.type.mapType)
+	public void ${field.setterName}Value(java.lang.String key, java.lang.Object value) 
+	{
+		this.${fieldName}.put(key, value);
+	}
+
+	public java.lang.Object ${field.getterName}Value(String key) 
+	{
+		return ${fieldName}.get(key);
+	}
+	
+    public void ${field.setterName}(java.util.Map $fieldName)
+    {
+        this.$fieldName = $fieldName;
+    }
+
+    /**
+$field.getDocumentation("     * ")
+     */
+    public java.util.Map ${field.getterName}()
+    {
+        return this.$fieldName;
+    }
+
+
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#set($type = ${enumeration.fullyQualifiedName})
+
+#if ($enumeration.literalType.primitive)
+    #set($literalType = ${enumeration.literalType.wrapperName})
+#else
+    #set($literalType = ${enumeration.literalType.fullyQualifiedName})
+#end
+
+public $literalType ${field.getterName}() 
+{
+	return this.${fieldName};
+}
+
+public $type ${field.getterName}AsEnumeration() 
+{
+	return ${type}.${enumeration.fromOperationName}(this.${fieldName});
+}
+
+public void ${field.setterName}($literalType value) 
+{
+	this.${fieldName} = new ${literalType}(value);
+}
+
+#else
+
+#if ($field.doubleSelect)
+public void ${field.setterName}($fieldType $fieldName)
+    {
+        this.$fieldName = $fieldName;
+    }
+	
+	public void ${field.setterName}Map(java.util.Map ${fieldName}Map, java.lang.String value, java.lang.String label, java.lang.String value2, java.lang.String label2)
+    {
+    	java.util.Map temp = new java.util.LinkedHashMap();
+
+    	int i = 0 , j = 0 , k = 0, size = 0;
+    	
+    	this.${field.valueListName} = new java.lang.Object[${fieldName}Map.keySet().size()];
+        this.${field.labelListName} = new java.lang.Object[${fieldName}Map.keySet().size()];
+        
+        
+        for (java.util.Iterator iterator = ${fieldName}Map.keySet().iterator(); iterator.hasNext();)
+    	{
+        	final java.lang.Object item = iterator.next();
+        	
+        	size += ((java.util.Collection)${fieldName}Map.get(item)).size();
+    	}
+        
+        this.${field.labelListName}Double = new java.lang.Object[size];
+        this.${field.valueListName}Double = new java.lang.Object[size];
+        this.${fieldName}IndexListDouble = new java.lang.Object[size];
+
+    	try
+    	{
+    		for (java.util.Iterator iterator = ${fieldName}Map.keySet().iterator(); iterator.hasNext();i++)
+    		{
+    			final java.lang.Object item = iterator.next();
+    			
+    			this.${field.valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, value);
+                this.${field.labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, label);
+
+    			for (java.util.Iterator iterator2 = ((java.util.Collection)${fieldName}Map.get(item)).iterator(); iterator2.hasNext(); j++)
+    			{
+    				final java.lang.Object item2 = iterator2.next();
+    				
+    				this.${field.valueListName}Double[k+j] = org.apache.commons.beanutils.PropertyUtils.getProperty(item2, value2);
+                    this.${field.labelListName}Double[k+j] = org.apache.commons.beanutils.PropertyUtils.getProperty(item2, label2);
+                    this.${fieldName}IndexListDouble[k+j] = this.${field.valueListName}[i];
+    			}
+    			k += j;
+    			j = 0;
+    		}
+    	}
+    	catch (Exception ex)
+        {
+    		throw new java.lang.RuntimeException("${formBeanClassName}.set${fieldName}Map encountered an exception", ex);
+        }
+    }
+        
+#else
+    public void ${field.setterName}($fieldType $fieldName)
+    {
+        this.$fieldName = $fieldName;
+        
+    }
+#end
+
+    /**
+$field.getDocumentation("     * ")
+     */
+    public $fieldType ${field.getterName}()
+    {
+        return this.$fieldName;
+    }
+    
+#if ($field.widgetType == "radio")
+    /**
+     * Converts the selected option index to the corresponding value as it was modeled.
+     */
+    public $field.type.fullyQualifiedName ${field.getterName}OptionValue(int optionIndex)
+    {
+#if ($field.type.primitive)
+        return ($field.type.fullyQualifiedName)optionIndex;
+#else
+        switch(optionIndex)
+        {
+#set ($optionValues = $field.optionValues)
+#foreach ($optionKey in $field.optionKeys)
+#set ($optionIndex = $velocityCount - 1)
+#if ($field.type.fullyQualifiedName == "java.lang.String")
+            case $optionIndex : return "$optionValues.get($optionIndex)";
+#else
+            case $optionIndex : return new ${field.type.fullyQualifiedName}("$optionValues.get($optionIndex)");
+#end
+#end
+            default:
+                throw new java.lang.ArrayIndexOutOfBoundsException(
+                    "Cannot access option "+optionIndex+", please specify a value in the range [0-$optionIndex]");
+        }
+#end
+    }
+
+#end
+#end
+#set ($listType = "java.lang.Object[]")
+#set ($backingListName = $field.backingListName)
+#set ($backingListMethod = $stringUtils.capitalize($backingListName))
+#set ($valueListName = $field.valueListName)
+#set ($valueListMethod = $stringUtils.capitalize($valueListName))
+#set ($labelListName = $field.labelListName)
+#set ($labelListMethod = $stringUtils.capitalize($labelListName))
+    public $listType get${backingListMethod}()
+    {
+        $listType values = this.${valueListName};
+        $listType labels = this.${labelListName};
+        $listType hints = this.${labelListName}Hints;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+
+        if (hints == null || hints.length == 0)
+        {
+            hints = labels;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValue(labels[i], values[i], hints[i]);
+        }
+
+        return backingList;
+    }
+    
+    public $listType get${backingListMethod}Double()
+    {
+#if ($field.doubleSelect)
+        $listType values = this.${valueListName}Double;
+        $listType labels = this.${labelListName}Double;
+        $listType labelsDouble = this.${field.name}IndexListDouble;
+#else
+        $listType values = this.${valueListName};
+        $listType labels = this.${labelListName};
+        $listType labelsDouble = this.${labelListName}Double;
+#end
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDouble == null || labelsDouble.length == 0)
+        {
+            labelsDouble = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDouble(labels[i], labelsDouble[i], values[i]);
+        }
+
+        return backingList;
+    }
+    
+    public $listType get${backingListMethod}Destination()
+    {
+        $listType values = this.${valueListName};
+        $listType labels = this.${labelListName};
+        $listType labelsDestination = this.${labelListName}Destination;        
+
+        if (values == null || values.length == 0)
+        {
+            return values;
+        }
+
+        if (labels == null || labels.length == 0)
+        {
+            labels = values;
+        }
+        
+        if (labelsDestination == null || labelsDestination.length == 0)
+        {
+            labelsDestination = values;
+        }
+
+        final int length = java.lang.Math.min(labels.length, values.length);
+        java.lang.Object[] backingList = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            backingList[i] = new LabelValueDestination(labels[i], labelsDestination[i], values[i]);
+        }
+
+        return backingList;
+    }
+
+    public $listType get${valueListMethod}()
+    {
+        return this.$valueListName;
+    }
+
+    public void set${valueListMethod}($listType $valueListName)
+    {
+        this.$valueListName = $valueListName;
+    }
+
+    public $listType get${labelListMethod}()
+    {
+        return this.$labelListName;
+    }
+
+    public $listType get${labelListMethod}Double()
+    {
+        return this.${labelListName}Double;
+    }
+    
+    public $listType get${labelListMethod}Destination()
+    {
+        return this.${labelListName}Destination;
+    }
+
+    public $listType get${labelListMethod}Hints()
+    {
+        return this.${labelListName}Hints;
+    }
+
+    public void set${labelListMethod}($listType $labelListName)
+    {
+        this.$labelListName = $labelListName;
+    }
+
+    public void set${labelListMethod}Double($listType ${labelListName}Double)
+    {
+        this.${labelListName}Double = ${labelListName}Double;
+    }
+    
+    public void set${labelListMethod}Destination($listType ${labelListName}Destination)
+    {
+        final int length = ${labelListName}Destination != null ? ${labelListName}Destination.length : 0;
+        java.lang.Object[] tempListaDestination = new java.lang.Object[length];
+
+        for (int i=0; i<length; i++)
+        {
+            Object tempDestination = ${labelListName}Destination[i];
+            if (tempDestination instanceof String) {
+                String tempStringDestination = (String) tempDestination;
+                if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                {
+                    tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                    tempDestination = tempStringDestination;
+                }
+            }
+            tempListaDestination[i] = tempDestination;
+        }
+
+        this.${labelListName}Destination = tempListaDestination;
+    }
+
+    public void set${labelListMethod}Hints($listType ${labelListName}Hints)
+    {
+        this.${labelListName}Hints = ${labelListName}Hints;
+    }
+
+    public void set${backingListMethod}Double(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDoubleProperty == null)
+        {
+            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod}Double requires non-null property arguments");
+        }
+
+        this.${valueListName} = null;
+        this.${labelListName} = null;
+        this.${labelListName}Double = null;        
+
+        if (items != null)
+        {
+            this.${valueListName} = new java.lang.Object[items.size()];
+            this.${labelListName} = new java.lang.Object[items.size()];
+            this.${labelListName}Double = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.${labelListName}Double[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDoubleProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod}Double encountered an exception", ex);
+            }
+        }
+    }
+    
+    
+    public void set${backingListMethod}Destination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelDestinationProperty == null)
+        {
+            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod}Destination requires non-null property arguments");
+        }
+
+        this.${valueListName} = null;
+        this.${labelListName} = null;
+        this.${labelListName}Destination = null;        
+
+        if (items != null)
+        {
+            this.${valueListName} = new java.lang.Object[items.size()];
+            this.${labelListName} = new java.lang.Object[items.size()];
+            this.${labelListName}Destination = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+
+                    Object tempDestination = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDestinationProperty);
+                    if (tempDestination instanceof String) {
+                        String tempStringDestination = (String) tempDestination;
+                        if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
+                        {
+                            tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
+                            tempDestination = tempStringDestination;
+                        }
+                    }
+                    this.${labelListName}Destination[i] = tempDestination;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod}Destination encountered an exception", ex);
+            }
+        }
+    }
+
+    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
+	set${backingListMethod}(items, valueProperty, labelProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.${labelListName}.length; i++){
+		Object label = this.${labelListName}[i];
+		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+	}
+    }	    
+    
+    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
+	set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.${labelListName}.length; i++){
+		Object label = this.${labelListName}[i];
+		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+	}
+	for(int i = 0; i < this.${labelListName}Hints.length; i++){
+		Object label = this.${labelListName}Hints[i];
+		if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
+        		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
+	}
+    }	    
+    
+    public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
+    {
+        if (valueProperty == null || labelProperty == null)
+        {
+            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod} requires non-null property arguments");
+        }
+
+        this.${valueListName} = null;
+        this.${labelListName} = null;
+
+        if (items != null)
+        {
+            this.${valueListName} = new java.lang.Object[items.size()];
+            this.${labelListName} = new java.lang.Object[items.size()];
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod} encountered an exception", ex);
+            }
+        }
+    }
+
+    public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty)
+    {
+        if (valueProperty == null || labelProperty == null || labelHintProperty == null)
+        {
+            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod} requires non-null property arguments");
+        }
+
+        this.${valueListName} = null;
+        this.${labelListName} = null;
+        this.${labelListName}Hints = null;        
+
+        if (items != null)
+        {
+            this.${valueListName} = new java.lang.Object[items.size()];
+            this.${labelListName} = new java.lang.Object[items.size()];
+            this.${labelListName}Hints = new java.lang.Object[items.size()];            
+
+            try
+            {
+                int i = 0;
+                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
+                {
+                    final java.lang.Object item = iterator.next();
+
+                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
+                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
+                    this.${labelListName}Hints[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelHintProperty);                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod} encountered an exception", ex);
+            }
+        }
+    }
+
+
+#end
+    /**
+     * @see org.apache.struts.validator.ValidatorForm${sharp}reset(org.apache.struts.action.ActionMapping,javax.servlet.http.HttpServletRequest)
+     */
+    public void reset(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
+    {
+#foreach ($field in $fields)
+#if ($field.resetRequired)
+## here we actually set the field to its null value, not its reset value (reset value is for dummy impls)
+        this.$field.name = $field.nullValue;
+#if ($field.doubleSelect)
+        this.${field.name}__Double = null;
+#end        
+#if ($field.selectable && $field.multiple)
+## multi-select fields need to be reset to an empty array (http://struts.apache.org/userGuide/struts-html.html#select)
+        this.$field.valueListName = new java.lang.Object[0];
+        this.$field.labelListName = new java.lang.Object[0];
+        this.${field.labelListName}Double = new java.lang.Object[0];
+        this.${field.labelListName}Hints = new java.lang.Object[0];        
+#end
+#end
+#if ($field.strutsAction.tableAction)
+        this.${field.name}RowSelection = null;
+#end
+#end
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.commons.lang.builder.ToStringBuilder builder =
+            new org.apache.commons.lang.builder.ToStringBuilder(this);
+#foreach ($field in $fields)
+#if ($field.password)
+        builder.append("$field.name", "***");
+#else
+#if ($field.strutsAction.tableAction)
+        builder.append("${field.name}RowSelection", this.${field.name}RowSelection);
+#else
+        builder.append("$field.name", this.$field.name);
+#end
+#end
+#end
+        return builder.toString();
+    }
+
+    /**
+     * Allows you to clean all values from this form. Objects will be set to <code>null</code>, numeric values will be
+     * set to zero and boolean values will be set to <code>false</code>. Backinglists for selectable fields will
+     * also be set to <code>null</code>.
+     */
+    public void clean()
+    {
+#foreach ($field in $fields)
+#if ($field.strutsAction.tableAction)
+        this.${field.name}RowSelection = null;
+#else
+        this.$field.name = $field.nullValue;
+#if ($field.doubleSelect)
+        this.${field.name}__Double = null;
+#end        
+        this.$field.valueListName = null;
+        this.$field.labelListName = null;
+        this.${field.labelListName}Double = null;        
+        this.${field.labelListName}Hints = null;                
+#end
+#end
+    }
+
+    /**
+     * Override to provide population of current form with request parameters when validation fails.
+     *
+     * @see org.apache.struts.action.ActionForm${sharp}validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
+     */
+    public org.apache.struts.action.ActionErrors validate(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
+    {
+        final org.apache.struts.action.ActionErrors errors = super.validate(mapping, request);
+        if (errors != null && !errors.isEmpty())
+        {
+#populateCurrentFormOnError()
+        }
+        return errors;
+    }
+
+    public final static class LabelValue
+    {
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+        private java.lang.Object hint = null;        
+
+        public LabelValue(Object label, java.lang.Object value)
+        {
+            this.label = label;
+            this.value = value;
+        }
+
+        public LabelValue(Object label, java.lang.Object value, Object hint)
+        {
+            this.label = label;
+            this.value = value;
+            this.hint = hint;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+        
+	public java.lang.Object getHint()
+        {
+            return this.hint;
+        }        
+
+        public java.lang.String toString()
+        {
+            return label + "=" + value;
+        }
+    }
+    
+    public final static class LabelValueDouble
+    {
+        private java.lang.Object labelDouble = null;
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+
+        public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
+        {
+            this.label = label;
+            this.labelDouble = labelDouble;
+            this.value = value;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+        
+        public java.lang.Object getLabelDouble()
+        {
+            return this.labelDouble;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+
+        public java.lang.String toString()
+        {
+            return label + "," + labelDouble + "=" + value;
+        }
+    }
+    
+    
+    public final static class LabelValueDestination
+    {
+        private java.lang.Object labelDestination = null;
+        private java.lang.Object label = null;
+        private java.lang.Object value = null;
+
+        public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
+        {
+            this.label = label;
+            this.labelDestination = labelDestination;
+            this.value = value;
+        }
+
+        public java.lang.Object getLabel()
+        {
+            return this.label;
+        }
+        
+        public java.lang.Object getLabelDestination()
+        {
+            return this.labelDestination;
+        }
+
+        public java.lang.Object getValue()
+        {
+            return this.value;
+        }
+
+        public java.lang.String toString()
+        {
+            return label + "," + labelDestination + "=" + value;
+        }
+    }
+ 
+    /** Verifica se o campo esta sendo exibido na tela */
+    public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
+	String modoPermitido = null;
+	java.util.StringTokenizer tokenizerModosPermitidos = null;
+        java.util.StringTokenizer tokenizerModosPossuidos = null;
+#foreach ($field in $fields)
+#set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
+#if($valueFieldOperationMode != "")
+        if (field.equals("$field.name")) {
+            if (modosOperacao == null || modosOperacao.isEmpty()) return false;
+            tokenizerModosPermitidos = new java.util.StringTokenizer("$valueFieldOperationMode", ",");
+            while (tokenizerModosPermitidos.hasMoreTokens()) {
+                modoPermitido = tokenizerModosPermitidos.nextToken();
+                if(modosOperacao.contains(modoPermitido)) return true;
+            }
+            return false;
+        }
+#end		    
+#end
+
+        return true;
+    }
+    
+    public String getOperationModeKey(){
+        return "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do";
+    }
+}
+#end

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../project.xml</extend>
+    <artifactId>${pom.groupId}-layout-web</artifactId>
+    <name>${projectName} layout Web</name>
+    <shortDescription>${pom.name} layout Web Component</shortDescription>
+    <description>
+        Contains the ${pom.name}-layout's web module.
+    </description>
+</project>

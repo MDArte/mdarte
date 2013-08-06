@@ -1,0 +1,90 @@
+#parse("templates/ejb/SessionEJBGlobals.vm")
+// license-header java merge-point
+#if ($stringUtils.isNotBlank($service.packageName))
+package $service.packageName;
+#end
+
+/**
+ * @see $service.fullyQualifiedName
+ */
+#set($serviceName = $stringUtils.capitalize("$projectId"))
+#if(${service.package})
+#set($serviceName = $stringUtils.capitalize("${service.package.serviceModuleName}"))
+#end
+##
+#set($webService = $service.hasStereotype("$webSrv"))
+##
+#if($webService && $service.jaxws)
+@javax.jws.WebService(endpointInterface = "${service.packageName}.${service.name}Srv", targetNamespace = "${service.targetNamespace}", serviceName = "${serviceName}Handler", portName = "${service.name}SrvPort")
+@org.jboss.wsf.spi.annotation.WebContext(contextRoot = "/${projectId}-services-${service.package.serviceModuleName}", urlPattern = "/${service.name}Srv")
+#if ($webServiceComAutenticacao.equalsIgnoreCase("true"))
+@javax.jws.HandlerChain(file = "META-INF/$stringUtils.lowerCamelCaseName(${service.name})-handlers.xml")
+#end
+#end
+public class ${service.name}BeanImpl
+    extends ${service.name}Bean
+#if($ejb3 == 'true')
+    implements ${service.name}, ${service.name}Local
+#else
+    implements javax.ejb.SessionBean
+#end
+{
+#foreach ($operation in $service.operations)
+
+## [MOISES-COPPETEC]
+## Codigo para gerar metodos que receba o grupo a ser carregado na paginacao, caso este metodo retorne uma colecao
+
+#set ($listaArgumentos = '')
+#set ($return = '')
+#if($webService)
+#renderParametersWS($operation $listaArgumentos true)
+#renderReturnWS($operation $return)
+#else
+#renderParameters($operation $listaArgumentos true)
+#set($return = $operation.returnType.fullyQualifiedName)
+#end
+
+###if ($stringUtils.contains($operation.returnType.fullyQualifiedName, "Collection"))
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#set ($listaArgumentos = '')
+#set ($return = '')
+#if($webService)
+#renderParametersWSPaginacao($operation $listaArgumentos true)
+#renderReturnWS($operation $return)
+#else
+#renderParametersPaginacao($operation $listaArgumentos true)
+#set($return = $operation.returnType.fullyQualifiedName)
+#end
+#end
+
+## Fim
+
+
+#if ($operation.exceptionsPresent)
+	$operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) throws $operation.exceptionList {
+#else
+	$operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) {
+#end
+#if ($operation.returnTypePresent)
+		return $operation.returnType.javaNullString;
+#end
+	}
+#end
+
+##Adicao do metodo do CRUD por dependencia com entidade
+	##foreach ($dependencia in $service.sourceDependencies)
+
+##if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
+##	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> handleManipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException
+##	  {
+##    try{ 
+##	return action.execute($stringUtils.lowerCase(${dependencia.targetElement.name}));   
+##    } catch (${customTypesPackage}.${modelPackageName}.DAOException e) {
+##			       throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);
+##		    }
+##	  }
+
+###end
+###end 
+
+}

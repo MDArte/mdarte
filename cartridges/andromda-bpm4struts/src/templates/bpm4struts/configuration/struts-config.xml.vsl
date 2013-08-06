@@ -1,0 +1,526 @@
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+
+<!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+
+    <!-- display-name merge point -->
+
+    <!-- description merge point -->
+
+    <data-sources>
+        <!-- data-sources merge point -->
+    </data-sources>
+
+    <form-beans>
+        <!-- form-beans merge-point -->
+##Forms oAuth
+		#if($oAuthServer == "true")
+			<form-bean
+            name="loginOAuthUCLoginOAuthUCForm"
+            type="${controleAcessoDir}.LoginOAuthUCFormImpl" />
+        <form-bean
+            name="loginOAuthUCPaginaDeLoginLoginForm"
+            type="${controleAcessoDir}.PaginaDeLoginLoginFormImpl" />
+		#end
+#foreach ($useCase in $useCases)
+
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+        <form-bean
+            name="$action.formBeanName"
+            type="$action.formBeanType" />
+#end
+#end
+#end
+	<form-bean
+            name="forwardForm"
+            type="${servletPackage}.ForwardForm"/>
+#foreach ($manageable in $manageables)
+        <form-bean name="$manageable.formBeanName" type="$manageable.formBeanType" />
+#end
+		<form-bean
+            name="mainMainForm"
+            type="${mainDir}.MainFormImpl" />
+
+#if ($securityEnabled) 
+## [MILENE-COPPETEC] Adicionei partes fixas referentes a login
+        
+        <form-bean
+            name="loginTrocaDeSenhaObrigatoriaProcessarForm"
+            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessarFormImpl" />  
+        <form-bean
+            name="loginLoginForm"
+            type="${controleAcessoDir}.LoginFormImpl" />
+        <form-bean
+            name="loginEntrarLoginValidarForm"
+            type="${controleAcessoDir}.EntrarLoginValidarFormImpl" />          
+        <form-bean
+            name="novaConexaoForm"
+            type="${controleAcessoDir}.NovaConexaoForm" /> 
+        <form-bean
+            name="saidaSistemaForm"
+            type="${controleAcessoDir}.SaidaSistemaForm" />    
+## Fim da adição                                 
+#end
+    </form-beans>
+
+    <global-forwards>
+        <!-- global-forwards merge-point -->
+#foreach ($useCase in $useCases)
+        <forward
+            name="$stringUtils.toResourceMessageKey($useCase.name)"
+            path="${useCase.actionPath}.do"
+            redirect="false" />
+#end
+##Forwards do oAuth
+#if($oAuthServer == "true")
+	    <forward
+            name="acc.token.uc"
+            path="/AccTokenUC/AccTokenUC.do"
+            redirect="false" />
+        <forward
+            name="login.oauth.uc"
+            path="/LoginOAuthUC/LoginOAuthUC.do"
+            redirect="false" />
+        <forward
+            name="req.token.uc"
+            path="/ReqTokenUC/ReqTokenUC.do"
+            redirect="false" />
+#end
+##Fim dos forwards do oAuth
+		<forward
+	    	name="main"
+	        path="/Main/Main.do"
+	        redirect="false"/>
+
+	    <forward
+	    	name="forwardAction"
+	        path="/ForwardAction.do"
+	        redirect="false"/>
+
+#if ($securityEnabled) 
+		<forward
+			name="entrar.login"
+			path="${login}/entrar-login.jsp"
+			redirect="false"/>
+
+		<forward
+			name="troca.de.senha.obrigatoria"
+			path="${login}/troca-de-senha-obrigatoria.jsp"
+			redirect="false" /> 
+#end
+    </global-forwards>
+
+    <action-mappings>
+        <!-- action-mappings merge-point -->
+#foreach ($useCase in $useCases)
+#foreach ($action in $useCase.actions)
+        <action
+            path="$action.actionPath"
+            type="$action.actionType"
+#if (!$action.actionFormFields.empty)
+            name="$action.formBeanName"
+#end
+##set ($roles = $action.actionRoles)
+###if ($stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) && $useCase.secured)
+##            roles="$roles"
+###end
+            scope="$action.actionScope"
+#if ($action.useCaseStart == false)
+            input="${action.input.fullPath}.jsp"
+#end
+            unknown="false"
+#set ($validate = $action.validationRequired && $validationDesired)
+            validate="$validate">
+            <exception
+                handler="${exceptionHandlerPackage}.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                #if ($action.useCaseStart == false)
+                path="${action.input.fullPath}.jsp"
+                #end
+                scope="request" />
+		
+#foreach ($actionForward in $action.actionForwards)
+            <forward
+                name="$actionForward.forwardName"
+##
+##  when direct page access is prevented we cannot redirect to pages,
+##  so we need to redirect to a page forward actioninstead
+##  (they are declared a bit further down the template)
+##
+#if ($preventDirectPageAccess == "true" && $actionForward.enteringPage)
+#set ($pageActionName = "$stringUtils.upperCamelCaseName($actionForward.target.name)")
+                path="${useCase.actionPathRoot}/${pageActionName}PageForward.do"
+#else
+                path="$actionForward.forwardPath"
+#end
+		/>
+#end
+#if ($securityEnabled) 
+			<forward
+				name="main"
+				path="/ForwardAction.do"
+				redirect="false" /> 
+#end                   
+        </action>
+#end
+#if ($onlineHelp == "true")
+        <action
+            path="${useCase.onlineHelpActionPath}"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${useCase.onlineHelpPagePath}.jsp"/>
+#foreach ($page in $useCase.pages)
+        <action
+            path="${page.onlineHelpActionPath}"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${page.onlineHelpPagePath}.jsp"/>
+#end
+#end
+#if ($preventDirectPageAccess == "true")
+##
+##  these actions merely forward to pages because the pages aren't to be accessed directly by the client
+##  (eg. via a redirect)
+##
+#foreach ($page in $useCase.pages)
+        <action
+#set ($pageActionName = "$stringUtils.upperCamelCaseName($page.name)")
+            path="${useCase.actionPathRoot}/${pageActionName}PageForward"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${page.fullPath}.jsp"/>
+#end
+#end
+#end
+#foreach ($manageable in $manageables)
+        <action
+            path="$manageable.actionPath"
+            type="$manageable.actionType"
+            name="$manageable.formBeanName"
+            scope="request"
+            input="$manageable.pageFullPath"
+            unknown="false"
+            validate="false"
+            parameter="$manageable.actionParameter">
+            <exception
+                handler="${exceptionHandlerPackage}.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                path="$manageable.exceptionPath"
+                scope="request" />
+        </action>
+#if ($onlineHelp == "true")
+        <action
+            path="$manageable.onlineHelpActionPath"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            input="${manageable.actionPath}.do"
+            parameter="${manageable.onlineHelpPagePath}.jsp"/>
+#end
+#end
+#if ($onlineHelp == "true")
+        <action
+            path="/applicationHelp"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="/application-help.jsp"/>
+#end
+        <action
+            path="/calendar"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="/calendar-js.jsp"/>
+        <action
+            path="/formValidation"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="/form-validation.jsp"/>
+       <!-- <action
+            path="${login}"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${login}/login-form.jsp"/> -->
+            
+            <action
+            path="/ForwardAction"
+            type="${servletPackage}.ForwardAction"
+            name="forwardForm"
+            scope="request"
+            unknown="false"
+            validate="false"/>
+            
+            <action
+            	path="/Main/Main"
+            	type="${mainDir}.Main"
+            	name="mainMainForm"
+            	scope="request"
+            	unknown="false"
+            	validate="false">
+                #set($mainPath = '')
+                #foreach($useCase in $applicationUseCases)
+                #if($useCase.applicationUseCase)
+				#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
+                #end
+                #if($mainPath.equals(''))
+                #set($mainPath = '/ForwardAction.do')
+                #end
+                #end
+	        	<forward
+	            	name="main"
+	            	path="$mainPath"
+	            	redirect="false" />                 
+        	</action> 
+
+          
+#if ($securityEnabled)  
+#set($path = "")                
+#if(!$applicationUseCases.empty)
+#set($applicationUseCase=$applicationUseCases.iterator().next())
+#set($path = "${applicationUseCase.actionPath}")
+#elseif(!$manageables.empty)
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+#set($path = "/Main/Main")
+#else
+#set($manageable=$manageables.iterator().next())
+#set($path = "${manageable.actionPath}")
+#end   
+#end    
+## Actions relativas ao oAuth
+#if($oAuthServer == "true")
+	<action
+        path="/AccTokenUC/AccTokenUC"
+        type="${controleAcessoDir}.AccTokenUC"
+        scope="request"
+        unknown="false"
+        validate="false">
+        <exception
+            handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+            type="java.lang.Throwable"
+            key="error.exception.message"
+            scope="request" />
+        <forward
+            	name="main"
+            	path="/ForwardAction.do"
+            	redirect="false" /> 
+        </action>
+		<action
+            path="/LoginOAuthUC/LoginOAuthUC"
+            type="${controleAcessoDir}.LoginOAuthUC"
+            name="loginOAuthUCLoginOAuthUCForm"
+            scope="request"
+            unknown="false"
+            validate="false">
+            <exception
+                handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                                scope="request" />
+		
+            <forward
+                name="pagina.de.login"
+                path="$login/pagina-de-login.jsp"
+		/>
+	        <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+
+        </action>
+		<action
+            path="/LoginOAuthUC/PaginaDeLoginLogin"
+            type="${controleAcessoDir}.PaginaDeLoginLogin"
+            name="loginOAuthUCPaginaDeLoginLoginForm"
+            scope="request"
+            input="$login/pagina-de-login.jsp"
+            unknown="false"
+            validate="true">
+            <exception
+                handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                path="$login/pagina-de-login.jsp"
+                scope="request" />
+	        <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+
+        </action>
+		<action
+            path="/ReqTokenUC/ReqTokenUC"
+            type="${controleAcessoDir}.ReqTokenUC"
+            scope="request"
+            unknown="false"
+            validate="false">
+            <exception
+                handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                scope="request" />
+	        <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+        </action>
+#end
+## [MILENE-COPPETEC] Adicionei partes fixas referentes a login
+##if(!$applicationUseCases.empty)
+##set($applicationUseCase=$applicationUseCases.iterator().next())
+##set ($pathApplicationUseCase = "${applicationUseCase.actionPath}.do")
+##elseif(!$manageables.empty)
+##set($manageable=$manageables.iterator().next())
+##set ($pathApplicationUseCase = "${manageable.actionPath}.do")
+##end
+
+
+        <action
+            path="/secure/Login"
+            type="${controleAcessoDir}.Login"
+            name="loginLoginForm"
+            scope="request"
+            unknown="false"
+            validate="false">    
+            <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+          
+        </action>
+        <action
+            path="/secure/EntrarLoginValidar"
+            type="${controleAcessoDir}.EntrarLoginValidar"
+            name="loginEntrarLoginValidarForm"
+            scope="request"
+            input="${login}/entrar-login.jsp"
+            unknown="false"
+            validate="true">
+            <exception
+                type="java.lang.Exception"
+                key="login.entrar.login.exception"
+                path="${login}/entrar-login.jsp"
+                scope="request" />
+            <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+        </action>
+        <action
+            path="/secure/TrocaDeSenhaObrigatoriaProcessar"
+            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessar"
+            name="loginTrocaDeSenhaObrigatoriaProcessarForm"
+            scope="request"
+            input="${login}/troca-de-senha-obrigatoria.jsp"
+            unknown="false"
+            validate="true">
+            <exception
+                type="java.lang.Exception"
+                key="login.troca.de.senha.obrigatoria.exception"
+                path="${login}/troca-de-senha-obrigatoria.jsp"
+                scope="request" />
+            <forward
+	            	name="main"
+	            	path="/ForwardAction.do"
+	            	redirect="false" /> 
+        </action>  
+        <action
+            path="/secure/NovaConexao"
+            type="${controleAcessoDir}.NovaConexao"
+            name="novaConexaoForm"
+            scope="request"
+            input="${login}/entrar-login.jsp"
+            unknown="false"
+            validate="false"/>         
+## ACTION QUE APAGA SESSAO DO MODULO (só deve ser gerada em projetos modularizados)
+#if($modulo == 'true')
+        <action
+            path="/secure/ApagaSessao"
+            type="${controleAcessoDir}.ApagaSessao"/>
+#end
+        
+        <action
+            path="/secure/SaidaSistema"
+            type="${controleAcessoDir}.SaidaSistema"
+            name="saidaSistemaForm"
+            scope="request"
+            input="${login}/saida-sistema.jsp"
+            unknown="false"
+            validate="false">
+            <forward
+                name="saida.sistema"
+                path="${login}/saida-sistema.jsp"
+                redirect="false" />                            
+        </action>                                                                   
+## Fim da adicao     
+#end            
+	<action path="/treeview"
+		type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
+		scope="request"
+		validate="false">
+		</action> 
+    </action-mappings>
+
+    <!-- controller merge point -->
+	<controller processorClass = "fr.improve.struts.taglib.layout.workflow.LayoutRequestProcessor"/>
+    <!-- message-resources merge-point -->
+    <message-resources parameter="application-resources" null="false"/>
+
+    <!-- plug-in merge-point -->
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+## metodo applicationValidationRequired nao existe
+##if (($applicationUseCase.applicationValidationRequired && $validationDesired) || ($securityEnabled))
+#if (($validationDesired) || ($securityEnabled))
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml"/>
+        <set-property property="stopOnFirstError" value="false"/>
+    </plug-in>
+
+#end
+    <plug-in className="org.apache.struts.tiles.TilesPlugin">
+        <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml,/WEB-INF/tiles-defs-impl.xml"/>
+        <set-property property="definitions-parser-validate" value="true"/>
+        <set-property property="moduleAware" value="true"/>
+    </plug-in>
+
+<plug-in className="fr.improve.struts.taglib.layout.workflow.LayoutPlugin"/>
+<!--
+  UNCOMMENT TO EXPOSE THE STRUTS-MENU TAGLIB
+
+    <plug-in className="net.sf.navigator.menu.MenuPlugIn">
+        <set-property property="menuConfig" value="/WEB-INF/menu-config.xml"/>
+    </plug-in>
+-->
+</struts-config>
+#end

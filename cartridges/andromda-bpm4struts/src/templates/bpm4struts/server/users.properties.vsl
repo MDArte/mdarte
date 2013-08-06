@@ -1,0 +1,6 @@
+#if ($stringUtils.isNotBlank($securityRealm))
+#
+# add your users here, name=password
+#
+admin=admin
+#end

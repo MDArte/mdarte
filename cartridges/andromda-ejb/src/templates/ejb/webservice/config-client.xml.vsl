@@ -1,0 +1,7 @@
+#set($generatedFile = "config-${client.name}.xml")
+<?xml version="1.0" encoding="$xmlEncoding"?>
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+    <wsdl
+        location="${mavenRepoProject}/${client.wsdlLocation}"
+        packageName="${client.package.fullyQualifiedName}"/>
+</configuration>

@@ -1,0 +1,11 @@
+##
+##
+##      This JSP fragment stores all hidden parameters.
+##
+##
+#set ($generatedFile = "${jsp.fullPath}-control-params.jspf")
+
+#set($useCaseName = $jsp.useCase.name)
+		#set($jspName = $jsp.name)
+
+<input type="hidden" name="invalidatePageControlCounter" value="<%=((java.util.Map)session.getAttribute("invalidatePageControlCounter")).get("${useCaseName}.${jspName}")%>"/>

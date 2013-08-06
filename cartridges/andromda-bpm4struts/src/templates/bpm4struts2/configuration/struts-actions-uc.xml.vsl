@@ -1,0 +1,145 @@
+#set ($generatedFile = "struts-actions-uc-${stringUtils.upperCamelCaseName(${useCase.name})}.xml")
+## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($modulo == 'true')
+##
+##  CONSTANTS
+##
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+#set($useCaseName = $stringUtils.upperCamelCaseName($useCase.name))
+	<package name="$useCaseName" namespace="/$useCaseName" extends="${bpmUtils.getStrutsDefaultNameConfig()}">
+#foreach ($action in $useCase.actions)
+#set($acaoDeControle = false)	
+#set($actionName = ${stringUtils.upperCamelCaseName($action.actionClassName)})
+##check if it is a struts 2 action
+#set($gerar = true)
+#if($action.actionOldStruts)
+#set($gerar = false)
+#end
+#if($gerar)
+		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="execute">
+#if(${action.ajaxAction} &&  ${action.temParametroTabela})
+			<result name="recarregaTabelas">${action.targetPages.get(0).fullPath}-tabelas.jsp</result>
+#else
+#foreach ($actionForward in $action.actionForwards)	
+#if($stringUtils.contains($actionForward.forwardPath, '.do'))
+			<result name="$actionForward.forwardName" type="redirect">
+				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+				<param name="parse">true</param>
+#foreach ($field in $actionForward.actionFormFields)
+#set ($begin = "${")
+#set ($end = "}")
+				<param name="$field.name">${begin}${field.name}${end}</param>
+#end
+			</result>
+#elseif($stringUtils.contains($actionForward.forwardPath, '.action'))
+			<result name="$actionForward.forwardName" type="redirectAction">
+				<param name="actionName">${actionForward.strutsActionName}</param>
+				<param name="namespace">${actionForward.strutsNamespace}</param>
+				<param name="prependServletContext">true</param>
+			</result>
+#else
+			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end
+#end
+#end
+#if (${action.input})
+			<result name="handleException">${action.input.fullPath}.jsp</result>
+#end
+## using the interceptor
+##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
+		</action>
+#set($acaoDeControle = true)
+#end
+#if ($acaoDeControle == false)
+#set($gerar = true)
+#if($action.actionOldStruts)
+#set($gerar = false)
+#end
+#if ($gerar)
+
+		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method = "execute" >
+#foreach ($actionForward in $action.actionForwards)
+#if($stringUtils.contains($actionForward.forwardPath, '.do'))
+			<result name="$actionForward.forwardName" type="redirect">
+				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+				<param name="parse">true</param>
+#foreach ($field in $actionForward.actionFormFields)
+#set ($begin = "${")
+#set ($end = "}")
+				<param name="$field.name">${begin}${field.name}${end}</param>
+#end
+			</result>
+#elseif($stringUtils.contains($actionForward.forwardPath, '.action'))
+			<result name="$actionForward.forwardName" type="redirectAction">
+				<param name="actionName">${actionForward.strutsActionName}</param>
+				<param name="namespace">${actionForward.strutsNamespace}</param>
+				<param name="prependServletContext">true</param>
+			</result>
+#else
+			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end
+#end
+#if (${action.input})
+			<result name="handleException">${action.input.fullPath}.jsp</result>
+#end
+## using the interceptor
+##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
+		</action>
+#end
+#end
+#end
+	</package>
+#if ($onlineHelp == "true")
+	<!-- It is supposed to work such as FowardAction. It takes the name of the HelpAction and
+	redirects to the jsp page-->
+	<package name="${useCaseName}OnlineHelp" namespace="/" extends="struts-default">
+		<action name="${useCase.onlineHelpActionPath}">
+			<result>${useCase.onlineHelpPagePath}.jsp</result>
+		</action>
+
+#foreach ($page in $useCase.pages)
+		<action name="${page.onlineHelpActionPath}">
+			<result>${page.onlineHelpPagePath}.jsp</result>
+		</action>
+#end
+	</package>
+#end
+
+#if ($preventDirectPageAccess == "true")
+##
+##  these actions merely forward to pages because the pages aren't to be accessed directly by the client
+##  (eg. via a redirect)
+##
+#foreach ($page in $useCase.pages)
+#set ($pageActionName = "$stringUtils.upperCamelCaseName($page.name)")
+	<package name="${useCaseName}PreventDirectPageAccess" namespace="/${useCase.actionPathRoot}" extends="struts-default">
+		<action name="${pageActionName}PageForward" class="org.apache.struts.actions.ForwardAction">
+			<result>${page.fullPath}.jsp</result>
+		</action>
+	</package>
+#end
+#end
+</struts>
+#end

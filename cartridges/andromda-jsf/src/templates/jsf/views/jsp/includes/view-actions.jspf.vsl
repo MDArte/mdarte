@@ -1,0 +1,106 @@
+<h:messages id="messageList" errorClass="error" globalOnly="true"/>
+
+
+
+##Inicio do tratamento de açoes que são hyperlink ou popup
+#foreach($_action in $view.actions)
+#if (($_action.hyperlink || $_action.popup) && !$_action.tableLink)
+	  #if ($_action.hyperlink)
+  <h:commandLink action="#{${_action.controller.beanName}.${_action.triggerName}}">
+  #else
+  <h:form styleClass="noSpace">
+    <jsf:popup scrolling="yes" height="350px" width="550px" actionOpen="#{${_action.controller.beanName}.${_action.triggerName}}" center="false">
+  #end
+    <h:outputText value="#{messages['$_action.messageKey']}"/>
+	  #foreach ($parameter in $_action.parameters)
+   #if (!$parameter.complex)
+   #renderActionCommandLinkParameter($parameter "")
+   #end
+   #foreach ($attribute in $parameter.attributes)
+   #renderActionCommandLinkParameter($attribute $parameter)
+   #end
+  #end
+	  #if ($_action.hyperlink)
+  </h:commandLink>
+  #else
+    </jsf:popup> 
+</h:form>
+	 #end
+<f:verbatim><br/><br/></f:verbatim>
+#end
+#end
+##Fim do tratamento de açoes que são hyperlink ou popup
+
+## Codigo acrescentado para pegar action que contém parametros
+## Alterado por Milene Fiorio - equipe COPPETEC 
+#set ($action = $view.actions.get(0))
+#if ($view.actions.size() > 0)
+#set($achou = "false")
+#foreach($_action in $view.actions)
+#if(!$achou.equals("true"))
+#if (!$_action.tableLink && !$_action.useCaseStart && !$_action.parameters.empty)
+        #set($action = $_action)
+        #set($achou = "true")
+#end
+#end
+#end
+#end
+## fim do codigo
+
+	#set($formName = $action.formBeanName)
+#if (!$action.hyperlink && !$action.popup && !$action.tableLink )
+ #set ($clientValidation = $clientValidation.equalsIgnoreCase("true"))
+ #set ($formValidateName = "validate$stringUtils.capitalize($formName)")
+ <h:form id="$formName" name="$formName"  enctype="multipart/form-data">
+ #if (!$action.hiddenParameters.empty)
+    <%@ include file="${action.viewFragmentPath}-hidden-params.jspf" %>
+ #end
+    <h:panelGrid columns="3" styleClass="formTable"
+                 headerClass="formHeader"
+                 footerClass="formFooter"
+                 columnClasses="formLabels,,formInputs">           
+ #foreach ($parameter in $action.parameters)
+  #if (!$parameter.complex)
+  #renderActionInput($parameter "")
+  #else
+   #foreach ($attribute in $parameter.attributes)
+   #renderActionInput($attribute $parameter)
+   #end
+  #end
+ #end
+ #end
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <h:panelGroup>
+## Modificação para renderizar todos os botes de uma pagina
+## Alterado por Milene Fiorio - equipe COPPETEC 
+				#foreach ($_action in $view.actions)
+				#if(!$_action.tableLink )        
+            <h:commandButton id="${_action.triggerName}-submit"
+                             value="#{messages['$_action.messageKey']}"
+                             ##Alteracao para nao chamar action quando nao houver metodos no controlador
+                             #if(!$_action.controller.operations.empty)
+                             action="#{${_action.controller.beanName}.${_action.triggerName}}"   
+                             #end                          
+                             styleClass="actionButton"
+                             onclick="return setaAcao('${_action.formBeanName}', 'validate$stringUtils.capitalize(${_action.formBeanName})', ${_action.validationRequired})"
+                             #if(!${_action.validationRequired})
+                             immediate="true"
+                             #end/>
+ #end 
+ #end
+## Fim da alteração
+                   
+ #if ($action.resettable)
+            <h:commandButton id="${action.triggerName}-reset"
+                             value="#{messages['$action.trigger.resetMessageKey']}"
+                             type="reset"
+                             immediate="true"
+                             styleClass="actionButton"/>
+ #end
+
+        </h:panelGroup>
+    </h:panelGrid>
+    <jsf:validator id="${formName}Validator"#if($clientValidation) functionName="$formValidateName"#end/>
+</h:form>
+

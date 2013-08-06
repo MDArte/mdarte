@@ -1,0 +1,22 @@
+#if ($viewTestEnabled == "true")
+#set ($usecaseName = "$stringUtils.upperCamelCaseName($useCase.name)")
+#set ($className = "${usecaseName}ViewTest")
+#set ($generatedFile = "${className}Impl.java")
+#set ($packageName  = "$stringUtils.replace(${useCase.packagePath}, '/', '.')")
+##
+#set ($generatedFile = "${useCase.packagePath}/${generatedFile}")
+##
+package ${packageName};
+
+import ${viewTestBasicDir}.BasicViewTestController;
+
+public class ${className}Impl extends ${className} {
+
+	public ${className}Impl(BasicViewTestController viewTestController)
+	{
+		super(viewTestController);
+	}
+
+	/* Implement here your own operations. */
+}
+#end

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+    "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+    "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+    <definition name="main.layout" page="/layout/main-layout.jsp">
+        <put name="head" type="string" value=""/>
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="menu" type="definition" value="menu.tile"/>
+        <put name="messages" type="definition" value="messages.tile"/>
+   </definition>
+
+   <definition name="login.layout" page="/accessControl/login-layout.jsp">
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="messages" type="definition" value="messages.tile"/>
+    </definition>
+    <definition name="simple.layout" page="/layout/simple-layout.jsp">
+        <put name="head" type="string" value=""/>
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="messages" type="definition" value="messages.tile"/>
+    </definition>
+    <definition name="messages.tile" page="/messages/messages.jsp"/>
+    <definition name="menu.tile" page="/menu/menu.jsp"/>
+    <definition name="help.layout" page="/layout/help-layout.jsp"/>
+</tiles-definitions>

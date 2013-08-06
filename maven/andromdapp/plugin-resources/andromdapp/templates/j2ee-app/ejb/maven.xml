@@ -1,0 +1,182 @@
+<project default="install"
+         xmlns:ant="jelly:ant"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core"
+         xmlns:u="jelly:util">
+
+#set($open = "${")
+#set($end = "}")
+
+    <goal name="install">
+#if($modulos)
+        <attainGoal name="multiproject:install"/>
+#else
+#set($var1 = "${")
+#set($var2 = "basedir}")
+        <maven:maven
+            descriptor="${var1}${var2}/project.xml"
+            goals="ejb:install"/>
+#end
+    </goal>
+
+#if(!$modulos)
+    <postGoal name="ejb:ejb">
+        <ant:path id="schema.classpath">
+            <ant:path refid="maven.dependency.classpath"/>
+            <ant:path location="${maven.build.dest}"/>
+        </ant:path>
+
+        <ant:mkdir dir="${hibernate.schema.output.dir}"/>
+
+        <ant:fileset id="hibernate.mapping.files" dir="${maven.build.dest}">
+            <ant:include name="**/*.hbm.xml"/>
+        </ant:fileset>
+
+        <ant:pathconvert refid="hibernate.mapping.files" property="hibernate.mappings" pathsep=" "/>
+
+        <ant:java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+            <ant:arg value="--output=${hibernate.schema.output.dir}/schema-create.sql"/>
+            <ant:arg value="--text"/>
+            <ant:arg value="--quiet"/>
+            <ant:arg value="--delimiter=;"/>
+            <ant:arg value="--format"/>
+            <ant:arg line="${hibernate.mappings}"/>
+            <ant:jvmarg value="-Dhibernate.dialect=${hibernate.db.dialect}"/>
+            <ant:classpath refid="schema.classpath" />
+        </ant:java>
+
+        <ant:replaceregexp file="${hibernate.schema.output.dir}/schema-create.sql"
+                match="^(alter table .* drop constraint|drop table)"
+                replace="-- SKIP \1"
+                flags="i"
+                byline="true"/>
+
+        <ant:java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+            <ant:arg value="--output=${hibernate.schema.output.dir}/schema-drop.sql"/>
+            <ant:arg value="--text"/>
+            <ant:arg value="--quiet"/>
+            <ant:arg value="--delimiter=;"/>
+            <ant:arg value="--format"/>
+            <ant:arg value="--drop"/>
+            <ant:arg line="${hibernate.mappings}"/>
+            <ant:jvmarg value="-Dhibernate.dialect=${hibernate.db.dialect}"/>
+            <ant:classpath refid="schema.classpath" />
+        </ant:java>
+
+    </postGoal>
+#end
+
+    <preGoal name="ejb:init">
+        <ant:property name="core.dir" value="${var1}${var2}"/>
+
+        <ant:path id="core.classpath">
+            <ant:path refid="maven.dependency.classpath"/>
+            <ant:path location="${maven.build.dest}"/>
+        </ant:path>
+
+        <ant:mkdir dir="${core.dir}/target/classes"/>
+        <ant:mkdir dir="${core.dir}/src/java"/>
+        <ant:mkdir dir="${core.dir}/target/src"/>
+
+        <ant:path id="compile.ws">
+            <ant:pathelement path="${core.dir}/target/src"/>
+            <ant:pathelement path="${core.dir}/src/java"/>
+        </ant:path>
+
+        <ant:javac srcdir="${core.dir}" destdir="${core.dir}/target/classes" includes="**/*.java" excludes="**/*BeanImpl.java" debug="on">
+            <ant:classpath>
+                <ant:path refid="maven.dependency.classpath"/>
+            </ant:classpath>
+        </ant:javac>
+
+#if(!$modulos && !$ejb3)
+        <ant:property name="webservices.dir" value="${var1}${var2}/target/src"/>
+        <ant:taskdef name="wscompile" classname="com.sun.xml.rpc.tools.ant.Wscompile">
+            <ant:classpath>
+                <ant:path refid="maven.dependency.classpath"/>
+            </ant:classpath>
+        </ant:taskdef>
+
+        <fileScanner var="scanner">
+            <fileset dir="target/src" includes="config-*.xml"/>
+        </fileScanner>
+
+        <j:forEach var="script" items="${scanner.iterator()}">
+            <ant:wscompile  client="true" base="target/classes" verbose="true"
+                    config="${script}" fork="true" classpath="./">
+                <ant:classpath refid="core.classpath" />
+            </ant:wscompile>
+        </j:forEach>
+
+        <u:available file="${var1}${var2}/target/src/config.xml">
+            <ant:mkdir dir="${webservices.dir}/META-INF/wsdl"/>
+            <ant:wscompile mapping="${webservices.dir}/META-INF/${stringUtils.capitalize("${projectId}")}Handler-mapping.xml" both="true" base="${core.dir}/target/classes" verbose="true" features="documentliteral"
+                    config="${webservices.dir}/config.xml" fork="true" nonClassDir="${webservices.dir}/META-INF/wsdl" classpath="./">
+                <ant:classpath refid="core.classpath" />
+            </ant:wscompile>
+        </u:available>
+#end
+
+        <ant:javac srcdir="${core.dir}/src" destdir="${core.dir}/target/classes" includes="**/*BeanImpl.java" debug="on">
+            <ant:classpath>
+                <ant:path refid="maven.dependency.classpath"/>
+            </ant:classpath>
+        </ant:javac>
+
+        <ant:copy todir="${core.dir}/target/classes/">
+            <ant:fileset dir="${core.dir}/target/src/" excludes="**/*.java"/>
+        </ant:copy>
+    </preGoal>
+
+    <ant:property environment="env"/>
+
+    <j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
+
+    <goal name="lib">
+        <j:forEach var="dep" items="${open}pom.dependencies${end}">
+            <j:if test= "${open}dep.type == 'jar'${end}">
+                <j:if test= "${open}dep.groupId != pom.groupId${end}">
+                    <j:if test= "${open}dep.getProperty('ejb.manifest.classpath') == 'true'${end}">
+                        <ant:delete includeEmptyDirs="false">
+                            <ant:fileset dir="${libDirectory}">
+                                <ant:include name="${dep.artifactId}*.jar"/>
+                            </ant:fileset>
+                        </ant:delete>
+                        <ant:copy todir="${libDirectory}">
+                            <fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+                                <include name="${dep.artifact}"/>
+                            </fileset>
+                        </ant:copy>
+                    </j:if>
+                </j:if>
+            </j:if>
+        </j:forEach>
+    </goal>
+
+    <!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+        <ant:echo>
+
+maven install - Compila o conteudo desta pasta e gera o jar (e o default desta pasta)
+
+maven deploy - Copia o jar desta pasta para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target 
+
+        </ant:echo>
+    </goal>
+
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== -->
+    <goal name="nuke">
+        <attainGoal name="clean"/>
+        <ant:delete>
+            <fileset dir="src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+    </goal>
+</project>

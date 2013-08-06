@@ -1,0 +1,39 @@
+#set($gerar = true)
+#if($applicationUseCases)#if($modulo == 'true')
+#set($gerar = false)
+#end#end
+#if ($pacote)
+#set ($generatedFile = "${pacote.fullyQualifiedNamePath}/util/ModoOperacao.java")
+#set ($modosOperacao = $pacote.modosOperacao)
+#set ($packageName = "${pacote.fullyQualifiedName}.util")
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($generatedFile = "util/ModoOperacao.java")
+#set ($modosOperacao = $applicationUseCase.allModosOperacao)
+#set ($packageName = "util")
+#end
+#if ($gerar)
+package $packageName;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class ModoOperacao {
+
+#foreach($modoOp in $modosOperacao)
+	public static String $modoOp = "$modoOp";
+#end
+
+	/** Retorna uma lista (de Strings) contendo todos os Modos de Operacao conhecidos por essa classe */
+	public static List<String> getModosOperacao() {
+		List<String> modosOperacao = new ArrayList<String>();
+
+#foreach($modoOp in $modosOperacao)
+		modosOperacao.add("$modoOp");
+#end
+
+		return modosOperacao;
+	}
+	
+}
+#end

@@ -1,0 +1,88 @@
+<project default="install" xmlns:ant="jelly:ant" xmlns:u="jelly:util" xmlns:maven="jelly:maven" xmlns:j="jelly:core">
+
+	<goal name="install">
+		<j:set var="goal" value="install" />
+		<attainGoal name="multiproject:goal" />
+	</goal>
+
+	<postGoal name="clean:clean">
+		<u:available file="${basedir}/../${sharedModel}/target">
+			<ant:delete dir="${basedir}/../${sharedModel}/target" />
+		</u:available>
+	</postGoal>
+
+	<goal name="deploy">
+		<j:set var="goal" value="deploy" />
+		<attainGoal name="multiproject:goal" />
+	</goal>
+
+	<goal name="undeploy">
+		<j:set var="goal" value="undeploy" />
+		<attainGoal name="multiproject:goal" />
+	</goal>
+
+#foreach($package in $packages)
+	<goal name="${package.name}:install">
+		<maven:maven descriptor="${basedir}/${package.name}/project.xml" goals="install" />
+	</goal>
+
+	<goal name="${package.name}:lib">
+		<maven:maven descriptor="${basedir}/${package.name}/project.xml" goals="lib" />
+	</goal>
+
+	<goal name="${package.name}:deploy">
+		<maven:maven descriptor="${basedir}/${package.name}/project.xml" goals="deploy" />
+	</goal>
+
+	<goal name="${package.name}:undeploy">
+		<maven:maven descriptor="${basedir}/${package.name}/project.xml" goals="undeploy" />
+	</goal>
+
+#end
+##
+	<ant:property environment="env" />
+
+	<j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib" />
+	<goal name="libaux">
+		<j:forEach var="dep" items="${pom.dependencies}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.type == 'jar'}")
+#set($comparacao = "$comparacao1$comparacao2")
+			<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.groupId != ")
+#set($comparacao3 = "pom.groupId}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+				<j:if test="${comparacao}">
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.getProperty('war.manifest.classpath') == ")
+#set($comparacao3 = "'true'}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+					<j:if test="${comparacao}">
+						<ant:copy todir="${libDirectory}">
+							<fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">
+								<include name="${dep.artifact}" />
+							</fileset>
+						</ant:copy>
+					</j:if>
+				</j:if>
+			</j:if>
+		</j:forEach>
+	</goal>
+
+	<!-- ==================================================================
+		Cleans Everything and deletes all implementation classes
+	================================================================== -->
+	<goal name="nuke">
+		<u:available file="${sharedModel}/src/java">
+			<ant:delete>
+				<fileset dir="${sharedModel}/src/java">
+					<include name="**/*Impl.java" />
+				</fileset>
+			</ant:delete>
+		</u:available>
+		<j:set var="goal" value="nuke" />
+		<attainGoal name="multiproject:goal" />
+		<attainGoal name="clean" />
+	</goal>
+</project>

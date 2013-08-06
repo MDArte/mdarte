@@ -1,0 +1,111 @@
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.custom.i18n.resources" value="application-resources" />
+    <constant name="struts.ui.theme" value="simple" />
+	
+	 <!-- including default fowards properties -->
+    <include file="struts-default.xml" />	
+	
+##define struts 2 action package derived from use case	
+<!-- Each action must extend ${bpmUtils.getDefaultNameConfig()} in order to reuse 
+some fowards operations-->
+#foreach ($useCase in $useCases)
+#set($useCaseName = $stringUtils.upperCamelCaseName($useCase.name))
+	<package name="$useCaseName" namespace="/$useCaseName" extends="struts-default">
+#foreach ($action in $useCase.actions)
+##define struts 2 action
+#set($actionName = $stringUtils.upperCamelCaseName(${action.getActionClassName()}))
+#set($resultPath = $action.actionFowards.get(0).forwardPath)
+
+        <action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="$bpmUtils.getExecuteMethodFromActionStruts2()">
+#foreach ($actionForward in $action.actionForwards)		
+    		<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end		
+        </action>	
+		
+#end
+	</package>
+	
+#if ($onlineHelp == "true")
+	<!-- It is supposed to work such as FowardAction. It takes the name of the HelpAction and
+	redirects to the jsp page-->
+	<package name="" namespace="/" extends="struts-default">
+        <action name="${useCase.onlineHelpActionPath}">
+			<result>${useCase.onlineHelpPagePath}.jsp</result>
+		</action>
+		
+#foreach ($page in $useCase.pages)
+        <action name="${page.onlineHelpActionPath}">
+			<result>${page.onlineHelpPagePath}.jsp</result>
+		</action>	
+#end
+
+	</package>
+
+#end	
+
+	
+#end 	
+	
+#set($naoEntrou = true)		
+#foreach ($manageable in $manageables)
+#if ($naoEntrou == true)
+#set($naoEntrou = false)	
+	<package name="" namespace="/" extends="${bpmUtils.getDefaultNameConfig()}">##TODO verificar nome do pacote dos manageable
+#end	
+    	<action name="$manageable.actionPath" class="$manageable.actionType">
+    			<result>$manageable.pageFullPath</result>
+    			<exception-mapping result="error.exception.message" exception="java.lang.Throwable"></exception-mapping>
+    			<result name="error.exception.messager">$manageable.exceptionPath</result>
+    	</action>
+	</package>
+	<!-- It is supposed to work such as FowardAction. It takes the name of the HelpAction and
+	redirects to the jsp page-->
+#if ($onlineHelp == "true")
+	<package name="" namespace="/" extends="${bpmUtils.getDefaultNameConfig()}">
+        <action name="${manageable.onlineHelpActionPath}">
+			<result>${manageable.onlineHelpPagePath}.jsp</result>
+		</action>
+		
+		<action name="/applicationHelp">
+			<result>/application-help.jsp</result>
+		</action>
+#end	
+	</package>
+#end
+## TODO: faltou uma parte final do struts-config.xml que e destinada a configuracao de tiles. 		
+</struts>
+#end	

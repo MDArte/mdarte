@@ -1,0 +1,16 @@
+#if ($stringUtils.isNotBlank($messageDriven.packageName))
+package $messageDriven.packageName;
+#end
+
+/**
+$messageDriven.getDocumentation(" * ")
+ */
+public class ${messageDriven.name}BeanImpl extends ${messageDriven.name}Bean
+#if ($messageDriven.generalization)
+    , ${messageDriven.generalization.fullyQualifiedName}
+#end
+{
+
+	public void handleOnMessage(Object object){
+	}
+}

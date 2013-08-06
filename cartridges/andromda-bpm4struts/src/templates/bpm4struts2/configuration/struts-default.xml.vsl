@@ -1,0 +1,145 @@
+## it shoul be included in each configuration struts.xml in order to add the default foward results
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+	
+<struts>
+	
+	<!-- Default foward operations-->
+	<package name="" namespace="/">
+		<action name="/calendar">
+			<result>/calendar-js.jsp</result>
+		</action>
+		
+		<action name="/formValidation">
+			<result>/application-help.jsp</result>
+		</action>
+	</package>	
+	
+	<package name="main" namespace="/main">
+		<action name="/Main" class="${mainDir}.Main">
+#set($mainPath = '')
+#foreach($useCase in $applicationUseCases)
+#if($useCase.applicationUseCase)
+#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
+#end
+#if($mainPath.equals(''))
+#set($mainPath = '/ForwardAction.do')
+#end
+#end
+			<result>$mainPath</result> 
+		</action>	
+	</package>
+
+#if ($securityEnabled)
+	<!-- Configuration of secure operations-->
+#set($path = "")                
+#if(!$applicationUseCases.empty)
+#set($applicationUseCase=$applicationUseCases.iterator().next())
+#set($path = "${applicationUseCase.actionPath}")
+#elseif(!$manageables.empty)
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+#set($path = "/Main/Main")
+#else
+#set($manageable=$manageables.iterator().next())
+#set($path = "${manageable.actionPath}")
+#end   
+#end
+    <package name="secure" namespace="/secure">
+    	<action name="Login" class="${controleAcessoDir}.Login">
+            <result name="main">/ForwardAction.do</result>
+        </action>
+    	
+    	<action name="EntrarLoginValidar" class="${controleAcessoDir}.Login">
+            <result name="main">/ForwardAction.do</result>
+    		<exception-mapping result="login.entrar.login.exception" exception="java.lang.Exception"></exception-mapping>
+            <result name="login.entrar.login.exception">${login}/entrar-login.jsp</result>
+        </action>
+    	
+    	<action name="TrocaDeSenhaObrigatoriaProcessar" class="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessar">
+            <result name="main">/ForwardAction.do</result>
+    		<exception-mapping result="login.troca.de.senha.obrigatoria.exception" exception="java.lang.Exception"></exception-mapping>
+            <result name="login.troca.de.senha.obrigatoria.exception">${login}/troca-de-senha-obrigatoria.jsp</result>
+        </action>
+    	
+    	<action name="NovaConexao" class="${controleAcessoDir}.NovaConexao">
+        </action>
+## ACTION QUE APAGA SESSAO DO MODULO (só deve ser gerada em projetos modularizados)
+#if($modulo == 'true')
+        <action name="ApagaSessao" class="${controleAcessoDir}.ApagaSessao">
+		</action>
+#end		
+    	<action name="SaidaSistema" class="${controleAcessoDir}.SaidaSistema">
+    		<result name="saida.sistema">${login}/saida-sistema.jsp</result>
+        </action>
+#end 		
+		
+    </package>
+	
+	<package name="main" namespace="/main">
+		<action name="/Main" class="${mainDir}.Main">
+			 #set($mainPath = '')
+                #foreach($useCase in $applicationUseCases)
+                #if($useCase.applicationUseCase)
+				#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
+                #end
+                #if($mainPath.equals(''))
+                #set($mainPath = '/ForwardAction.do')
+                #end
+				#end
+				<result>$mainPath</result> 
+		</action>	
+	</package>
+	
+	<!-- global results pages-->
+	<package name="$bpmUtils.getDefaultNameConfig()" extends="struts-default">
+		<global-results>
+		
+#foreach ($useCase in $useCases)
+            <result name="$stringUtils.toResourceMessageKey($useCase.name)" type="redirect-action">
+                ${useCase.actionPath}.do
+            </result>
+			
+#end
+            <result name="main" type="redirect-action">
+    			/Main/Main.do
+            </result>
+			
+			<result name="forwardAction" type="redirect-action">
+    			/ForwardAction.do
+            </result>
+
+#if ($securityEnabled)
+    		<result name="entrar.login">
+    				${login}/entrar-login.jsp
+            </result>
+    	
+    		<result name="troca.de.senha.obrigatoria">
+    				${login}/troca-de-senha-obrigatoria.jsp
+            </result>
+#end	
+			
+		</global-results>
+	</package>
+</struts>

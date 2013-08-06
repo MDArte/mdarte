@@ -1,0 +1,325 @@
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if(!$pacote)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#if($gerar)
+<?xml version="1.0" encoding="$xmlEncoding"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+#if ($generateWebXmlIds=="true")
+         id="webapp"
+#end
+         version="2.4">
+
+#set ($comment = "<!-- context-param merge-point -->")
+    ${comment}
+
+
+#if ($aplicacaoDistribuida=="true")
+	<distributable/>
+#end
+	<session-config>
+		<session-timeout>$timeout</session-timeout>
+	</session-config>
+
+#if($securityEnabled)
+    <filter>
+        <filter-name>SessionFilter</filter-name>
+	    <filter-class>org.andromda.presentation.bpm4struts.SessionFilter</filter-class>
+    </filter>
+#end
+
+    <filter>
+        <filter-name>ActionServletFilter</filter-name>
+	    <filter-class>org.andromda.presentation.bpm4struts.ActionServletFilter</filter-class>
+    </filter>
+
+#if($securityEnabled)
+	<filter-mapping>
+	    <filter-name>SessionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+#end
+
+    <filter-mapping>
+	    <filter-name>ActionServletFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+	    <filter-name>ActionServletFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    
+	<filter-mapping>
+		<filter-name>ActionServletFilter</filter-name>
+		<url-pattern>*.action</url-pattern>
+	</filter-mapping>
+
+    #if($pacote)
+    <!-- filter merge-${pacote.webModuleName}-point -->
+    #end
+    
+    <!-- filter merge-point -->
+    
+	## struts2
+	<filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+    
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.action</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/struts/*</url-pattern>
+	</filter-mapping>
+    
+#if ($generateWebXmlIds=="true")
+    <filter id="filter_1">
+#else
+    <filter>
+#end
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <filter-class>org.displaytag.filter.ResponseOverrideFilter</filter-class>
+    </filter>
+
+    <!-- filter-mapping merge-point -->
+#if ($generateWebXmlIds=="true")
+    <filter-mapping id="filter_mapping_1">
+#else
+    <filter-mapping>
+#end
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+#if ($preventDirectPageAccess != "true")
+#if ($generateWebXmlIds=="true")
+    <filter-mapping id="filter_mapping_2">
+#else
+    <filter-mapping>
+#end
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+#end
+    
+	#if($pacote)
+    <!-- listener merge-${pacote.webModuleName}-point -->
+    #end
+    
+    <!-- listener merge-point -->
+
+    <!-- servlet merge-point -->
+#if ($generateWebXmlIds=="true")
+    <servlet id="servlet_struts">
+#else
+    <servlet>
+#end
+        <servlet-name>action</servlet-name>
+        #if ($stringUtils.isNotBlank($securityRealm))
+        <servlet-class>${servletPackage}.ActionServletImpl</servlet-class>
+        #else
+        <servlet-class>${servletPackage}.ActionServlet</servlet-class>
+        #end
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/struts-config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>detail</param-name>
+            <param-value>3</param-value>
+        </init-param>
+        <init-param>
+            <param-name>validate</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet>
+    	<servlet-name>util</servlet-name>
+    	<servlet-class>${servletPackage}.UtilServlet</servlet-class>
+    </servlet>
+	
+	#if($stringUtils.isNotEmpty($customServlets)) 
+    #foreach($servlet in $stringUtils.split($customServlets,","))
+	
+	<servlet>
+    	<servlet-name>${servlet}</servlet-name>
+    	<servlet-class>${servletPackage}.${servlet}</servlet-class>
+    </servlet>
+		
+	#end
+	#end
+	
+	#if($enableCaptcha=="true")
+	<servlet>
+		<servlet-name>Kaptcha</servlet-name>
+    	<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+		<!-- captcha-param merge-point -->
+	</servlet>
+	#end
+    <!-- precompilation merge-point -->
+    
+    #if($pacote)
+    <!-- servlet-mapping merge-${pacote.webModuleName}-point -->
+    #end
+    
+    <!-- servlet-mapping merge-point -->
+#if ($generateWebXmlIds=="true")
+    <servlet-mapping id="servlet_mapping_default">
+#else
+    <servlet-mapping>
+#end
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+        <url-pattern>*.action</url-pattern>
+    </servlet-mapping>
+	
+	#foreach ($useCase in $useCases)
+	#if	($stringUtils.isNotEmpty($useCase.customLink))
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+        <url-pattern>/$useCase.customLink</url-pattern>
+    </servlet-mapping>	
+	#end
+	#end
+    
+    <servlet-mapping>
+        <servlet-name>util</servlet-name>
+        <url-pattern>/util-service/*</url-pattern>
+    </servlet-mapping>
+	
+	#if($stringUtils.isNotEmpty($customServlets)) 
+    #foreach($servlet in $stringUtils.split($customServlets,","))
+	
+	<servlet-mapping>
+        <servlet-name>${servlet}</servlet-name>
+        <url-pattern>/${servlet.toLowerCase()}/*</url-pattern>
+    </servlet-mapping>	
+		
+	#end
+	#end
+	
+    #if($enableCaptcha=="true")
+    <servlet-mapping>  
+    	<servlet-name>Kaptcha</servlet-name>  
+    	<url-pattern>/kaptcha.jpg</url-pattern>  
+ 	</servlet-mapping> 
+ 	#end
+    <!-- session-config merge-point -->
+    
+    <!-- mime-type merge-point -->
+
+#if ($generateWebXmlIds=="true")
+    <welcome-file-list id="welcome_file_list">
+#else
+    <welcome-file-list>
+#end
+        <!-- welcome-file-list merge-point -->
+        <welcome-file>$welcomeFileName</welcome-file>
+    </welcome-file-list>
+    
+    <!-- error-page merge-point -->
+    <error-page>
+        <error-code>400</error-code>
+        <location><![CDATA[/error-page.jsp?code=400]]></location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location><![CDATA[/error-page.jsp?code=403]]></location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location><![CDATA[/error-page.jsp?code=404&resource=true]]></location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location><![CDATA[/error-page.jsp?code=500&exception=true]]></location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location><![CDATA[/error-page.jsp?code=exception&exception=true]]></location>
+    </error-page>
+
+    <!-- taglib merge-point -->
+    <!-- resource-ref merge-point -->
+
+    <!-- security-constraint merge-point -->
+## we always place the use-case JSPs inside a security-constraint, security or no security
+#if ($preventDirectPageAccess == "true")
+#if ($generateWebXmlIds=="true")
+#set ($counter = 1)
+    <security-constraint id="security_constraint_$counter">
+#else
+    <security-constraint>
+#end
+        <web-resource-collection>
+            <web-resource-name>JSP resources</web-resource-name>
+            <description>
+                This security constraint prevents JSP files and fragments to be accessed
+                directly by the client. Only the server is able to access the files matching the
+                url patterns below.
+            </description>
+            <url-pattern>*.jspf</url-pattern>
+#foreach ($applicationUseCase in $applicationUseCases)
+#foreach ($useCase in $applicationUseCase.allUseCases)
+#foreach ($page in $useCase.pages)
+            <url-pattern>${page.fullPath}.jsp</url-pattern>
+#end
+#end
+#end
+#foreach ($manageable in $manageables)
+            <url-pattern>$manageable.pageFullPath</url-pattern>
+#if ($onlineHelp == "true")
+            <url-pattern>${manageable.onlineHelpPagePath}.jsp</url-pattern>
+#end
+#end
+            <url-pattern>/error-page.jsp</url-pattern>
+            <url-pattern>/form-validation.jsp</url-pattern>
+            <url-pattern>/calendar-js.jsp</url-pattern>
+            <url-pattern>/application-help.jsp</url-pattern>
+            <url-pattern>/$controleAcessoDir/login-form.jsp</url-pattern>
+            <url-pattern>/layout/menu.jsp</url-pattern>
+            <url-pattern>/layout/messages.jsp</url-pattern>
+            <url-pattern>/layout/breadcrumbs.jsp</url-pattern>
+            <url-pattern>/layout/main-layout.jsp</url-pattern>
+            <url-pattern>/layout/help-layout.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+#end    
+</web-app>
+#end

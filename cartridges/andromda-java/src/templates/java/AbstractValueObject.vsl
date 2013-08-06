@@ -1,0 +1,9 @@
+#set ($generatedFile = "ValueObject.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+public abstract interface ValueObject extends DataObject {
+	
+}

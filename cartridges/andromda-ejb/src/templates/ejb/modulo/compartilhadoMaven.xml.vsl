@@ -1,0 +1,131 @@
+#set($generatedFile = "compartilhado/maven.xml")
+
+<project default="ejb:install"
+         xmlns:ant="jelly:ant"
+         xmlns:u="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:j="jelly:core">
+
+	<ant:property environment="env"/>
+
+	<j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
+
+#set($open = "${")
+#set($end = "}")
+
+	<preGoal name="ejb:init">
+		<ant:mkdir dir="${open}basedir${end}/target/classes"/>
+		<ant:mkdir dir="${open}basedir${end}/target/src"/>
+		<ant:mkdir dir="${open}basedir${end}/src/java"/>
+
+		<ant:property name="compile.dir" value="${open}basedir${end}"/>
+
+	   
+		<ant:path id="core.classpath">
+			<ant:path refid="maven.dependency.classpath"/>
+			<ant:path location="${maven.build.dest}"/>
+		</ant:path>
+	   
+		<ant:path id="compile.dir">
+			<ant:pathelement path="${open}basedir${end}/target/src"/>
+			<ant:pathelement path="${open}basedir${end}/src/java"/>
+    		</ant:path>
+	
+		<ant:javac destdir="${open}basedir${end}/target/classes" includes="**/*.java"  debug="on">
+			<ant:src>
+				<ant:path refid="compile.dir"/>
+          		</ant:src>
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath"/>
+        		</ant:classpath>
+		</ant:javac>
+	</preGoal>
+
+    <goal name="lib">
+        <j:forEach var="dep" items="${open}pom.dependencies${end}">
+            <j:if test= "${open}dep.getProperty('application.dependency') == 'true'${end}">
+                <ant:delete includeEmptyDirs="false">
+                    <ant:fileset dir="${open}libDirectory${end}">
+                        <ant:include name="${open}dep.artifactId${end}*.${open}dep.type${end}"/>
+                    </ant:fileset>
+                </ant:delete>
+                <ant:copy todir="${open}libDirectory${end}">
+                    <fileset dir="${open}user.home${end}/.maven/repository/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                        <include name="${open}dep.artifact${end}"/>
+                    </fileset>
+                </ant:copy>
+            </j:if>
+        </j:forEach>
+    </goal>
+
+    <j:set var="deployDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/deploy"/>
+    <goal name="deploy" prereqs="undeploy">
+    	<ant:copy file="${user.home}/.maven/repository/${pom.groupId}/ejbs/${pom.artifactId}-${pom.CurrentVersion}.jar"
+        	tofile="${deployDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
+        
+    </goal>
+
+    <goal name="undeploy">
+        <ant:delete includeEmptyDirs="true">
+            <ant:fileset dir="${deployDirectory}">
+                <ant:include name="${pom.artifactId}*.jar"/>
+            </ant:fileset>
+        </ant:delete>
+    </goal>
+
+    <goal name="earInstall">
+        <j:set var="earDirectory" value="${open}basedir${end}/../../../target/ear"/>	    
+
+        <j:if test="${open}packDependencies${end}">
+            <j:forEach var="dep" items="${open}pom.dependencies${end}">
+                <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
+                    <ant:copy todir="${open}earDirectory${end}">
+                        <fileset dir="${open}maven.repo.local${end}/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                            <include name="$${open}dep.artifact${end}" />
+                        </fileset>
+                    </ant:copy>
+                </j:if>
+            </j:forEach>
+        </j:if>
+
+    	<ant:copy file="${maven.repo.local}/${pom.groupId}/ejbs/${pom.artifactId}-${pom.CurrentVersion}.jar"
+        	tofile="${earDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
+        	
+        <!-- Gera trecho do arquivo application.xml -->
+        <j:set var="earTempDirectory" value="${open}basedir${end}/../../../target/ear/temp"/>        
+        <j:file name="${earTempDirectory}/ejb-modulo-compartilhado.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+    <module>
+        <ejb>${pom.artifactId}-${pom.CurrentVersion}.jar</ejb>
+    </module>]]></j:file>
+        
+    </goal>
+    	<!-- ==================================================================
+           Shows help
+         ================================================================== -->
+    <goal name="help">
+		<ant:echo> 
+		
+maven ejb:install Compila o conteudo desta pasta e gera o jar  (e o default desta pasta)
+
+maven deploy - Copia o jar deste modulo para o seu JBoss
+
+maven clean - Apaga o conteudo da pasta target 
+		</ant:echo>
+	</goal>
+    <!-- ==================================================================
+           Cleans Everything and deletes all implementation classes
+         ================================================================== --> 
+    <goal name="nuke">
+        <ant:delete>
+            <fileset dir="src/java">
+                <include name="**/*Impl.java"/>
+            </fileset>
+        </ant:delete>
+        <attainGoal name="clean"/>
+    </goal>
+
+</project>

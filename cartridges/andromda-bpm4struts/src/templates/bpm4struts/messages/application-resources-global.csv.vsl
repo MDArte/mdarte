@@ -1,0 +1,192 @@
+#
+#   Messages for error pages
+#
+;;;error.link.title;Click here to go to the application's home page
+;;;error.link.text;Application Home
+
+;;;error.400.title;Bad request
+;;;error.400.message;The request sent by your browser could not properly be interpreted, please try again.
+;;;error.403.title;Forbidden
+;;;error.403.message;You are not allowed to access this part of the application.
+;;;error.404.title;Not found
+;;;error.404.message;The resource could not be located on the server, please contact your system administrator.
+;;;error.500.title;Server error
+;;;error.500.message;An internal server error occurred, please contact your system administrator.
+;;;error.exception.title;Application error
+;;;error.exception.message;The application encountered an unexpected exception, please contact your system administrator and notify him/her of this problem.
+;;;erro.copia.parametros;Erro na passagem de parametros entre casos de uso, tipos incompativeis para o parametro {0}
+
+;;;erro.stack.trace;Um erro ocorreu. Clique aqui para ver o StackTrace
+
+;;;select.deselect.all;Select/Deselect All
+;;;select.deselect.this.row;Select/Deselect this row
+;;;breadcrumbs.error;Error on page
+;;;required.fields.asterisk;Fields marked with an asterisk are required
+;;;online.help.href;Help
+;;;online.help.main;Overview
+;;;online.help.close;Close
+;;;online.help.title;Online Help:
+;;;online.help.inputfield;Field
+;;;online.help.description;Description
+;;;click.to.go.back;Click to go back
+;;;form.already.submitted;This form has already been submitted
+
+##Excecoes Default
+
+;;;error.default.hibernate.exception;Erro no hibernate
+;;;error.dafault.constraint.violation.exception;Violação da constraint
+;;;error.default.data.exception;Erro na avaliação da expressão sql
+;;;error.default.generic.jdbc.exception;Erro inesperado do banco de dados
+;;;error.default.jdbc.connection.exception;Erro de conexão ao banco
+;;;error.default.lock.acquisition.exception;Erro ao tenatr dar lock na base
+;;;error.default.sql.grammar.exception;Erro na sintaxe do sql
+;;;error.default.stale.stale.exception;Erro: o registro já foi alterado por outro usuário
+;;;error.default.privileged.action.exception;O usuário não tem permissão para executar a ação
+;;;error.default.exportid.notunique.exception;Busca de entidade pelo ExportId retornou mais de um elemento: {0}, {1}...
+;;;error.default.importaction.exception;Não foi possível concluir a importação, entidades referenciadas não foram encontradas na base
+
+;;;error.port.configuration;Erro na configuração das portas
+;;;port.file.not.found;Arquivo de configuração de portas não encontrado
+
+#
+#   Messages for the menu
+#
+;;;menu.usecases.title;Other links
+
+#
+#   Messages for the calendar
+#
+;;;calendar.title;Calendar
+;;;calendar.popup;Click here to popup a calendar to choose the date from
+;;;calendar.info;About this calendar
+;;;calendar.toggle;Toggle
+;;;calendar.previous.year;Prev. year (hold for menu)
+;;;calendar.previous.month;Prev. month (hold for menu)
+;;;calendar.go.today;Go Today
+;;;calendar.next.month;Next month (hold for menu)
+;;;calendar.next.year;Next year (hold for menu)
+;;;calendar.select.date;Select date
+;;;calendar.drag.to.move;Drag to move
+;;;calendar.part.today; (today)
+;;;calendar.week;wk
+;;;calendar.time;Time:
+;;;calendar.time.part;(Shift-)Click or drag to change value
+;;;calendar.day.first;Display %s first
+;;;calendar.today;Today
+;;;calendar.close;Close
+
+;;;month.0;January
+;;;month.1;February
+;;;month.2;March
+;;;month.3;April
+;;;month.4;May
+;;;month.5;June
+;;;month.6;July
+;;;month.7;August
+;;;month.8;September
+;;;month.9;October
+;;;month.10;November
+;;;month.11;December
+
+;;;day.0;Sunday
+;;;day.1;Monday
+;;;day.2;Tuesday
+;;;day.3;Wednesday
+;;;day.4;Thursday
+;;;day.5;Friday
+;;;day.6;Saturday
+
+#
+#   Messages for the login page
+#
+;;;login.title;Login
+;;;login.username;User
+;;;login.password;Password
+;;;login.failed;Login failed, please try again
+;;;login.submit;Login
+;;;login.submit.title;Click to submit these credentials
+;;;login.reset;Reset
+;;;login.reset.title;Click to reset these credentials
+
+;;;login.error;Login failed, please try again or register as a new user.
+
+;;;login.howto.title;How to login
+;;;login.howto;If you are a registered user you simply enter your user name and password and click on the submit button. In case this is your first time, you should register yourself to the system.
+
+;;;login.register.user;Register a new user
+;;;login.login.user;Log in a registered user
+
+;;;login.na;This feature is not available yet
+
+;;;login.entrar.login.title;Login
+;;;login.entrar.login.param.login;Login
+;;;login.entrar.login.param.senha;Senha
+;;;login.entrar.login.validar;OK
+;;;login.entrar.login.validar.title.reset.message;Limpar
+;;;login.troca.de.senha.obrigatoria.param.usuario;Login
+;;;login.troca.de.senha.obrigatoria.param.senha;Senha
+;;;login.troca.de.senha.obrigatoria.title;Troca de Senha 
+;;;login.troca.de.senha.obrigatoria.param.nova.senha;Nova senha
+;;;login.troca.de.senha.obrigatoria.param.confirmacao;Repita nova senha
+;;;login.troca.de.senha.obrigatoria.processar;Ok
+;;;login.troca.de.senha.obrigatoria.validwhen;Os campos Nova senha e Repita nova senha devem ser iguais
+;;;login.troca.de.senha.obrigatoria.processar.error;Ocorreu um erro no processament da troca de senha
+;;;login.troca.de.senha.obrigatoria.processar.success;A senha foi trocada com sucesso
+;;;login.troca.de.senha.obrigatoria.senha.antiga.igual.senha.nova;A nova senha deve ser diferente da senha atual
+;;;login.troca.de.senha.obrigatoria.senha.fraca;A senha digitada no atende aos requisitos de segurana
+;;;login.troca.de.senha.obrigatoria.senha.nova.diferente.confirmacao;A nova senha está diferente da confirmação
+;;;main.tela.principal.title;Tela inicial
+;;;login.troca.de.senha.tile;Troca de senha
+;;;saida.sistema.confirma.saida;Deseja sair do sistema?
+;;;saida.sistema.nova.conexao;Nova conexao
+;;;saida.sistema.fecha.browser;Sair
+;;;saida.sistema.title;Logout
+;;;login.logo;/layout/sgdc/LoginLogo.gif
+;;;main.tela.principal.image;/layout/sgdc/LoginLogo.gif
+;;;acesso.negado;O usuario não possui permissão para acessar este serviço.
+;;;subject.null;O usuario não está logado no sistema.
+;;;senha.incorreta;Senha incorreta
+;;;usuario.incorreto;Login incorreto
+;;;usuario.bloqueado;Este login foi bloqueado. Entre em contato com o administrador do sistema.
+
+#
+#   Messages for the validator plugin
+#
+;;;errors.required;{0} is required.
+;;;errors.minlength;{0} can not be less than {1} characters.
+;;;errors.maxlength;{0} can not be greater than {1} characters.
+;;;errors.invalid;{0} is invalid.
+
+;;;errors.byte;{0} must be a byte.
+;;;errors.short;{0} must be a short.
+;;;errors.integer;{0} must be an integer.
+;;;errors.long;{0} must be a long.
+;;;errors.float;{0} must be a float.
+;;;errors.double;{0} must be a double.
+
+;;;errors.date;{0} is not a valid date or does not respect the '{1}' format.
+;;;errors.time;{0} is not a valid time or does not respect the '{1}' format.
+;;;errors.range;{0} is not in the range {1} through {2}.
+;;;errors.creditcard;{0} is an invalid credit card number.
+;;;errors.email;{0} is an invalid e-mail address.
+;;;errors.url;{0} is an invalid URL.
+
+;;;pagina.expirou;A página expirou
+#if($oAuthServer == "true")
+;;;login.oauth.uc.pagina.de.login.title;Login
+;;;login.oauth.uc.pagina.de.login.login.param.login;Login
+;;;login.oauth.uc.pagina.de.login.login.param.senha;Senha
+;;;login.oauth.uc.pagina.de.login.login;Login
+#end
+#
+#   Messages for enumerations
+#
+#foreach($enumeration in $enumerations)
+#foreach ($literal in $enumeration.literals)
+;;;enum.label.${enumeration.name}.${literal.name};$literal.name
+#end
+#end
+
+#   CUSTOM MESSAGES-CONTEXT
+# custom-messages-context merge-point
+

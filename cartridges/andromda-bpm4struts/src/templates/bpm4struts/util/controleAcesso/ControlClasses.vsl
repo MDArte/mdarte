@@ -1,0 +1,20 @@
+#set($gerar = true)
+#if($applicationUseCases)
+#set($useCases = $applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+
+#if($pacote)
+#set($useCases = $pacote.useCases)
+#end
+
+#if($gerar)
+#foreach($useCase in $useCases)
+#if($useCase.controller.operations.size() > 0)
+#set ($controller = "${stringUtils.replace(${useCase.controller.fullyQualifiedName},'.','/')}")
+${useCase.package.webModuleName}${useCase.actionPath}.do;web#if($pacote)/${pacote.webModuleName}#end/src/java/${controller}Impl.java
+#end
+#end
+#end

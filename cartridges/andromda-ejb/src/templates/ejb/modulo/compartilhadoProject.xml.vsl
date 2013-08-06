@@ -1,0 +1,39 @@
+#set($generatedFile = "compartilhado/project.xml")
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../project.xml</extend>
+    <artifactId>${pom.groupId}-compartilhado</artifactId>
+    <name>${projectId} compartilhado EJB</name>
+    <currentVersion>${application.version}</currentVersion>
+    <shortDescription>${pom.name} compartilhado EJB Component</shortDescription>
+    <description>
+        Contains the ${pom.name}-compartilhado's EJB module.
+    </description>
+	#if($oAuthServer  == "true")
+  <dependencies>
+        <dependency>
+            <groupId>oauth</groupId>
+            <artifactId>oauth-core</artifactId>
+            <version>${oauthcore.version}</version>
+            <type>jar</type>
+        </dependency>
+		<dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
+            <type>jar</type>
+        </dependency>
+  </dependencies>
+  #end
+    <build>
+        <sourceDirectory>target/src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>target/src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+</project>

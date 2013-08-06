@@ -1,0 +1,27 @@
+
+<server>
+#foreach($messageBean in $messageBeans)
+#if($messageBean.findTaggedValue("$JMSQueue"))
+	<mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=$messageBean.findTaggedValue("$JMSQueue")">
+        <depends optional-attribute-name="DestinationManager">jboss.mq:service=DestinationManager</depends>
+        <depends optional-attribute-name="SecurityManager">jboss.mq:service=SecurityManager</depends>
+
+#if($messageBean.findTaggedValue("$JMSQueueRedeliveryLimit"))
+		<attribute name="RedeliveryLimit">$messageBean.findTaggedValue("$JMSQueueRedeliveryLimit")</attribute>
+#end
+
+#if($messageBean.findTaggedValue("$JMSQueueRedeliveryDelay"))
+		<attribute name="RedeliveryDelay">$messageBean.findTaggedValue("$JMSQueueRedeliveryDelay")</attribute>
+#end
+
+#if($messageBean.findTaggedValue("$JMSQueueMaxDepth"))	
+		<attribute name="MaxDepth">$messageBean.findTaggedValue("$JMSQueueMaxDepth")</attribute>
+#end
+
+#if($messageBean.findTaggedValue("$JMSQueueMessageCounterHistoryDayLimit"))
+		<attribute name="MessageCounterHistoryDayLimit">$messageBean.findTaggedValue("$JMSQueueMessageCounterHistoryDayLimit")</attribute>
+#end
+    </mbean> 
+#end
+#end
+</server>
