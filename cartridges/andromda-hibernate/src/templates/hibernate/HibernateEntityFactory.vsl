@@ -262,8 +262,10 @@ try {
 			org.hibernate.Query qry = session.createQuery(hql);
 			
 			if (paginacao != null){
-				qry.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-				qry.setMaxResults($maxRows*$maxPages);
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				qry.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				qry.setMaxResults($maxRows*$maxPages + 1);
 			}
 			#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
@@ -303,9 +305,11 @@ try {
             		if(obj instanceof org.hibernate.Query){
             		org.hibernate.Query res = (org.hibernate.Query)obj;
             			if (paginacao != null){
-            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-					res.setMaxResults($maxRows*$maxPages);
-				}
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				res.setMaxResults($maxRows*$maxPages + 1);
+			}
 			#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			res.setCacheable(true);
 			#end		
@@ -314,9 +318,11 @@ try {
             		else if(obj instanceof org.hibernate.Criteria){
             			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
             			if (paginacao != null){
-            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-					res.setMaxResults($maxRows*$maxPages);
-				}
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				res.setMaxResults($maxRows*$maxPages + 1);
+			}
 			#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			res.setCacheable(true);
 			#end		
@@ -444,7 +450,7 @@ try {
 #macroCriterioBusca( $target.type $target.name "raiz_$target.name" )
 
 		java.util.List listaResAss_$target.name = critBusca_${target.name}.setMaxResults(2).list();
-		if (listaResAss_${target.name}.size() > 1) // Encontrou mais de uma entidade para o mesmo código
+		if (listaResAss_${target.name}.size() > 1) // Encontrou mais de uma entidade para o mesmo cÃ³digo
 			throw new DAOException("error.default.exportid.notunique.exception" + "," + listaResAss_${target.name}.get(0).toString() + "," + listaResAss_${target.name}.get(1).toString());
 		if (listaResAss_${target.name}.size() == 0) // Nao encontrou entidade associada
 			return 1;
@@ -661,10 +667,12 @@ $target.getDocumentation("     * ")
 			org.hibernate.Query qry = session.createQuery("select a.${target.name} from ${entity.fullyQualifiedName} a where a.id = " + id);
 			#end
 			#if ($target.many)
-			   if(paginacao != null){
-			   	qry.setFirstResult((paginacao -1)*$maxRows*$maxPages);
-			   	qry.setMaxResults($maxRows*$maxPages);
-			   }
+			   if (paginacao != null){
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				qry.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				qry.setMaxResults($maxRows*$maxPages + 1);
+			}
 			   #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			   qry.setCacheable(true);
 			   #end
@@ -761,9 +769,11 @@ try{
             if(obj instanceof org.hibernate.Query){
             	org.hibernate.Query res = (org.hibernate.Query)obj;
             	if (paginacao != null){
-            		res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-			res.setMaxResults($maxRows*$maxPages);
-		}
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				res.setMaxResults($maxRows*$maxPages + 1);
+			}
 		#if($hibernateEnableCache.equalsIgnoreCase("true"))
 		res.setCacheable(true);
 		#end		
@@ -772,9 +782,11 @@ try{
             else if(obj instanceof org.hibernate.Criteria){
             	org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
             	if (paginacao != null){
-            		res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-			res.setMaxResults($maxRows*$maxPages);
-		}
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				res.setMaxResults($maxRows*$maxPages + 1);
+			}
 		#if($hibernateEnableCache.equalsIgnoreCase("true"))
 		res.setCacheable(true);
 		#end		
@@ -846,9 +858,11 @@ $finder.getDocumentation("     * ")
 #elseif (!$finder.returnType.collectionType)
         return ($returnType.fullyQualifiedName)query.uniqueResult();
 #else
-	if(paginacao != null){
-		query.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
-		query.setMaxResults($maxRows*$maxPages);
+	if (paginacao != null){
+		int extra = 0;
+		if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+		query.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+		query.setMaxResults($maxRows*$maxPages  + 1);
 	}
 	#if($hibernateEnableCache.equalsIgnoreCase("true"))
 	query.setCacheable(true);
@@ -963,4 +977,5 @@ $finder.getDocumentation("     * ")
 	}
 #end
 }
+
 

@@ -9,7 +9,7 @@ public class Constantes {
 	static public final String FORWARD = "forward";
 	static public final String CONTROLLER = "controller";
 	static public final String ACAO_ATUAL = "acaoAtual";
-	static public final String PARAMETRO_PAGINA = "d-16544-g";
+	static public final String PARAMETRO_PAGINA = "d-16544-p";
 	static public final String PARAMETRO_GRUPO = "group";
 	static public final String ATTRIBUTE_TABLE = "tableName";
 	static public final String PARAMETRO_TABLE = "d-16544-t";

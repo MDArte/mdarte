@@ -42,7 +42,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     $visibility final $returnType ${operation.name}(ActionMapping mapping, $operation.interfaceType form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
     	/*Caso seja necessario usar paginacao		
-    		Integer paginacao = (((Integer)request.getAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO)));
+    		Integer paginacao = (((Integer)request.getAttribute(${utilDir}.Constantes.PARAMETRO_PAGINA)));
     	*/
 	
 #set($allowDummyData = ($dummyData == 'true'))
@@ -190,3 +190,4 @@ ${comma}${dummyValue}#set ($comma = ", ")
 #end
 }
 #end
+
