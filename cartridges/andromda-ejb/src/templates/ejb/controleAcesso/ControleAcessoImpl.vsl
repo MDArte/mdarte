@@ -7,11 +7,24 @@
 package $controleAcessoDir;
 #set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
 #end
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
+import accessControl.Perfil;
 import accessControl.exception.ControleAcessoException;
+#if($controleAcessoDefault == 'true')
+import br.gov.mdarte.controleacesso.cd.*;
+#end
 
 public  class ControleAcessoImpl extends accessControl.ControleAcesso {
-
+	#if($controleAcessoDefault == 'true')
+	public static final String SUPER_USUARIO = "1";
+	public static final int PROXIMA_TROCA_SENHA_DIAS = 30;
 	/**
 	 * Verifica se o operador necessita trocar senha obrigatoria
 	 */
@@ -25,7 +38,212 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public accessControl.Operador getOperador(String usuario) throws ControleAcessoException{
+		OperadorCA operador = new OperadorCAImpl();
+		operador.setLogin(usuario);
+		OperadorCADAOImpl opDAO = new OperadorCADAOImpl();
+		try
+		{
+			return (accessControl.Operador)
+					opDAO.recuperaOperador(usuario,
+							null).iterator().next(); //trocar para filter?
+		}
+		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
+		{
+			throw new ControleAcessoException(e.getMessage());
+		}
+	}
+	private HashMap<String, Collection<Perfil>> addServices(HashMap<String,Collection<Perfil>> hmServicos, ServicoCA servico, Collection<Perfil> perfis)
+	{
+		if (hmServicos.get(servico.getCodigo()) != null)
+		{
+			hmServicos.get(servico.getCodigo()).addAll(perfis);
+		}
+		else
+		{
+			hmServicos.put(servico.getCodigo(), perfis);
+		}
+		for(ServicoCA servicoAgrupado : (Collection<ServicoCA>)
+				servico.getEAgrupadoPor())
+		{
+			hmServicos = addServices(hmServicos, servicoAgrupado,
+					perfis);
+		}
+		return hmServicos;
+	}
+
+	/**
+	 * lista os servicos em um map onde a chave eh o nome do servico e o valor a colecao de perfis que possui acesso ao servico
+	 */
+	@Override
+	public java.util.HashMap<String, java.util.Collection<accessControl.Perfil>> listaServicos() throws ControleAcessoException {
+		HashMap<String, Collection<Perfil>> hmServicos = new
+				HashMap<String, Collection<Perfil>>();
+		ServicoCADAOImpl servDAO = new ServicoCADAOImpl();
+		List serviceList =
+				new ArrayList();
+		try
+		{
+			// recupera todos os serviÃ§os
+			serviceList = servDAO.list();
+		}
+		catch(br.gov.mdarte.controleacesso.cd.DAOException e)
+		{
+			throw new ControleAcessoException(e.getMessage());
+		}
+		for(ServicoCA service : (Collection<ServicoCA>) serviceList)
+		{
+			Collection<PerfilOperadorCA> perfilOperadorList =
+					service.getPerfilOperadorCAs();
+			Collection<Perfil> perfilList = new HashSet<Perfil>();
+			// adiciona SU para todos os servicos
+			perfilList.add(new Perfil(SUPER_USUARIO));
+			for(PerfilOperadorCA perfilCA : perfilOperadorList)
+			{
+				Perfil perfil = new
+						Perfil(perfilCA.getId().toString());
+				perfilList.add(perfil);
+			}
+			if (!perfilList.isEmpty())
+				hmServicos = addServices(hmServicos, service,
+						perfilList);
+		}
+		return hmServicos;
+	}	
+
+	/**
+	 * realiza a troca de senha do operador
+	 */
+	@Override
+	public boolean trocaSenha(accessControl.Operador operador, String senhaAtual, String novaSenha) throws ControleAcessoException{
+		OperadorCADAOImpl opDAO = new OperadorCADAOImpl();
+		OperadorCAImpl opRetrieved;
+		OperadorCAImpl op = (OperadorCAImpl) operador;
+		opRetrieved = (OperadorCAImpl) getOperador(op.getLogin());
+		if (!opRetrieved.getSenha().equals(senhaAtual))
+			return false;
+		opRetrieved.setSenha(novaSenha);
+		Calendar calendar = new GregorianCalendar();
+		calendar.add(Calendar.DATE, PROXIMA_TROCA_SENHA_DIAS);
+		opRetrieved.setDataValidadeSenha(calendar.getTime());
+		try
+		{
+			opDAO.update(opRetrieved);
+		}
+		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}	
+
+	/**
+	 * Bloqueia o acesso do usuário
+	 */
+	@Override
+	public void bloqueiaUsuario(String usuario) {
+		
+	}		
+
+	/**
+	 * Verifica se o acesso do usuário está bloqueado
+	 */
+	@Override
+	public boolean usuarioBloqueado(String usuario) {
+		return false;
+	}	
+
+	/**
+	 * Verifica se a senha é fraca
+	 */
+	@Override
+	public boolean senhaFraca(String senha) {
+		
+		/* IMPLEMENTACAO SUGERIDA
+		 *
+		 * (a senha deve possuir pelo menos 8 caracteres,
+		 * incluindo numerais, letras maiúsculas,
+		 * letras minúsculas e símbolos)
+		 */
+		 
+		if (senha == null) {
+			return true;
+		}
+		
+		if (senha.length() < 8) {
+			return true;
+		}
+		
+		String numerais = "0123456789";
+		String maiusculas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String minusculas = "abcdefghijklmnopqrstuvwxyz";
+		String simbolos = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+		boolean achouNumeral = false;
+		boolean achouMaiuscula = false;
+		boolean achouMinuscula = false;
+		boolean achouSimbolo = false;
+		
+		for (int i = 0; i < senha.length(); i++) {
+			achouNumeral |= numerais.indexOf(senha.charAt(i)) > -1;
+			achouMaiuscula |= maiusculas.indexOf(senha.charAt(i)) > -1;
+			achouMinuscula |= minusculas.indexOf(senha.charAt(i)) > -1;
+			achouSimbolo |= simbolos.indexOf(senha.charAt(i)) > -1;
+		}
+		
+		return !achouNumeral || !achouMaiuscula || !achouMinuscula || !achouSimbolo;
+		
+	}
+	
+	/**
+	 * lista as restricoes em um map onde a chave eh o perfil e o valor a colecao de restricoes do perfil
+	 */
+	@Override
+	public java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> getRestricoes(accessControl.Operador operador, accessControl.Servico servico) throws ControleAcessoException {
 		// TODO Auto-generated method stub
+		return null;
+	}	
+	
+	/**
+	*	Busca os perfis associados ao servico
+	*/
+	@Override
+	public  java.util.Collection<accessControl.Perfil> buscaPerfisServico(accessControl.Servico servico) throws ControleAcessoException{
+		
+		return null;
+	}
+	
+	public  static class RestricaoDinamicaImpl {
+	#foreach ($service in $services)
+	
+		#foreach ($operation in $service.operations )
+	
+		$operation.visibility  $operation.returnType.fullyQualifiedName ${operation.name} () {
+	   	 #if ($operation.returnTypePresent)
+                    return $operation.returnType.javaNullString;
+            	#end
+		}
+	
+	#end
+		
+	#end
+	}	
+
+	public void agendaTarefas() {
+	
+	}
+	#else
+	@Override
+	public boolean precisaTrocarSenha(accessControl.Operador operador) throws ControleAcessoException{
+		return false;
+	}
+	
+	/**
+	 * Recupera o operador de acordo com o login
+	 */
+	@Override
+	public accessControl.Operador getOperador(String usuario) throws ControleAcessoException{
 		return null;
 	}
 
@@ -34,7 +252,6 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public java.util.HashMap<String, java.util.Collection<accessControl.Perfil>> listaServicos() throws ControleAcessoException {
-		// TODO Auto-generated method stub
 		return null;
 	}	
 
@@ -75,7 +292,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		 * (a senha deve possuir pelo menos 8 caracteres,
 		 * incluindo numerais, letras maiúsculas,
 		 * letras minúsculas e símbolos)
-		 *
+		 
 		 
 		if (senha == null) {
 			return true;
@@ -103,7 +320,6 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		}
 		
 		return !achouNumeral || !achouMaiuscula || !achouMinuscula || !achouSimbolo;
-		
 		*/
 	}
 	
@@ -112,7 +328,6 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> getRestricoes(accessControl.Operador operador, accessControl.Servico servico) throws ControleAcessoException {
-		// TODO Auto-generated method stub
 		return null;
 	}	
 	
@@ -144,4 +359,5 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	public void agendaTarefas() {
 	
 	}
+	#end
 }

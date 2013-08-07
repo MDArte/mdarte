@@ -52,15 +52,22 @@
 			<result name="$actionForward.forwardName" type="redirectAction">
 				<param name="actionName">${actionForward.strutsActionName}</param>
 				<param name="namespace">${actionForward.strutsNamespace}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
 			</result>
 #else
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end
+#if (!${action.input})
+			<result name="handleException">${actionForward.forwardPath}</result>
+#end
 #end
 #end
 #if (${action.input})
-			<result name="handleException">${action.input.fullPath}.jsp</result>
+			<result name="handleException">${action.input.fullPath}.jsp</result>		
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
@@ -95,10 +102,17 @@
 			<result name="$actionForward.forwardName" type="redirectAction">
 				<param name="actionName">${actionForward.strutsActionName}</param>
 				<param name="namespace">${actionForward.strutsNamespace}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
 			</result>
 #else
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end
+#if (!${action.input})
+			<result name="handleException">${actionForward.forwardPath}</result>
 #end
 #end
 #if (${action.input})

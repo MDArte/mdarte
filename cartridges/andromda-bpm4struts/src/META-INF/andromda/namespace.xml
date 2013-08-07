@@ -143,6 +143,11 @@
                     application JSP pages, login pages and stylesheets are outputted here
                 </documentation>
             </property>
+            <property name="custom-pages">
+                <documentation>
+                    Diretório com as páginas customizadas.
+                </documentation>
+            </property>
             <property name="shared-pages">
                 <documentation>
                     application shared JSP pages, login pages and stylesheets are outputted here

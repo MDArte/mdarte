@@ -1,3 +1,4 @@
+#if(!$jsp.oldStruts)
 #set ($generatedFile = "messages/messages.jsp")
 
 <%@ include file="/taglib-imports.jspf" %>
@@ -100,3 +101,4 @@
 		displayWindow(message);
 		</script>
 		<%}%>
+#end

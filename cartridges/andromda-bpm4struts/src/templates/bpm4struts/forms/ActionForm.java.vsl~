@@ -9,9 +9,9 @@
 ##
 ##  START TEMPLATE
 ##
-#set($gerar = true)
-#if($action.actionOldStruts)
 #set($gerar = false)
+#if($action.actionOldStruts)
+#set($gerar = true)
 #end
 #if($gerar)
 // license-header java merge-point
@@ -21,6 +21,8 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+##
+#set ($sharp = "#")
 
 public class ${formBeanClassName}
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
@@ -35,38 +37,31 @@ public class ${formBeanClassName}
 #end
 {
 
-    private final static DecimalFormatSymbols simbolosDecimais = new DecimalFormatSymbols(Locale.US);
+    private final static DecimalFormatSymbols simbolosDecimaisReal = new DecimalFormatSymbols(Locale.US);
     static 
     {
-        simbolosDecimais.setGroupingSeparator('.');
-        simbolosDecimais.setDecimalSeparator(',');
+        simbolosDecimaisReal.setGroupingSeparator('.');
+        simbolosDecimaisReal.setDecimalSeparator(',');
+    }
+
+	private final static DecimalFormatSymbols simbolosDecimaisDolar = new DecimalFormatSymbols(Locale.US);
+    static 
+    {
+        simbolosDecimaisDolar.setGroupingSeparator(',');
+        simbolosDecimaisDolar.setDecimalSeparator('.');
     }
 
     private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
     
-#set($i=0)
-#foreach($field in $fields)#set($i=$i+1)#end
-#set($j=0)
-	public void setValues(#foreach($field in $fields) #set($j=$j+1) $field.type.fullyQualifiedName $field.name #if($j==$i) )#else, #end#end
-	{
-#foreach($field in $fields)
-#if(!$field.strutsAction.tableAction)
-		this.${field.name} = ${field.name};
-#end
-#end
-	}
-	
 #foreach ($field in $fields)
 #if ($field.file)
-    private java.io.File $field.name = null;
-	private java.lang.String ${field.name}FileName = null;
-	private java.lang.String ${field.name}ContentType = null;
+    private org.apache.struts.upload.FormFile $field.name = null;
 #elseif ($field.table)
     private $field.type.fullyQualifiedName $field.name = null;
 #elseif ($field.strutsAction.tableAction)
     private java.util.List ${field.name}RowSelection = null;
 #elseif ($field.type.mapType)
-    private java.util.Map $field.name = new java.util.LinkedHashMap();
+    private java.util.Map $field.name = new java.util.HashMap();
 #elseif($field.widgetType=="money")
     private java.lang.String $field.name;
 #elseif($field.type.enumeration)
@@ -82,7 +77,6 @@ public class ${formBeanClassName}
 ## Adiciona um double para o caso do doubleSelect
 #if ($field.doubleSelect)
     private $field.type.fullyQualifiedName ${field.name}__Double;
-	private java.util.Map ${field.name}Map = null;
     public $field.type.fullyQualifiedName ${field.getterName}__Double()
     {
 	return this.${field.name}__Double;    
@@ -91,6 +85,8 @@ public class ${formBeanClassName}
     {
     	this.${field.name}__Double = ${field.name}__Double;
     }
+	private java.lang.Object[] ${field.valueListName}Double;
+	private java.lang.Object[] ${field.name}IndexListDouble;
 #end
 
 #if ($field.date)
@@ -105,18 +101,6 @@ public class ${formBeanClassName}
     private java.lang.Object[] ${field.labelListName}Double;    
     private java.lang.Object[] ${field.labelListName}Hints;
     private java.lang.Object[] ${field.labelListName}Destination;
-	#if(${field.widgetType}=="select" || ${field.radioButton})
-	public java.util.Map ${field.name}ComboList;
-	public java.util.Map ${field.getterName}ComboList()
-    {
-		if(${field.name}ComboList==null)${field.name}ComboList=new java.util.LinkedHashMap();
-        return ${field.name}ComboList;
-    }
-	public void ${field.setterName}ComboList(java.util.Map ${field.name}ComboList)
-    {
-		this.${field.name}ComboList = ${field.name}ComboList;
-    }
-	#end
 #end
 
     public ${formBeanClassName}(){
@@ -241,12 +225,12 @@ $field.getDocumentation("     * ")
        String s = null;
        try{
 	   if($fieldName != null){
-	   
+
 	   	String myFormat = "#,#" + "#" +"#.00";
-    	   	java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
-           	s = myFormatter.format($fieldName);
-           
-           	if(s.startsWith(",")){
+        java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, #if($field.moneyReal)simbolosDecimaisReal #elseif($field.moneyDolar)simbolosDecimaisDolar #end);
+        s = myFormatter.format($fieldName);
+
+        if(s.startsWith(#if($field.moneyReal)"," #elseif($field.moneyDolar)"." #end)){
 			s = "0"+s;
 	   	}
 	   	
@@ -264,11 +248,18 @@ $field.getDocumentation("     * ")
     public java.lang.Double ${field.getterName}As${asType}(){
     	if(this.$fieldName != null && !this.${fieldName}.equals("")){
     		java.lang.String $fieldName = this.$fieldName;
-    		$fieldName = ${fieldName}.replace(".", "");
-   		$fieldName = ${fieldName}.replace(",", ".");
-   		return new java.lang.Double($fieldName);
-   	}
-   	return null;
+   		
+#if ($field.moneyReal)
+            $fieldName = ${fieldName}.replace(".", "");
+            $fieldName = ${fieldName}.replace(",", ".");
+#elseif ($field.moneyDolar)
+            $fieldName = ${fieldName}.replace(",", "");
+            $fieldName = ${fieldName}.replace(".", ".");
+#end
+
+    		return new java.lang.Double($fieldName);
+    	}
+		return null;
     }
 
     
@@ -379,43 +370,17 @@ $field.getDocumentation("     * ")
     }
 
 #elseif ($field.file)
-    public void ${field.setterName}(java.io.File $fieldName)
+    public void ${field.setterName}(org.apache.struts.upload.FormFile $fieldName)
     {
         this.$fieldName = $fieldName;
     }
 
     /**
-	$field.getDocumentation("     * ")
+$field.getDocumentation("     * ")
      */
-    public java.io.File ${field.getterName}()
+    public org.apache.struts.upload.FormFile ${field.getterName}()
     {
         return this.$fieldName;
-    }
-	
-	 public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
-    {
-        this.${fieldName}ContentType = ${fieldName}ContentType;
-    }
-
-    /**
-	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}ContentType()
-    {
-        return this.${fieldName}ContentType;
-    }
-	
-	 public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
-    {
-        this.${fieldName}FileName = ${fieldName}FileName;
-    }
-
-    /**
-	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}FileName()
-    {
-        return this.${fieldName}FileName;
     }
 #elseif ($field.type.mapType)
 	public void ${field.setterName}Value(java.lang.String key, java.lang.Object value) 
@@ -452,66 +417,75 @@ $field.getDocumentation("     * ")
     #set($literalType = ${enumeration.literalType.fullyQualifiedName})
 #end
 
-    public $literalType ${field.getterName}()
-    {
-    	return this.${fieldName};
-    }
-    
-    public $type ${field.getterName}AsEnumeration()
-    {
-    	return ${type}.${enumeration.fromOperationName}(this.${fieldName});
-    }
-    
-    public void ${field.setterName}($literalType value)
-    {
-    	this.${fieldName} = new ${literalType}(value);
-    }
+public $literalType ${field.getterName}() 
+{
+	return this.${fieldName};
+}
+
+public $type ${field.getterName}AsEnumeration() 
+{
+	return ${type}.${enumeration.fromOperationName}(this.${fieldName});
+}
+
+public void ${field.setterName}($literalType value) 
+{
+	this.${fieldName} = new ${literalType}(value);
+}
 
 #else
 
 #if ($field.doubleSelect)
-    public void ${field.setterName}($fieldType $fieldName)
+public void ${field.setterName}($fieldType $fieldName)
     {
         this.$fieldName = $fieldName;
     }
-
-    public java.util.Map ${field.getterName}Map()
-    {
-    	return ${fieldName}Map;
-    }
-
-    public void ${field.setterName}Map(java.util.Map ${fieldName}Map, java.lang.String value, java.lang.String label, java.lang.String value2, java.lang.String label2)
+	
+	public void ${field.setterName}Map(java.util.Map ${fieldName}Map, java.lang.String value, java.lang.String label, java.lang.String value2, java.lang.String label2)
     {
     	java.util.Map temp = new java.util.LinkedHashMap();
 
-    	int i = 0 ,j = 0;
+    	int i = 0 , j = 0 , k = 0, size = 0;
+    	
+    	this.${field.valueListName} = new java.lang.Object[${fieldName}Map.keySet().size()];
+        this.${field.labelListName} = new java.lang.Object[${fieldName}Map.keySet().size()];
+        
+        
+        for (java.util.Iterator iterator = ${fieldName}Map.keySet().iterator(); iterator.hasNext();)
+    	{
+        	final java.lang.Object item = iterator.next();
+        	
+        	size += ((java.util.Collection)${fieldName}Map.get(item)).size();
+    	}
+        
+        this.${field.labelListName}Double = new java.lang.Object[size];
+        this.${field.valueListName}Double = new java.lang.Object[size];
+        this.${fieldName}IndexListDouble = new java.lang.Object[size];
 
-    	try{
-    		for (java.util.Iterator iterator = ${fieldName}Map.keySet().iterator(); iterator.hasNext(); i++)
+    	try
+    	{
+    		for (java.util.Iterator iterator = ${fieldName}Map.keySet().iterator(); iterator.hasNext();i++)
     		{
     			final java.lang.Object item = iterator.next();
-
-    			java.util.ArrayList doubleList = new java.util.ArrayList();
-
-    			LabelValue key = new LabelValue(org.apache.commons.beanutils.PropertyUtils.getProperty(item, label),
-    					org.apache.commons.beanutils.PropertyUtils.getProperty(item, value));
+    			
+    			this.${field.valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, value);
+                this.${field.labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, label);
 
     			for (java.util.Iterator iterator2 = ((java.util.Collection)${fieldName}Map.get(item)).iterator(); iterator2.hasNext(); j++)
     			{
     				final java.lang.Object item2 = iterator2.next();
-
-    				doubleList.add(new LabelValue(org.apache.commons.beanutils.PropertyUtils.getProperty(item2, label2),
-    						org.apache.commons.beanutils.PropertyUtils.getProperty(item2, value2)));
+    				
+    				this.${field.valueListName}Double[k+j] = org.apache.commons.beanutils.PropertyUtils.getProperty(item2, value2);
+                    this.${field.labelListName}Double[k+j] = org.apache.commons.beanutils.PropertyUtils.getProperty(item2, label2);
+                    this.${fieldName}IndexListDouble[k+j] = this.${field.valueListName}[i];
     			}
-    			temp.put(key, doubleList);
+    			k += j;
+    			j = 0;
     		}
     	}
     	catch (Exception ex)
         {
     		throw new java.lang.RuntimeException("${formBeanClassName}.set${fieldName}Map encountered an exception", ex);
         }
-    
-    	this.${fieldName}Map = temp;
     }
         
 #else
@@ -600,9 +574,15 @@ $field.getDocumentation("     * ")
     
     public $listType get${backingListMethod}Double()
     {
+#if ($field.doubleSelect)
+        $listType values = this.${valueListName}Double;
+        $listType labels = this.${labelListName}Double;
+        $listType labelsDouble = this.${field.name}IndexListDouble;
+#else
         $listType values = this.${valueListName};
         $listType labels = this.${labelListName};
-        $listType labelsDouble = this.${labelListName}Double;        
+        $listType labelsDouble = this.${labelListName}Double;
+#end
 
         if (values == null || values.length == 0)
         {
@@ -812,51 +792,33 @@ $field.getDocumentation("     * ")
         }
     }
 
-    public void set${backingListMethod}Internationalized(${servletPackage}.ViewContainer container, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty) {
-        set${backingListMethod}(items, valueProperty, labelProperty);
-
-#if(${field.widgetType}=="select" || ${field.radioButton})
-        java.util.Map ${field.name}Combo = new java.util.LinkedHashMap();
-#end
-        for(int i = 0; i < this.${labelListName}.length; i++) {
-            String messageText = container.getMessageText(this.${labelListName}[i].toString());
-            if(messageText != null)
-                this.${labelListName}[i] = messageText;
-#if(${field.widgetType}=="select" || ${field.radioButton})
-            ${field.name}Combo.put(this.${valueListName}[i], messageText);
-#end
-        }
-#if(${field.widgetType}=="select" || ${field.radioButton})
-        ${field.setterName}ComboList(${field.name}Combo);
-#end
-    }
-
-    public void set${backingListMethod}Internationalized(${servletPackage}.ViewContainer container, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty) {
-        set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
-
-#if(${field.widgetType}=="select" || ${field.radioButton})
-        java.util.Map ${field.name}Combo = new java.util.LinkedHashMap();
-#end
-        for(int i = 0; i < this.${labelListName}.length; i++) {
-            String messageText = container.getMessageText(this.${labelListName}[i].toString());
-            if(messageText != null)
-                this.${labelListName}[i] = messageText;
-#if(${field.widgetType}=="select" || ${field.radioButton})
-            ${field.name}Combo.put(this.${valueListName}[i], messageText);
-#end
-        }
-#if(${field.widgetType}=="select" || ${field.radioButton})
-        ${field.setterName}ComboList(${field.name}Combo);
-#end
-
-        for(int i = 0; i < this.${labelListName}Hints.length; i++) {
-            Object label = this.${labelListName}Hints[i];
-            String messageText = container.getMessageText(this.${labelListName}Hints[i].toString());
-            if(messageText != null)
-                this.${labelListName}Hints[i] = messageText;
-        }
-    }
-
+    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
+	set${backingListMethod}(items, valueProperty, labelProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.${labelListName}.length; i++){
+		Object label = this.${labelListName}[i];
+		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+	}
+    }	    
+    
+    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
+	set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
+	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+	for(int i = 0; i < this.${labelListName}.length; i++){
+		Object label = this.${labelListName}[i];
+		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+	}
+	for(int i = 0; i < this.${labelListName}Hints.length; i++){
+		Object label = this.${labelListName}Hints[i];
+		if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
+        		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
+	}
+    }	    
+    
     public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
     {
         if (valueProperty == null || labelProperty == null)
@@ -929,7 +891,7 @@ $field.getDocumentation("     * ")
 
 #end
     /**
-     * @see org.apache.struts.validator.ValidatorForm${hash}reset(org.apache.struts.action.ActionMapping,javax.servlet.http.HttpServletRequest)
+     * @see org.apache.struts.validator.ValidatorForm${sharp}reset(org.apache.struts.action.ActionMapping,javax.servlet.http.HttpServletRequest)
      */
     public void reset(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
     {
@@ -950,18 +912,6 @@ $field.getDocumentation("     * ")
 #end
 #if ($field.strutsAction.tableAction)
         this.${field.name}RowSelection = null;
-#end
-#end
-    }
-
-	/**
-     * @see org.apache.struts.validator.ValidatorForm${hash}resetCheckBoxes(org.apache.struts.action.ActionMapping,javax.servlet.http.HttpServletRequest)
-     */
-    public void resetCheckBoxes(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
-    {
-#foreach ($field in $fields)
-#if ($stringUtils.equals($field.widgetType,"checkbox"))
-        this.$field.name = $field.nullValue;
 #end
 #end
     }
@@ -1010,7 +960,7 @@ $field.getDocumentation("     * ")
     /**
      * Override to provide population of current form with request parameters when validation fails.
      *
-     * @see org.apache.struts.action.ActionForm${hash}validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
+     * @see org.apache.struts.action.ActionForm${sharp}validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
      */
     public org.apache.struts.action.ActionErrors validate(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
     {
@@ -1131,14 +1081,14 @@ $field.getDocumentation("     * ")
         }
     }
  
-    /** Verifica se o campo est� sendo exibido na tela */
+    /** Verifica se o campo esta sendo exibido na tela */
     public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
 	String modoPermitido = null;
 	java.util.StringTokenizer tokenizerModosPermitidos = null;
         java.util.StringTokenizer tokenizerModosPossuidos = null;
 #foreach ($field in $fields)
 #set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
-#if( $valueFieldOperationMode != "")
+#if($valueFieldOperationMode != "")
         if (field.equals("$field.name")) {
             if (modosOperacao == null || modosOperacao.isEmpty()) return false;
             tokenizerModosPermitidos = new java.util.StringTokenizer("$valueFieldOperationMode", ",");

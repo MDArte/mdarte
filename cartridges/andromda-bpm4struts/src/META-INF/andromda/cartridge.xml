@@ -279,6 +279,7 @@
         </modelElements>
     </template>
     
+    
     <template
         path="templates/bpm4struts/forms/ActionForm.java.vsl"
         outputPattern="$generatedFile"
@@ -712,7 +713,20 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"/>
-
+	
+	<template
+        path="templates/bpm4struts2/pages/menu.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        outputToSingleFile="true"/>
+        
+    <template
+        path="templates/bpm4struts2/pages/main-layout.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"/>
+	
     <template
         path="templates/bpm4struts/configuration/tiles-defs.xml.vsl"
         outputPattern="tiles-defs.xml"
@@ -852,6 +866,13 @@
 
     <template
         path="templates/bpm4struts/pages/messages.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        outputToSingleFile="true"/>
+        
+      <template
+        path="templates/bpm4struts2/pages/messages.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"
@@ -1243,6 +1264,23 @@
         outlet="controleAcessoImpl"
         overwrite="false"/>      
 
+	 <template
+        path="templates/bpm4struts2/pages/controleAcesso/entrar-login.css.vsl"
+        outputPattern="$secureDir/entrar-login.css"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>        
+
+    <template
+        path="templates/bpm4struts2/pages/controleAcesso/entrar-login.jsp.vsl"
+        outputPattern="$secureDir/entrar-login.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>   
+        
+    <template
+        path="templates/bpm4struts2/pages/controleAcesso/entrar-login-actions.jsp.vsl"
+        outputPattern="$secureDir/entrar-login-actions.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>
         
     <template
         path="templates/bpm4struts/pages/controleAcesso/troca-de-senha-obrigatoria.css.vsl"
@@ -1497,7 +1535,8 @@
             </modelElement>
         </modelElements>
     </template>
-      <template
+    
+    <template
         path="templates/bpm4struts2/configuration/validation.xml.vsl"
         outputPattern="$generatedFile"
         outlet="shared-configuration-struts2"
@@ -1570,7 +1609,121 @@
         </modelElements>
     </template>
     
-       <template
+    <template
+        path="templates/bpm4struts2/pages/page-fields.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-container.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+     <template
+        path="templates/bpm4struts2/pages/page.js.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-impl.js.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        overwrite="false"
+        outputOnEmptyElements="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-impl.js.vsl"
+        outputPattern="$generatedFile"
+        outlet="custom-pages"
+        overwrite="false"
+        outputOnEmptyElements="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        outputOnEmptyElements="false"
+        overwrite="true">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-impl.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="pages"
+        outputOnEmptyElements="false"
+        overwrite="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/page-impl.css.vsl"
+        outputPattern="$generatedFile"
+        outlet="custom-pages"
+        outputOnEmptyElements="false"
+        overwrite="false">
+        <modelElements variable="jsp">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
         path="templates/bpm4struts2/pages/page-table.jspf.vsl"
         outputPattern="$generatedFile"
         outlet="pages"
@@ -1584,7 +1737,8 @@
             </modelElement>
         </modelElements>
     </template> 
-        <template
+    
+    <template
         path="templates/bpm4struts2/forms/ActionForm.java.vsl"
         outputPattern="$generatedFile"
         outlet="forms"

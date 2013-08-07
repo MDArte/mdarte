@@ -39,5 +39,34 @@
                 <jar.manifest.classpath>true</jar.manifest.classpath>
             </properties>
         </dependency>
+		#if($controleAcesso)
+		<dependency>
+			<groupId>ControleAcesso</groupId>
+			<artifactId>ControleAcesso-dominio-core</artifactId>
+			<version>${controle.acesso.version}</version>
+    		<properties>
+    			<ejb.manifest.classpath>false</ejb.manifest.classpath>
+    		</properties>
+    		<type>jar</type>
+		</dependency>
+    	<dependency>
+    		<groupId>ControleAcesso</groupId>
+    		<artifactId>ControleAcesso-common</artifactId>
+    		<version>${controle.acesso.version}</version>
+    		<type>jar</type>
+    		<properties>
+    			<ejb.manifest.classpath>true</ejb.manifest.classpath>
+    		</properties>
+    	</dependency>
+    	<dependency> 
+            <groupId>ControleAcesso</groupId>
+            <artifactId>ControleAcesso-compartilhado</artifactId>
+            <version>${controle.acesso.version}</version>
+            <type>ejb</type>
+            <properties>
+      			<ejb.manifest.classpath>true</ejb.manifest.classpath>
+  			</properties>
+  		</dependency>
+    	#end
     </dependencies>
 </project>

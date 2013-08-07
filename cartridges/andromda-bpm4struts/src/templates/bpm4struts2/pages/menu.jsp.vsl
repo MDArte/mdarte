@@ -1,0 +1,72 @@
+#if(!$jsp.oldStruts)
+#set ($generatedFile = "menu/menu.jsp")
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Iterator"%>
+<%@ include file="/taglib-imports.jspf" %>
+
+
+<% String url = request.getScheme( ) + "://" + request.getServerName( ) + 
+		                   (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "" );   
+		                   url += "${contextoPrincipal}"; %>
+
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($securityEnabled) 
+<SCRIPT LANGUAGE="Javascript"> 	 
+function sair( )
+{
+	    var msg = <%out.print("\"");%><bean:message key="saida.sistema.confirma.saida"/><%out.print("\"");%>;
+    if( confirm( msg ) ) 
+        window.location = "<%=url%>/${secureDir}/SaidaSistema.do";
+}  	
+</script> 
+
+#else
+<SCRIPT LANGUAGE="Javascript"> 	 
+function closeWindow() {
+window.open('','_parent','');
+window.close();
+}
+</script>
+#end
+
+<!--<div id="barraNav1">
+	<div id="breadCrumb">
+		<%
+			Iterator breadCrumbIt = null;
+			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb"); 
+			
+			if (breadCrumbCollection != null){
+				
+				breadCrumbIt = breadCrumbCollection.iterator();
+				 
+				while (breadCrumbIt.hasNext()) {	   
+				
+	
+					out.print(breadCrumbIt.next().toString());
+	
+	
+				} 
+			}
+		
+		%>
+	</div>
+
+</div>--> 
+<% 
+       	java.util.HashMap paramsPrincipal = new java.util.HashMap();
+		paramsPrincipal.put("modulo", "");
+		paramsPrincipal.put("path","");
+		pageContext.setAttribute("paramsPrincipal", paramsPrincipal);
+%>
+ <div class="masthead">
+	<ul class="nav nav-pills pull-right">
+		<li class="active"><html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page">Home</html:link></li>
+		<li><a href="<%=url%>/secure/TrocaDeSenhaObrigatoriaProcessar.do?menu=true"><bean:message key="login.troca.de.senha.title"/></a></li>
+		<li><a href="<%=url%>/secure/NovaConexao.do" >
+						<bean:message key="login.sair.link"/>
+						<%-- <span class='menuFechar'/> --%>
+		    </a></li>
+	</ul>
+	<h3 class="muted">${projectId}</h3>
+</div>        
+#end

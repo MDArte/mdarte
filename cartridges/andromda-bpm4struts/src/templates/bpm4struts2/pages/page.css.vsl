@@ -1,0 +1,5 @@
+#if(!$jsp.oldStruts)
+#set ($generatedFile = "${jsp.fullPath}.css")
+/* Arquivo gerado dinamicamente, não o modifique manualmente, 
+	qualquer mudança feita será sobrescrita na prómixa geração */
+#end

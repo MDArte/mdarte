@@ -608,6 +608,14 @@
                         question="Would you like to enable security? (enter 'yes' or 'no')?"
                         answer="securityAnswer"/>
                 </j:while>
+                <j:if test="${securityAnswer eq 'yes'}">
+                        <j:while test="${(controleAcessoAnswer ne 'yes' and controleAcessoAnswer ne 'no')}" >
+                        	<i:ask question="Would you like to use MDArte's default Controle Acesso (enter 'yes' or 'no') ?" answer="controleAcessoAnswer" />
+                        </j:while>
+                        <j:if test="${controleAcessoAnswer eq 'yes'}">
+                        	<j:set var="controleAcessoDefault" value="${controleAcesso eq 'yes'}"/>
+                        </j:if>
+                </j:if>
             </j:when>
         </j:choose>
 
@@ -736,6 +744,7 @@
         <j:set var="junit" value="${junitComponent eq 'yes'}"/>
         <j:set var="selenium" value="${seleniumComponent eq 'yes'}"/>
         <j:set var="securityEnabled" value="${securityAnswer eq 'yes'}"/>
+        <j:set var="controleAcesso" value="${controleAcessoAnswer eq 'yes'}"/>
 
         <j:new var="stringUtils" className="org.apache.commons.lang.StringUtils"/>
 

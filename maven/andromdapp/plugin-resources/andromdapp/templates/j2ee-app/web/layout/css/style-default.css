@@ -1,0 +1,54 @@
+html, body {
+	min-width: 1024px;
+	min-height: 768px;
+}
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+input[type=text]
+{
+	height: 26px;
+}
+
+input[type=radio],input[type=checkbox]
+{
+	display:block;
+	float:left;
+}
+
+div.multibox label.checkboxLabel {
+	display: block;
+	float:left;
+}
+
+div.checkbox label.checkboxLabel {
+	float: left;
+	margin-right: 40px;
+}
+
+.clear{
+	clear:both;
+}
+
+div.radio label {
+	float:left;
+	margin-right:40px;
+}
+
+div.radio label.radioLabel {
+	display: block;
+	float: left;
+}
+
+div.multibox label.checkboxLabel {
+	margin-right: 25px;
+	margin-left: 10px;
+}
+
+div.radio div.checkbox {
+	margin-left: 0px;
+	padding-left: 0px;
+}

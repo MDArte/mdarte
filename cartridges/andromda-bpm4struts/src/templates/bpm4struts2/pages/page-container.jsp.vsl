@@ -1,0 +1,87 @@
+#if(!${jsp.oldStruts})
+#set($generatedFile = "${jsp.fullPath}-container.jsp")
+
+#parse("templates/bpm4struts2/pages/page.jsp.vm")
+#set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+
+<%@ include file="/taglib-imports.jspf"%>
+<%@ include file="/layout-configuration.jsp"%>
+## Codigo acrescentado para pegar action que contï¿½m parametros ##
+#if ($jsp.actions.size() > 0)
+	
+#set ($action = $jsp.actions.get(0))
+#set($achou = "false")
+
+#foreach($_action in $jsp.actions)
+#if(!$achou.equals("true"))
+#if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
+#set($action = $_action)
+#set($achou = "true")
+#end
+#end
+#end
+
+#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
+#set ($clientValidationDesired = ($clientValidation=='true'))
+#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
+#set ($hints = $hints.equalsIgnoreCase("true"))
+
+#set($achou = false)
+
+#foreach($jspAction in $jsp.actions)
+#if($jspAction.hasStereotype("$enterAction"))
+#if(!$jspAction.tableLink && $jspAction.formPost && !$achou)
+#set($defaultAction = $jspAction)
+#set($achou = true)
+#end
+#end
+#end
+#end
+## fim do codigo
+#end
+
+
+
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+#if($jsp.temTabela)
+			<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
+#end
+	        <div id="form">
+#set ($messageKey = $action.messageKey)
+#set ($actionTrigger = $action.actionTrigger)
+            	<div id="$action.styleId" class="action">
+                	<div class="trigger">
+#if ($action.tableAction)## this means this action allows rows to be selected and sent
+                    	<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
+            				<s:actionerror />
+								<%@ include file="${jsp.fullPath}-actions.jsp" %>
+							</s:form>
+#elseif (($action.formPost || $action.hyperlink))
+#if ($action.actionParameters.empty)
+		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+                		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">
+							<s:actionerror />
+								<%@ include file="${jsp.fullPath}-actions.jsp" %>
+						</s:form>
+#else
+						<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" >
+							<s:actionerror />
+								<%@ include file="${jsp.fullPath}-fields.jsp" %>
+								<%@ include file="${jsp.fullPath}-actions.jsp" %>
+						</s:form>
+#end
+#end
+					</div>
+				</div>
+			</div>
+#set($name = $jsp.name)
+	        <script src="${name.toString().toLowerCase().replace(' ', '-')}.js"></script>
+			<script src="${name.toString().toLowerCase().replace(' ', '-')}-impl.js"></script>
+		</div>
+	</div>
+</div>
+#end

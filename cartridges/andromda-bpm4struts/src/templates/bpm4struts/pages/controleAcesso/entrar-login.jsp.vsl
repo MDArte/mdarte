@@ -1,3 +1,4 @@
+#if($jsp.oldStruts)
 <%@ include file="/taglib-imports.jspf" %>
 
 
@@ -39,3 +40,4 @@
 </tiles:put>
 
 </tiles:insert>
+#end

@@ -1,3 +1,4 @@
+#if(!${table.jsp.oldStruts})
 #parse("templates/bpm4struts2/pages/page.jsp.vm")
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
@@ -8,6 +9,7 @@
 #if($table.oldStruts)
 #set($gerarJSP = false)	
 #end
+#set($indent="	")
 #if($gerarJSP)
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
@@ -27,37 +29,14 @@
   out.println("</script>");
 %>
 
-           <script>
-		   $(function(){
-   				$("#${table.name}").displayTagAjax();
-				})
-               function setaParametros${table.name}(param1, param2) {
-               		document.${table.name}.action = "";
-			document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-			document.${table.name}.name=param1;						   
-			document.${table.name}.submit(); 
-			return true;                
-               }
-			function selecionaDeseleciona(){
-				var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
-                var setChecked;
-                if(boxes.length==0){
-                    boxes.checked=!boxes.checked;
-                }else{
-                    setChecked = !boxes[0].checked;
-                }
-               
-                for(var i=0;i<boxes.length;i++)
-                    boxes[i].checked=setChecked;
-            }
-           </script>
+         
 
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
     <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
 #end
 #set ($displayTableName = "form.${table.name}")
-    <display:table name="${${displayTableName}}" id="row" class="row"
+    <display:table name="${${displayTableName}}" id="row" class="table table-bordered table-striped"
         ##requestURIAction -> ação a ser utilizada no link "NEXT" na paginação
         requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
 #if ($table.tableDecoratorRequired)
@@ -168,30 +147,24 @@
 ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
             
-            #if($valueConfirmMessage !="")
-            <input type="button"  #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end id="form_submit" onclick="confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false" name="$action.formBeanName">
+#if($valueConfirmMessage !="")
+            <input id="${action.actionTrigger.name}" class="btn btn-mini" type="button"  name="$action.formBeanName">
 	           <s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
             </input>  
-            #else
+#else
 				
-				#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
-			<input type="button" 
-				onclick="setaAcaoForm('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', this.form )"
-				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
-                name="${action.actionName}"> 
+#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
+			<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button" name="${action.actionName}"> 
 				<s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
 			</input>
-				#else
-					<input type="button" 
-				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
-				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
-                property="${action.actionName}"> 
+#else
+					<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button" property="${action.actionName}"> 
 				<s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
 			</input>
-            #end  
-            #end        
+#end  
+#end        
      
-            <input type="button" onclick="selecionaDeseleciona();"/><s:property value="%{getText('select.deselect.all')}" /></input>
+            <input type="button" class="btn btn-mini select-deselect" /><s:property value="%{getText('select.deselect.all')}" /></input>
 #if ($securityEnabled) 
 ${indent}   </security:containsPermission>
 #end    
@@ -204,4 +177,5 @@ ${indent}   </security:containsPermission>
 #end
 </div>
 
+#end
 #end

@@ -36,6 +36,7 @@ maven.andromda.ejb.dir=${maven.src.dir}/../../core/cs
 
 maven.andromda.web.modulo.generated.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/target/src
 maven.andromda.web.modulo.manual.java.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/src/java
+maven.andromda.web.modulo.manual.jsp.dir=${maven.src.dir}/../../web/${maven.andromda.module.name.outlet.replace}/src/jsp
 
 maven.andromda.web.manual.jsp.dir=${maven.src.dir}/../../web/modelo/compartilhado/src/jsp
 
@@ -57,6 +58,7 @@ maven.andromda.core.manual.dir=${maven.src.dir}/../../core/src/java
 
 maven.andromda.web.generated.dir=${maven.src.dir}/../../web/target/src
 maven.andromda.web.manual.java.dir=${maven.src.dir}/../../web/src/java
+maven.andromda.web.custom.jsp.dir=${maven.src.dir}/../../web/src/jsp
 maven.andromda.web.manual.jsp.dir=${maven.src.dir}/../../web/src/jsp/layout/default
 maven.andromda.web.controle.acesso.principal.dir=${maven.src.dir}/../../web/target/src
 maven.andromda.web.src.dir=${maven.src.dir}/../../web/src/java

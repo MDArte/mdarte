@@ -1,3 +1,6 @@
 <%@ page session="false" %>
+<!-- Coloque aqui o rodape -->
 
-</div> ## Este div fecha o div onde o conteudo da tela é exibido. 
+<div class="footer">
+	<p>&copy; projetoTest 2013</p>
+</div>

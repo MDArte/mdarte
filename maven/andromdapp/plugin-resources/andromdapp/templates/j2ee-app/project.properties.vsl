@@ -16,7 +16,7 @@ dataSource=java:/${dataSource.name}
 
 # Properties for management of the database schema, 
 # ignore if you setup/drop your schema manually
-dataSource.driver.jar=${env.JBOSS_HOME}/server/default/lib/hsqldb.jar
+dataSource.driver.jar=${env.JBOSS_HOME}/server/default/lib/postgresql-9.1-902.jdbc3.jar
 dataSource.driver.class=org.hsqldb.jdbcDriver
 dataSource.url=jdbc:hsqldb:hsql://127.0.0.1:1701
 dataSource.user=sa
@@ -31,25 +31,28 @@ dataSource.sql.onError=continue
 # For MySql use: MySQL
 # For Hypersonic use: HypersonicSql
 # For Oracle9i use: Oracle9i
-sql.mappings=HypersonicSql
+sql.mappings=PostgreSQL
 
 #if ($hibernate || $spring)
 #if ($hibernateVersion == "2")
 # For MySql use: net.sf.hibernate.dialect.MySQLDialect
 # For Hypersonic use: net.sf.hibernate.dialect.HSQLDialect
 # For Oracle9i use: net.sf.hibernate.dialect.Oracle9Dialect
-hibernate.db.dialect=net.sf.hibernate.dialect.HSQLDialect
+hibernate.db.dialect=net.sf.hibernate.dialect.PostgreSQLDialect
 #else
 # For MySql use: org.hibernate.dialect.MySQLDialect
 # For Hypersonic use: org.hibernate.dialect.HSQLDialect
 # For Oracle9i use: org.hibernate.dialect.Oracle9Dialect
-hibernate.db.dialect=org.hibernate.dialect.HSQLDialect
+hibernate.db.dialect=org.hibernate.dialect.PostgreSQLDialect
 #end
 #end
 #if ($ejb)
 
 # Change this to the correct database type mappings (for Jboss)
-jboss.typeMappings=Hypersonic SQL
+jboss.typeMappings=PostgreSQL
 #end
 
+# For MySql use: native
 defaultHibernateGeneratorClass=sequence
+
+

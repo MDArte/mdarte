@@ -1,0 +1,8 @@
+#if(!${jsp.oldStruts})
+#set ($generatedFile = "${jsp.fullPath}-impl.js")
+
+$(document).ready(function(){ 
+	//Coloque o JavaScript customizado aqui
+
+});
+#end
