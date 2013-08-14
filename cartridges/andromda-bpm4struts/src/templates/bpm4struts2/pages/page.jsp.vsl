@@ -1,0 +1,208 @@
+<%
+	#set($useCaseName = $jsp.useCase.name)
+	#set($jspName = $jsp.name)
+	Object form = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${useCaseName}.${jspName}");
+	request.getSession().setAttribute("$jsp.useCase.formKey", form);
+	request.setAttribute("$jsp.useCase.formKey", form);
+
+	// Script para setar a cao correspondente do botao no form
+	String nomeProjeto = request.getContextPath(); 
+	out.println("<script>");
+	out.println("function getPath(){return \""+nomeProjeto+"\";}");
+	out.println("</script>");
+%>
+
+#parse("templates/bpm4struts/pages/page.jsp.vm")
+#set ($generatedFile = "${jsp.fullPath}.jsp")
+##
+##  START TEMPLATE
+##
+#set ($hasTable = false)
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+#foreach ($variable in $jsp.pageVariables)
+#if ($variable.table)
+#set ($hasTable = true)
+#end
+#end
+
+## #if ($maxBreadCrumbs != "0")
+## <breadcrumbs:resize size="$maxBreadCrumbs"/>
+## <breadcrumbs:add value="$jsp.titleKey"/>
+## #end
+#if(!${jsp.oldStruts})
+<script>
+function atualizaElementos(){
+	#foreach ($variable in $jsp.pageVariables)
+	#if ($variable.table)
+		$("#${variable.name}").displayTagAjax();
+	#end
+	#end
+		$('#tabs').easytabs(); 
+	}
+</script>
+#end
+
+
+#if ($xhtml == "true")
+<html:xhtml/>
+
+#end
+
+#set ($webLayoutName = ${jsp.useCase.webLayoutName})
+#if ($stringUtils.isNotBlank($webLayoutName))
+<tiles:insert definition="${webLayoutName}">
+#else
+#if($jsp.useCase.hasStereotype("$simpleUseCase"))
+<tiles:insert definition="simple.layout">
+#else
+<tiles:insert definition="main.layout">
+#end
+#end
+
+##
+##  SETS THE TITLE
+##
+#if(!${jsp.oldStruts})
+    <tiles:put name="head" type="string">
+        <sj:head jqueryui="true" jquerytheme="cupertino"/>
+    </tiles:put>
+
+#end
+    <tiles:put name="title" type="string">
+        <bean:message key="$jsp.titleKey"/>
+    </tiles:put>
+
+
+
+<tiles:put name="style" type="string">
+<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+
+#if ($jsp.calendarRequired)
+<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
+#end
+    </tiles:put>
+
+##if($jsp.oldStruts)
+<%@ include file="${jsp.fullPath}-javascript.jspf" %>
+##end
+##
+##  SETS THE BODY OF THIS PAGE
+##
+    	
+    <tiles:put name="body" type="string">
+
+<div id="pathway">
+#if($jsp.generateHelp)
+#if($jsp.generateHelpLink)
+#if($jsp.HelpLinkModoOperacao)
+<% boolean achouModo = false; %>
+#foreach ($helpLink in $jsp.helpLinkList)
+#if ($helpLink.modoOperacaoSet)
+   <security:containsOperationMode value="$helpLink.modoOperacao">
+      <html:link href="" onclick="window.open('$helpLink.link','','')">
+   	     <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+      </html:link>
+      <% achouModo = true; %>
+   </security:containsOperationMode>
+#else
+   <% if (!achouModo) { %>
+   ## fazer alguma checagem
+     <html:link href="" onclick="window.open('$helpLink.link','','')">
+   	    <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+     </html:link>
+   <% } %>     
+#end	
+#end
+#else
+   <html:link href="" onclick="window.open('$jsp.helpLink','','')">   
+      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+   </html:link>
+#end
+#else
+   <a href="javascript:window.open('${layoutPath}/help.jsp','','height=600,width=600,scrollbars=yes');void(0);">
+      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+   </a>
+#end
+#end
+
+#if ($jsp.onlineHelp)
+	<div id="helpLink">
+            <a href="" id="pageHelp" style="display:inline;" onclick="openWindow('${contextoPrincipal}${jsp.onlineHelpActionPath}.do','onlinehelp',true,false,760,540); return false;">
+                <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+            </a>
+    </div>
+#end
+
+   <bean:message key="$jsp.titleKey"/>
+
+</div>
+
+#if ($setPageVariablesInPageScope == "true" && $jsp.pageVariables.size() > 0)
+        <%@ include file="${jsp.fullPath}-vars.jspf" %>
+#end
+
+
+
+#if ($jsp.actions.size() > 0)
+#set($achou = "false")
+#foreach($action in $jsp.actions)
+#if(!$achou.equals("true"))
+#if (!$action.tableLink)
+        <tiles:insert page="${jsp.fullPath}-actions.jsp" flush="false"/>
+        #set($achou = "true")
+#end
+#end
+#end
+#end
+
+
+
+#if($jsp.oldStruts)
+#foreach ($variable in $jsp.pageVariables)
+## tables that have actions targetting them globally will include them in the corresponding JSP fragment, not here
+#if ($variable.table)
+        <%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
+#end
+#end
+#elseif($jsp.temTabela)
+	<div id="divTabelas">
+	<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
+	</div>
+#end
+
+        <div id="pageHelpSection">
+	<blockquote>
+	#set ($actionParameters = $jsp.allUniqueActionParameters )
+	#set($flag=0)
+	#foreach($field in $actionParameters)
+		#if($field.required)
+			#if ($jsp.validationRequired && ($clientValidation=='true' || $serverValidation=='true'))
+                	#set($flag=1)
+			#end
+		#end
+	#end
+
+	#if($flag > 0)
+		<bean:message key="required.fields.asterisk"/>
+	#end
+
+</blockquote>
+       </div>
+	         
+   </tiles:put>
+</tiles:insert>
+
+##if(! $jsp.oldStruts)
+##	<script>
+##$(document).ready(function() {
+##	$('.row').dataTable({"oLanguage": {
+##			"sLengthMenu": "Exibir _MENU_ registros por p&aacute;gina",
+##			"sZeroRecords": "Nenhum registro foi encontrado",
+##			"sInfo": "Exibindo de _START_ at&eacute; _END_ de _TOTAL_ registros",
+##			"sInfoEmpty": "",
+##			"sInfoFiltered": "(filtrado de _MAX_ registros)"
+##		}});
+##} );
+##</script>
+##end

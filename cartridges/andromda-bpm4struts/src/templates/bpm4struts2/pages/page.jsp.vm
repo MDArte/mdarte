@@ -436,6 +436,12 @@
         <input  class="span2" type="text" id="${field.name}${action.useCase.name}" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
 		<span class="add-on"><i class="icon-th"></i></span>
 	</div>
+#elseif ( $field.textField && $field.autoComplete )
+	<div id="div${field.name}${action.useCase.name}" class="textfield field autocomplete">
+	#if ($requiredness && $field.required)<!--<nobr>--><label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label><!--</nobr>-->#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
+	#end
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{#form.$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+	</div>
 #elseif ( ($field.textField) )
 	<div id="div${field.name}${action.useCase.name}" class="textfield field">
 	#if ($requiredness && $field.required)<!--<nobr>--><label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label><!--</nobr>-->#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>

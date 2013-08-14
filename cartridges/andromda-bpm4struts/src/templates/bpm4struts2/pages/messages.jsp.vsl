@@ -20,7 +20,7 @@
             java.io.PrintStream ps = new java.io.PrintStream(baos);
             e.printStackTrace(ps);
             String stackTrace = baos.toString();
-            request.getSession().getServletContext().getContext("/SistemaAcademico").setAttribute("stackTrace", stackTrace);
+            request.getSession().getServletContext().getContext("/$projectId").setAttribute("stackTrace", stackTrace);
     %>
 					 		          
         <script> 

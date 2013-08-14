@@ -3,6 +3,7 @@
 #if ($jsp.actions.size() > 0)
 #set ($action = $jsp.actions.get(0))
 #set($achou = "false")
+#set($dollar = "$")
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
 #if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
@@ -144,12 +145,12 @@ function verificaDesabilitados() {
     <!--Operacao de tornar visivel-->    
 function verificaVisiveis() {
           
-          #foreach ($field in $actionParameters)
-          #if($field.visivelPor)
+#foreach ($field in $actionParameters)
+#if($field.visivelPor)
           if(
-          #foreach($visivelPor in $field.visivelPor)
+#foreach($visivelPor in $field.visivelPor)
           #if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
-          #end
+#end
           ){
           	document.getElementById('tr-$field.styleId').style.display ='';
      	  }else {
@@ -334,7 +335,7 @@ $(document).ready(function(){
 	
 //Fim do Javascript da tabela $table.name
 #end
-
+$projectId
 //Javascript dos fields
 #foreach($field in $jsp.allUniqueActionParameters)
 #set ($quote ='"')
@@ -350,6 +351,16 @@ $(document).ready(function(){
 #end
 #if($field.radioButton || ($field.textField && $field.calendarRequired))
 	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
+	
+#elseif($field.textfield && $field.autoComplete)
+#set($url="/$projectId/${jsp.useCase.name}/${field.autoComplete.actionName}.action")
+	$("input#${field.name}${jsp.useCase.name}").typeahead({
+	    source: function (query, process) {
+	        return ${dollar}.get("$url", { query: query }, function (data) {
+	            return process(data.options);
+	        });
+	    }
+	});
 	
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });

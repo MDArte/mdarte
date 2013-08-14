@@ -94,7 +94,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 //			{
 //				if(forward != null && forward.getPath().startsWith("/secure"))
 //				{
-//					url = "https://" + (request.getServerName() + ":" + request.getSession().getServletContext().getAttribute("httpsPort") + "//SistemaAcademico" + forward.getPath()).replaceAll("//", "/");
+//					url = "https://" + (request.getServerName() + ":" + request.getSession().getServletContext().getAttribute("httpsPort") + "//$projectId" + forward.getPath()).replaceAll("//", "/");
 //				}
 //				else
 //				{

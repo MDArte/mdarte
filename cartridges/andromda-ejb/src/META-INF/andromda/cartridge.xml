@@ -50,6 +50,7 @@
 	<property reference="oAuthServer"/>
 	<property reference="dataSourceName"/>
 	<property reference="ejb3"/>
+	<property reference="controleAcessoDefault"/>
 
 	<!-- cartridge-resource merge-point -->    
     

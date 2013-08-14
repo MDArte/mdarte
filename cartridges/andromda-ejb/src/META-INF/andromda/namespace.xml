@@ -207,6 +207,11 @@
                 <documentation>
                     Nome do pacote de trasnferencia.
                 </documentation>
+            </property>
+            <property name="controleAcessoDefault">
+            	<documentation>
+            		Necessidade da geração do ControleAcessoImpl já implementado.
+            	</documentation>
             </property>                                 
             <property name="controleAcessoDir">
                 <default>accessControl</default>
