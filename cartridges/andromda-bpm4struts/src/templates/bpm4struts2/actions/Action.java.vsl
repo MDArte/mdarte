@@ -18,12 +18,12 @@
 #macro (saveMessages $transition $indent)
 #if ($transition.successMessagesPresent)
 #foreach ($message in $transition.successMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveSuccessMessage(request, "$message.key");
+${indent}${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().saveSuccessMessage(request, "$message.key");
 #end
 #end
 #if ($transition.warningMessagesPresent)
 #foreach ($message in $transition.warningMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveWarningMessage(request, "$message.key");
+${indent}${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().saveWarningMessage(request, "$message.key");
 #end
 #end
 #end
@@ -567,7 +567,7 @@ $actionState.getDocumentation("	 * ")
 			length = in.read(dados); 
 		}
 
-		#processTransition($actionState.forward)
+		#processTransitionStruts2($actionState.forward)
 		}
 		catch (Exception e)
 		{
@@ -584,15 +584,17 @@ $actionState.getDocumentation("	 * ")
 	/**
 $decisionTransition.getDocumentation("	 * ")
 	 */
-	private org.apache.struts.action.ActionForward ${decisionMethodName}(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
+	private String ${decisionMethodName}(org.apache.struts.validator.ValidatorForm form) throws java.lang.Exception
 	{
-		org.apache.struts.action.ActionForward forward = null;
+		String forward = null;
+		String redirect ="";
 #if (!$action.actionFormFields.empty)
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, ($formBeanClassName)form, request, response));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}((${decisionTransition.operationCall.interfaceName}) form, new Struts2ViewContainer(this, request, response)));
 #else
 		// we pass an empty form implementation to the controller, we know there are no parameters on this operation because the
 		// cartridge would have issued a model validation error
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
+		//final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}(new ${decisionTransition.operationCall.interfaceName}(){}, new Struts2ViewContainer(this, request, response)));
 #end
 
 #set ($defaultOutcome = false)## keeps track of the last transition
@@ -604,7 +606,7 @@ $decisionTransition.getDocumentation("	 * ")
 		###processOperationMode($outcome ${action.useCase.name})
 		#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 		#processTableNameList($outcome)
-			#processTransition($outcome)
+			#processTransitionStruts2($outcome)
 			return forward;
 		}
 #end
@@ -613,7 +615,7 @@ $decisionTransition.getDocumentation("	 * ")
 		## #processOperationMode($defaultOutcome)
 		#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 		#processTableNameList($defaultOutcome)
-		#processTransition($defaultOutcome)
+		#processTransitionStruts2($defaultOutcome)
 		return forward;
 	}
 
