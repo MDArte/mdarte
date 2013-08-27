@@ -1,4 +1,6 @@
 #if(!$jsp.oldStruts)
+#set ($generatedFile = "messages/messages.jsp")
+
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
 
@@ -25,7 +27,7 @@
 					 		          
         <script> 
             function stackTrace() { 
-                window.open('/SistemaAcademico/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
+                window.open('/$projectId/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
             }	
         </script>    				                     
     <%
