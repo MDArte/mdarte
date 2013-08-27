@@ -1,3 +1,5 @@
+#if(!$jsp.oldStruts)
+
 <%
 	#set($useCaseName = $jsp.useCase.name)
 	#set($jspName = $jsp.name)
@@ -12,7 +14,7 @@
 	out.println("</script>");
 %>
 
-#parse("templates/bpm4struts/pages/page.jsp.vm")
+#parse("templates/bpm4struts2/pages/page.jsp.vm")
 #set ($generatedFile = "${jsp.fullPath}.jsp")
 ##
 ##  START TEMPLATE
@@ -26,10 +28,6 @@
 #end
 #end
 
-## #if ($maxBreadCrumbs != "0")
-## <breadcrumbs:resize size="$maxBreadCrumbs"/>
-## <breadcrumbs:add value="$jsp.titleKey"/>
-## #end
 #if(!${jsp.oldStruts})
 <script>
 function atualizaElementos(){
@@ -63,12 +61,11 @@ function atualizaElementos(){
 ##
 ##  SETS THE TITLE
 ##
-#if(!${jsp.oldStruts})
-    <tiles:put name="head" type="string">
-        <sj:head jqueryui="true" jquerytheme="cupertino"/>
-    </tiles:put>
 
-#end
+    ##<tiles:put name="head" type="string">
+        ##<sj:head jqueryui="true" jquerytheme="flick"/>
+    ##</tiles:put>
+
     <tiles:put name="title" type="string">
         <bean:message key="$jsp.titleKey"/>
     </tiles:put>
@@ -77,6 +74,7 @@ function atualizaElementos(){
 
 <tiles:put name="style" type="string">
 <link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
 
 #if ($jsp.calendarRequired)
 <link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
@@ -92,6 +90,7 @@ function atualizaElementos(){
     	
     <tiles:put name="body" type="string">
 
+	    <hr/>
 <div id="pathway">
 #if($jsp.generateHelp)
 #if($jsp.generateHelpLink)
@@ -134,7 +133,7 @@ function atualizaElementos(){
     </div>
 #end
 
-   <bean:message key="$jsp.titleKey"/>
+   <h2><bean:message key="$jsp.titleKey"/></h2>
 
 </div>
 
@@ -142,67 +141,28 @@ function atualizaElementos(){
         <%@ include file="${jsp.fullPath}-vars.jspf" %>
 #end
 
+	    <tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
 
 
-#if ($jsp.actions.size() > 0)
-#set($achou = "false")
-#foreach($action in $jsp.actions)
-#if(!$achou.equals("true"))
-#if (!$action.tableLink)
-        <tiles:insert page="${jsp.fullPath}-actions.jsp" flush="false"/>
-        #set($achou = "true")
+	<div id="pageHelpSection">
+		<blockquote>
+#set ($actionParameters = $jsp.allUniqueActionParameters )
+#set($flag=0)
+#foreach($field in $actionParameters)
+#if($field.required)
+#if ($jsp.validationRequired && ($clientValidation=='true' || $serverValidation=='true'))
+#set($flag=1)
 #end
 #end
 #end
+
+#if($flag > 0)
+		    <bean:message key="required.fields.asterisk"/>
 #end
 
-
-
-#if($jsp.oldStruts)
-#foreach ($variable in $jsp.pageVariables)
-## tables that have actions targetting them globally will include them in the corresponding JSP fragment, not here
-#if ($variable.table)
-        <%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
-#end
-#end
-#elseif($jsp.temTabela)
-	<div id="divTabelas">
-	<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
-	</div>
-#end
-
-        <div id="pageHelpSection">
-	<blockquote>
-	#set ($actionParameters = $jsp.allUniqueActionParameters )
-	#set($flag=0)
-	#foreach($field in $actionParameters)
-		#if($field.required)
-			#if ($jsp.validationRequired && ($clientValidation=='true' || $serverValidation=='true'))
-                	#set($flag=1)
-			#end
-		#end
-	#end
-
-	#if($flag > 0)
-		<bean:message key="required.fields.asterisk"/>
-	#end
-
-</blockquote>
-       </div>
+		</blockquote>
+   </div>
 	         
    </tiles:put>
 </tiles:insert>
-
-##if(! $jsp.oldStruts)
-##	<script>
-##$(document).ready(function() {
-##	$('.row').dataTable({"oLanguage": {
-##			"sLengthMenu": "Exibir _MENU_ registros por p&aacute;gina",
-##			"sZeroRecords": "Nenhum registro foi encontrado",
-##			"sInfo": "Exibindo de _START_ at&eacute; _END_ de _TOTAL_ registros",
-##			"sInfoEmpty": "",
-##			"sInfoFiltered": "(filtrado de _MAX_ registros)"
-##		}});
-##} );
-##</script>
-##end
+#end
