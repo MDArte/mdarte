@@ -870,13 +870,13 @@
         outlet="shared-pages-impl"
         overwrite="false"
         outputToSingleFile="true"/>
-        
+<!--         
       <template
         path="templates/bpm4struts2/pages/messages.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"
-        outputToSingleFile="true"/>
+        outputToSingleFile="true"/> -->
 
     <template
         path="templates/bpm4struts/server/users.properties.vsl"
