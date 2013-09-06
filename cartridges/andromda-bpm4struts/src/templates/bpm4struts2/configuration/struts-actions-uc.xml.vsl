@@ -27,6 +27,25 @@
 #if($action.actionOldStruts)
 #set($gerar = false)
 #end
+## Mapeia as actions de autocomplete para cada componente autocomplete que serve de parâmetro para a action
+#if($gerar)
+#foreach($parameter in $action.getActionParameters())
+#if($parameter.autocomplete)
+#set($actionAutocomplete = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($palavras = ${parameter.getJsp().getName().split(" ")})
+#set($pageName = "")
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($actionAutocomplete = $actionAutocomplete.concat("${pageName}Autocomplete"))
+		<action name="${actionAutocomplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutocomplete}Action2" method="particularExecute">
+			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
+			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
+		</action>
+#end
+#end
+#end
 #if($gerar)
 		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="execute">
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})

@@ -335,7 +335,7 @@ $(document).ready(function(){
 	
 //Fim do Javascript da tabela $table.name
 #end
-$projectId
+
 //Javascript dos fields
 #foreach($field in $jsp.allUniqueActionParameters)
 #set ($quote ='"')
@@ -352,8 +352,15 @@ $projectId
 #if($field.radioButton || ($field.textField && $field.calendarRequired))
 	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
 	
-#elseif($field.textfield && $field.autoComplete)
-#set($url="/$projectId/${jsp.useCase.name}/${field.autoComplete.actionName}.action")
+#elseif($field.autocomplete)
+#set($actionName = $field.name.subSequence(0,1).toUpperCase().concat("$field.name.substring(1)") )
+#set($palavras = ${jsp.getName().split(" ")})
+#set($pageName = "")
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
 	    source: function (query, process) {
 	        return ${dollar}.get("$url", { query: query }, function (data) {
@@ -377,7 +384,7 @@ $projectId
 #end
 #end
 
-//Java Script dos botões de ação
+//JavaScript dos botoes de acao
 #if($action.tableAction)
 #foreach($_action in $jsp.actions)
 #set ($messageKey = $_action.messageKey)

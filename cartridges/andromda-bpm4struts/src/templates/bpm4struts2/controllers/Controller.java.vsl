@@ -20,6 +20,8 @@ package $controller.packageName;
 #set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import ${servletPackage}.ViewContainer;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
 $controller.getDocumentation(" * ")
@@ -157,18 +159,7 @@ $operation.getDocumentation("     * ")
     }
 
 #end
-	## Na verdade acredito que esse direcionamento de paginas nao deveria exisit aqui. Isso e de struts1
-	## Alem disso deveria ser configurado apenas nos arquivos de config do struts.->comentei
-##    /*protected final void setForward(String modulo, String caminho){
-##    	String path = (request.getServerName() + 
-##    		       (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "") + 
-##    		       "$contextoPrincipal" + "/" + modulo + "/" + caminho).replaceAll("//", "/");
-## 	path = request.getScheme() + "://" + path;
-##    	request.setAttribute("$forwardKey", path);
-##    	request.setAttribute("$forwardKeyModule", modulo);
-##    }*/	
-
-	##TODO verificar como e realizado essa parte de mensagens no struts1 e adaptar para struts2
+	
     /**
      * Stores a warning message in the session, if any other warning messages exist, this one
      * is simply added. This message will be removed from the session after the first time
@@ -274,79 +265,46 @@ $operation.getDocumentation("     * ")
         this.saveErrorMessage(message, null,container);
     }
 
-###foreach ($serviceRef in $controller.serviceReferences)
-###if ($stringUtils.isNotBlank($serviceRef.targetElement.accessorImplementation))
-###if ($securityEnabled)
-###set ($pbiPackage = "${serviceRef.targetElement.packageName}.${stringUtils.replace($pbiDir, '/', '.')}")	
-###end
-##	/**
-##	 * Returns a reference to the $serviceRef.name back-end service.
-##	 */
-##	#set($isServiceFactory = false)
-##	#if($serviceRef.hasExactSterotype("ServiceFactory"))
-##		#set($isServiceFactory = true)
-##	#end
+##Codigo que gera automaticamente os métodos para fazer o autocomplete dos campos
+#set($actions = $controller.getUseCase().getActions())
+#foreach($action in $actions)
+#foreach($parametro in $action.getActionParameters())
+#if($parametro.autocomplete)
 
-##	/**
-##	 * Método a ser utilizado na recuperação de serviços.
-##	 */
-##	protected final #if($securityEnabled) ${pbiPackage}.${serviceRef.targetElement.name}PBI#else${serviceRef.targetElement.fullyQualifiedName}BI #end ${serviceRef.getterName}() throws Exception {
-##	#if ($securityEnabled) 
-##		return new ${pbiPackage}.${serviceRef.targetElement.name}PBI();
-##	#else
-##		#set ($str = "")
-##		#set ($str = $stringUtils.substringBeforeLast($serviceRef.targetElement.accessorImplementation, "()"))
-##		#set ($str = $str.concat("BI();"))
-##		return ${str}
-##	#end
-##	}
+#set($pageName = $parametro.name) 
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($actionName = ${parametro.name.subSequence(0,1).toUpperCase().concat("$parametro.name.substring(1)")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#set($actionName=$actionName.concat("$aux"))
+#end
+#set($package = ${controller.getPackagePath().replace("/", ".")})
 
-##	/**
-##	 * Método utilizado em aplicações legadas.
-##	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
-##	 */
-##	@Deprecated
-##	protected final #if($securityEnabled) ${pbiPackage}.${serviceRef.targetElement.name}PBI#else${serviceRef.targetElement.fullyQualifiedName}BI #end ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {
-##		return ${serviceRef.getterName}();
-##	}
+	protected abstract String[] ${pageName}AutocompleteHandler(ViewContainer container);
+	
 
-###end
-###end
-
-###foreach($dependencia in  $controller.sourceDependencies)
-###if($dependencia.targetElement.hasExactStereotype("ServiceFactory"))
-##	#set($factorySelectNodeName = false)
-##	#foreach($bean in $dependencia.targetElement.allSpecializations)
-##		#if($factorySelectNodeName == false)
-##			#if(${bean.findTaggedValue("$ServiceFactorySelectNodeName").length()} > 0)
-##				#set($factorySelectNodeName = true)
-##			#end
-##		#end
-##	#end
-##
-##	/**
-##	 * Método a ser utilizado na recuperação de serviços.
-##	 */
-##	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(#if($factorySelectNodeName == false) br.ufrj.coppetec.Entity entity #end)	throws Exception {
-##	#if(!$securityEnabled)
-##		return ${dependencia.targetElement.fullyQualifiedName}Factory.getService(#if($factorySelectNodeName == false) entity #end);
-##	#else
-##		#set ($pbiPackage = "${dependencia.targetElement.packageName}")	
-##		#set ($pbiPackage = "${pbiPackage}.${stringUtils.replace($pbiDir, '/', '.')}")	
-##		return ${pbiPackage}.${dependencia.targetElement.name}FactoryPBI.getService(#if($factorySelectNodeName == false) entity #end);
-##	#end
-##	}
-##
-##	/**
-##	 * Método utilizado em aplicações legadas.
-##	 * Em novas aplicações, utilizar o método ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
-##	 */
-##	@Deprecated
-##	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(javax.servlet.http.HttpServletRequest request#if($factorySelectNodeName == false), br.ufrj.coppetec.Entity entity#end) throws Exception {
-##		return ${dependencia.getterName}(#if($factorySelectNodeName == false)entity#end);
-##	}
-###end
-###end
+	public void ${pageName}Autocomplete(ViewContainer container) throws Exception
+	{	
+		String [] result =  this.${pageName}AutocompleteHandler(container);
+    		
+    	JSONArray jsonArray = new JSONArray();
+    	JSONObject obj = new JSONObject();
+    
+		for (String string : result)
+		{
+			jsonArray.add(string);
+    	}
+    	
+		obj.put("options", jsonArray);
+    	
+		container.setContentType("application/json;charset=UTF-8");
+    	container.getWriter().write(obj.toString());
+	}
+#end
+#end
+#end
+	
 	/**
 	 * Método a ser utilizado na recuperação de serviços.
 	 */
@@ -376,4 +334,5 @@ $operation.getDocumentation("     * ")
 		return modoOperacao;
 	}
 }
+
 #end

@@ -19,6 +19,8 @@ public interface ${className}
 	public Object getAttribute(String key);
 
 	public void removeAttribute(String key);
+	
+	public String getParameter(String key);
 
 	/* lida o response */
 

@@ -11,9 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import ${controleAcessoDir}.ControleAcessoImpl;
-import ${controleAcessoDir}.ServicosSingleton;
-import ${controleAcessoDir}.ControleAcesso;
-import ${controleAcessoDir}.Perfil;
+import accessControl.ServicosSingleton;
+import accessControl.ControleAcesso;
+import accessControl.Perfil;
 
 #end
 ##

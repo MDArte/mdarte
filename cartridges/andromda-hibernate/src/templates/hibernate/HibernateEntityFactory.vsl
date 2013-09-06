@@ -450,7 +450,7 @@ try {
 #macroCriterioBusca( $target.type $target.name "raiz_$target.name" )
 
 		java.util.List listaResAss_$target.name = critBusca_${target.name}.setMaxResults(2).list();
-		if (listaResAss_${target.name}.size() > 1) // Encontrou mais de uma entidade para o mesmo cÃ³digo
+		if (listaResAss_${target.name}.size() > 1) // Encontrou mais de uma entidade para o mesmo código
 			throw new DAOException("error.default.exportid.notunique.exception" + "," + listaResAss_${target.name}.get(0).toString() + "," + listaResAss_${target.name}.get(1).toString());
 		if (listaResAss_${target.name}.size() == 0) // Nao encontrou entidade associada
 			return 1;

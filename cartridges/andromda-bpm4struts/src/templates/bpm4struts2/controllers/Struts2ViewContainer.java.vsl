@@ -67,6 +67,10 @@ public class ${className} implements ViewContainer
 	{
 		request.removeAttribute(key); 
 	}
+	
+	public String getParameter(String key) {
+		return request.getParameter(key);
+	}
 
 	/* lida o response */
 
