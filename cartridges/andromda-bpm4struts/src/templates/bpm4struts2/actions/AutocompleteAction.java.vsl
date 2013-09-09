@@ -10,41 +10,22 @@
 #set($package=$path.replace('/','.'))
 #set($generatedFile = "${path}/${actionName}AutocompleteAction2.java")
 #set($controllerClass = ${parameter.getJsp().getUseCase().getController()})
-
-##MACRO
-#macro (saveMessages $transition $indent)
-#if ($transition.successMessagesPresent)
-#foreach ($message in $transition.successMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveSuccessMessage(request, "$message.key");
-#end
-#end
-#if ($transition.warningMessagesPresent)
-#foreach ($message in $transition.warningMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveWarningMessage(request, "$message.key");
-#end
-#end
-#end
-##
-
 package ${package};
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.ServletActionContext;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.PrintWriter;
 import ${servletPackage}.ActionUtil;
 import ${servletPackage}.Struts2ViewContainer;
-
+import ${controleAcessoDir}.LoginControllerFactory;
 import com.opensymphony.xwork2.ActionSupport;
 import util.Constantes;
 import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Action2Factory;
-
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled && !${action.useCase.openAccess})
@@ -53,6 +34,7 @@ public class ${actionName}AutocompleteAction2 extends ${controleAcessoDir}.Login
 public class ${actionName}AutocompleteAction2 extends ActionSupport implements ServletRequestAware, ServletResponseAware
 #end
 {
+#if (!($securityEnabled && !${$controllerClass.getUseCase().openAccess}))
 	private HttpServletResponse response;
 	private HttpServletRequest request;
 
@@ -70,7 +52,8 @@ public class ${actionName}AutocompleteAction2 extends ActionSupport implements S
 	protected String __urlCasoDeUso = "/${parameter.getJsp().getUseCase().getName()}/${actionName}Autocomplete.action";
 	protected String __modulo = "${parameter.getJsp().getUseCase().package.webModuleName}";
 	protected String __contexto = "$stringUtils.replaceOnce(${parameter.getJsp().getUseCase().package.contexto}, ${contextoPrincipal}, "")";
-	
+#end
+
 	private String query = new String();
 	
 	public void setQuery(String query) 
@@ -103,12 +86,14 @@ public class ${actionName}AutocompleteAction2 extends ActionSupport implements S
 #if ($securityEnabled && !${$controllerClass.getUseCase().openAccess})
 	public String particularExecute() throws Exception
 #else
-	public String execute() throws Exception
+#	public String execute() throws Exception
 #end
 	{		
 		String forward = null;
 		String redirect = "";
-
+		request.getSession().setAttribute("form", null);
+		
+				
 		boolean copyParameters = true;
 		if (request.getSession().getAttribute(util.Constantes.COPY_PARAMETERS) != null) {
 			copyParameters = (Boolean) request.getSession().getAttribute(util.Constantes.COPY_PARAMETERS);
@@ -119,7 +104,6 @@ public class ${actionName}AutocompleteAction2 extends ActionSupport implements S
 		
 		forward = _autocomplete(form);
 		
-		request.getSession().setAttribute("form", null);
 
 		if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("${parameter.getJsp().getUseCase().package.webModuleName}")){
 			java.util.Enumeration atributosName = request.getSession().getAttributeNames();

@@ -397,7 +397,7 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 		try
 		{
 ## [MOISES-COPPETEC]
-## Codigo responsavel por pegar o parametro da DispayTag e colocar o nome da acao na sessao, caso esta acao 
+## Codigo responsavel por pegar o parametro da DisplayTag e colocar o nome da acao na sessao, caso esta acao 
 ## carregue dados para uma tabela e assim possibilitar a paginacao.
 #set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
@@ -444,14 +444,12 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 		specificForm.${field.resetName}();
 #end
 #end
-
 #else
 		org.apache.struts.validator.ValidatorForm form = null;
 
 #processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")	
 #processTableNameList($action)
-#processTransitionStruts2($action)
-		
+#processTransitionStruts2($action)		
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
 #else

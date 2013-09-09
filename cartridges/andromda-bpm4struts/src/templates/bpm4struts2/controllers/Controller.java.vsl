@@ -281,25 +281,36 @@ $operation.getDocumentation("     * ")
 #end
 #set($package = ${controller.getPackagePath().replace("/", ".")})
 
-	protected abstract String[] ${pageName}AutocompleteHandler(ViewContainer container);
+	protected abstract String[] ${pageName}AutocompleteHandler(String query, ViewContainer container) throws Exception;
 	
 
 	public void ${pageName}Autocomplete(ViewContainer container) throws Exception
 	{	
-		String [] result =  this.${pageName}AutocompleteHandler(container);
-    		
-    	JSONArray jsonArray = new JSONArray();
+		String [] result;
+    	
+    	String query = container.getParameter("query");
+    	
+    	if(query == null)
+    		query = "";
+  
+		result =  this.matriculaPreenchaOsDadosAutocompleteHandler(query, container);
+
+		JSONArray jsonArray = new JSONArray();
     	JSONObject obj = new JSONObject();
-    
-		for (String string : result)
+		
+		if(result != null)
 		{
-			jsonArray.add(string);
-    	}
+			for (String string : result)
+			{
+				jsonArray.add(string);
+		    }
+		}
     	
 		obj.put("options", jsonArray);
     	
 		container.setContentType("application/json;charset=UTF-8");
     	container.getWriter().write(obj.toString());
+    	
 	}
 #end
 #end

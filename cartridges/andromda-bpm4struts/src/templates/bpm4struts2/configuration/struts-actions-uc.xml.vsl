@@ -39,7 +39,7 @@
 #set($pageName = $pageName.concat("$aux"))
 #end
 #set($actionAutocomplete = $actionAutocomplete.concat("${pageName}Autocomplete"))
-		<action name="${actionAutocomplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutocomplete}Action2" method="particularExecute">
+		<action name="${actionAutocomplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutocomplete}Action2" method="execute">
 			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
 			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
 		</action>
