@@ -306,9 +306,9 @@ extends CoppetecStrutsParameterLogic
 				widgetType = "link";
 
 				//}
-			} else if(true) //Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE.equalsIgnoreCase(fieldType))
+			} else if(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE.equalsIgnoreCase(fieldType))
 			{
-				widgetType = "autocomplete";
+				widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE;
 			}
 			else
 			{
