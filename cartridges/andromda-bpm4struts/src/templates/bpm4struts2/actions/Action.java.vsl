@@ -267,7 +267,7 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 	public String execute() throws Exception
 #end
 	{
-		#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
+#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
 #if(${action.moduloRedirect})
 		${servletPackage}.ActionUtil.copiaParametrosSessao(request,response, "${contextoPrincipal}");
 #end
@@ -287,15 +287,11 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 					session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
 				}
 				messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage("pagina.expirou"));
+				
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})	
 				return "recarregaTabelas";
 #else
-##Codigo adicionado para pegar somente o ultimo forward e retorná-lo, antes o codig era gerado dando vários returns sem sentido.
-#set($forward = "")
-#foreach ($actionForward in $actionForwards)
-#set($forward = $actionForward.forwardName)
-#end
-				return "$forward";
+				return "forwardAction";
 #end
 			}
 		}
@@ -461,23 +457,15 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 #processPageSO($action)
 #processRedirectStruts2($action)
 
-			if (redirect != "") {//troca de modules - to be tested
-				response.sendRedirect(redirect);
-			}
-			request.removeAttribute("$forwardKey");
-			request.removeAttribute("$forwardKeyModule");
-##			if(forward==null) {
-###if(!(${action.ajaxAction} &&  ${action.temParametroTabela}))
-##foreach ($actionForward in $actionForwards)
-##				forward = "$actionForward.forwardName";
-##end
-##end
-##			}
-			System.out.println("Tentei redirecionar para o forward " + forward);
+		if (redirect != "") {//troca de modules - to be tested
+			response.sendRedirect(redirect);
+		}
+		request.removeAttribute("$forwardKey");
+		request.removeAttribute("$forwardKeyModule");
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
-				return "recarregaTabelas";
+		return "recarregaTabelas";
 #else
-				return forward;
+		return forward;
 #end
 	}
 

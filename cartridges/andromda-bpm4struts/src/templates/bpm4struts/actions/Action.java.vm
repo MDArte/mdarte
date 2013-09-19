@@ -58,7 +58,7 @@ Class[] classes = null;
 #macro(processUseCaseStartCopy2 $parameters)
 #set($loggerName = "${loggerPackage}.${stringUtils.capitalize($loggerName)}Logger")
 Class[] classes = null;
-        Object[] objetos = null;
+	Object[] objetos = null;
 #foreach($parameter in $parameters)
 #set($getValue = "")
 #set($literalType = "")
@@ -81,9 +81,7 @@ Class[] classes = null;
 #else
 #set($type = ${parameter.type.fullyQualifiedName})
 #end
-	
 #set ($asType = "")
-
 #if ($parameter.date)
 #set ($asType = "AsDate")
 #end
@@ -197,11 +195,9 @@ forward = ${transition.target.actionMethodName}(mapping, form, request, response
 #macro (processTableNameList $transition)
 #if ($transition)
 #if($transition.enteringFinalState)
-		if(request.getSession().getAttribute("tableNameList") != null)
-		{
+		if(request.getSession().getAttribute("tableNameList") != null){
 			java.util.Collection tableNameList = (java.util.Collection)request.getSession().getAttribute("tableNameList");
-			for(java.util.Iterator it = tableNameList.iterator();it.hasNext();)
-			{
+			for(java.util.Iterator it = tableNameList.iterator();it.hasNext();){
 				String tableName = (String) it.next();
 				request.getSession().removeAttribute(tableName);
 			}
@@ -211,14 +207,12 @@ forward = ${transition.target.actionMethodName}(mapping, form, request, response
 #end
 #end
 #macro(processRedirect $transition)
-	if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("$action.useCase.package.webModuleName"))
-	{
+	if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("$action.useCase.package.webModuleName")){
 		java.util.Enumeration atributosName = request.getSession().getAttributeNames();
 		
         	java.util.Map atributos = new java.util.HashMap();
         
-		while(atributosName.hasMoreElements())
-		{
+		while(atributosName.hasMoreElements()){
 			String atributo = (String)atributosName.nextElement();
 			atributos.put(atributo, request.getSession().getAttribute(atributo));
 		}
@@ -271,7 +265,6 @@ ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
 #set($contentUrl='path=" + urlCasoDeUso')
 #end
 #if ($action.useCase.hasStereotype("FrontEndApplication"))
-		
 	ArrayList breadCrumbCollection = new ArrayList();
 #if($modulo.equals("false"))
 		breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+"#if(${action.useCase.useCaseOldStruts}).do#else.action#end\"'>$action.useCase.name</a>");
@@ -348,7 +341,6 @@ ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
 			
 #if($action.findTaggedValue("$breadCrumbLabel"))
 			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>")      )    )   {
-			
 			 	adicionaBreadCrumb = false;
 			 	break;
 			}
@@ -422,6 +414,7 @@ if (request.getAttribute("$forwardKey") != null) {
 	
 		String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
 		redirect = uriForward + "$transition.forwardPath";
+		response.sendRedirect(redirect);
 	}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
@@ -450,6 +443,7 @@ try{
 	out.print("<raiz>");
 #foreach ($field in $transition.actionFormFields)
 #if ($field.file)
+##
 #else
 #if(${field.widgetType}=="select" || ${field.radioButton})
 		if(!form.${field.getterName}ComboList().equals(this.${field.name}ComboList)){
