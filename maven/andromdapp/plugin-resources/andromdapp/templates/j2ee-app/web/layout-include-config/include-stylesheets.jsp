@@ -11,6 +11,6 @@ Adicionar css usando o seguinte formato:
 -->
 
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/dimming/dimming.css"></link>
-<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/bootstrap.min.css"></link>
+<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/bootstrap.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/style-default.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/datepicker.css"></link>
