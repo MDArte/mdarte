@@ -1243,7 +1243,7 @@
     <template
         path="templates/bpm4struts/controllers/controleAcesso/LoginControllerImpl.java.vsl"
         outputPattern="$generatedFile"
-        outlet="controleAcessoImpl"
+        outlet="controleAcessoImplJava"
         overwrite="false"/>  
         
     <template

@@ -37,6 +37,11 @@
                     Diretorio onde os artefados de controle de acesso sera gerados
                 </documentation>
 	    </property>
+	    <property name="controleAcessoImplJava">
+                <documentation>
+                    Diretorio onde os artefados de controle de acesso sera gerados
+                </documentation>
+	    </property>
 	    <property name="controleAcesso-config">
 		    <documentation>
 			    Diretorio onde os arqivos de configuracao do controle de acesso estão
