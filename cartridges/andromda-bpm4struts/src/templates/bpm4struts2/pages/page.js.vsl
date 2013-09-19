@@ -335,7 +335,7 @@ $(document).ready(function(){
 	
 //Fim do Javascript da tabela $table.name
 #end
-$projectId
+
 //Javascript dos fields
 #foreach($field in $jsp.allUniqueActionParameters)
 #set ($quote ='"')
