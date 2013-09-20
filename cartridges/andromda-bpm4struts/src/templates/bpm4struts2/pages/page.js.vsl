@@ -360,7 +360,12 @@ $(document).ready(function(){
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
 #end
+#if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
+#set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
+#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
+#else
 #set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
+#end
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
 	    source: function (query, process) {
 	        return ${dollar}.get("$url", { query: query }, function (data) {

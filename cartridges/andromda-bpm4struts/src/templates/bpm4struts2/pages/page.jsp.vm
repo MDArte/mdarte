@@ -450,7 +450,7 @@
 	</div>
 #elseif ($field.money)
 	<div id="div${field.name}${action.useCase.name}" class="money field">
-#if ($requiredness && $field.required)<label class="moneyLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="moneyLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>#end
+		#if ($requiredness && $field.required)<label class="moneyLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="moneyLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>#end
 		<input type="text" id="${field.name}${action.useCase.name}" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  title="" $readonly$columnCount styleId="$styleId" />
 		<br class="clear"/>	
 	</div>
