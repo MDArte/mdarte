@@ -293,7 +293,7 @@ $operation.getDocumentation("     * ")
     	if(query == null)
     		query = "";
   
-		result =  this.matriculaPreenchaOsDadosAutocompleteHandler(query, container);
+		result =  this.${pageName}AutocompleteHandler(query, container);
 
 		JSONArray jsonArray = new JSONArray();
     	JSONObject obj = new JSONObject();
