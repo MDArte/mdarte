@@ -270,7 +270,6 @@ $operation.getDocumentation("     * ")
 #foreach($action in $actions)
 #foreach($parametro in $action.getActionParameters())
 #if($parametro.autocomplete)
-
 #set($pageName = $parametro.name) 
 #set($palavras = ${parametro.getJsp().getName().split(" ")})
 #set($actionName = ${parametro.name.subSequence(0,1).toUpperCase().concat("$parametro.name.substring(1)")})

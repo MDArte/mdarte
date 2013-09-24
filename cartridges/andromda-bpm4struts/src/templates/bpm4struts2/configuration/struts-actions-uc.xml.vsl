@@ -27,7 +27,7 @@
 #if($action.actionOldStruts)
 #set($gerar = false)
 #end
-## Mapeia as actions de autocomplete para cada componente autocomplete que serve de parâmetro para a action
+## Código que mapeia as actions de autocomplete para cada componente autocomplete que serve de parâmetro para a action
 #if($gerar)
 #foreach($parameter in $action.getActionParameters())
 #if($parameter.autocomplete)
@@ -46,6 +46,7 @@
 #end
 #end
 #end
+##fim do código
 #if($gerar)
 		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="execute">
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
