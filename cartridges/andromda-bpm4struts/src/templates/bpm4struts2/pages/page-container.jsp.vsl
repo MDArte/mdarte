@@ -78,7 +78,10 @@
 					</div>
 				</div>
 			</div>
-#set($name = $jsp.name)
+#set($name = "")
+#foreach($palavra in $jsp.fullPath.split("\"))
+#set($name=$palavra)
+#end
 	        <script src="${name.toString().toLowerCase().replace(' ', '-')}.js"></script>
 			<script src="${name.toString().toLowerCase().replace(' ', '-')}-impl.js"></script>
 		</div>
