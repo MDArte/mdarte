@@ -38,6 +38,7 @@ commons.launcher.version=1.0
 
 jboss.version=4.2.3.GA
 
+json.simple.version=1.1
 
 
 #if ($ejb)

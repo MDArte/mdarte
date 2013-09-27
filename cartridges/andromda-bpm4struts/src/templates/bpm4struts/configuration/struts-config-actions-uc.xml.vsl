@@ -115,10 +115,9 @@
 #end
 #end
 ##Codigo que mapeia as actions de autocomplete
-
 #foreach($page in $useCase.pages)
 #foreach($parameter in $page.allUniqueActionParameters)
-#if($parameter.autocomplete)
+#if($parameter.autocomplete && !$parameter.jsp.oldStruts)
 #set($actionName=${parameter.getName().subSequence(0,1).toUpperCase().concat("${parameter.getName().substring(1)}")})
 #set($palavras=${parameter.getJsp().getName().split(" ")})
 #foreach($palavra in $palavras)

@@ -177,6 +177,15 @@
             </properties>
         </dependency>
 ## struts 2
+		<dependency>
+            <groupId>json</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>${json.simple.version}</version>
+            <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
 	    <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
