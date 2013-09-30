@@ -90,9 +90,8 @@ public class StrutsFinalStateLogicImpl
 						}//Estou assumindo que todas as acoes do caso de uso possuem a mesma tecnlogoia
 					}
 
-					//return "/" + name + "/" + name + formato;
-					return "/" + name + formato;
-					//ter cuidado nesse caso, nao se sabe se o caso de uso em outro modelo
+					return "/" + name + "/" + name + formato;
+					//ter cuidado nesse caso, nao se sabe se o caso de uso em outro modelo.
 					//sera struts1 ou struts2
                 }
             }

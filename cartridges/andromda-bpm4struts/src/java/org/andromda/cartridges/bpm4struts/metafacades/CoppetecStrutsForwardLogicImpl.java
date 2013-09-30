@@ -151,7 +151,7 @@ extends CoppetecStrutsForwardLogic
 					actionName = linkExterno;
 				}
 			}
-			actionName = actionName.replace("//", "/");
+			actionName = actionName.substring(1).replace("//", "/");
 		}
 		return actionName;
 	}
@@ -186,7 +186,7 @@ extends CoppetecStrutsForwardLogic
 				if(pkg!=null){
 					return ((CoppetecStrutsPackage)pkg).getContexto().replace("//", "/");
 				}else{
-					return ((StrutsFinalState) target).getName();
+					return ((CoppetecFrontEndPackage)(getUseCase().getPackage())).getContexto().replace("//", "/") ;
 				}
 			}
 		}
