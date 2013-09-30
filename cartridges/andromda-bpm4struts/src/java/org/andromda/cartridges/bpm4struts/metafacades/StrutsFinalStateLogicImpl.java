@@ -102,7 +102,8 @@ public class StrutsFinalStateLogicImpl
         }
         else
         {
-            fullPath = useCase.getActionPath() + useCase.getUseCaseFormat();
+        	String format = ((CoppetecStrutsAction)this.getActions().get(0)).getActionFormat();
+            fullPath = useCase.getActionPath() + format;//useCase.getUseCaseFormat();
         }
 
         return fullPath;
