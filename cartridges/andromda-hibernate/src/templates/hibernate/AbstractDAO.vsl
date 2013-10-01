@@ -158,6 +158,8 @@ public abstract class AbstractDAO {
 	
 	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
 	
+	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
+	
 	public abstract org.hibernate.Criteria xmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws DAOException;
 	
 	public abstract org.dom4j.Element xmlExportEntity(AbstractEntity entity) throws DAOException;

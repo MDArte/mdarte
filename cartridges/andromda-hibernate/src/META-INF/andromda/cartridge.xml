@@ -526,7 +526,19 @@
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
             </modelElement>
         </modelElements>
-    </template>      
+    </template>    
+
+    <template
+        path="templates/hibernate/actions/DefaultFilterAction.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+        <modelElements variable="class">
+            <modelElement>
+                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>   
     
     <template
         path="templates/hibernate/actions/SelectAction.vsl"

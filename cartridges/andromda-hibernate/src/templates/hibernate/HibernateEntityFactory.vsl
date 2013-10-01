@@ -10,12 +10,24 @@ package $entity.packageName;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.Criteria;
+import org.hibernate.CallbackException;
+import org.hibernate.CacheMode;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-import org.hibernate.CallbackException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+
+import br.mdarte.exemplo.academico.vo.*;
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
@@ -25,7 +37,6 @@ import br.ufrj.coppetec.DataObject;
 #if ($entity.auditoria)
 import ${customTypesPackage}.${modelPackageName}.AuditoriaEntity;
 
-import org.hibernate.HibernateException;
 
 import util.CriptoUtils;
 
@@ -35,7 +46,6 @@ import java.util.Collection;
 import accessControl.ControleAcesso;
 
 #end
-import org.hibernate.CacheMode;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -297,39 +307,122 @@ try {
 	
 	
 	protected abstract Object handleFilter (DataObject vo) throws DAOException;
+	
+	public List<AbstractEntity> defaultFilter(DataObject vo, Integer paginacao) throws DAOException {
+		
+		Session session = currentSession();
+	    Criteria criterios = ((org.hibernate.Session) session).createCriteria(${entity.entityImplementationName}.class);
+		
+    	
+		if (vo instanceof ${entity.name}VO)
+    	{
+    		${entity.name}VO objVO = (${entity.name}VO) vo;
+    		${entity.name} entity  = new ${entity.entityImplementationName}();
+			
+			//itera sobre os campos do VO para pegar os atributos e assim poder passá-los para entity
+			for (Field f : objVO.getClass().getDeclaredFields() ){
+				try{
+										
+            		f.setAccessible(true);
+					
+					//deixa  a primeira letra do atributo maiuscula para buscar a funcao setAtributo e nao setatributo 
+					String atributo = f.getName();
+					atributo = atributo.substring(0,1).toUpperCase()+atributo.substring(1);
+					
+					//pega o metodo de entity que seta o atributo
+					Method m = entity.getClass().getMethod("set"+ atributo, f.getType());
+    				
+					try {
+    					//chama o metodo passando o objeto (entity) e o valor, que é pego do VO 
+						m.invoke(entity, f.get(objVO));
+    				} catch (IllegalArgumentException e1) {					
+    					e1.printStackTrace();
+    				} catch (InvocationTargetException e1) {
+    					e1.printStackTrace();
+					} catch (IllegalAccessException e1) {
+    					e1.printStackTrace();
+    				}
+    			} catch (NoSuchMethodException e1) {
+    				e1.printStackTrace();
+    			}
+            			
+			}		
+			
+    		criterios.add(Example.create(entity).enableLike(MatchMode.ANYWHERE));
+    	}
+	    
+	    try {
+		if(criterios instanceof org.hibernate.Query){
+            		org.hibernate.Query res = (org.hibernate.Query)criterios;
+            		if (paginacao != null){
+						int extra = 0;
+						if (paginacao % 10 == 0 && paginacao != 0)  
+							extra = 1;
+						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+						res.setMaxResults($maxRows*$maxPages + 1);
+					}
+        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        			res.setCacheable(true);
+        			#end		
+        			return res.list();
+        		}
+        		else if(criterios instanceof org.hibernate.Criteria){
+        			org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
+        			if (paginacao != null){
+						int extra = 0;
+						if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+						res.setMaxResults($maxRows*$maxPages + 1);
+					}
+        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        			res.setCacheable(true);
+        			#end		
+        			return res.list();
+				}
+        		else
+        			return null;
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+		
+		
+	}
+	
 
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
 		try {
-            		Object obj = handleFilter(vo);
-            
-            		if(obj instanceof org.hibernate.Query){
+        		Object obj = handleFilter(vo);
+        
+        		if(obj instanceof org.hibernate.Query){
             		org.hibernate.Query res = (org.hibernate.Query)obj;
-            			if (paginacao != null){
-				int extra = 0;
-				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-				res.setMaxResults($maxRows*$maxPages + 1);
-			}
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
-			res.setCacheable(true);
-			#end		
-			return res.list();
-            		}
-            		else if(obj instanceof org.hibernate.Criteria){
-            			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
-            			if (paginacao != null){
-				int extra = 0;
-				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-				res.setMaxResults($maxRows*$maxPages + 1);
-			}
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
-			res.setCacheable(true);
-			#end		
-			return res.list();
-	    		}
-            		else
-            			return null;
+            		if (paginacao != null){
+						int extra = 0;
+						if (paginacao % 10 == 0 && paginacao != 0)  
+							extra = 1;
+						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+						res.setMaxResults($maxRows*$maxPages + 1);
+					}
+        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        			res.setCacheable(true);
+        			#end		
+        			return res.list();
+        		}
+        		else if(obj instanceof org.hibernate.Criteria){
+        			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+        			if (paginacao != null){
+						int extra = 0;
+						if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+						res.setMaxResults($maxRows*$maxPages + 1);
+					}
+        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        			res.setCacheable(true);
+        			#end		
+        			return res.list();
+				}
+        		else
+        			return null;
 
 		} catch (HibernateException h) {
 			throw new DAOException(h);
