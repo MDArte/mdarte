@@ -64,7 +64,6 @@
     	
 <tiles:put name="body" type="string">
 
-	    <hr/>
 <div id="pathway">
 #if($jsp.generateHelp)
 #if($jsp.generateHelpLink)
@@ -126,6 +125,7 @@
 
 #if($flag > 0)
 		    <bean:message key="required.fields.asterisk"/>
+#end
 #end
 
 #if($jsp.oldStruts)
