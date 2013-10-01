@@ -35,7 +35,7 @@
 #foreach ($actionForward in $action.actionForwards)	
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else
@@ -85,7 +85,7 @@
 #foreach ($actionForward in $action.actionForwards)
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else
