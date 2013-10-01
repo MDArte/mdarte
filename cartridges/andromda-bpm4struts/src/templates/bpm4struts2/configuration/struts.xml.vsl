@@ -50,7 +50,7 @@ some fowards operations-->
 #set($actionName = $stringUtils.upperCamelCaseName(${action.getActionClassName()}))
 #set($resultPath = $action.actionFowards.get(0).forwardPath)
 
-        <action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="$bpmUtils.getExecuteMethodFromActionStruts2()">
+        <action name="$actionName" class="${action.actionType}" method="$bpmUtils.getExecuteMethodFromActionStruts2()">
 #foreach ($actionForward in $action.actionForwards)		
     		<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end		

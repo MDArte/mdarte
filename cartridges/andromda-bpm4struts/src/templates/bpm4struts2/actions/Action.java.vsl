@@ -1,5 +1,5 @@
 #parse("templates/bpm4struts/actions/Action.java.vm")
-#set ($generatedFile = "${action.fullActionPath}Action2.java")
+#set ($generatedFile = "${action.fullActionPath}.java")
 ##
 ##  CONSTANTS
 ##
@@ -18,12 +18,12 @@
 #macro (saveMessages $transition $indent)
 #if ($transition.successMessagesPresent)
 #foreach ($message in $transition.successMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().saveSuccessMessage(request, "$message.key");
+${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveSuccessMessage(request, "$message.key");
 #end
 #end
 #if ($transition.warningMessagesPresent)
 #foreach ($message in $transition.warningMessages.entrySet())
-${indent}${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().saveWarningMessage(request, "$message.key");
+${indent}${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().saveWarningMessage(request, "$message.key");
 #end
 #end
 #end
@@ -61,13 +61,13 @@ import ${servletPackage}.Struts2ViewContainer;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import ${controllerClass.fullyQualifiedName}Action2Factory;
+import ${controllerClass.fullyQualifiedName}Factory;
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled && !${action.useCase.openAccess})
-public class ${action.actionClassName}Action2 extends ${controleAcessoDir}.Login2
+public class ${action.actionClassName} extends ${controleAcessoDir}.Login2
 #else
-public class ${action.actionClassName}Action2 extends ActionSupport implements ServletRequestAware, ServletResponseAware
+public class ${action.actionClassName} extends ActionSupport implements ServletRequestAware, ServletResponseAware
 #end
 {
 #if (!$securityEnabled || ${action.useCase.openAccess})
@@ -496,9 +496,9 @@ $actionState.getDocumentation("	 * ")
 
 #foreach ($controllerCall in $controllerCalls)
 #if (!$action.actionFormFields.empty)
-		${controllerClass.name}Action2Factory.get${controllerClass.name}Instance().${controllerCall.name}((${formBeanClassName}) form, new Struts2ViewContainer(this, request, response));
+		${controllerClass.name}Factory.get${controllerClass.name}Instance().${controllerCall.name}((${formBeanClassName}) form, new Struts2ViewContainer(this, request, response));
 #else
-		${controllerClass.name}Action2Factory.get${controllerClass.name}Instance().${controllerCall.name}(null, new Struts2ViewContainer(this, request, response));
+		${controllerClass.name}Factory.get${controllerClass.name}Instance().${controllerCall.name}(null, new Struts2ViewContainer(this, request, response));
 #end
 #end
 		##processOperationMode($actionState.forward ${action.useCase.name})
@@ -584,12 +584,12 @@ $decisionTransition.getDocumentation("	 * ")
 		String forward = null;
 		String redirect ="";
 #if (!$action.actionFormFields.empty)
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}((${decisionTransition.operationCall.interfaceName}) form, new Struts2ViewContainer(this, request, response)));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}((${decisionTransition.operationCall.interfaceName}) form, new Struts2ViewContainer(this, request, response)));
 #else
 		// we pass an empty form implementation to the controller, we know there are no parameters on this operation because the
 		// cartridge would have issued a model validation error
-		//final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Action2Factory.get${controllerClass.name}Instance().${controllerMethodName}(new ${decisionTransition.operationCall.interfaceName}(){}, new Struts2ViewContainer(this, request, response)));
+		//final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(new ${decisionTransition.operationCall.interfaceName}(){}, new Struts2ViewContainer(this, request, response)));
 #end
 
 #set ($defaultOutcome = false)## keeps track of the last transition
