@@ -1,0 +1,39 @@
+#set ($generatedFile = "FilterAction.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${actionPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
+#end
+
+import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.DAOException;
+import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import br.ufrj.coppetec.DataObject;
+import br.ufrj.coppetec.ValueObject;
+
+public class DefaultFilterAction extends Action {
+
+	private DataObject vo;
+	private Integer paginacao;
+	
+	public DefaultFilterAction(){
+		vo = null;
+		paginacao = null;
+	}
+	
+	public DefaultFilterAction(DataObject vo, Integer paginacao){
+		this.vo = vo;
+		this.paginacao = paginacao;
+	}
+	
+	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
+		return dao.filter(vo, paginacao);
+	}
+		
+	public DataObject getVo(){
+		return vo;
+	}
+	
+	public Integer getPaginacao(){
+		return paginacao;
+	}
+}
