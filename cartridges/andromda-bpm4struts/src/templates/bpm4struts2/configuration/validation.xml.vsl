@@ -8,7 +8,7 @@
 #end
 #end
 #set($actionName = $stringUtils.upperCamelCaseName(${action.getActionClassName()}))
-#set ($generatedFile = "${actionName}Action2-validation.xml")
+#set ($generatedFile = "${actionName}-validation.xml")
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE validators PUBLIC
 "-//OpenSymphony Group//XWork Validator 1.0.2//EN"

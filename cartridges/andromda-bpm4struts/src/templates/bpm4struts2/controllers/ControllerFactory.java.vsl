@@ -1,4 +1,4 @@
-#set ($generatedFile = "${controller.fullPath}Action2Factory.java")
+#set ($generatedFile = "${controller.fullPath}Factory.java")
 ##
 ##  START TEMPLATE
 ##
@@ -10,11 +10,11 @@
 // license-header java merge-point
 package $controller.packageName;
 
-public class ${controller.name}Action2Factory
+public class ${controller.name}Factory
 {
-    private final static ${controller.name}Action2 INSTANCE = new ${controller.name}Action2Impl();
+    private final static ${controller.name} INSTANCE = new ${controller.name}Impl();
 
-    public final static ${controller.name}Action2 get${controller.name}Instance()
+    public final static ${controller.name} get${controller.name}Instance()
     {
         return INSTANCE;
     }

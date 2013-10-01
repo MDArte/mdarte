@@ -1,3 +1,4 @@
+#if($jsp.oldStruts)
 <%
 	#set($useCaseName = $jsp.useCase.name)
 	#set($jspName = $jsp.name)
@@ -206,3 +207,4 @@ function atualizaElementos(){
 ##} );
 ##</script>
 ##end
+#end

@@ -28,14 +28,14 @@
 #set($gerar = false)
 #end
 #if($gerar)
-		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="execute">
+		<action name="$actionName" class="${action.actionType}" method="execute">
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
 			<result name="recarregaTabelas">${action.targetPages.get(0).fullPath}-tabelas.jsp</result>
 #else
 #foreach ($actionForward in $action.actionForwards)	
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else
@@ -81,11 +81,11 @@
 #end
 #if ($gerar)
 
-		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method = "execute" >
+		<action name="$actionName" class="${action.actionType}" method = "execute" >
 #foreach ($actionForward in $action.actionForwards)
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else

@@ -81,7 +81,7 @@ public class StrutsFinalStateLogicImpl
                 	// caso o caso de uso alvo não esteja no mesmo modelo.. monta caminho usando o nome do estado final
                 	name = StringUtils.capitalize(name);
                 	String formato = ".action";
-
+                	
 					if (!this.getActions().isEmpty()) {
 						Object a = this.getActions().get(0);
 
