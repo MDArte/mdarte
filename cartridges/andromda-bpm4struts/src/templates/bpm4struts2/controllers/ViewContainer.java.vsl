@@ -22,6 +22,8 @@ public interface ${className}
 	
 	public String getParameter(String key);
 
+	public javax.servlet.http.HttpServletRequest getRequest();
+
 	/* lida o response */
 
 	public void setCharacterEncoding(String charset);
@@ -33,6 +35,8 @@ public interface ${className}
 	public javax.servlet.ServletOutputStream getOutputStream() throws java.io.IOException;
 
 	public java.io.PrintWriter getWriter() throws java.io.IOException;
+	
+	public javax.servlet.http.HttpServletResponse getResponse();
 
 	/* util */
 

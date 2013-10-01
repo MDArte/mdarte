@@ -116,4 +116,12 @@ public class ${className} implements ViewContainer
 	{
 		return action.getText(key);
 	}
+	
+	public HttpServletRequest getRequest() {
+		return this.request;
+	}
+	
+	public HttpServletResponse getResponse() {
+		return this.response;
+	}
 }

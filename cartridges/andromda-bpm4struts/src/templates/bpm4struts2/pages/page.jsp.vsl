@@ -1,5 +1,4 @@
 #if(!$jsp.oldStruts)
-
 <%
 	#set($useCaseName = $jsp.useCase.name)
 	#set($jspName = $jsp.name)
@@ -28,25 +27,10 @@
 #end
 #end
 
-#if(!${jsp.oldStruts})
-<script>
-function atualizaElementos(){
-	#foreach ($variable in $jsp.pageVariables)
-	#if ($variable.table)
-		$("#${variable.name}").displayTagAjax();
-	#end
-	#end
-		$('#tabs').easytabs(); 
-	}
-</script>
-#end
-
-
 #if ($xhtml == "true")
 <html:xhtml/>
 
 #end
-
 #set ($webLayoutName = ${jsp.useCase.webLayoutName})
 #if ($stringUtils.isNotBlank($webLayoutName))
 <tiles:insert definition="${webLayoutName}">
@@ -62,15 +46,9 @@ function atualizaElementos(){
 ##  SETS THE TITLE
 ##
 
-    ##<tiles:put name="head" type="string">
-        ##<sj:head jqueryui="true" jquerytheme="flick"/>
-    ##</tiles:put>
-
-    <tiles:put name="title" type="string">
-        <bean:message key="$jsp.titleKey"/>
-    </tiles:put>
-
-
+<tiles:put name="title" type="string">
+	<bean:message key="$jsp.titleKey"/>
+</tiles:put>
 
 <tiles:put name="style" type="string">
 <link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
@@ -79,16 +57,11 @@ function atualizaElementos(){
 #if ($jsp.calendarRequired)
 <link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
 #end
-    </tiles:put>
+</tiles:put>
 
-##if($jsp.oldStruts)
 <%@ include file="${jsp.fullPath}-javascript.jspf" %>
-##end
-##
-##  SETS THE BODY OF THIS PAGE
-##
     	
-    <tiles:put name="body" type="string">
+<tiles:put name="body" type="string">
 
 	    <hr/>
 <div id="pathway">
@@ -132,17 +105,14 @@ function atualizaElementos(){
             </a>
     </div>
 #end
-
-   <h2><bean:message key="$jsp.titleKey"/></h2>
-
+	<h2><bean:message key="$jsp.titleKey"/></h2>
 </div>
 
 #if ($setPageVariablesInPageScope == "true" && $jsp.pageVariables.size() > 0)
         <%@ include file="${jsp.fullPath}-vars.jspf" %>
 #end
 
-	    <tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
-
+<tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
 
 	<div id="pageHelpSection">
 		<blockquote>
@@ -157,11 +127,11 @@ function atualizaElementos(){
 #end
 
 #if($flag > 0)
-		    <bean:message key="required.fields.asterisk"/>
+			<bean:message key="required.fields.asterisk"/>
 #end
 
 		</blockquote>
-   </div>
+	</div>
 	         
    </tiles:put>
 </tiles:insert>

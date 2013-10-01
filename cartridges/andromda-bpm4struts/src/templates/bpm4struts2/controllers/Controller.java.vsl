@@ -1,4 +1,4 @@
-#set ($generatedFile = "${controller.fullPath}Action2.java")
+#set ($generatedFile = "${controller.fullPath}.java")
 #set ($operations = $controller.operations)
 ##
 ##  CONSTANTS
@@ -26,7 +26,7 @@ import org.json.simple.JSONObject;
 /**
 $controller.getDocumentation(" * ")
  */
-public abstract class ${controller.name}Action2 implements java.io.Serializable
+public abstract class ${controller.name} implements java.io.Serializable
 {
 
 

@@ -151,14 +151,14 @@ extends CoppetecStrutsForwardLogic
 					actionName = linkExterno;
 				}
 			}
-			actionName = actionName.replace("//", "/");
+			actionName = actionName.substring(1).replace("//", "/");
 		}
 		return actionName;
 	}
 
 	protected String handleGetStrutsNamespace() {
 		final StateVertexFacade target = this.getTarget();
-		if (isEnteringFinalState()){
+		if(isEnteringFinalState()){
 			String appName = (String)((StrutsFinalState)target).findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_EXTERNAL_APPLICATION_NAME);
 			
 			String contextoPrincipal="/";
@@ -186,7 +186,7 @@ extends CoppetecStrutsForwardLogic
 				if(pkg!=null){
 					return ((CoppetecStrutsPackage)pkg).getContexto().replace("//", "/");
 				}else{
-					return "";
+					return ((CoppetecFrontEndPackage)(getUseCase().getPackage())).getContexto().replace("//", "/") ;
 				}
 			}
 		}

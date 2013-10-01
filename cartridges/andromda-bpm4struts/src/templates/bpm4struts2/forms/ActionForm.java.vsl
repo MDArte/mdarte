@@ -21,6 +21,7 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+#set ($hasTable = false)
 
 public class ${formBeanClassName}
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
@@ -62,6 +63,7 @@ public class ${formBeanClassName}
 	private java.lang.String ${field.name}FileName = null;
 	private java.lang.String ${field.name}ContentType = null;
 #elseif ($field.table)
+#set ($hasTable = true)
     private $field.type.fullyQualifiedName $field.name = null;
 #elseif ($field.strutsAction.tableAction)
     private java.util.List ${field.name}RowSelection = null;
@@ -1157,5 +1159,12 @@ $field.getDocumentation("     * ")
     public String getOperationModeKey(){
         return "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do";
     }
+	
+#if ($hasTable)	
+	public String getActionPath(){
+		return "${action.actionPath}.action";
+    }
+
+#end
 }
 #end

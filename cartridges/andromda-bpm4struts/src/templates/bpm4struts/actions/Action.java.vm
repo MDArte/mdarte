@@ -37,28 +37,28 @@
 #if($parameter.widgetType=="money")
 #set ($type = "java.lang.String")
 #end
-		try{
+	try{
 #if ($parameter.strutsAction.tableAction)
-			Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
+		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
 
-			if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
-				specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
+		if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
+			specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
 #else
-			Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
-			if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
-				specificForm.${parameter.setterName}${asType}(((${type}) obj));	
+		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
+		if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
+			specificForm.${parameter.setterName}${asType}(((${type}) obj));	
 #end
-			}catch(NoSuchMethodException e){
-				//Nao faz nada, simplesmente nao copia o parametro
-		}catch(ClassCastException cce){
-			${loggerName}.warn("error.copia.parametros=$parameter.name", this.getClass());
-		}
+		}catch(NoSuchMethodException e){
+		//Nao faz nada, simplesmente nao copia o parametro
+	}catch(ClassCastException cce){
+		${loggerName}.warn("error.copia.parametros=$parameter.name", this.getClass());
+	}
 #end
 #end
 #macro(processUseCaseStartCopy2 $parameters)
 #set($loggerName = "${loggerPackage}.${stringUtils.capitalize($loggerName)}Logger")
 Class[] classes = null;
-    Object[] objetos = null;
+	Object[] objetos = null;
 #foreach($parameter in $parameters)
 #set($getValue = "")
 #set($literalType = "")
@@ -91,27 +91,27 @@ Class[] classes = null;
 #if($parameter.widgetType=="money")
 #set ($type = "java.lang.String")
 #end
-		try{
+	try{
 #if ($parameter.strutsAction.tableAction)
-			Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
+		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
 
-			if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
-				specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
+		if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
+			specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
 #else
-			Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
-			if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
-				specificForm.${parameter.setterName}${asType}(((${type}) obj));	
+		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
+		if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
+			specificForm.${parameter.setterName}${asType}(((${type}) obj));	
 #end
 		}catch(NoSuchMethodException e){
-			//Nao faz nada, simplesmente nao copia o parametro
-		}catch(ClassCastException cce){
-			${loggerName}.warn("error.copia.parametros=$parameter.name", this.getClass());
-		}
+		//Nao faz nada, simplesmente nao copia o parametro
+	}catch(ClassCastException cce){
+		${loggerName}.warn("error.copia.parametros=$parameter.name", this.getClass());
+	}
 #end
 #end
 #macro (processTransition $transition)
 #if (!$transition)
-
+##
 #elseif ($transition.moduloRedirect) ## ( TROCA DE MODULO )
 #if(!$transition.lookupGrid)
 #processInvalidatePageControlCounter($transition)
@@ -142,7 +142,6 @@ forward = request.getAttribute("$forwardKey") != null ?
 :
 	mapping.findForward("$transition.forwardName");
 	
-
 #elseif ($transition.enteringDecisionPoint)
 forward = __${transition.operationCall.name}(mapping, form, request, response);
 #else
@@ -158,7 +157,7 @@ forward = ${transition.target.actionMethodName}(mapping, form, request, response
 #if($transition.target.findTaggedValue("$externalHyperlinkModulo"))
 #set($finalUseCaseName = "$transition.target.findTaggedValue($externalHyperlinkModulo)$transition.target.findTaggedValue($externalHyperlink)")
 #else		
-		###set($finalUseCaseName = $transition.target.targetUseCase.name)
+###set($finalUseCaseName = $transition.target.targetUseCase.name)
 ##		#set($finalUseCaseName = "${transition.target.targetUseCase.package.webModuleName}$transition.target.fullPath")
 #set($finalUseCaseName = "${transition.useCase.package.webModuleName}$transition.target.fullPath")
 #end
@@ -219,7 +218,6 @@ forward = ${transition.target.actionMethodName}(mapping, form, request, response
 		}
 	
 		org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, atributos, this.getServlet().getServletContext().getContext("$servletContext"));
-	
 	}
 #end
 #macro(processPageSO $transition)
@@ -240,7 +238,6 @@ ${servletPackage}.PageSessionObjectUtil.setPageSO(request, new org.andromda.pres
 #macro(processRemovePageSO)
 ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
 #end
-
 #macro(processInvalidatePageControlCounter $transition)
 #if($transition.enteringPage)
 #set($useCaseName = $transition.useCase.name)
@@ -258,9 +255,8 @@ ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
     	casoDeUso = "$action.useCase.name";
     	urlCasoDeUso = "$action.actionPath";
 
-    	modulo = "$action.useCase.package.webModuleName";
-    	Iterator breadCrumbIt = null;
-    
+    modulo = "$action.useCase.package.webModuleName";
+    Iterator breadCrumbIt = null;
 #if($action.useCase.package.webModuleName)
 #set($contentModule='modulo="+ modulo +')
 #set($contentPath='"&path=" + urlCasoDeUso')
@@ -279,8 +275,59 @@ ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
     request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
     request.getSession().setAttribute("nomeDeTela", casoDeUso);
        	
-#if($action.findTaggedValue("$breadCrumbInput").equals("true"))	
- 		breadCrumbCollection = (ArrayList)request.getSession().getAttribute("breadCrumb");
+#if($action.findTaggedValue("$breadCrumbInput").equals("true"))
+	 	breadCrumbCollection = (ArrayList)request.getSession().getAttribute("breadCrumb");
+	 		
+	 	if (breadCrumbCollection == null){
+	 		breadCrumbCollection = new ArrayList();
+	 		request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
+	 	}
+	 		
+	 	breadCrumbIt = breadCrumbCollection.iterator();	 	 	 	
+			 
+		while (breadCrumbIt.hasNext()) {	   			
+#if($action.findTaggedValue("$breadCrumbLabel"))
+		
+			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>")      )    )   {
+			 	adicionaBreadCrumb = false;
+			 	break;
+			 }
+#else
+			
+			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.useCase.name</a>")      )    )   {		
+			 	adicionaBreadCrumb = false;
+			 	break;
+			 }			
+#end
+
+		} 
+#if($action.findTaggedValue("$breadCrumbLabel"))
+
+ 		if(adicionaBreadCrumb){
+#if($action.target.findTaggedValue("$externalHyperlinkModulo"))
+			modulo = "$action.target.findTaggedValue("$externalHyperlinkModulo")";
+			urlCasoDeUso = "$action.target.findTaggedValue("$externalHyperlink")";
+			breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ "\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
+
+#else
+			breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
+#end	 	
+			request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
+			request.getSession().setAttribute("nomeDeTela", "$action.findTaggedValue("$breadCrumbLabel")");
+ 		}
+	 		
+#else
+ 		if(adicionaBreadCrumb){			
+	 		breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.useCase.name</a>");
+	 		request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
+	 		request.getSession().setAttribute("nomeDeTela", casoDeUso);
+	 	}	 			 		
+#end
+#end
+#elseif ($action.useCase.hasStereotype("FrontEndUseCase"))	 		
+#if($action.findTaggedValue("$breadCrumbInput").equals("true"))
+	
+	 	ArrayList breadCrumbCollection = (ArrayList)request.getSession().getAttribute("breadCrumb");
 	 		
 	 	if (breadCrumbCollection == null){
 	 		breadCrumbCollection = new ArrayList();
@@ -291,93 +338,47 @@ ${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
 	 	 	 	
 			 
 		while (breadCrumbIt.hasNext()) {	   
-#if($action.findTaggedValue("$breadCrumbLabel"))
-				
-			 if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>")      )    )   {
-			 	adicionaBreadCrumb = false;
-			 	break;
-			 }
-#else
-			
-			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.useCase.name</a>")      )    )   {		
-			 	adicionaBreadCrumb = false;
-			 	break;
-			 }
-#end
-		} 
-#if($action.findTaggedValue("$breadCrumbLabel"))
-	 		if(adicionaBreadCrumb){
-#if($action.target.findTaggedValue("$externalHyperlinkModulo"))
- 				modulo = "$action.target.findTaggedValue("$externalHyperlinkModulo")";
- 				urlCasoDeUso = "$action.target.findTaggedValue("$externalHyperlink")";
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ "\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
-#else
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
-#end	 				
-				request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
-	 			request.getSession().setAttribute("nomeDeTela", "$action.findTaggedValue("$breadCrumbLabel")");
-	 		}
-	 		
-#else
-	 		if(adicionaBreadCrumb){	 				
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.useCase.name</a>");
- 				request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
- 				request.getSession().setAttribute("nomeDeTela", casoDeUso);
-	 		} 		
-#end
-#end
-#elseif ($action.useCase.hasStereotype("FrontEndUseCase"))
-#if($action.findTaggedValue("$breadCrumbInput").equals("true"))
-	
-	 		ArrayList breadCrumbCollection = (ArrayList)request.getSession().getAttribute("breadCrumb");
-	 		
-	 		if (breadCrumbCollection == null){
-	 			breadCrumbCollection = new ArrayList();
-	 			request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
-	 		}
-	 		
-	 	 	breadCrumbIt = breadCrumbCollection.iterator();
-	 	 	 	
-			 
-			while (breadCrumbIt.hasNext()) {	   
 			
 #if($action.findTaggedValue("$breadCrumbLabel"))
-				 if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>")      )    )   {			
-			 		adicionaBreadCrumb = false;
-			 		break;
-				 }
+			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>")      )    )   {
+			 	adicionaBreadCrumb = false;
+			 	break;
+			}
+		
 #else
-				if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.useCase.name</a>")      )    )   {
-			 		adicionaBreadCrumb = false;
-			 		break;
-			 	}			
+			if (  (breadCrumbIt.next().toString().equals("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.useCase.name</a>")      )    )   {	
+		 		adicionaBreadCrumb = false;
+		 		break;
+		 	}
+			
 #end
 
-			} 
+		} 
 #if($action.findTaggedValue("$breadCrumbLabel"))
-	 		if(adicionaBreadCrumb){
+ 		if(adicionaBreadCrumb){
 #if($action.target.findTaggedValue("$externalHyperlinkModulo"))
- 				modulo = "$action.target.findTaggedValue("$externalHyperlinkModulo")";
- 				urlCasoDeUso = "$action.target.findTaggedValue("$externalHyperlink")";
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ "\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
+			modulo = "$action.target.findTaggedValue("$externalHyperlinkModulo")";
+			urlCasoDeUso = "$action.target.findTaggedValue("$externalHyperlink")";
+			breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl}+ "\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
 #else
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
+			breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.findTaggedValue("$breadCrumbLabel")</a>");
 #end
- 				request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
- 				request.getSession().setAttribute("nomeDeTela", "$action.findTaggedValue("$breadCrumbLabel")");
-	 		} 		
+			request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
+			request.getSession().setAttribute("nomeDeTela", "$action.findTaggedValue("$breadCrumbLabel")");
+	 		}
+	 		
 #else
-	 		if(adicionaBreadCrumb){
- 				breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.useCase.name</a>");
- 				request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
- 				request.getSession().setAttribute("nomeDeTela", casoDeUso);
-	 		} 			 		
+ 		if(adicionaBreadCrumb){
+			breadCrumbCollection.add("<a href='javascript:window.location=getPath()+\"/ForwardAction.do?${contentUrl} + ".do\"'>$action.useCase.name</a>");
+			request.getSession().setAttribute("breadCrumb", breadCrumbCollection);
+			request.getSession().setAttribute("nomeDeTela", casoDeUso);
+ 		}	 			 		
 #end
 #end
 #end 	   
 #end
 #macro(processRedirectStruts2 $transition)
-	if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("$action.useCase.package.webModuleName")){
+	if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("$transition.useCase.package.webModuleName")){
 		java.util.Enumeration atributosName = request.getSession().getAttributeNames();
 		
         	java.util.Map atributos = new java.util.HashMap();
@@ -413,6 +414,8 @@ if (request.getAttribute("$forwardKey") != null) {
 	
 		String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
 		redirect = uriForward + "$transition.forwardPath";
+		response.sendRedirect(redirect);
+		return null;
 	}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
@@ -439,6 +442,7 @@ response.setHeader("Cache-Control", "no-cache");
 
 		out.print("<?xml version='1.0' encoding='UTF-8'?>");
 		out.print("<raiz>");
+
 #foreach ($field in $transition.actionFormFields)
 #if ($field.file)
 ##
@@ -465,4 +469,3 @@ response.setHeader("Cache-Control", "no-cache");
 #end
 #end
 #end
-
