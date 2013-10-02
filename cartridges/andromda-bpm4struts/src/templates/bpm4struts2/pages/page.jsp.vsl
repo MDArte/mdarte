@@ -63,7 +63,6 @@
     	
 <tiles:put name="body" type="string">
 
-	    <hr/>
 <div id="pathway">
 #if($jsp.generateHelp)
 #if($jsp.generateHelpLink)
@@ -113,9 +112,18 @@
 #end
 
 <tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
+#if($jsp.temTabela)
+	<div id="divTabelas">
+	<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
+	</div>
+#end
+#if($flag > 0)
+	<bean:message key="required.fields.asterisk"/>
+#end
 
 	<div id="pageHelpSection">
 		<blockquote>
+
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set($flag=0)
 #foreach($field in $actionParameters)
@@ -126,9 +134,7 @@
 #end
 #end
 
-#if($flag > 0)
-			<bean:message key="required.fields.asterisk"/>
-#end
+
 
 		</blockquote>
 	</div>

@@ -25,7 +25,7 @@ import ${servletPackage}.Struts2ViewContainer;
 import ${controleAcessoDir}.LoginControllerFactory;
 import com.opensymphony.xwork2.ActionSupport;
 import util.Constantes;
-import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Action2Factory;
+import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Factory;
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled && !${action.useCase.openAccess})
@@ -138,7 +138,7 @@ public class ${actionName}AutocompleteAction2 extends ActionSupport implements S
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($method=$method.concat("$aux"))
 #end
-		${package}.${controllerClass.name}Action2Factory.get${controllerClass.name}Instance().${method}Autocomplete(new Struts2ViewContainer(this,request,response));
+		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().${method}Autocomplete(new Struts2ViewContainer(this,request,response));
 		
 		return forward;		
 	}
