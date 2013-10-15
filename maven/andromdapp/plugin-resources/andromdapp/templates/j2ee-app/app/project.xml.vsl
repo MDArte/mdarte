@@ -238,6 +238,15 @@
         </dependency>
 #end
 #end
+	    <dependency>
+            <groupId>json</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>${json.simple.version}</version>
+            <type>jar</type>  
+            <properties>
+                <ear.bundle>true</ear.bundle>
+            </properties>                     
+        </dependency>
         <dependency>
             <groupId>security</groupId>
             <artifactId>security</artifactId>

@@ -67,6 +67,10 @@ public class ${className} implements ViewContainer
 	{
 		request.removeAttribute(key); 
 	}
+	
+	public String getParameter(String key) {
+		return request.getParameter(key);
+	}
 
 	/* lida o response */
 
@@ -111,5 +115,13 @@ public class ${className} implements ViewContainer
 	public String getMessageText(String key)
 	{
 		return action.getText(key);
+	}
+	
+	public HttpServletRequest getRequest() {
+		return this.request;
+	}
+	
+	public HttpServletResponse getResponse() {
+		return this.response;
 	}
 }

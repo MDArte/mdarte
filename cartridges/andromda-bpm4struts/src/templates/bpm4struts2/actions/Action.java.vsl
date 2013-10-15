@@ -1,5 +1,5 @@
 #parse("templates/bpm4struts/actions/Action.java.vm")
-#set ($generatedFile = "${action.fullActionPath}Action2.java")
+#set ($generatedFile = "${action.fullActionPath}.java")
 ##
 ##  CONSTANTS
 ##
@@ -61,13 +61,13 @@ import ${servletPackage}.Struts2ViewContainer;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import ${controllerClass.fullyQualifiedName}Action2Factory;
+import ${controllerClass.fullyQualifiedName}Factory;
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled && !${action.useCase.openAccess})
-public class ${action.actionClassName}Action2 extends ${controleAcessoDir}.Login2
+public class ${action.actionClassName} extends ${controleAcessoDir}.Login2
 #else
-public class ${action.actionClassName}Action2 extends ActionSupport implements ServletRequestAware, ServletResponseAware
+public class ${action.actionClassName} extends ActionSupport implements ServletRequestAware, ServletResponseAware
 #end
 {
 #if (!$securityEnabled || ${action.useCase.openAccess})
@@ -267,7 +267,7 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 	public String execute() throws Exception
 #end
 	{
-		#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
+#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
 #if(${action.moduloRedirect})
 		${servletPackage}.ActionUtil.copiaParametrosSessao(request,response, "${contextoPrincipal}");
 #end
@@ -287,12 +287,11 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 					session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
 				}
 				messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage("pagina.expirou"));
+				
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})	
 				return "recarregaTabelas";
 #else
-#foreach ($actionForward in $actionForwards)
-				return "$actionForward.forwardName";
-#end
+				return "forwardAction";
 #end
 			}
 		}
@@ -397,7 +396,7 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 		try
 		{
 ## [MOISES-COPPETEC]
-## Codigo responsavel por pegar o parametro da DispayTag e colocar o nome da acao na sessao, caso esta acao 
+## Codigo responsavel por pegar o parametro da DisplayTag e colocar o nome da acao na sessao, caso esta acao 
 ## carregue dados para uma tabela e assim possibilitar a paginacao.
 #set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
@@ -437,21 +436,17 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 #if($possuiTable)
 		request.getSession().setAttribute("$action.useCase.formKey", form);
 #end
-
 #saveMessages($action "		")
 #if (!$resettableActionParameters.empty)
 #foreach ($field in $resettableActionParameters)
 		specificForm.${field.resetName}();
 #end
 #end
-
 #else
 		org.apache.struts.validator.ValidatorForm form = null;
-
 #processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")	
 #processTableNameList($action)
-#processTransitionStruts2($action)
-		
+#processTransitionStruts2($action)		
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
 #else
@@ -462,16 +457,16 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 #processPageSO($action)
 #processRedirectStruts2($action)
 
-			if (redirect != "") {//troca de modules - to be tested
-				response.sendRedirect(redirect);
-			}
-			request.removeAttribute("$forwardKey");
-			request.removeAttribute("$forwardKeyModule");
-			#if(${action.ajaxAction} &&  ${action.temParametroTabela})
-				return "recarregaTabelas";
-			#else
-				return forward;
-			#end
+		if (redirect != "") {//troca de modules - to be tested
+			response.sendRedirect(redirect);
+		}
+		request.removeAttribute("$forwardKey");
+		request.removeAttribute("$forwardKeyModule");
+#if(${action.ajaxAction} &&  ${action.temParametroTabela})
+		return "recarregaTabelas";
+#else
+		return forward;
+#end
 	}
 
 #foreach ($actionState in $action.actionStates)
@@ -501,9 +496,9 @@ $actionState.getDocumentation("	 * ")
 
 #foreach ($controllerCall in $controllerCalls)
 #if (!$action.actionFormFields.empty)
-		${controllerClass.name}Action2Factory.get${controllerClass.name}Instance().${controllerCall.name}((${formBeanClassName}) form, new Struts2ViewContainer(this, request, response));
+		${controllerClass.name}Factory.get${controllerClass.name}Instance().${controllerCall.name}((${formBeanClassName}) form, new Struts2ViewContainer(this, request, response));
 #else
-		${controllerClass.name}Action2Factory.get${controllerClass.name}Instance().${controllerCall.name}(null, new Struts2ViewContainer(this, request, response));
+		${controllerClass.name}Factory.get${controllerClass.name}Instance().${controllerCall.name}(null, new Struts2ViewContainer(this, request, response));
 #end
 #end
 		##processOperationMode($actionState.forward ${action.useCase.name})
@@ -541,33 +536,33 @@ $actionState.getDocumentation("	 * ")
 			String fs = System.getProperty("file.separator");	
 			java.io.File tempFile = java.io.File.createTempFile("${parameterReport.reportName}", "${parameterReport.reportType}");
 			tempFile.deleteOnExit();
-		$stringUtils.capitalize(${parameterReport.name})DataSourceImpl ds = new $stringUtils.capitalize(${parameterReport.name})DataSourceImpl((($formBeanClassName)form).${parameterReport.getterName}());
-		java.util.Map parameters = ds.getParameters();  
-		net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(this.getClass().getClassLoader().getResourceAsStream("/${controllerClass.packagePath}/${parameterReport.reportName}.jasper"), parameters, ds);
+			$stringUtils.capitalize(${parameterReport.name})DataSourceImpl ds = new $stringUtils.capitalize(${parameterReport.name})DataSourceImpl((($formBeanClassName)form).${parameterReport.getterName}());
+			java.util.Map parameters = ds.getParameters();  
+			net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(this.getClass().getClassLoader().getResourceAsStream("/${controllerClass.packagePath}/${parameterReport.reportName}.jasper"), parameters, ds);
 
 #if($parameterReport.reportType.equals("pdf"))
-		net.sf.jasperreports.engine.JasperExportManager.exportReportToPdfFile(jasperPrint, tempFile.getPath());
+			net.sf.jasperreports.engine.JasperExportManager.exportReportToPdfFile(jasperPrint, tempFile.getPath());
 #elseif($parameterReport.reportType.equals("xls"))
-		net.sf.jasperreports.engine.export.JRXlsExporter xlsExporter = new net.sf.jasperreports.engine.export.JRXlsExporter();
-		xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.OUTPUT_FILE, tempFile );
-		xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.JASPER_PRINT, jasperPrint);
-		xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.CHARACTER_ENCODING, "ISO-8859-9");
-		xlsExporter.exportReport();
+			net.sf.jasperreports.engine.export.JRXlsExporter xlsExporter = new net.sf.jasperreports.engine.export.JRXlsExporter();
+			xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.OUTPUT_FILE, tempFile );
+			xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.JASPER_PRINT, jasperPrint);
+			xlsExporter.setParameter(net.sf.jasperreports.engine.JRExporterParameter.CHARACTER_ENCODING, "ISO-8859-9");
+			xlsExporter.exportReport();
 #end
 
-		response.setContentType("application/${parameterReport.reportType}");
-		response.setHeader("Content-Disposition","attachment;filename=${parameterReport.reportName}.${parameterReport.reportType}");
+			response.setContentType("application/${parameterReport.reportType}");
+			response.setHeader("Content-Disposition","attachment;filename=${parameterReport.reportName}.${parameterReport.reportType}");
 
-		byte[] dados = new byte[1024];
-		java.io.InputStream in = new java.io.FileInputStream (tempFile);
-		int length = in.read(dados);
-		while(length >= 0)
-		{
-			response.getOutputStream().write(dados);
-			length = in.read(dados); 
-		}
+			byte[] dados = new byte[1024];
+			java.io.InputStream in = new java.io.FileInputStream (tempFile);
+			int length = in.read(dados);
+			while(length >= 0)
+			{
+				response.getOutputStream().write(dados);
+				length = in.read(dados); 
+			}
 
-		#processTransition($actionState.forward)
+		#processTransitionStruts2($actionState.forward)
 		}
 		catch (Exception e)
 		{
@@ -584,27 +579,29 @@ $actionState.getDocumentation("	 * ")
 	/**
 $decisionTransition.getDocumentation("	 * ")
 	 */
-	private org.apache.struts.action.ActionForward ${decisionMethodName}(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
+	private String ${decisionMethodName}(org.apache.struts.validator.ValidatorForm form) throws java.lang.Exception
 	{
-		org.apache.struts.action.ActionForward forward = null;
+		String forward = null;
+		String redirect ="";
 #if (!$action.actionFormFields.empty)
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, ($formBeanClassName)form, request, response));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}((${decisionTransition.operationCall.interfaceName}) form, new Struts2ViewContainer(this, request, response)));
 #else
 		// we pass an empty form implementation to the controller, we know there are no parameters on this operation because the
 		// cartridge would have issued a model validation error
-		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
+		//final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(mapping, new ${decisionTransition.operationCall.interfaceName}(){}, request, response));
+		final java.lang.String value = java.lang.String.valueOf(${controllerClass.fullyQualifiedName}Factory.get${controllerClass.name}Instance().${controllerMethodName}(new ${decisionTransition.operationCall.interfaceName}(){}, new Struts2ViewContainer(this, request, response)));
 #end
 
 #set ($defaultOutcome = false)## keeps track of the last transition
-#foreach ($outcome in $decisionTransition.target.outgoings)
+#foreach ($outcome in $decisionTransition.target.getOutgoing())
 #set ($defaultOutcome = $outcome)
 		if (value.equals("$outcome.guardName"))
 		{
 #saveMessages($outcome "			")
-		###processOperationMode($outcome ${action.useCase.name})
-		#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($outcome)
-			#processTransition($outcome)
+			###processOperationMode($outcome ${action.useCase.name})
+			#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
+			#processTableNameList($outcome)
+			#processTransitionStruts2($outcome)
 			return forward;
 		}
 #end
@@ -613,7 +610,7 @@ $decisionTransition.getDocumentation("	 * ")
 		## #processOperationMode($defaultOutcome)
 		#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 		#processTableNameList($defaultOutcome)
-		#processTransition($defaultOutcome)
+		#processTransitionStruts2($defaultOutcome)
 		return forward;
 	}
 

@@ -352,8 +352,20 @@ $(document).ready(function(){
 #if($field.radioButton || ($field.textField && $field.calendarRequired))
 	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
 	
-#elseif($field.textfield && $field.autoComplete)
-#set($url="/$projectId/${jsp.useCase.name}/${field.autoComplete.actionName}.action")
+#elseif($field.autocomplete)
+#set($actionName = $field.name.subSequence(0,1).toUpperCase().concat("$field.name.substring(1)") )
+#set($palavras = ${jsp.getName().split(" ")})
+#set($pageName = "")
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
+#set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
+#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#else
+#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#end
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
 	    source: function (query, process) {
 	        return ${dollar}.get("$url", { query: query }, function (data) {
@@ -377,7 +389,7 @@ $(document).ready(function(){
 #end
 #end
 
-//Java Script dos botÃµes de aÃ§Ã£o
+//JavaScript dos botoes de acao
 #if($action.tableAction)
 #foreach($_action in $jsp.actions)
 #set ($messageKey = $_action.messageKey)
@@ -514,6 +526,9 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
+#else
+##se não for nenhuma das opções seta a ação do struts2
+	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
 #end
 #end
 #end

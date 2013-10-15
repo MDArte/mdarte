@@ -187,6 +187,20 @@
         </modelElements>
     </template>
     
+   <template
+        path="templates/bpm4struts2/actions/AutoCompleteAction.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="parameter">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
+                	<property name="autocomplete"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
     
     <template
         path="templates/bpm4struts/modulo/maven.xml.vsl"
@@ -293,7 +307,7 @@
             </modelElement>
         </modelElements>
     </template>
-
+  
     <template
         path="templates/bpm4struts/forms/ActionFormInterface.java.vsl"
         outputPattern="$generatedFile"

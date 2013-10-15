@@ -462,7 +462,7 @@ public abstract class ${service.name}MessageHandler extends GenericHandler {
 		Servico servico = new Servico(resource);
 
 		PrincipalImpl principalImpl = ControleAcesso.getCallerPrincipal(subject);
-		principalImpl.setNomeProjeto("$projectId");
+		principalImpl.setNomeProjeto("${projectId}");
 
 		try {
 			if (!ControleAcesso.verificaPermissao(subject, mapServicos, servico, false)) {

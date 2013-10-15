@@ -20,7 +20,7 @@
 	
 #if ($action.useCaseStart == true && $stringUtils.isNotEmpty($useCase.customLink))
 
- <action
+ 		<action
             path="/$useCase.customLink"
             type="$action.actionType"
 #if (!$action.actionFormFields.empty)
@@ -48,13 +48,13 @@
         		redirect="true"
 #end
 #end
-		/>
+			/>
 #end
 #if ($securityEnabled) 
 	        <forward
-	            	name="main"
-	            	path="/ForwardAction.do"
-	            	redirect="false" /> 
+	            name="main"
+	            path="/ForwardAction.do"
+	            redirect="false" /> 
 #end
         </action>
 #end
@@ -64,19 +64,19 @@
 ###if ($stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) && $useCase.secured)
 ##            roles="$roles"
 ###end
-<action
-            path="$action.actionPath"
-            type="$action.actionType"
+	<action
+    	path="$action.actionPath"
+        type="$action.actionType"
 #if (!$action.actionFormFields.empty)
-            name="$action.formBeanName"
+        name="$action.formBeanName"
 #end
-            scope="$action.actionScope"
+        scope="$action.actionScope"
 #if ($action.useCaseStart == false)
-            input="${action.input.fullPath}.jsp"
+        input="${action.input.fullPath}.jsp"
 #end
-            unknown="false"
+        unknown="false"
 #set ($validate = $action.validationRequired && $validationDesired)
-            validate="$validate">
+        validate="$validate">
             <exception
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
                 type="java.lang.Throwable"
@@ -87,8 +87,8 @@
                 scope="request" />
 		
 #foreach ($actionForward in $action.actionForwards)
-            <forward
-                name="$actionForward.forwardName"
+       		<forward
+        		name="$actionForward.forwardName"
 ##
 ##  when direct page access is prevented we cannot redirect to pages,
 ##  so we need to redirect to a page forward actioninstead
@@ -96,26 +96,54 @@
 ##
 #if ($preventDirectPageAccess == "true" && $actionForward.enteringPage)
 #set ($pageActionName = "$stringUtils.upperCamelCaseName($actionForward.target.name)")
-                path="${useCase.actionPathRoot}/${pageActionName}PageForward$useCase.useCaseFormat"
+            	path="${useCase.actionPathRoot}/${pageActionName}PageForward$useCase.useCaseFormat"
 #else
-                path="$actionForward.forwardPath"
+            	path="$actionForward.forwardPath"
 #if ($stringUtils.endsWith(${actionForward.forwardPath},".action") == true)
         		redirect="true"
 #end
 #end
-		/>
+			/>
 #end
 #if ($securityEnabled) 
 	        <forward
-	            	name="main"
-	            	path="/ForwardAction.do"
-	            	redirect="false" /> 
+	            name="main"
+	            path="/ForwardAction.do"
+	            redirect="false" /> 
 #end
-
         </action>
 #end
 #end
-
+##Codigo que mapeia as actions de autocomplete
+#foreach($page in $useCase.pages)
+#foreach($parameter in $page.allUniqueActionParameters)
+#if($parameter.autocomplete && !$parameter.jsp.oldStruts)
+#set($actionName=${parameter.getName().subSequence(0,1).toUpperCase().concat("${parameter.getName().substring(1)}")})
+#set($palavras=${parameter.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("${palavra.substring(1)}"))
+#set($actionName = $actionName.concat("$aux"))
+#end
+	 <action path="/${useCase.getName()}/${actionName}AutoComplete"
+	 	type="${useCase.getPackagePath().replace('/','.')}.${actionName}AutoComplete"
+	 	scope="request"
+	 	input="${page.fullPath}.jsp"
+	 	unknown="false"
+	 	validate="true" >
+	 	<exception
+           handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+           type="java.lang.Throwable"
+           key="error.exception.message"
+           path="${page.fullPath}.jsp"
+           scope="request" />
+	    <forward
+	     	name="main"
+	       	path="/ForwardAction.do"
+	       	redirect="false" /> 
+	 </action>
+#end
+#end
+#end
 #if ($onlineHelp == "true")
         <action
             path="${useCase.onlineHelpActionPath}"

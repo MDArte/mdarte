@@ -306,6 +306,9 @@ extends CoppetecStrutsParameterLogic
 				widgetType = "link";
 
 				//}
+			} else if(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE.equalsIgnoreCase(fieldType))
+			{
+				widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE;
 			}
 			else
 			{
@@ -390,7 +393,10 @@ extends CoppetecStrutsParameterLogic
 		return "money".equals(this.getWidgetType());
 	}
 
-
+	protected boolean handleIsAutocomplete()
+	{
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE.equals(this.getWidgetType());
+	}
 
 	protected java.util.Collection handleGetValidatorTypes()
 	{

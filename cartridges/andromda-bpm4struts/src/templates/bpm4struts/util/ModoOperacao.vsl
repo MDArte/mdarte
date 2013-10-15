@@ -1,18 +1,22 @@
 #set($gerar = true)
-#if($applicationUseCases)#if($modulo == 'true')
+#if($applicationUseCases)
+#if($modulo == 'true')
 #set($gerar = false)
-#end#end
-#if ($pacote)
-#set ($generatedFile = "${pacote.fullyQualifiedNamePath}/util/ModoOperacao.java")
-#set ($modosOperacao = $pacote.modosOperacao)
-#set ($packageName = "${pacote.fullyQualifiedName}.util")
-#else
-#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
-#set ($generatedFile = "util/ModoOperacao.java")
-#set ($modosOperacao = $applicationUseCase.allModosOperacao)
-#set ($packageName = "util")
 #end
-#if ($gerar)
+#end
+#if($pacote)
+#set($generatedFile = "${pacote.fullyQualifiedNamePath}/util/ModoOperacao.java")
+#set($modosOperacao = $pacote.modosOperacao)
+#set($packageName = "${pacote.fullyQualifiedName}.util")
+#else
+#if(!$applicationUseCases.empty)
+#set($applicationUseCase = $applicationUseCases.iterator().next())
+#end
+#set($generatedFile = "util/ModoOperacao.java")
+#set($modosOperacao = $applicationUseCase.allModosOperacao)
+#set($packageName = "util")
+#end
+#if($gerar)
 package $packageName;
 
 import java.util.List;

@@ -27,15 +27,35 @@
 #if($action.actionOldStruts)
 #set($gerar = false)
 #end
+## Código que mapeia as actions de autocomplete para cada componente autocomplete que serve de parâmetro para a action
 #if($gerar)
-		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method="execute">
+#foreach($parameter in $action.getActionParameters())
+#if($parameter.autocomplete)
+#set($actionAutoComplete = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($palavras = ${parameter.getJsp().getName().split(" ")})
+#set($pageName = "")
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($actionAutoComplete = $actionAutoComplete.concat("${pageName}AutoComplete"))
+		<action name="${actionAutoComplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutoComplete}Action2" method="execute">
+			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
+			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
+		</action>
+#end
+#end
+#end
+##fim do código
+#if($gerar)
+		<action name="$actionName" class="${action.actionType}" method="execute">
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
 			<result name="recarregaTabelas">${action.targetPages.get(0).fullPath}-tabelas.jsp</result>
 #else
 #foreach ($actionForward in $action.actionForwards)	
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else
@@ -81,11 +101,11 @@
 #end
 #if ($gerar)
 
-		<action name="$actionName" class="${action.actionType}$bpmUtils.getSuffixFromActionStruts2()" method = "execute" >
+		<action name="$actionName" class="${action.actionType}" method = "execute" >
 #foreach ($actionForward in $action.actionForwards)
 #if($stringUtils.contains($actionForward.forwardPath, '.do'))
 			<result name="$actionForward.forwardName" type="redirect">
-				<param name="location">${actionForward.strutsNamespace}${actionForward.strutsActionName}</param>
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
 #if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
 				<param name="prependServletContext">true</param>
 #else

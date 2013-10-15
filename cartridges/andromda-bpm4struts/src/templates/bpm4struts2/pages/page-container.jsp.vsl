@@ -1,17 +1,14 @@
 #if(!${jsp.oldStruts})
 #set($generatedFile = "${jsp.fullPath}-container.jsp")
-
 #parse("templates/bpm4struts2/pages/page.jsp.vm")
 #set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-
 <%@ include file="/taglib-imports.jspf"%>
 <%@ include file="/layout-configuration.jsp"%>
+
 ## Codigo acrescentado para pegar action que contï¿½m parametros ##
 #if ($jsp.actions.size() > 0)
-	
 #set ($action = $jsp.actions.get(0))
 #set($achou = "false")
-
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
 #if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
@@ -20,14 +17,11 @@
 #end
 #end
 #end
-
 #if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($hints = $hints.equalsIgnoreCase("true"))
-
 #set($achou = false)
-
 #foreach($jspAction in $jsp.actions)
 #if($jspAction.hasStereotype("$enterAction"))
 #if(!$jspAction.tableLink && $jspAction.formPost && !$achou)
@@ -39,11 +33,6 @@
 #end
 ## fim do codigo
 #end
-
-
-
-
-
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
@@ -79,7 +68,7 @@
 				</div>
 			</div>
 #set($name = "")
-#foreach($palavra in $jsp.fullPath.split("\"))
+#foreach($palavra in $jsp.fullPath.split('/'))
 #set($name=$palavra)
 #end
 	        <script src="${name.toString().toLowerCase().replace(' ', '-')}.js"></script>

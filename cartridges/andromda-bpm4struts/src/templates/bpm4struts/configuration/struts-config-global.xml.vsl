@@ -33,17 +33,17 @@
 
 #foreach ($useCase in $useCases)
 	##looking for a field on this action
-	#set($hasAction = "false")
-	#foreach ($action in $useCase.actions)
-		#if (!$action.actionFormFields.empty)
-			#set($hasAction = "true")
-		#end
-	#end
-	#set($useCaseName = "$stringUtils.upperCamelCaseName(${useCase.name})")
-	#if($hasAction == "true")
+#set($hasAction = "false")
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+#set($hasAction = "true")
+#end
+#end
+#set($useCaseName = "$stringUtils.upperCamelCaseName(${useCase.name})")
+#if($hasAction == "true")
 	##generated only if this action has at least one field
     <!ENTITY forms_${useCaseName} SYSTEM "struts-config-forms-uc-${useCaseName}.xml">
-    #end
+#end
 	<!ENTITY actions_${useCaseName} SYSTEM "struts-config-actions-uc-${useCaseName}.xml">
 #end
 
@@ -62,29 +62,29 @@
     <form-beans>
 		<!-- form-beans merge-point -->
 		##Forms oAuth
-		#if($oAuthServer == "true")
+#if($oAuthServer == "true")
 			<form-bean
             name="loginOAuthUCLoginOAuthUCForm"
             type="${controleAcessoDir}.LoginOAuthUCFormImpl" />
         <form-bean
             name="loginOAuthUCPaginaDeLoginLoginForm"
             type="${controleAcessoDir}.PaginaDeLoginLoginFormImpl" />
-		#end
+#end
         
 
 #foreach ($useCase in $useCases)
-	##looking for a field on this action
-	#set($hasAction = "false")
-	#foreach ($action in $useCase.actions)
-		#if (!$action.actionFormFields.empty)
-			#set($hasAction = "true")
-		#end
-	#end
-	#if($hasAction == "true")
+##looking for a field on this action
+#set($hasAction = "false")
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+#set($hasAction = "true")
+#end
+#end
+#if($hasAction == "true")
 #set($useCaseName = "$stringUtils.upperCamelCaseName(${useCase.name})")
-		##generated only if this action has at least one field
+##generated only if this action has at least one field
         &forms_${useCaseName};
-	#end
+#end
 #end
         <form-bean
             name="forwardForm"
@@ -436,10 +436,10 @@
         </action>                                                                   
 ## Fim da adicao     
 #end            
-    <action path="/treeview"
-        type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
-        scope="request"
-        validate="false">
+    	<action path="/treeview"
+       		type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
+        	scope="request"
+        	validate="false">
         </action> 
     </action-mappings>
 

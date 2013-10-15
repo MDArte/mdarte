@@ -418,6 +418,7 @@
                     <value>radio</value>
                     <value>link</value>
                     <value>multibox</value>
+                    <value>autocomplete</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">

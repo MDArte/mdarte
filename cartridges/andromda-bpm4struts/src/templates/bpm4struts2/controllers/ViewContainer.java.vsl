@@ -19,6 +19,10 @@ public interface ${className}
 	public Object getAttribute(String key);
 
 	public void removeAttribute(String key);
+	
+	public String getParameter(String key);
+
+	public javax.servlet.http.HttpServletRequest getRequest();
 
 	/* lida o response */
 
@@ -31,6 +35,8 @@ public interface ${className}
 	public javax.servlet.ServletOutputStream getOutputStream() throws java.io.IOException;
 
 	public java.io.PrintWriter getWriter() throws java.io.IOException;
+	
+	public javax.servlet.http.HttpServletResponse getResponse();
 
 	/* util */
 
