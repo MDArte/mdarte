@@ -24,7 +24,7 @@
 
 
 ##set ($action = $jsp.actions.get(0))
-#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
+#if ($jsp.actions.size() > 0 && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 ##
 	#set ($clientValidationDesired = ($clientValidation=='true'))
 	#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))

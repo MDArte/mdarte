@@ -272,18 +272,16 @@ $operation.getDocumentation("     * ")
 #if($parametro.autocomplete)
 #set($pageName = $parametro.name) 
 #set($palavras = ${parametro.getJsp().getName().split(" ")})
-#set($actionName = ${parametro.name.subSequence(0,1).toUpperCase().concat("$parametro.name.substring(1)")})
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
-#set($actionName=$actionName.concat("$aux"))
 #end
 #set($package = ${controller.getPackagePath().replace("/", ".")})
 
-	protected abstract String[] ${pageName}AutocompleteHandler(String query, ViewContainer container) throws Exception;
+	protected abstract String[] ${pageName}AutoComplete(String query, ViewContainer container) throws Exception;
 	
 
-	public void ${pageName}Autocomplete(ViewContainer container) throws Exception
+	public void ${pageName}AutoComplete(ViewContainer container) throws Exception
 	{	
 		String [] result;
     	
@@ -292,7 +290,7 @@ $operation.getDocumentation("     * ")
     	if(query == null)
     		query = "";
   
-		result =  this.${pageName}AutocompleteHandler(query, container);
+		result =  this.${pageName}AutoComplete(query, container);
 
 		JSONArray jsonArray = new JSONArray();
     	JSONObject obj = new JSONObject();

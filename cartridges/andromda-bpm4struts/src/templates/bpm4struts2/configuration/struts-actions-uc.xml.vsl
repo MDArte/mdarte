@@ -31,15 +31,15 @@
 #if($gerar)
 #foreach($parameter in $action.getActionParameters())
 #if($parameter.autocomplete)
-#set($actionAutocomplete = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($actionAutoComplete = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
 #set($palavras = ${parameter.getJsp().getName().split(" ")})
 #set($pageName = "")
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
 #end
-#set($actionAutocomplete = $actionAutocomplete.concat("${pageName}Autocomplete"))
-		<action name="${actionAutocomplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutocomplete}Action2" method="execute">
+#set($actionAutoComplete = $actionAutoComplete.concat("${pageName}AutoComplete"))
+		<action name="${actionAutoComplete}" class="${useCase.getPackagePath().replace('/','.')}.${actionAutoComplete}Action2" method="execute">
 			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
 			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
 		</action>

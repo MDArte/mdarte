@@ -124,8 +124,8 @@
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("${palavra.substring(1)}"))
 #set($actionName = $actionName.concat("$aux"))
 #end
-	 <action path="/${useCase.getName()}/${actionName}Autocomplete"
-	 	type="${useCase.getPackagePath().replace('/','.')}.${actionName}Autocomplete"
+	 <action path="/${useCase.getName()}/${actionName}AutoComplete"
+	 	type="${useCase.getPackagePath().replace('/','.')}.${actionName}AutoComplete"
 	 	scope="request"
 	 	input="${page.fullPath}.jsp"
 	 	unknown="false"
