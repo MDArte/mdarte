@@ -410,9 +410,9 @@
 ##
 ## @todo: disable this widget if not used in a row action
 #elseif($field.custom)
-#set($path = ${field.getJsp().getUseCase().getPackagePath()})
-#set($file = "${path}/${field.name}.jsp")
-	<tiles:insert page="${field.name}.jsp" flush="false"/>
+	<div id="div${field.name}${action.useCase.name}" class="custom field">
+		<tiles:insert page="${field.name}.jsp" flush="false"/>
+	</div>
 #elseif ($field.multibox)
 	<div id="div${field.name}${action.useCase.name}" class="multibox field">
 		#if ($requiredness && $field.required)<label class="multiboxLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
