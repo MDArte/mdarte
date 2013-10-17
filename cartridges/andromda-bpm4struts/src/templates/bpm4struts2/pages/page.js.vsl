@@ -1,18 +1,18 @@
 #if(!${jsp.oldStruts})
-#set ($generatedFile = "${jsp.fullPath}.js")
-#if ($jsp.actions.size() > 0)
-#set ($action = $jsp.actions.get(0))
+#set($generatedFile = "${jsp.fullPath}.js")
+#if($jsp.actions.size() > 0)
+#set($action = $jsp.actions.get(0))
 #set($achou = "false")
 #set($dollar = "$")
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
-#if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
+#if(!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
 #set($action = $_action)
 #set($achou = "true")
 #end
 #end
 #end
-#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
+#if($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
 #set($achou = false)
 #foreach($jspAction in $jsp.actions)
 #if($jspAction.hasStereotype("$enterAction"))
@@ -24,52 +24,48 @@
 #end
 #end
 #end
-#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
-#set ($clientValidationDesired = ($clientValidation=='true'))
-#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
-#set ($formBeanName = $action.formBeanName)
-#set ($actionParameters = $jsp.allUniqueActionParameters )
-#set ($hints = $hints.equalsIgnoreCase("true"))
-#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page	
-	function setaLocation(nomeAcao){
-
-		var action;
-		if (nomeAcao.indexOf("/") == 0) {
-			action=getPath() + nomeAcao + '.action';
-		}else{
-			action=getPath() + '/' + nomeAcao + '.action';
-		}
+#if($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
+#set($clientValidationDesired =($clientValidation=='true'))
+#set($requiredness =($clientValidationDesired || $serverValidation=='true'))
+#set($formBeanName = $action.formBeanName)
+#set($actionParameters = $jsp.allUniqueActionParameters )
+#set($hints = $hints.equalsIgnoreCase("true"))
+#set($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page	
+function setaLocation(nomeAcao) { 
+	var action;
+	if(nomeAcao.indexOf("/") == 0) {
+		action=getPath() + nomeAcao + '.action';
+	}else{
+		action=getPath() + '/' + nomeAcao + '.action';
+	}
 #set($temLookupGrid="false")
-#foreach ($_action in $jsp.actions)
+#foreach($_action in $jsp.actions)
 #if($_action.lookupGrid)
 #set($temLookupGrid="true")
 #end
 #end
 #if($temLookupGrid=="true")
-		window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
+	window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
 #else
-		window.open(action, '', 'width=700,height=500,top=50,left=100');
+	window.open(action, '', 'width=700,height=500,top=50,left=100');
 #end
-	}
-	function apaga() {
-               document.forms[0].reset();
-		for (i=0;i<document.forms[0].elements.length;i++)
-               {
-			
-			var strtype = document.forms[0].elements[i].type;
-			if(strtype.match("select")=="select"){
-				document.forms[0].elements[i].selectedIndex=0;
-			}
-                       	if (strtype == "text" || strtype == "password")
-                       	{
-                       	        document.forms[0].elements[i].value="";
-                       	}
-                       	if (strtype == "radio" || strtype == "checkbox")
-                       	{
-                       	        document.forms[0].elements[i].checked=false;
-                       	}
-               }
-       } 
+}
+
+function apaga() {
+	document.forms[0].reset();
+	for(i=0;i<document.forms[0].elements.length;i++) {
+		var strtype = document.forms[0].elements[i].type;
+		if(strtype.match("select")=="select") { 
+			document.forms[0].elements[i].selectedIndex=0;
+		}
+	    if(strtype == "text" || strtype == "password") {
+	    	document.forms[0].elements[i].value="";
+	    }
+	    if(strtype == "radio" || strtype == "checkbox") {
+	    	document.forms[0].elements[i].checked=false;
+	    }
+    }
+} 
 
 
 #set($achou = false)
@@ -81,62 +77,61 @@
 #end
 #end
 #end		
-function keySubmit(e){
+function keySubmit(e) { 
 #if($defaultAction)
-		var keycode;
-		if (window.event) 
+	var keycode;
+	if (window.event) { 
 			keycode = window.event.keyCode;
-		else if (e) 
+	} else if (e) { 
 			keycode = e.which;
-		else 
-			return true;
-
-		if (keycode == 13)
-   		{
-   			setaAcao('${defaultAction.actionPath}', '${defaultAction.formValidationMethodName}', ${defaultAction.validationRequired})
-   			return false;
-   		}
-		else
-  			return true;
-#end
+	} else { 
+		return true;
 	}
+	if(keycode == 13) {
+   		setaAcao('${defaultAction.actionPath}', '${defaultAction.formValidationMethodName}', ${defaultAction.validationRequired})
+   		return false;
+   	} else {
+  		return true;
+  	}
+#end
+}
 	<!--Operacao de Habilitar-->
 function verificaHabilitados() {          
-#foreach ($field in $actionParameters)
+#foreach($field in $actionParameters)
 #if($field.habilitadoPor)
-          if(
+     if (
 #foreach($habilitador in $field.habilitadoPor)
 #if($velocityCount != 1)&&#end document.getElementById('$habilitador.styleId').value != ''
 #end
-          ){
+          ) { 
      	  	document.getElementById('$field.styleId').disabled = false;
-	  }else {
-            	document.getElementById('$field.styleId').disabled = true;
-		if(document.getElementById('$field.styleId').value != ''){
-       			document.getElementById('$field.styleId').value = '';
+	  } else {
+      	document.getElementById('$field.styleId').disabled = true;
+		if(document.getElementById('$field.styleId').value != '') { 
+       		document.getElementById('$field.styleId').value = '';
 			verificaHabilitados();
 		}
 	 }
 #end
 #end
-    }
+}
     <!--Operacao de Desabilitar-->
 function verificaDesabilitados() {          
-#foreach ($field in $actionParameters)
+#foreach($field in $actionParameters)
 #if($field.desabilitadoPor)
-          if(
+	if(
 #foreach($desabilitador in $field.desabilitadoPor)
 #if($velocityCount != 1)||#end document.getElementById('$desabilitador.styleId').value != ''
 #end
-          ){
-          	document.getElementById('$field.styleId').disabled = true;
-          	if(document.getElementById('$field.styleId').value != ''){
-       			document.getElementById('$field.styleId').value = '';
-       			verificaDesabilitados();
-       		}
+          ) { 
+        document.getElementById('$field.styleId').disabled = true;
+        if(document.getElementById('$field.styleId').value != '') { 
+       		document.getElementById('$field.styleId').value = '';
+       		verificaDesabilitados();
+       	}
      	  	
 	  }else {
-            	document.getElementById('$field.styleId').disabled = false;
+      	document.getElementById('$field.styleId').disabled = false;
 	  }
 #end
 #end
@@ -145,84 +140,82 @@ function verificaDesabilitados() {
     <!--Operacao de tornar visivel-->    
 function verificaVisiveis() {
           
-#foreach ($field in $actionParameters)
+#foreach($field in $actionParameters)
 #if($field.visivelPor)
-          if(
+	if(
 #foreach($visivelPor in $field.visivelPor)
           #if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
 #end
-          ){
-          	document.getElementById('tr-$field.styleId').style.display ='';
-     	  }else {
-	  	document.getElementById('tr-$field.styleId').style.display ='none';
-	  	if(document.getElementById('tr-$field.styleId').value != ''){
-       			document.getElementById('tr-$field.styleId').value = '';
+    ) { 
+		document.getElementById('tr-$field.styleId').style.display ='';
+	}else {
+		document.getElementById('tr-$field.styleId').style.display ='none';
+	  	if(document.getElementById('tr-$field.styleId').value != '') { 
+       		document.getElementById('tr-$field.styleId').value = '';
 			verificaVisiveis();
-		}
-            	
+		}	
 	 }
 #end
 #end
-    }
+}
     
     <!--Operacao de Esconder-->    
     function verificaEscondidos() {
           
-#foreach ($field in $actionParameters)
+#foreach($field in $actionParameters)
 #if($field.escondidoPor)
-          if(
+	if(
 #foreach($escondidoPor in $field.escondidoPor)
 #if($velocityCount != 1)||#end document.getElementById('$escondidoPor.styleId').value != ''
 #end
-          ){
-          	document.getElementById('tr-$field.styleId').style.display ='none';
-          	if(document.getElementById('tr-$field.styleId').value != ''){
-       			document.getElementById('tr-$field.styleId').value = '';
+	) { 
+    	document.getElementById('tr-$field.styleId').style.display ='none';
+        if(document.getElementById('tr-$field.styleId').value != '') { 
+       		document.getElementById('tr-$field.styleId').value = '';
 			verificaEscondidos();
 		}
-     	  	
-	  }else {
+	}else {
             	document.getElementById('tr-$field.styleId').style.display ='';
-	 }
-#end
-#end
-    }
-    
-    function verifica() {
-     	verificaHabilitados();
-     	verificaDesabilitados();
-     	verificaEscondidos();
-     	verificaVisiveis();
-    }
-	
-
-$(document).ready(function(){			
-				$('textarea').elastic();
-				$('textarea').trigger('update');
-				$("#tabs").easytabs();
-			});
-#foreach ($field in $actionParameters)
-#if(($field.textField) && $field.calendarRequired)
-	$(function() {
-		$( "input#${field.name}${jsp.useCase.name}" ).datepicker({
-			changeMonth: true,
-			changeYear: true,
-			regional:['pt-BR']
-		});
-	});
-#end
-#end
-
-function atualizaElementos(){
-#foreach ($variable in $jsp.pageVariables)
-#if ($variable.table)
-		$("#${variable.name}").displayTagAjax();
-#end
-#end
-		$('#tabs').easytabs(); 
 	}
+#end
+#end
+}
+    
+function verifica() {
+	verificaHabilitados();
+    verificaDesabilitados();
+    verificaEscondidos();
+    verificaVisiveis();
+}
 	
-$(document).ready(function(){
+
+$(document).ready(function() {			
+	$('textarea').elastic();
+	$('textarea').trigger('update');
+	$("#tabs").easytabs();
+});
+#foreach($field in $actionParameters)
+#if(($field.textField) && $field.calendarRequired)
+$(function() {
+	$( "input#${field.name}${jsp.useCase.name}" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		regional:['pt-BR']
+	});
+});
+#end
+#end
+
+function atualizaElementos() {
+#foreach($variable in $jsp.pageVariables)
+#if($variable.table)
+	$("#${variable.name}").displayTagAjax();
+#end
+#end
+	$('#tabs').easytabs(); 
+}
+	
+$(document).ready(function() {
 #set($tables = $jsp.getTables())
 	atualizaElementos();
 #foreach($table in $tables)
@@ -234,8 +227,9 @@ $(document).ready(function(){
 			document.${table.name}.name=param1;						   
 			document.${table.name}.submit(); 
 			return true;                
-               }
-	function selecionaDeseleciona(){
+    }
+    
+	function selecionaDeseleciona() {
 		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
         var setChecked = !boxes[0].checked;
                
@@ -244,35 +238,35 @@ $(document).ready(function(){
     }
 	
 	//Botao Select/Deselect all
-	$(".select-deselect").click(function(){
+	$(".select-deselect").click(function() {
 		selecionaDeseleciona();
 	});
 	
 	//Botao Clean
-	$(".clean-btn").click(function(){apaga() });
+	$(".clean-btn").click(function() { apaga() });
 	
 	//Botao Close
-	$(".close-btn").click(function(){close() });
+	$(".close-btn").click(function() { close() });
 	
 	//Table Global Actions tabela $table.name
-#foreach ($_action in $table.tableGlobalActions)
+#foreach($_action in $table.tableGlobalActions)
 #set($valueOperationMode = "")
 #set($valueOperationMode = $_action.findTaggedValue("$operationMode"))
-#set ($valueConfirmMessage = "")
-#set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
+#set($valueConfirmMessage = "")
+#set($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
 	//Javascript da action $_action.name da tabela $table.name
 #if($valueConfirmMessage != '')
-	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false });
+	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function() { confirm('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false });
 #else
 #if($_action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
-	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function(){setaAcaoForm('${_action.actionPath}', '${_action.formValidationMethodName}', ${_action.validationRequired} , '${_action.actionName}', this.form ); });
+	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function() { setaAcaoForm('${_action.actionPath}', '${_action.formValidationMethodName}', ${_action.validationRequired} , '${_action.actionName}', this.form ); });
 #else
-	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function(){setaAcaoForm('${_action.actionPath}', '${_action.formValidationMethodName}', ${_action.validationRequired} , '${_action.actionName}'); });
+	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").click(function() { setaAcaoForm('${_action.actionPath}', '${_action.formValidationMethodName}', ${_action.validationRequired} , '${_action.actionName}'); });
 #end
 #end
 #if($hints)
-	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").mouseover(function(){hints.show('${_action.actionTrigger.name}'); });
-	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").mouseout(function(){hints.hide() });
+	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").mouseover(function() { hints.show('${_action.actionTrigger.name}'); });
+	$("input#${_action.actionTrigger.name.toString().replace(' ','')}").mouseout(function() { hints.hide() });
 #end
 #end
 	//Fim Table Global Actions tabela $table.name
@@ -281,52 +275,52 @@ $(document).ready(function(){
 #foreach($formAction in $table.tableFormActions)
 #set($valueOperationMode = "")
 #set($valueOperationMode = $formAction.findTaggedValue("$operationMode"))
-#set ($valueConfirmMessage = "")
-#set ($valueConfirmMessage = $formAction.findTaggedValue("$confirmMessage"))
+#set($valueConfirmMessage = "")
+#set($valueConfirmMessage = $formAction.findTaggedValue("$confirmMessage"))
 #if($formAction.imageLink)
 #if($valueConfirmMessage != '')
-	$("a#imageLink${formAction.name.replace(' ','')}.imageLink").click(function(){return confirm('$valueConfirmMessage'); });
+	$("a#imageLink${formAction.name.replace(' ','')}.imageLink").click(function() { return confirm('$valueConfirmMessage'); });
 #end
 #else
 #if($valueConfirmMessage != '')	
-	$("a#buttonLink${formAction.name.replace(' ','')}.buttonLink").click(function(){return confirm('$valueConfirmMessage'); });
+	$("a#buttonLink${formAction.name.replace(' ','')}.buttonLink").click(function() { return confirm('$valueConfirmMessage'); });
 #end
 #end
 #end
 	// Fim Table Form Actions tabela $table.name
 	
 	//Table Look up Grid actions tabela $table.name
-#foreach ($tableAction in $table.TableLookupGridActions)
-#set ($valueConfirmMessage = $tableAction.findTaggedValue("$confirmMessage"))						  
+#foreach($tableAction in $table.TableLookupGridActions)
+#set($valueConfirmMessage = $tableAction.findTaggedValue("$confirmMessage"))						  
 #set($valueOperationMode = "")
 #set($valueOperationMode = $tableAction.findTaggedValue("$operationMode"))
 #if($hints)	
-	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").mouseover(function(){hints.show('${tableAction.actionTrigger.name}'); });
-	$("input#lookupGrid${tableAction.actionTrigger.name.toString().replace(' ','')}").mouseout(function(){hints.hide() });
+	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").mouseover(function() { hints.show('${tableAction.actionTrigger.name}'); });
+	$("input#lookupGrid${tableAction.actionTrigger.name.toString().replace(' ','')}").mouseout(function() { hints.hide() });
 #if($tableAction.resettable)
-	$("input#reset${tableAction.actionName.toString().replace(' ','')}").mouseover(function(){hints.show('${tableAction.actionTrigger.name}_reset'); });
-	$("input#reset${tableAction.actionTrigger.name.toString().replace(' ','')}").mouseout(function(){hints.hide() });
+	$("input#reset${tableAction.actionName.toString().replace(' ','')}").mouseover(function() { hints.show('${tableAction.actionTrigger.name}_reset'); });
+	$("input#reset${tableAction.actionTrigger.name.toString().replace(' ','')}").mouseout(function() { hints.hide() });
 #end
 #end
 #if($valueConfirmMessage)
-	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaLocation('${tableAction.actionPath}'): false });
+	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").click(function() { confirm('$valueConfirmMessage')?setaLocation('${tableAction.actionPath}'): false });
 #else
-	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").click(function(){setaLocation('${tableAction.actionPath}'); });
+	$("input#lookupGrid${tableAction.actionName.toString().replace(' ','')}").click(function() { setaLocation('${tableAction.actionPath}'); });
 #end
 #end
 	// Fim Table Look up Grid actions tabela $table.name
 
 	//Table Column Actions tabela $table.name
-#foreach ($column in $table.tableColumns)
+#foreach($column in $table.tableColumns)
 #if($column.name)#set($columnName=$column.name)#else#set($columnName=$column)#end
-#set ($tableColumnActions = $table.getTableColumnActions($columnName))
+#set($tableColumnActions = $table.getTableColumnActions($columnName))
 #if($column.actionParameter)
 	##
-#elseif (!$tableColumnActions.empty)
-#foreach ($tableColumnAction in $tableColumnActions)
+#elseif(!$tableColumnActions.empty)
+#foreach($tableColumnAction in $tableColumnActions)
 #if($hints)
-	$("a#tableHyperlink${tableColumnAction.name.replace(' ','')}").mouseover(function(){hints.show("${tableColumnAction.actionTrigger.name}"); });
-	$("a#tableHyperlink${tableColumnAction.name.replace(' ','')}").mouseover(function(){hints.hide(); });
+	$("a#tableHyperlink${tableColumnAction.name.replace(' ','')}").mouseover(function() { hints.show("${tableColumnAction.actionTrigger.name}"); });
+	$("a#tableHyperlink${tableColumnAction.name.replace(' ','')}").mouseover(function() { hints.hide(); });
 #end
 #end
 #end
@@ -338,18 +332,18 @@ $(document).ready(function(){
 
 //Javascript dos fields
 #foreach($field in $jsp.allUniqueActionParameters)
-#set ($quote ='"')
+#set($quote ='"')
 #if($field.fieldRowCount)#set($rowCount=" rows=$quote$field.fieldRowCount$quote")#else#set($rowCount='')#end
 #if($field.fieldColumnCount)#set($columnCount=" size=$quote$field.fieldColumnCount$quote")#else#set($columnCount='')#end
 #if($rowIndex=='')#set($beanName=$formBeanName)#else#set($beanName="row")#end
-#set ($styleId = "$field.styleId$rowIndex")
+#set($styleId = "$field.styleId$rowIndex")
 
 	//Javascript do field $field.name
 #if($hints)
-	$("input#${field.name}${jsp.useCase.name}").mouseover(function(){hints.show("${field.hintKey}","$styleId") });
-	$("input#${field.name}${jsp.useCase.name}").mouseout(function(){hints.hide()});
+	$("input#${field.name}${jsp.useCase.name}").mouseover(function() { hints.show("${field.hintKey}","$styleId") });
+	$("input#${field.name}${jsp.useCase.name}").mouseout(function() { hints.hide()});
 #end
-#if($field.radioButton || ($field.textField && $field.calendarRequired))
+#if($field.radioButton ||($field.textField && $field.calendarRequired))
 	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
 	
 #elseif($field.autocomplete)
@@ -367,24 +361,24 @@ $(document).ready(function(){
 #set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
 #end
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
-	    source: function (query, process) {
-	        return ${dollar}.get("$url", { query: query }, function (data) {
+	    source: function(query, process) {
+	        return ${dollar}.get("$url", { query: query }, function(data) {
 	            return process(data.options);
 	        });
 	    }
 	});
 	
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
-	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
-	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
-	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
+	$("input#${field.name}${jsp.useCase.name}").keyup(function() { verifica() });
+	$("input#${field.name}${jsp.useCase.name}").keypress(function() { verifica(); });
+	$("input#${field.name}${jsp.useCase.name}").mouseup(function() { keySubmit(event); });
 	
 #elseif($field.money)
-	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){verifica(); });
-	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica(); });
-	$("input#${field.name}${jsp.useCase.name}").keydown(function(event){backspace(this,event); });
-	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
-	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
+	$("input#${field.name}${jsp.useCase.name}").mouseup(function() { verifica(); });
+	$("input#${field.name}${jsp.useCase.name}").keyup(function() { verifica(); });
+	$("input#${field.name}${jsp.useCase.name}").keydown(function(event) { backspace(this,event); });
+	$("input#${field.name}${jsp.useCase.name}").keypress(function(event) { reais(this,event); });
+	$("input#${field.name}${jsp.useCase.name}").change(function() { limpaStringParaMoney(this); });
 	
 #end
 #end
@@ -392,212 +386,212 @@ $(document).ready(function(){
 //JavaScript dos botoes de acao
 #if($action.tableAction)
 #foreach($_action in $jsp.actions)
-#set ($messageKey = $_action.messageKey)
-#set ($trigger = $_action.actionTrigger)
+#set($messageKey = $_action.messageKey)
+#set($trigger = $_action.actionTrigger)
 #set($useCaseName = "${_action.useCase.package.webModuleName}${_action.useCase.actionPath}.action")
-#set ($roles = $_action.actionRoles)
-#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
+#set($roles = $_action.actionRoles)
+#set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
 #if(!$_action.tableLink)
 	
 #if($_action.formPost )
 #if($hints)
-	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function() { confirm('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
-#if ($_action.resettable)
-	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.hyperlink)
 #set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))					
 #if($fieldLinkValue.equals(""))
 #if($hints)
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}' });
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide() });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}' });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide() });
 #end
 #end
 #elseif($_action.lookupGrid)
 #if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage !="")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.pupUp)
 	#if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #end
 
 #end
 #end
-#elseif (($action.formPost || $action.hyperlink))
-#if ($action.actionParameters.empty)
+#elseif(($action.formPost || $action.hyperlink))
+#if($action.actionParameters.empty)
 #foreach($_action in $jsp.actions)
-#set ($messageKey = $_action.messageKey)
-#set ($trigger = $_action.actionTrigger)
+#set($messageKey = $_action.messageKey)
+#set($trigger = $_action.actionTrigger)
 #set($useCaseName = "${_action.useCase.package.webModuleName}${_action.useCase.actionPath}.action")
-#set ($roles = $_action.actionRoles)
-#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
+#set($roles = $_action.actionRoles)
+#set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
 #if(!$_action.tableLink)
 #if($_action.formPost )
 #if($hints)
-	$("input#${_action.actionName.toString().replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("input#${_action.actionName.toString().replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { confirm('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
-#if ($_action.resettable)
-	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.hyperlink)
 #set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))					
 #if($fieldLinkValue.equals(""))
 #if($hints)
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}' });
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide() });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}' });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide() });
 #end
 #end
 #elseif($_action.lookupGrid)
 #if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false; }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false; }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.pupUp)
 	#if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #else
 ##se não for nenhuma das opções seta a ação do struts2
-	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
+	$("#${_action.actionName}").click(function() {  setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
 #end
 #end
 #end
 
 #else
 #foreach($_action in $jsp.actions)
-#set ($messageKey = $_action.messageKey)
-#set ($trigger = $_action.actionTrigger)
+#set($messageKey = $_action.messageKey)
+#set($trigger = $_action.actionTrigger)
 #set($useCaseName = "${_action.useCase.package.webModuleName}${_action.useCase.actionPath}.action")
-#set ($roles = $_action.actionRoles)
-#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
+#set($roles = $_action.actionRoles)
+#set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
 
 #if(!$_action.tableLink)
 #if($_action.formPost )
 #if($hints)
-	$("input#${_action.actionName.toString().replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("input#${_action.actionName.toString().replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { confirm('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() { setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
-#if ($_action.resettable)
-	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("input#reset${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.hyperlink)
 #set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))					
 #if($fieldLinkValue.equals(""))
 #if($hints)
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}' });
-	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide() });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}' });
+	$("a#hyperLink${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide() });
 #end
 #end
 #elseif($_action.lookupGrid)
 #if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #elseif($_action.pupUp)
 	#if($hints)
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function() { hints.show('${trigger.name}'); }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function() { hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){confirm ('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { confirm('$valueConfirmMessage') ? setaLocation('${_action.actionPath}') : false }); 
 #else 
-	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function(){setaLocation('${_action.actionPath}'); });
+	$("#lookupGrid${_action.actionName.replace(' ','')}").click(function() { setaLocation('${_action.actionPath}'); });
 #end
-#if ($_action.resettable)
-	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
+#if($_action.resettable)
+	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function() { apaga(); });
 #end
 #end
 #end
