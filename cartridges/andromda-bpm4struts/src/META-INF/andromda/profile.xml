@@ -419,6 +419,7 @@
                     <value>link</value>
                     <value>multibox</value>
                     <value>autocomplete</value>
+                    <value>custom</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">

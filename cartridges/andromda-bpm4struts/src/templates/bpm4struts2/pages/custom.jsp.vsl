@@ -1,0 +1,6 @@
+#if ($parameter.custom)
+#set($path = ${parameter.getJsp().getUseCase().getPackagePath()})
+#set($package=$path.replace('/','.'))
+#set($generatedFile = "${path}/${parameter.name}.jsp")
+ <!-- Implemente -->
+#end 

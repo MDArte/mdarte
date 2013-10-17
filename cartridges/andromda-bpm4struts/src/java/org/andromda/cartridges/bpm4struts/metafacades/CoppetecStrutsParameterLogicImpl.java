@@ -246,6 +246,10 @@ extends CoppetecStrutsParameterLogic
 					else widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_TEXT;
 				}
 			}
+			else if(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM.equalsIgnoreCase(fieldType)) {
+
+				  return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM;
+			}
 			else if ("doubleselect".equalsIgnoreCase(fieldType))
 			{
 				widgetType = "doubleselect";
@@ -326,6 +330,12 @@ extends CoppetecStrutsParameterLogic
 	private boolean isGenericValidator()
 	{
 		return true;
+	}
+	
+	
+	protected boolean handleIsCustom() {
+
+		  return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM.equals(this.getWidgetType());
 	}
 
 	protected boolean handleIsSelectable()

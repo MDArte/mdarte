@@ -343,9 +343,7 @@
 ###end
 ##${indent}</logic:notPresent>
 ##end
-
 #end
-
 ##
 ##
 ##      This macro takes care of rendering the appropriate Struts tags
@@ -411,6 +409,11 @@
 ##      M U L T I B O X
 ##
 ## @todo: disable this widget if not used in a row action
+#elseif ($field.custom )
+#set($path = ${field.getJsp().getUseCase().getPackagePath()})
+#set($package=$path.replace('/','.'))
+#set($file = "${path}/${field.name}.jsp")
+	<%@ include file="${file}" %>
 #elseif ($field.multibox)
 	<div id="div${field.name}${action.useCase.name}" class="multibox field">
 		#if ($requiredness && $field.required)<label class="multiboxLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
