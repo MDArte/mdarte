@@ -188,7 +188,7 @@
     </template>
     
    <template
-        path="templates/bpm4struts2/actions/AutocompleteAction.java.vsl"
+        path="templates/bpm4struts2/actions/AutoCompleteAction.java.vsl"
         outputPattern="$generatedFile"
         outlet="actions"
         overwrite="true">

@@ -356,9 +356,9 @@ $(document).ready(function() {
 #end
 #if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
 #set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
-#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
+#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
 #else
-#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}Autocomplete.action")
+#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
 #end
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
 	    source: function(query, process) {
