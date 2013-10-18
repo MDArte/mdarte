@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 
-import ${customTypesPackage}.to.*;
+import ${customTypesPackage}.to.${entity.name}TOImpl;
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
