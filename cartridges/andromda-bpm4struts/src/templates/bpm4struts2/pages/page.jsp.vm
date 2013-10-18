@@ -409,20 +409,20 @@
 ##      M U L T I B O X
 ##
 ## @todo: disable this widget if not used in a row action
-#elseif($field.custom)
-	<div id="div${field.name}${action.useCase.name}" class="custom field">
-		<tiles:insert page="${field.name}.jsp" flush="false"/>
-	</div>
 #elseif ($field.multibox)
 	<div id="div${field.name}${action.useCase.name}" class="multibox field">
 		#if ($requiredness && $field.required)<label class="multiboxLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
 		#end
 		<s:checkboxlist id="${field.name}${action.useCase.name}" name="$fieldName" listKey="value" listValue="label" list="#session.form.${field.backingListName}"/>
 	</div><br class="clear"/>
+#elseif($field.custom)
+	<div id="div${field.name}${action.useCase.name}" class="custom field">
+		<%@ include file="${field.name}.jsp"  %>
+	</div>
 ##
 ##     P A S S W O R D
 ##
-#elseif ( ($field.password) )
+#elseif( ($field.password) )
 	<div id="div${field.name}${action.useCase.name}" class="password field">
 		#if ($requiredness && $field.required)<label class="passwordLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="passwordLabel"><bean:message key="$field.messageKey"/></label>
 		#end
@@ -430,7 +430,7 @@
 	</div>
 ##      T E X T F I E L D       &       P A S S W O R D
 ##
-#elseif ( ($field.textField) && $field.calendarRequired )
+#elseif( ($field.textField) && $field.calendarRequired )
 	<div id="div${field.name}${action.useCase.name}" class="input-append date field" >
 		#if ($requiredness && $field.required)
 		<label class="dateLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
@@ -534,7 +534,6 @@
 #elseif ($field.strutsAction.tableLink)
 ## we could also test for widget type == 'plaintext', but that would be redundant here
 	<div id="div${field.name}${action.useCase.name}" class="hidden field">
-		##if($requiredness && $field.required)<label class="fileLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="fileLabel"><bean:message key="$field.messageKey"/></label>#end
 		<input id="${field.name}${action.useCase.name}" type="hidden" name="${field.name}" value="<c:out value="${__value}"/>" />
 	</div>
 #else
