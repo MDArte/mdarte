@@ -27,13 +27,12 @@ import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import br.mdarte.exemplo.academico.vo.*;
-import br.mdarte.exemplo.academico.to.*;
+
+import ${customTypesPackage}.to.*;
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
-import ${customTypesPackage}.${modelPackageName}.EstudanteAbstract;
 import br.ufrj.coppetec.ValueObject;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.to.AbstractTO;
