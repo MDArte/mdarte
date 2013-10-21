@@ -45,17 +45,17 @@ public class ${formBeanClassName}
 
     private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
     
-#set($i=0)
-#foreach($field in $fields)#set($i=$i+1)#end
-#set($j=0)
-	public void setValues(#foreach($field in $fields) #set($j=$j+1) $field.type.fullyQualifiedName $field.name #if($j==$i) )#else, #end#end
-	{
-#foreach($field in $fields)
-#if(!$field.strutsAction.tableAction)
-		this.${field.name} = ${field.name};
-#end
-#end
-	}
+##set($i=0)
+##foreach($field in $fields)#set($i=$i+1)#end
+##set($j=0)
+##	public void setValues(#foreach($field in $fields) #set($j=$j+1) $field.type.fullyQualifiedName $field.name #if($j==$i) )#else, #end#end
+##	{
+##foreach($field in $fields)
+##if(!$field.strutsAction.tableAction)
+##		this.${field.name} = ${field.name};
+##end
+##end
+##	}
 	
 #foreach ($field in $fields)
 #if ($field.file)
