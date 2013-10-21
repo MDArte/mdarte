@@ -171,6 +171,15 @@
         </dependency>
 		<dependency>
 	        <groupId>slf4j</groupId>
+	        <artifactId>slf4j-api</artifactId>
+	        <version>${slf4j.api.version}</version>
+	        <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+		<dependency>
+	        <groupId>slf4j</groupId>
 	        <artifactId>slf4j-log4j12</artifactId>
 	        <version>${slf4j.api.version}</version>
 	        <properties>
