@@ -36,9 +36,6 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-#if($jsp.temTabela)
-			<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
-#end
 	        <div id="form">
 #set ($messageKey = $action.messageKey)
 #set ($actionTrigger = $action.actionTrigger)
@@ -67,6 +64,9 @@
 					</div>
 				</div>
 			</div>
+#if($jsp.temTabela)
+			<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
+#end
 #set($name = "")
 #foreach($palavra in $jsp.fullPath.split('/'))
 #set($name=$palavra)

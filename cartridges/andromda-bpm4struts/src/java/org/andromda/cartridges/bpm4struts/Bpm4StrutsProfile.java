@@ -94,6 +94,7 @@ public class Bpm4StrutsProfile
 
     public static final String TAGGEDVALUE_ACTION_TYPE_TABLE = "table";
     public static final String TAGGEDVALUE_ACTION_DEFAULT_TYPE = TAGGEDVALUE_ACTION_TYPE_FORM;
+    public static final String TAGGEDVALUE_INPUT_TYPE_CUSTOM = "custom";
     public static final String TAGGEDVALUE_INPUT_TYPE_TEXT = "text";
     public static final String TAGGEDVALUE_INPUT_TYPE_PLAINTEXT = "plaintext";
     public static final String TAGGEDVALUE_INPUT_TYPE_TEXTAREA = "textarea";

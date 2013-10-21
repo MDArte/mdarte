@@ -11,7 +11,7 @@ packDependencies=true
 packWar=true
 
 # The datasource for the application
-dataSource.name=DefaultDS
+dataSource.name=${projectId}DS
 dataSource=java:/${dataSource.name}
 
 # Properties for management of the database schema, 
