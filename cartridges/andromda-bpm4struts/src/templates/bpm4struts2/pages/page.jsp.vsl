@@ -112,11 +112,7 @@
 #end
 
 <tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
-#if($jsp.temTabela)
-	<div id="divTabelas">
-	<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
-	</div>
-#end
+
 #if($flag > 0)
 	<bean:message key="required.fields.asterisk"/>
 #end
