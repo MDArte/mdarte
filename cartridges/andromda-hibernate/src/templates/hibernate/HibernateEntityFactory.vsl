@@ -28,7 +28,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 
-import ${customTypesPackage}.to.${entity.name}TOImpl;
+#set ($modelPackage = ".${modelPackageName}")
+#set ($transferPackage = ".${transferPackageName}")
+#if ($stringUtils.isNotBlank($entity.packageName))
+import ${stringUtils.replace($entity.packageName,".${modelPackageName}",".${transferPackageName}")}.${entity.name}TOImpl;
+#end
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
