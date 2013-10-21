@@ -169,6 +169,43 @@
                 <ejb.manifest.classpath>true</ejb.manifest.classpath>
             </properties>
         </dependency>
+		<dependency>
+	        <groupId>slf4j</groupId>
+	        <artifactId>slf4j-api</artifactId>
+	        <version>${slf4j.api.version}</version>
+	        <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+		<dependency>
+	        <groupId>slf4j</groupId>
+	        <artifactId>slf4j-log4j12</artifactId>
+	        <version>${slf4j.api.version}</version>
+	        <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+        <dependency>
+        	<groupId>log4j</groupId>
+        	<artifactId>log4j</artifactId>
+        	<version>1.2.16</version>
+        	<properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate-jpa</artifactId>
+            <version>${hibernate.jpa.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
