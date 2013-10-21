@@ -95,6 +95,7 @@
 				<property name="securityRealm">${application.id}</property>
 				<property name="controleAcesso">${maven.andromda.core.ejb.generated.dir}</property>
 				<property name="controleAcessoImpl">${maven.andromda.core.ejb.manual.dir}</property>
+				<property name="controleAcessoImplJava">${maven.andromda.web.manual.java.dir}</property>
 #if(!$securityEnabled)
 				-->
 #end
