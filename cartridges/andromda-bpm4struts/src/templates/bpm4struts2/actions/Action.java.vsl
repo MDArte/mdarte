@@ -177,11 +177,17 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		this.${fieldName}RowSelection = ${fieldName}RowSelection;
 	}
 #else
+#if(!$field.hiddenField)
 	public void ${field.setterName}($fieldType $fieldName)
 	{
 		this.$fieldName = $fieldName;
 	}
-
+#else
+	public void ${field.setterName}(String $fieldName)
+	{
+		this.$fieldName = ${fieldType}.valueOf($fieldName);
+	}
+#end
 #end
 #else
 	 public void ${field.setterName}(java.io.File $fieldName)
