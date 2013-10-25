@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    #if(!$modulos)
+#if(!$modulos)
     <classpathentry kind="src" path="core/src/java"/>
     <classpathentry kind="src" path="core/target/src"/>
     <classpathentry kind="src" path="web/src/java"/>
     <classpathentry kind="src" path="web/target/src"/>
-    #else
+#else
+    <classpathentry kind="src" path="core/cs/compartilhado/src/java"/>
+    <classpathentry kind="src" path="core/cs/compartilhado/target/src"/>
     <classpathentry kind="src" path="core/cd/src/java"/>
     <classpathentry kind="src" path="core/cd/target/src"/>
-    #end
     <classpathentry kind="src" path="common/src/java"/>
     <classpathentry kind="src" path="common/target/src"/>
+#end
+    <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.7.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-3.1.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-lang/jars/commons-lang-2.1.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+#if($securityRealm)
+	<classpathentry kind="var" path="MAVEN_REPO/security/jars/security-1.1.3-RC1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/jars/ControleAcesso-common-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/ejbs/ControleAcesso-compartilhado-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/ejbs/ControleAcesso-controleacesso-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/jars/ControleAcesso-dominio-core-1.0.jar"/>
+#end
+	<classpathentry kind="var" path="MAVEN_REPO/struts/jars/struts-1.2.7.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.4-20040521.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-validator/jars/commons-validator-1.3.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/json/jars/json-simple-1.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/common-classes/jars/CommonClasses-1.3-RC3.jar"/>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
