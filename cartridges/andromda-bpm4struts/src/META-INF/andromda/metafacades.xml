@@ -154,6 +154,12 @@
         </mapping>
         <property reference="defaultTableExportTypes"/>
     </metafacade>
+    
+    <metafacade class="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackageLogicImpl">
+        <mapping class="org.omg.uml.modelmanagement.UmlPackage$Impl">
+             <stereotype>MODULO_SERVICO</stereotype>
+        </mapping>
+    </metafacade>
 
     <metafacade class="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntityAttributeLogicImpl">
         <mapping class="org.omg.uml.foundation.core.Attribute$Impl">

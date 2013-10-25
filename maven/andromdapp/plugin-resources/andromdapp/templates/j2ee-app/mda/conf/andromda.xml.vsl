@@ -31,6 +31,7 @@
 				<property name="outletReplaceModulo">${maven.andromda.module.name.outlet.replace}</property>
 				<property name="modulo">true</property>
 #end
+				<property name="projectDir">${maven.andromda.project.base.dir}</property>
 				<property name="projectId">${application.id}</property>
 				<property name="projectVersion">${application.version}</property>
 				<property name="contextoPrincipal">/${application.id}</property>

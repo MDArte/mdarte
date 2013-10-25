@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-#if(!$modulos)
+<!-- Classpath gerado a partir do cartucho andromda-bpm4struts, para gerar um 
+	novo(atualizado com o modelo), apague esse e regere o projeto. Não se 
+	esqueça de salvar as dependencias adicionadas manualmente para 
+	adicioná-las ao novo arquivo. -->
+#set($generatedFile=".classpath")
+#foreach($service in $services)
+	<classpathentry kind="src" path="core/cs/${service.name}/target/src"/>
+	<classpathentry kind="src" path="core/cs/${service.name}/src/java"/>
+#end
+#if(!$modulo)
     <classpathentry kind="src" path="core/src/java"/>
     <classpathentry kind="src" path="core/target/src"/>
     <classpathentry kind="src" path="web/src/java"/>
     <classpathentry kind="src" path="web/target/src"/>
 #else
+    <classpathentry kind="src" path="core/cs/compartilhado/src/java"/>
+    <classpathentry kind="src" path="core/cs/compartilhado/target/src"/>
     <classpathentry kind="src" path="core/cd/src/java"/>
     <classpathentry kind="src" path="core/cd/target/src"/>
+#foreach($package in $packages)
+	<classpathentry kind="src" path="web/${package.name}/src/java"/>
+    <classpathentry kind="src" path="web/${package.name}/target/src"/>
+#end
     <classpathentry kind="src" path="common/src/java"/>
     <classpathentry kind="src" path="common/target/src"/>
 #end
@@ -28,6 +43,5 @@
 	<classpathentry kind="var" path="MAVEN_REPO/json/jars/json-simple-1.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/common-classes/jars/CommonClasses-1.3-RC3.jar"/>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="output" path="target/classes"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>

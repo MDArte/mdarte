@@ -89,6 +89,7 @@
 	<property reference="externalHyperlinkModulo"/>
 	<property reference="externalHyperlink"/>
 	<property reference="projectId"/>
+	<property reference="projectDir"/>
 	<property reference="server"/>
 	<property reference="reportPropertiesPath"/>
 	<property reference="useCaseuseCaseRemove"/>
@@ -1825,6 +1826,25 @@
         overwrite="true"/>
     
     <!-- end of struts 2 templates -->
+	
+	<!-- Templates de configuração do eclipse -->
+	<template
+		path="templates/eclipse-config/classpath.vsl"
+		outputPattern="$generatedFile"
+		outlet="projectDir"
+		overwrite="false"
+		outputToSingleFile="true"
+		outputOnEmptyElements="true">
+		<modelElements>
+			<modelElement variable="packages">
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+			</modelElement>
+			<modelElement variable="services">
+				<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
+			</modelElement>
+		  </modelElements>
+	</template>
+	<!-- Fim templates de configuração do eclipse -->
 	
 	<!--  inicio - statistics templates -->
 

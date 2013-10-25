@@ -82,6 +82,8 @@ maven.andromda.test.manual.dir=${maven.src.dir}/../../test/model/shared/src/java
 maven.andromda.common.manual.dir=${maven.src.dir}/../../common/src/java
 maven.andromda.common.generated.dir=${maven.src.dir}/../../common/target/src
 
+maven.andromda.project.base.dir=${maven.src.dir}/../../
+
 #if ($hibernate || $spring)
 #if ($hibernate)
 # The hibernate transaction manager to use.
