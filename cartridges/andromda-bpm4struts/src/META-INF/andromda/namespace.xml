@@ -202,6 +202,11 @@
                     Place which the reports will be placed. Use for internal statistics.
                 </documentation>
             </property>
+            <property name="projectDir">
+            	<documentation>
+            		Project's base directory. 
+            	</documentation>
+            </property>
         </propertyGroup>
         <propertyGroup name="View Test">
         	<property name="viewTestEnabled">

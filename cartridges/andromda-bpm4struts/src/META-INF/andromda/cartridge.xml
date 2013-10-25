@@ -89,6 +89,7 @@
 	<property reference="externalHyperlinkModulo"/>
 	<property reference="externalHyperlink"/>
 	<property reference="projectId"/>
+	<property reference="projectDir"/>
 	<property reference="server"/>
 	<property reference="reportPropertiesPath"/>
 	<property reference="useCaseuseCaseRemove"/>
@@ -884,14 +885,30 @@
         outlet="shared-pages-impl"
         overwrite="false"
         outputToSingleFile="true"/>
-<!--         
+       
       <template
         path="templates/bpm4struts2/pages/messages.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"
-        outputToSingleFile="true"/> -->
-
+        outputToSingleFile="true"
+        />
+	
+	 <!-- Templates de configuração do eclipse -->
+	 <template path="templates/eclipse-config/classpath.vsl"
+		outputPattern="$generatedFile" 
+		outlet="projectDir" 
+		overwrite="false"
+		outputToSingleFile="true" 
+		outputOnEmptyElements="true">
+		<modelElements>
+			<modelElement variable="packages">
+				<type
+					name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage" />
+			</modelElement>
+		</modelElements>
+	</template>
+	 <!-- Fim templates de configuração do eclipse -->
     <template
         path="templates/bpm4struts/server/users.properties.vsl"
         outputPattern="users.properties"
