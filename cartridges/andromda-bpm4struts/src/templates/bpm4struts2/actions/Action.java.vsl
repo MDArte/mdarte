@@ -183,10 +183,23 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		this.$fieldName = $fieldName;
 	}
 #else
-	public void ${field.setterName}(String $fieldName)
+#if($field.type.name=="String")
+	public void ${field.setterName}($fieldType $fieldName)
 	{
-		this.$fieldName = ${fieldType}.valueOf($fieldName);
+		this.$fieldName = $fieldName;
 	}
+#else
+	public void ${field.setterName}(Object $fieldName)
+	{
+		if($fieldName == null) this.$fieldName = null;
+		else if ($fieldName instanceof  String[]) {
+			String temp = ((String[])$fieldName)[0];
+			if (temp.isEmpty()) this.$fieldName = null;
+			else this.$fieldName = ${fieldType}.valueOf(((String[])$fieldName)[0]);
+		}
+		else this.$fieldName = (${fieldType}) $fieldName;
+	}
+#end
 #end
 #end
 #else
