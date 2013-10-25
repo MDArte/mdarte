@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsGlobals;
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsProfile;
@@ -763,7 +764,7 @@ public class StrutsParameterLogicImpl
 
         final StrutsJsp page = this.getJsp();
 
-        final Collection tableActions = new HashSet();
+        final Map tableActions = new TreeMap();
 
         final Collection allUseCases = getModel().getAllUseCases();
         for (final Iterator useCaseIterator = allUseCases.iterator(); useCaseIterator.hasNext();)
@@ -788,7 +789,7 @@ public class StrutsParameterLogicImpl
                                     (tableAction && action.isTableAction())||
                                     (lookupGrid && action.isLookupGrid()))
                                 {
-                                    tableActions.add(action);
+                                    tableActions.put(action.getName(), action);
                                 }
                             }
                         }
@@ -796,7 +797,7 @@ public class StrutsParameterLogicImpl
                 }
             }
         }
-        return new ArrayList(tableActions);
+        return new ArrayList(tableActions.values());
     }
 
     protected String handleGetTableDecoratorFullyQualifiedName()

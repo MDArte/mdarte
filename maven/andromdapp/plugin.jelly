@@ -242,7 +242,7 @@
         <velocity:merge
             name="${moduleDir}/maven.xml"
             basedir="${moduleTemplatesDir}"
-            template="maven.xml"/>
+            template="maven.xml.vsl"/>
 
         <ant:mkdir dir="${moduleDir}/${javaSrcDir}"/>
 
@@ -281,16 +281,19 @@
 			name="${projectId}/core/project.xml"
 			basedir="${templatesDir}/core/"
 			template="project.xml.vsl"/>
-        
-          
-		<ant:copy todir="${projectId}/core/" file="${templatesDir}/core/project.properties"/>
+		
+		<velocity:merge
+			name="${projectId}/core/project.properties"
+			basedir="${templatesDir}/core/"
+			template="project.properties.vsl"/>
+
         </j:if>
         
 
         <velocity:merge
           name="${projectId}/core/${pasta}/maven.xml"
           basedir="${templatesDir}/ejb/"
-          template="maven.xml"/>
+          template="maven.xml.vsl"/>
           
         <velocity:merge
           name="${projectId}/core/${pasta}/project.xml"
@@ -390,6 +393,11 @@
           name="${moduleDir}/project.xml"
           basedir="${moduleTemplatesDir}"
           template="project.xml.vsl"/>
+    
+    <velocity:merge
+          name="${moduleDir}/project.properties"
+          basedir="${moduleTemplatesDir}"
+          template="project.properties.vsl"/>
 
 	<ant:mkdir dir="${moduleDir}/${javaSrcDir}"/>
 	<ant:mkdir dir="${moduleDir}/target/src"/>
@@ -435,18 +443,29 @@
 		<!-- ADICIONA O HELP SE FOR MODULARIZADO -->
 		
 		<j:if test ="${modulos == 'true'}">
-			<ant:copy todir="${moduleDir}/help">
-	            <ant:fileset dir="${moduleTemplatesDir}/help"/>
-	    	</ant:copy>
+		
+			<ant:mkdir dir="${moduleDir}/help/src/java/WEB-INF"/>	
 			
 			<velocity:merge
           		name="${moduleDir}/help/src/java/WEB-INF/jboss-web.xml"
           		basedir="${moduleTemplatesDir}/help/src/java/WEB-INF"
-          		template="jboss-web.xml"/>
+          		template="jboss-web.xml.vsl"/>
+          	<velocity:merge
+          		name="${moduleDir}/help/src/java/WEB-INF/web.xml"
+          		basedir="${moduleTemplatesDir}/help/src/java/WEB-INF"
+          		template="web.xml.vsl"/>
           	<velocity:merge
           		name="${moduleDir}/help/maven.xml"
           		basedir="${moduleTemplatesDir}/help"
-          		template="maven.xml"/>
+          		template="maven.xml.vsl"/>
+          	<velocity:merge
+          		name="${moduleDir}/help/project.xml"
+          		basedir="${moduleTemplatesDir}/help"
+          		template="project.xml.vsl"/>
+          	<velocity:merge
+          		name="${moduleDir}/help/project.properties"
+          		basedir="${moduleTemplatesDir}/help"
+          		template="project.properties.vsl"/>
 		</j:if>
 		
 		<!-- ADICIONA RECURSOS DO LAYOUT (STRUTS) -->
@@ -457,18 +476,24 @@
 			</j:if>			
 			<j:if test ="${modulos == 'true'}">
 				<j:set var="layoutWebDir" value="${projectId}/${moduleName}/layout/src/jsp/default"/>	
-				<ant:copy todir="${projectId}/${moduleName}/layout" file="${moduleTemplatesDir}/layout-config/project.xml"/>
 				<ant:copy todir="${projectId}/${moduleName}/layout" file="${moduleTemplatesDir}/layout-config/project.properties"/>
+				<velocity:merge
+          			name="${projectId}/${moduleName}/layout/project.xml"
+          			basedir="${moduleTemplatesDir}/layout-config"
+          			template="project.xml.vsl"/>
 				<velocity:merge
           			name="${projectId}/${moduleName}/layout/maven.xml"
           			basedir="${moduleTemplatesDir}/layout-config"
-          			template="maven.xml"/>
-				<ant:copy todir="${projectId}/${moduleName}/layout/src/java/WEB-INF/" file="${moduleTemplatesDir}/layout-config/web.xml"/>
-				<ant:copy todir="${projectId}/${moduleName}/layout/src/java/WEB-INF" file="${moduleTemplatesDir}/layout-config/struts-config.xml"/>
+          			template="maven.xml.vsl"/>
+          		<ant:copy todir="${projectId}/${moduleName}/layout/src/java/WEB-INF" file="${moduleTemplatesDir}/layout-config/struts-config.xml"/>
+          		<velocity:merge
+          			name="${projectId}/${moduleName}/layout/src/java/WEB-INF/web.xml"
+          			basedir="${moduleTemplatesDir}/layout-config"
+          			template="web.xml.vsl"/>
 				<velocity:merge
           			name="${projectId}/${moduleName}/layout/src/java/WEB-INF/jboss-web.xml"
           			basedir="${moduleTemplatesDir}/layout-config"
-          			template="jboss-web.xml"/>
+          			template="jboss-web.xml.vsl"/>
 			</j:if>			
 				
 			<ant:mkdir dir="${layoutWebDir}"/>		
@@ -483,22 +508,22 @@
 	        <velocity:merge
           			name="${layoutWebDir}/conf/cabecalho.jsp"
           			basedir="${moduleTemplatesDir}/layout-include-config"
-          			template="cabecalho.jsp"/>
+          			template="cabecalho.jsp.vsl"/>
           			
           	<velocity:merge
           			name="${layoutWebDir}/conf/rodape.jsp"
           			basedir="${moduleTemplatesDir}/layout-include-config"
-          			template="rodape.jsp"/>
+          			template="rodape.jsp.vsl"/>
           			
           	<velocity:merge
           			name="${layoutWebDir}/conf/include-stylesheets.jsp"
           			basedir="${moduleTemplatesDir}/layout-include-config"
-          			template="include-stylesheets.jsp"/>
+          			template="include-stylesheets.jsp.vsl"/>
           	
           	<velocity:merge
           			name="${layoutWebDir}/conf/include-javascripts.jsp"
           			basedir="${moduleTemplatesDir}/layout-include-config"
-          			template="include-javascripts.jsp"/>
+          			template="include-javascripts.jsp.vsl"/>
 	        
 		</j:if>
         
@@ -726,6 +751,12 @@
                     answer="seleniumComponent"/>
             </j:while>
         </j:if>
+        
+        <j:while test="${empty(databaseType) or (databaseType ne 'hypersonic' and databaseType ne 'oracle' and databaseType ne 'mysql' and databaseType ne 'postgres')}">
+            <i:ask
+                question="Please enter the database backend for the persistence layer: (enter 'hypersonic' or 'mysql' or 'oracle' or 'postgres')"
+                answer="databaseType"/>
+        </j:while>
 
         <!-- Fim das perguntas -->
 
@@ -744,6 +775,9 @@
         <j:set var="junit" value="${junitComponent eq 'yes'}"/>
         <j:set var="selenium" value="${seleniumComponent eq 'yes'}"/>
         <j:set var="securityEnabled" value="${securityAnswer eq 'yes'}"/>
+        <j:set var="mysql" value="${databaseType eq 'mysql'}"/>
+        <j:set var="postgres" value="${databaseType eq 'postgres'}"/>
+        <j:set var="oracle" value="${databaseType eq 'oracle'}"/>
         <j:set var="controleAcesso" value="${controleAcessoAnswer eq 'yes'}"/>
 
         <j:new var="stringUtils" className="org.apache.commons.lang.StringUtils"/>
