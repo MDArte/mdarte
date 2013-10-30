@@ -13,7 +13,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class LoginOAuthUCFormImpl
-    extends accessControl.LoginFormImpl
+    extends ${controleAcessoDir}.LoginFormImpl
     implements java.io.Serializable
 {
 

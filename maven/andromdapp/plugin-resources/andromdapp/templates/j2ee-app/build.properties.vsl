@@ -31,6 +31,7 @@ jboss.config=default
 # common dependency versions
 commons.jelly.version=1.0
 commons.beanutils.version=1.7.0
+commons.codec.version=1.4
 commons.collections.version=3.1
 commons.lang.version=2.1
 commons.logging.version=1.0.4
@@ -101,6 +102,11 @@ xwork.core.version=2.1.6
 #if(${controleAcesso})
 # versão do controle de acesso padrão do mdarte
 controle.acesso.version=1.0
+#end
+
+#if(${oauth})
+# versão do auth do mdarte
+oauth.version=1.0
 #end
 
 ## end struts2

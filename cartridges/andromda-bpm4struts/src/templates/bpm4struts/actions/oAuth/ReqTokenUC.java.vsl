@@ -44,7 +44,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import accessControl.OAuthImpl;
+import ${controleAcessoDir}.OAuthImpl;
 
 
 

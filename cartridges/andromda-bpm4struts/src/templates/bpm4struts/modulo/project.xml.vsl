@@ -10,12 +10,12 @@
     <description>
         Contains the ${pom.name}-${package.name}'s web module.
     </description>
-	#if($oAuthServer  == "true")
+#if($oAuthServer  == "true")
   <dependencies>
         <dependency>
             <groupId>oauth</groupId>
-            <artifactId>oauth-core</artifactId>
-            <version>${oauthcore.version}</version>
+            <artifactId>oauth</artifactId>
+            <version>${oauth.version}</version>
             <type>jar</type>
         </dependency>
 		<dependency>
@@ -25,5 +25,5 @@
             <type>jar</type>
         </dependency>
   </dependencies>
-  #end
+#end
 </project>

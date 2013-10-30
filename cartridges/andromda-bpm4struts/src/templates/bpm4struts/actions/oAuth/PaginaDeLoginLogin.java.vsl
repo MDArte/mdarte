@@ -37,9 +37,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import util.Constantes;
-import accessControl.EntrarLoginValidarFormImpl;
-import accessControl.LoginControllerFactory;
-import accessControl.OAuthImpl;
+import ${controleAcessoDir}.EntrarLoginValidarFormImpl;
+import ${controleAcessoDir}.LoginControllerFactory;
+import ${controleAcessoDir}.OAuthImpl;
 
 public final class PaginaDeLoginLogin extends Action
 {

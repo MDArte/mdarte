@@ -634,6 +634,14 @@
                         answer="securityAnswer"/>
                 </j:while>
                 <j:if test="${securityAnswer eq 'yes'}">
+                        <j:while test="${(securityTypeAnswer ne 'yes' and securityTypeAnswer ne 'no')}" >
+                        	<i:ask question="Would you like to use oAuth (enter 'yes' or 'no') ?" answer="securityTypeAnswer" />
+                        </j:while>
+                        <j:if test="${securityTypeAnswer eq 'oauth'}">
+                        	<j:set var="oauth" value="${oauth eq 'yes'}"/>
+                        </j:if>
+                </j:if>
+                <j:if test="${securityAnswer eq 'yes'}">
                         <j:while test="${(controleAcessoAnswer ne 'yes' and controleAcessoAnswer ne 'no')}" >
                         	<i:ask question="Would you like to use MDArte's default Controle Acesso (enter 'yes' or 'no') ?" answer="controleAcessoAnswer" />
                         </j:while>
@@ -779,6 +787,7 @@
         <j:set var="postgres" value="${databaseType eq 'postgres'}"/>
         <j:set var="oracle" value="${databaseType eq 'oracle'}"/>
         <j:set var="controleAcesso" value="${controleAcessoAnswer eq 'yes'}"/>
+        <j:set var="oauth" value="${securityTypeAnswer eq 'yes'}"/>
 
         <j:new var="stringUtils" className="org.apache.commons.lang.StringUtils"/>
 

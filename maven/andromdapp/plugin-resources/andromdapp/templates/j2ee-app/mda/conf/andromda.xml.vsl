@@ -30,6 +30,11 @@
 				<property name="outletReplaceModulo">${maven.andromda.module.name.outlet.replace}</property>
 				<property name="modulo">true</property>
 #end
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 				<property name="projectId">${application.id}</property>
 				<property name="projectVersion">${application.version}</property>
 				<property name="contextoPrincipal">/${application.id}</property>
