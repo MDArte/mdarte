@@ -16,9 +16,8 @@
 					<moduleSearchLocations>
 						<!--<location>${maven.repo.local}/andromda/xml.zips</location>-->
 						<location>${maven.src.dir}/uml/xml.zips</location>
-						<!-- expressao util quando utilizando SVN para versionar modelos
+						<!-- expressao util quando utilizando SVN para versionar modelos-->
 						<location patterns="**/*.xml.zip,**/*.xml">${maven.src.dir}/uml</location>
-						-->
 					</moduleSearchLocations>
 				</model>
 			</models>

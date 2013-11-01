@@ -1,21 +1,23 @@
 package org.andromda.cartridges.bpm4struts.metafacades;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsGlobals;
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsUtils;
-import org.andromda.utils.StringUtilsHelper;
 import org.andromda.metafacades.uml.ActivityGraphFacade;
 import org.andromda.metafacades.uml.CoppetecPackageFacade;
 import org.andromda.metafacades.uml.StateMachineFacade;
 import org.andromda.metafacades.uml.StateVertexFacade;
 import org.andromda.metafacades.uml.TransitionFacade;
 import org.andromda.metafacades.uml.UseCaseFacade;
+import org.andromda.utils.StringUtilsHelper;
 import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -241,7 +243,15 @@ public class StrutsJspLogicImpl
 
     protected List handleGetPageVariables()
     {
-        return this.getVariables();
+    	Map pageVariables = new TreeMap();
+    	
+    	for (int i = 0; i < this.getVariables().size(); i++)
+    	{
+    		pageVariables.put(((StrutsParameter)this.getVariables().get(i)).getName(), this.getVariables().get(i));
+    	}
+    	
+    	return new ArrayList(pageVariables.values());
+        //return this.getVariables();
     }
 
     protected List handleGetIncomingActions()
