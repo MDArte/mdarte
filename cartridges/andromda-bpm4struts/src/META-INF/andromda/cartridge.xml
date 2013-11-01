@@ -894,22 +894,7 @@
         outputToSingleFile="true"
         />
 	
-	 <!-- Templates de configuração do eclipse -->
-	 <template path="templates/eclipse-config/classpath.vsl"
-		outputPattern="$generatedFile" 
-		outlet="projectDir" 
-		overwrite="false"
-		outputToSingleFile="true" 
-		outputOnEmptyElements="true">
-		<modelElements>
-			<modelElement variable="packages">
-				<type
-					name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage" />
-			</modelElement>
-		</modelElements>
-	</template>
-	 <!-- Fim templates de configuração do eclipse -->
-    <template
+	 <template
         path="templates/bpm4struts/server/users.properties.vsl"
         outputPattern="users.properties"
         outlet="server"
