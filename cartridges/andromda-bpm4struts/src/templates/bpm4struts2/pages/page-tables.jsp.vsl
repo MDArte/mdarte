@@ -1,27 +1,31 @@
 #set($generatedFile = "${jsp.fullPath}-tabelas.jsp")
-
-
 #if($jsp.temTabela)
 <%@ include file="/taglib-imports.jspf" %>
 
-<div id="tabs">
-  <ul class="idTabs">
-	#foreach ($variable in $jsp.pageVariables)
-		#if ($variable.table)
-    <li><a href="#$variable.name">$variable.name</a></li>
-		#end
-	#end 
-  </ul>
-  #foreach ($variable in $jsp.pageVariables)
-	#if ($variable.table)
-  <%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
-	#end
-  #end 
-  
- </div>
- <script type="text/javascript">
-  $(document).ready(function(){
-      $("#tabs").easytabs(); 
-  });
-</script>
+#set($i=1)
+<div id="tabbable">
+	<ul class="nav nav-tabs">
+#foreach ($variable in $jsp.pageVariables)
+#if ($variable.table)
+    	<li><a href="#tab-${variable.name}" data-toggle="tab">$variable.name</a></li>
+#end
+#end 
+	</ul>
+
+	<div class="tab-content">
+#foreach ($variable in $jsp.pageVariables)
+#if ($variable.table)
+#if($i==1)
+		<div class="tab-pane active" id="tab-${variable.name}">
+#else
+		<div class="tab-pane" id="tab-${variable.name}" >
+#end
+#set($i=$i+1)
+			<!--<tiles:insert page="${jsp.fullPath}-${variable.name}.jspf" flush="false"/>--> 
+  			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
+  		</div>
+#end
+#end 
+	</div>
+</div>
 #end
