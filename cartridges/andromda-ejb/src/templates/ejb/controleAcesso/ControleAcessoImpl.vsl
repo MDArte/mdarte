@@ -22,7 +22,7 @@ import br.gov.mdarte.controleacesso.cd.*;
 #end
 
 public  class ControleAcessoImpl extends accessControl.ControleAcesso {
-	#if($controleAcessoDefault == 'true')
+#if($controleAcessoDefault == 'true')
 	public static final String SUPER_USUARIO = "1";
 	public static final int PROXIMA_TROCA_SENHA_DIAS = 30;
 	/**
@@ -215,25 +215,25 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	}
 	
 	public  static class RestricaoDinamicaImpl {
-	#foreach ($service in $services)
+#foreach ($service in $services)
 	
-		#foreach ($operation in $service.operations )
+#foreach ($operation in $service.operations )
 	
 		$operation.visibility  $operation.returnType.fullyQualifiedName ${operation.name} () {
-	   	 #if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
                     return $operation.returnType.javaNullString;
-            	#end
+#end
 		}
 	
-	#end
+#end
 		
-	#end
+#end
 	}	
 
 	public void agendaTarefas() {
 	
 	}
-	#else
+#else
 	@Override
 	public boolean precisaTrocarSenha(accessControl.Operador operador) throws ControleAcessoException{
 		return false;
@@ -341,23 +341,23 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	}
 	
 	public  static class RestricaoDinamicaImpl {
-	#foreach ($service in $services)
+#foreach ($service in $services)
 	
-		#foreach ($operation in $service.operations )
+#foreach ($operation in $service.operations )
 	
 		$operation.visibility  $operation.returnType.fullyQualifiedName ${operation.name} () {
-	   	 #if ($operation.returnTypePresent)
+ #if ($operation.returnTypePresent)
                     return $operation.returnType.javaNullString;
-            	#end
+#end
 		}
 	
-	#end
+#end
 		
-	#end
+#end
 	}	
 
 	public void agendaTarefas() {
 	
 	}
-	#end
+#end
 }

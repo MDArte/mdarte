@@ -99,15 +99,15 @@
 	
 	<package name="main" namespace="/main">
 		<action name="/Main" class="${mainDir}.Main">
-			 #set($mainPath = '')
-                #foreach($useCase in $applicationUseCases)
-                #if($useCase.applicationUseCase)
-				#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
-                #end
-                #if($mainPath.equals(''))
-                #set($mainPath = '/ForwardAction.do')
-                #end
-				#end
+#set($mainPath = '')
+#foreach($useCase in $applicationUseCases)
+#if($useCase.applicationUseCase)
+#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
+#end
+#if($mainPath.equals(''))
+#set($mainPath = '/ForwardAction.do')
+#end
+#end
 				<result>$mainPath</result> 
 		</action>	
 	</package>

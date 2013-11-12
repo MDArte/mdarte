@@ -157,7 +157,8 @@ public abstract class Login extends Action
         {
 ##String uri = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "").replace("//", "/"));
 ##return new org.apache.struts.action.ActionForward(uri + ("/${contextoPrincipal}/"  + "${secureDir}/entrar-login.jsp").replace("//", "/"), true);
-            ActionForward forward = mapping.findForward("entrar.login");
+			ActionForward forward = mapping.findForward("entrar.login");
+
             if (__urlCasoDeUso != null && __contexto != null)
             {
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
@@ -230,7 +231,8 @@ public abstract class Login extends Action
         {
             request.getSession().removeAttribute(Constantes.FORWARD);
 
-            ActionForward forward = mapping.findForward("entrar.login");
+			ActionForward forward = mapping.findForward("entrar.login");
+			
             if (__urlCasoDeUso != null && __contexto != null)
             {
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
@@ -291,7 +293,8 @@ public abstract class Login extends Action
         }
         else
         {
-            ActionForward forward = mapping.findForward("entrar.login");
+			ActionForward forward = mapping.findForward("entrar.login");
+
             if (__urlCasoDeUso != null && __contexto != null)
             {
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
