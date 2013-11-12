@@ -1,6 +1,9 @@
 #if($oAuthServer == "true")
+#set ($generatedFile = "OAuthImpl.java")
+#if($stringUtils.isNotEmpty($controleAcessoDir))
 package $controleAcessoDir;
-
+#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
+#end
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;

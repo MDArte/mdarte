@@ -1885,18 +1885,18 @@
         overwrite="true"/>
     <template
         path="templates/bpm4struts/pages/oAuth/pagina-de-login.jsp.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        outputPattern="$secureDir/pagina-de-login.jsp"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
         path="templates/bpm4struts/pages/oAuth/pagina-de-login.css.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        outputPattern="$secureDir/pagina-de-login.css"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
-        path="templates/bpm4struts/pages/oAuth/pagina-de-login-javascript.jspf.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        path="templates/bpm4struts/pages/oAuth/pagina-de-login-actions.jsp.vsl"
+        outputPattern="$secureDir/pagina-de-login-actions.jsp"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
         path="templates/bpm4struts/forms/oAuth/PaginaDeLoginLoginFormImpl.java.vsl"
@@ -1907,7 +1907,8 @@
         path="templates/bpm4struts/forms/oAuth/LoginOAuthUCFormImpl.java.vsl"
         outputPattern="$generatedFile"
         outlet="controleAcesso"
-        overwrite="true"/>        
+        overwrite="true"/>
+
 	<!-- fim oAuth templates -->
 
 </cartridge>
