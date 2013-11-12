@@ -1,218 +1,55 @@
-#set ($generatedFile = "pagina-de-login.jsp")
-#if($stringUtils.isNotEmpty($controleAcessoDir))
-#set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
-#end
-
 #if($oAuthServer == "true")
-<%
-		Object form = org.andromda.presentation.bpm4struts.PageSessionObjectUtil.getPageForm(request, "LoginOAuthUC.Pagina de login");
-	request.getSession().setAttribute("form", form);
-	request.setAttribute("form", form);
-
-	// Script para setar a cao correspondente do botao no form
-	String nomeProjeto = request.getContextPath(); 
-	out.println("<script>");
-	out.println("function getPath(){return \""+nomeProjeto+"\";}");
-	out.println("</script>");
-%>
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
 <%@ include file="/taglib-imports.jspf" %>
-<%@ include file="/layout-configuration.jsp" %>
 
 
-
-<tiles:insert definition="main.layout">
-
+<tiles:insert definition="login.layout">
 
     <tiles:put name="title" type="string">
         <bean:message key="login.oauth.uc.pagina.de.login.title"/>
     </tiles:put>
 
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
 
-
-<tiles:put name="style" type="string">
-<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="/br/gov/uc/oauth/loginoauth/pagina-de-login.css"/>"></link>
-
+    <tiles:put name="style" type="string">
+        <link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${login}/pagina-de-login.css"/>"></link>
     </tiles:put>
 
-<%@ include file="pagina-de-login-javascript.jspf" %>
-<script>
-	function setaAcaoOAuth(nomeAcao, fcValidacao, valida , nomeForm){
-		document.forms[0].action = "";
-							
-				if (nomeAcao.indexOf("/") == 0) {
-			document.forms[0].action = getPath() + nomeAcao + '.do?oauth_token=<%=request.getParameter("oauth_token")%>';
-		}else{
-			document.forms[0].action = getPath() + '/' + nomeAcao + '.do';
-		}
-		document.forms[0].name = nomeForm;
-		if(true && valida){
-			if(eval(fcValidacao + '(document.forms[0])')){
-				document.forms[0].submit();
+    <tiles:put name="javascript" type="string">
+        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/form-validation.jsp"/>"></script>
+        <html:javascript formName="loginOAuthUCPaginaDeLoginLoginForm" method="validatePaginaDeLoginLoginForm" dynamicJavascript="true" staticJavascript="false" htmlComment="true" cdata="false"/>
+    	<script type="text/javascript" language="Javascript1.1">
+        //<!--
+            var HINTS_ITEMS = {
+                'login.entrar.login.param.login.title':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.param.login.title"/></formatting:escape>',
+                'login.entrar.login.param.senha.title':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.param.senha.title"/></formatting:escape>',
+                'validar':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title"/></formatting:escape>',
+                'validar_no':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.notallowed"/></formatting:escape>',
+                'validar_reset':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.reset"/></formatting:escape>',
+                'validar_noreset':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.reset.not.allowed"/></formatting:escape>',
+                'calendar.popup':'<formatting:escape language="javascript"><bean:message key="calendar.popup"/></formatting:escape>'
+            };
+
+            var hints = new Hints (HINTS_ITEMS);
+        //-->
+
+		function descriptionDestination(key , componenteNome){
+			var HINTS_DESTINATION  = {} 
+
+			var componenteDestino = document.getElementsByName(componenteNome);
+
+			if(componenteDestino[0] != null)
+			{
+		
+				componenteDestino[0].value = HINTS_DESTINATION[key];
 			}
-		}else{
-			document.forms[0].submit();
 		}
-	}
-	
-	function setaLocation(nomeAcao){
+    	</script>
+    </tiles:put>
 
-		var action;
-		if (nomeAcao.indexOf("/") == 0) {
-			action=getPath() + nomeAcao + '.do';
-		}else{
-			action=getPath() + '/' + nomeAcao + '.do';
-		}
-								window.open(action, '', 'width=700,height=500,top=50,left=100');
-		}
-	function apaga() {
-               document.forms[0].reset();
-		for (i=0;i<document.forms[0].elements.length;i++)
-               {
-			
-			var strtype = document.forms[0].elements[i].type;
-			if(strtype.match("select")=="select"){
-				document.forms[0].elements[i].selectedIndex=0;
-			}
-                       	if (strtype == "text" || strtype == "password")
-                       	{
-                       	        document.forms[0].elements[i].value="";
-                       	}
-                       	if (strtype == "radio" || strtype == "checkbox")
-                       	{
-                       	        document.forms[0].elements[i].checked=false;
-                       	}
-               }
-       } 
-</script>
+<tiles:put name="body" type="string">
+   <tiles:insert page="${login}/pagina-de-login-actions.jsp" flush="false"/>
+</tiles:put>
 
-
-<script>
-	function keySubmit(e){
-			}
-</script>
-
-
-
-
-<script type="text/javascript">
-     <!--Operacao de Habilitar-->
-     function verificaHabilitados() {
-          
-                    	           	     }
-    <!--Operacao de Desabilitar-->
-    function verificaDesabilitados() {
-          
-                    	           	     }
-    
-    <!--Operacao de tornar visivel-->    
-    function verificaVisiveis() {
-          
-                    	           	     }
-    
-    <!--Operacao de Esconder-->    
-    function verificaEscondidos() {
-          
-                    	           	     }
-    
-    function verifica() {
-     	verificaHabilitados();
-     	verificaDesabilitados();
-     	verificaEscondidos();
-     	verificaVisiveis();
-    }
-</script>
-    	
-    <tiles:put name="body" type="string">
-
-<div id="pathway">
-
-
-   <bean:message key="login.oauth.uc.pagina.de.login.title"/>
-
-</div>
-
-
-<div id="ConteudoDiv">
-		<div id="login" class="action">
-    	<div class="trigger">
-					
-        		<html:form action="/LoginOAuthUC/PaginaDeLoginLogin" method="post" enctype="multipart/form-data" >
-									                    	            <table>
-                <tbody>
-
-
-	                       <tr class="login" id="tr-loginLogin" >
-                        <td class="label"><bean:message key="login.oauth.uc.pagina.de.login.login.param.login"/></td>
-                        <td class="field">
-
-
-
-                           <c:set var="value" value="${form.login}"/>
-
-
-                           <input type="text" name="login" value="<c:out value="${value}"/>"  onmouseup="verifica()" onkeyup="verifica()" onkeypress="keySubmit(event)"  onmouseover="hints.show('login.oauth.uc.pagina.de.login.login.param.login.title', 'loginLogin')" onmouseout="hints.hide()"  id="loginLogin"/>
-                        </td>
-                    </tr>   
-	   
-	                       <tr class="senha" id="tr-loginSenha" >
-                        <td class="label"><bean:message key="login.oauth.uc.pagina.de.login.login.param.senha"/></td>
-                        <td class="field">
-
-
-
-                           <c:set var="value" value="${form.senha}"/>
-
-
-                           <input type="password" name="senha" value="<c:out value="${value}"/>"  onmouseup="verifica()" onkeyup="verifica()" onkeypress="keySubmit(event)"  onmouseover="hints.show('login.oauth.uc.pagina.de.login.login.param.senha.title', 'loginSenha')" onmouseout="hints.hide()"  id="loginSenha"/>
-                        </td>
-                    </tr>
-	                       <tr>
-                    <td>&nbsp;</td>
-                        				<td class="FormLinhaBotoes">
-                              <html:button  onmouseover="hints.show('Login')" onmouseout="hints.hide()" styleId="form_submit"  onclick="setaAcaoOAuth('/LoginOAuthUC/PaginaDeLoginLogin', 'validatePaginaDeLoginLoginForm', true , 'loginOAuthUCPaginaDeLoginLoginForm' )" property="loginOAuthUCPaginaDeLoginLoginForm" >
-                                  <bean:message key="login.oauth.uc.pagina.de.login.login"/>
-                              </html:button>
-
-																	                        				</td>
-                    				</tr>
-                		</tbody>
-            		</table>
-        	</html:form>
-			    </div>
-
-</div>
-
-<br class="clr"/>
-
-        
-        
-
-
-
-
-        <div id="pageHelpSection">
-	<blockquote>
-								
-	
-</blockquote>
-       </div>
-	         
-   </tiles:put>
 </tiles:insert>
-
-
 #end

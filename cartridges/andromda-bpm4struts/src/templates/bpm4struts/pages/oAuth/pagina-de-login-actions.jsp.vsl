@@ -1,0 +1,116 @@
+#if($oAuthServer == "true")
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+<%
+	//Object form = org.andromda.presentation.bpm4struts.PageSessionObjectUtil.getPageForm(request, "LoginOAuthUC.Pagina de login");
+	//request.getSession().setAttribute("form", form);
+	//request.setAttribute("form", form);
+
+	// Script para setar acao correspondente do botao no form
+	String nomeProjeto = request.getContextPath(); 
+	out.println("<script>");
+	out.println("function getPath(){return \""+nomeProjeto+"\";}");
+	out.println("</script>");
+%>
+#set ($clientValidationDesired = ($clientValidation=='true'))
+<script>
+	function setaAcaoOAuth(nomeAcao, fcValidacao, valida , nomeForm){
+		document.forms[0].action = "";
+							
+				if (nomeAcao.indexOf("/") == 0) {
+			document.forms[0].action = getPath() + nomeAcao + '.do?oauth_token=<%=request.getParameter("oauth_token")%>';
+		}else{
+			document.forms[0].action = getPath() + '/' + nomeAcao + '.do';
+		}
+		document.forms[0].name = nomeForm;
+		if(true && valida){
+			if(eval(fcValidacao + '(document.forms[0])')){
+				document.forms[0].submit();
+			}
+		}else{
+			document.forms[0].submit();
+		}
+	}
+	
+	function setaLocation(nomeAcao){
+
+		var action;
+		if (nomeAcao.indexOf("/") == 0) {
+			action=getPath() + nomeAcao + '.do';
+		}else{
+			action=getPath() + '/' + nomeAcao + '.do';
+		}
+								window.open(action, '', 'width=700,height=500,top=50,left=100');
+		}
+	function apaga() {
+               document.forms[0].reset();
+		for (i=0;i<document.forms[0].elements.length;i++)
+               {
+			
+			var strtype = document.forms[0].elements[i].type;
+			if(strtype.match("select")=="select"){
+				document.forms[0].elements[i].selectedIndex=0;
+			}
+                       	if (strtype == "text" || strtype == "password")
+                       	{
+                       	        document.forms[0].elements[i].value="";
+                       	}
+                       	if (strtype == "radio" || strtype == "checkbox")
+                       	{
+                       	        document.forms[0].elements[i].checked=false;
+                       	}
+               }
+       } 
+</script>
+<script>
+	function keySubmit(e){
+		
+		var keycode;
+		if (window.event) 
+			keycode = window.event.keyCode;
+		else if (e) 
+			keycode = e.which;
+		else 
+			return true;
+
+		if (keycode == 13)
+   		{   			
+   			setaAcaoOAuth('/LoginOAuthUC/PaginaDeLoginLogin', 'validatePaginaDeLoginLoginForm', true)
+   			return false;
+   		}
+		else
+  			return true;
+  		
+	}
+</script>
+
+
+<div class="container form-signin">
+    <html:form action="/LoginOAuthUC/PaginaDeLoginLogin" method="post" enctype="multipart/form-data" >
+    
+    	<h2 class="form-signin-heading">OAuth Log in</h2>
+		
+    			<input type="text" id="login" name="login"  property="login" class="input-block-level" placeholder="<bean:message key="login.oauth.uc.pagina.de.login.login.param.login"/>"/>
+				
+				<input type="password" id="senha" name="senha" property="senha" class="input-block-level" placeholder="<bean:message key="login.oauth.uc.pagina.de.login.login.param.senha"/>"/>
+				
+				<input type="submit" class="btn btn-large btn-primary" value="Sign in" name="commit" onclick="setaAcaoOAuth('/LoginOAuthUC/PaginaDeLoginLogin', 'validatePaginaDeLoginLoginForm', true , 'loginOAuthUCPaginaDeLoginLoginForm' )" property="loginOAuthUCPaginaDeLoginLoginForm"/>
+				<input type="reset" class="btn btn-large btn-primary" value="Clear"/>
+    			
+    			#if($enableCaptcha=="true")
+    			<img src="/${projectId}/kaptcha.jpg" align="middle" border="1"/>	
+                <html:text property="kaptcha" styleId="validarCaptcha"/>
+    			<br />
+                #end
+    	
+    	<html:hidden property="parametrosLogin" styleId="parametrosLogin"/> 
+    
+    	<% if (request.getParameter("nextPath") != null) { %>
+    		<html:hidden property="nextPath" styleId="nextPath" value="<%= request.getParameter("nextPath") %>"/>
+    	<% } %>
+    </html:form>
+</div>
+	
+<script type="text/javascript" src="pagina-de-login.js"></script>
+
+#end
