@@ -370,6 +370,7 @@
 #else
 #set ($readonly = '')
 #end
+#set($form="#session.form.")
 #set ($propertyValue = "${beanName}.${fieldName}")
 #set($requiredness = ($clientValidation || $serverValidation))
 #if ($field.type.dateType && $beanName=="row")
@@ -387,7 +388,7 @@
 	<div id="div${field.name}${action.useCase.name}" class="radio field">
 #if ($requiredness && $field.required)<label class="radioLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="radioLabel"><bean:message key="$field.messageKey"/></label>#end<br class="clear"/>
 #if ($field.optionKeys.empty)
-		<s:radio id="${field.name}${action.useCase.name}" label="$field.name" name="$field.name" list="#session.form.${field.name}ComboList"  title="" />
+		<s:radio id="${field.name}${action.useCase.name}" label="$field.name" name="$field.name" list="${form}${field.name}ComboList"  title="" />
 	</div><div class="clear"></div>
 #else
 #foreach ($optionKey in $field.optionKeys)
@@ -413,11 +414,15 @@
 	<div id="div${field.name}${action.useCase.name}" class="multibox field">
 		#if ($requiredness && $field.required)<label class="multiboxLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
 		#end
-		<s:checkboxlist id="${field.name}${action.useCase.name}" name="$fieldName" listKey="value" listValue="label" list="#session.form.${field.backingListName}"/>
+		<s:checkboxlist id="${field.name}${action.useCase.name}" name="$fieldName" listKey="value" listValue="label" list="${form}${field.backingListName}"/>
 	</div><br class="clear"/>
 #elseif($field.custom)
 	<div id="div${field.name}${action.useCase.name}" class="custom field">
 		<%@ include file="${field.name}.jsp"  %>
+	</div>
+#elseif($field.ajax)
+	<div id="div${field.name}${action.useCase.name}" class="ajax field">
+		<%@ include file="${field.name}Ajax.jsp"  %>
 	</div>
 ##
 ##     P A S S W O R D
@@ -426,7 +431,7 @@
 	<div id="div${field.name}${action.useCase.name}" class="password field">
 		#if ($requiredness && $field.required)<label class="passwordLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="passwordLabel"><bean:message key="$field.messageKey"/></label>
 		#end
-        <s:password id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{#value}" $disabled  title=""  $readonly$columnCount id="$styleId"/>
+        <s:password id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{#value}" $disabled  title=""  $readonly$columnCount />
 	</div>
 ##      T E X T F I E L D       &       P A S S W O R D
 ##
@@ -439,16 +444,16 @@
 		<span class="add-on"><i class="icon-th"></i></span>
 	</div>
 #elseif ($field.autocomplete )
-	<div id="div${field.name}${action.useCase.name}" class="textfield field autocomplete">
+	<div id="div${field.name}${action.useCase.name}" class="field autocomplete">
 	#if ($requiredness && $field.required)<label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 	#end
-		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{#form.$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{${form}$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 	</div>
 #elseif ( ($field.textField) )
 	<div id="div${field.name}${action.useCase.name}" class="textfield field">
 	#if ($requiredness && $field.required)<label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 	#end
-		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{#form.$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${form}$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 	</div>
 #elseif ($field.money)
 	<div id="div${field.name}${action.useCase.name}" class="money field">
@@ -490,7 +495,7 @@
 #if($field.multiple)#set($multiple='multiple="multiple"')#else#set($multiple='')#end
 #if($field.type.collectionType)#set($selectProperty="${fieldName}AsArray")#else#set($selectProperty="$fieldName")
 #end
-		<s:select id="${field.name}${action.useCase.name}" label="" name="${field.name}" headerKey="" headerValue="" list="#session.form.${field.name}ComboList"/>
+		<s:select id="${field.name}${action.useCase.name}" label="" name="${field.name}" headerKey="" headerValue="" list="${form}${field.name}ComboList"/>
 	</div>
 ##
 ##	D O U B L E   S E L E C T
@@ -501,9 +506,9 @@
 #if ($field.readOnly)#set ($disabled = 'disabled="true"')#end
 #set($multiple='')
 #set($selectProperty="$fieldName")
-    	<s:doubleselect id="${field.name}${action.useCase.name}" name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
+    	<s:doubleselect id="${field.name}${action.useCase.name}" name="$selectProperty" list="${form}${field.name}Map.keySet()"
     		listKey="value" listValue="label"
-    		doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
+    		doubleName="${selectProperty}__Double" doubleList="${form}${field.name}Map.get(top)"
     		doubleListKey="value" doubleListValue="label" />
 	</div>
 

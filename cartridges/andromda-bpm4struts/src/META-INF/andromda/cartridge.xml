@@ -202,6 +202,19 @@
         </modelElements>
     </template>
     
+    <template
+        path="templates/bpm4struts2/actions/AjaxAction.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="parameter">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
+                	<property name="ajax"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
     
     <template
         path="templates/bpm4struts/modulo/maven.xml.vsl"
@@ -894,22 +907,7 @@
         outputToSingleFile="true"
         />
 	
-	 <!-- Templates de configuração do eclipse -->
-	 <template path="templates/eclipse-config/classpath.vsl"
-		outputPattern="$generatedFile" 
-		outlet="projectDir" 
-		overwrite="false"
-		outputToSingleFile="true" 
-		outputOnEmptyElements="true">
-		<modelElements>
-			<modelElement variable="packages">
-				<type
-					name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage" />
-			</modelElement>
-		</modelElements>
-	</template>
-	 <!-- Fim templates de configuração do eclipse -->
-    <template
+	 <template
         path="templates/bpm4struts/server/users.properties.vsl"
         outputPattern="users.properties"
         outlet="server"
@@ -1645,7 +1643,7 @@
         outputPattern="$generatedFile"
         outlet="pages"
         overwrite="true"
-        outputOnEmptyElements="false">
+        outputOnEmptyElements="true">
         <modelElements variable="jsp">
             <modelElement>
                 <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
@@ -1716,6 +1714,7 @@
             </modelElement>
         </modelElements>
     </template>
+    
     
     <template
         path="templates/bpm4struts2/pages/page-impl.js.vsl"

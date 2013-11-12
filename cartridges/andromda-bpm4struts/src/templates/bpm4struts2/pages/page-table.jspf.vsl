@@ -11,6 +11,7 @@
 #end
 #set($indent="	")
 #if($gerarJSP)
+<%@ include file="/taglib-imports.jspf" %>
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
 <% String acao_${table.name};
