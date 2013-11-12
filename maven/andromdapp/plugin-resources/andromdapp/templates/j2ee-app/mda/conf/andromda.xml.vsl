@@ -80,6 +80,11 @@
 			<properties>
 				<property name="jboss-config">jboss-config</property>
 				<property name="dataSourceName">${dataSource.name}</property>
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 #if($modulos)
 				<property name="project-configuration">${maven.andromda.ejb.dir}</property>
 				<property name="entity-beans">${maven.andromda.core.modulo.ejb.generated.dir}</property>
@@ -134,6 +139,11 @@
 		<namespace name="ejb">
 			<properties>
 				<property name="dataSourceName">${dataSource.name}</property>
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 #if($modulos)
 				<property name="project-configuration">${maven.andromda.ejb.dir}</property>
 				<property name="session-beans">${maven.andromda.core.modulo.ejb.generated.dir}</property>
@@ -329,6 +339,11 @@
 				<property name="struts2">true</property>
 #else
 				<property name="struts2">false</property>
+#end
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
 #end
 				<property name="servletContext">/${application.id}</property>
 				<property name="reportPropertiesPath">C:\\report.properties</property>

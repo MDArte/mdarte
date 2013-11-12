@@ -106,7 +106,7 @@ controle.acesso.version=1.0
 
 #if(${oauth})
 # versão do auth do mdarte
-oauth.version=1.0
+oauth.core.version=1.0
 #end
 
 ## end struts2

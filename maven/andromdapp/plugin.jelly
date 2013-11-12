@@ -628,20 +628,18 @@
 
         <j:choose>
             <j:when test="${projectType eq 'jboss'}">
+            	 <j:if test="${securityTypeAnswer eq 'yes'}">
+            	 		<j:set var="oauth" value="${oauth eq 'yes'}"/>
+            	 </j:if>
                 <j:while test="${empty(securityAnswer) or (securityAnswer ne 'yes' and securityAnswer ne 'no')}">
                     <i:ask
                         question="Would you like to enable security? (enter 'yes' or 'no')?"
                         answer="securityAnswer"/>
                 </j:while>
                 <j:if test="${securityAnswer eq 'yes'}">
-                        <j:while test="${(securityTypeAnswer ne 'yes' and securityTypeAnswer ne 'no')}" >
-                        	<i:ask question="Would you like to use oAuth (enter 'yes' or 'no') ?" answer="securityTypeAnswer" />
-                        </j:while>
-                        <j:if test="${securityTypeAnswer eq 'oauth'}">
-                        	<j:set var="oauth" value="${oauth eq 'yes'}"/>
-                        </j:if>
-                </j:if>
-                <j:if test="${securityAnswer eq 'yes'}">
+                		<j:while test="${(securityTypeAnswer ne 'yes' and securityTypeAnswer ne 'no')}" >
+            				<i:ask question="Would you like to use oAuth (enter 'yes' or 'no') ?" answer="securityTypeAnswer" />
+            	 		</j:while>
                         <j:while test="${(controleAcessoAnswer ne 'yes' and controleAcessoAnswer ne 'no')}" >
                         	<i:ask question="Would you like to use MDArte's default Controle Acesso (enter 'yes' or 'no') ?" answer="controleAcessoAnswer" />
                         </j:while>

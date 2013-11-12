@@ -13,8 +13,8 @@
   <dependencies>
         <dependency>
             <groupId>oauth</groupId>
-            <artifactId>oauth</artifactId>
-            <version>${oauth.version}</version>
+            <artifactId>oauth-core</artifactId>
+            <version>${oauth.core.version}</version>
             <type>jar</type>
         </dependency>
 		<dependency>
