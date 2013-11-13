@@ -36,6 +36,7 @@
 				<property name="oAuthServer">false</property>
 #end
 				<property name="projectId">${application.id}</property>
+				<property name="projectDir">${projectDir}</property>
 				<property name="projectVersion">${application.version}</property>
 				<property name="contextoPrincipal">/${application.id}</property>
 				<property name="languageMappingsUri">Java</property>

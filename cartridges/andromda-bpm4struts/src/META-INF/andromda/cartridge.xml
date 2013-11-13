@@ -54,6 +54,7 @@
     <property reference="cadastroSessionObjectName"/>    
 	<property reference="maxRows"/>
 	<property reference="utilDir"/>
+	<property reference="pbiDir"/>
 	<property reference="servicePackageName"/>
 	<property reference="webPackageName"/>  
 	<property reference="modulo"/>
@@ -145,6 +146,20 @@
         outputPattern="$generatedFile"
         outlet="layout-util"
         overwrite="false">
+    </template>
+    
+    <template
+        path="templates/bpm4struts/models/ManageableModels.vsl"
+        outputPattern="$generatedFile"
+        outlet="manageable-models"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.MDArteManageableModelsLogicImpl">
+        			<property name="manageable"/>
+        		</type>
+            </modelElement>
+        </modelElements>
     </template>
     
     <template
@@ -615,6 +630,19 @@
         overwrite="true"
         outputToSingleFile="true"/>    
         
+     <template
+        path="templates/bpm4struts/messages/application-resources.properties.vsl"
+        outputPattern="application-resources-modulo.properties"
+        outlet="messages-modulo"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+	  
     <template
         path="templates/bpm4struts/messages/application-resources.csv.vsl"
         outputPattern="application-resources-modulo.csv"
