@@ -213,6 +213,11 @@
             		Project's base directory. 
             	</documentation>
             </property>
+            <property name="defaultCrudPackage">
+            	<documentation>
+            		Default CRUD package name. 
+            	</documentation>
+            </property>
         </propertyGroup>
         <propertyGroup name="View Test">
         	<property name="viewTestEnabled">

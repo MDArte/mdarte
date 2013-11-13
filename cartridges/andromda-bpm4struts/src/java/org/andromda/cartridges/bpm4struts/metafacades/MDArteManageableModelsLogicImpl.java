@@ -1,5 +1,8 @@
 package org.andromda.cartridges.bpm4struts.metafacades;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 
 /**
  * MetafacadeLogic implementation for org.andromda.cartridges.bpm4struts.metafacades.MDArteManageableModels.
@@ -23,8 +26,7 @@ public class MDArteManageableModelsLogicImpl
      */
     protected java.lang.String handleGetDataAtual()
     {
-        // TODO: put your implementation here.
-        return null;
+        return new Date().toString();
     }
 
     /**
@@ -32,8 +34,13 @@ public class MDArteManageableModelsLogicImpl
      */
     protected java.util.Collection handleSplitPackageName(java.lang.String packageName)
     {
-        // TODO: put your implementation here.
-        return null;
+    	ArrayList lista = new ArrayList();
+    	
+    	String[] packages = packageName.split("\\.");
+    	
+    	for (int i = 0; i < packages.length ; i++) lista.add(packages[i]);
+    	
+    	return lista;
     }
 
 }

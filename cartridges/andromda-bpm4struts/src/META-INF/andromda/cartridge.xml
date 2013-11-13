@@ -91,6 +91,7 @@
 	<property reference="externalHyperlink"/>
 	<property reference="projectId"/>
 	<property reference="projectDir"/>
+	<property reference="defaultCrudPackage"/>
 	<property reference="server"/>
 	<property reference="reportPropertiesPath"/>
 	<property reference="useCaseuseCaseRemove"/>

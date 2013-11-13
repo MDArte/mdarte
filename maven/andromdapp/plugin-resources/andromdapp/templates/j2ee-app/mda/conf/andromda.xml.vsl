@@ -57,6 +57,7 @@
 				<property name="modelPackageName">cd</property>
 				<property name="servicePackageName">cs</property>
 				<property name="webPackageName">web</property>
+				<property name="defaultCrudPackage">geral</property>
 				<property name="utilDir">util</property>
 				<property name="controleAcessoDir">${application.package}.accessControl</property>
                 <property name="controleAcessoDefault">${controleAcesso}</property>
