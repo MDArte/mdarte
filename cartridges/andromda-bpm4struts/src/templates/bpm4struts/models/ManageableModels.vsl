@@ -1,6 +1,10 @@
-#set ($generatedFile = "CRUD${manageable.name}.xml")
+#set ($generatedFile = $stringUtils.uncapitalize("${projectId}-${defaultCrudPackage}-${manageable.Name}.xml"))
+#if ($manageable.crudPackageName)
+#set ($generatedFile = $stringUtils.uncapitalize("${projectId}-${manageable.crudPackageName}-${manageable.Name}.xml"))
+#end
 #set ($newPackageName = $stringUtils.replaceSuffix(${manageable.packageName}, ${modelPackageName}, ${webPackageName}))
 #set($modelroot = $newPackageName.replace(".", "::"))
+
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- <!DOCTYPE XMI SYSTEM "uml14xmi12.dtd"> -->
 <!-- This xmi file is optimized for MagicDraw UML. Some references are not saved. -->
@@ -21,7 +25,11 @@
 				<UML:Package xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.Name}, $packageName)}' name='$packageName'>
 					<UML:Namespace.ownedElement>			
 #end
+#if (!$manageable.crudPackageName)
 												<UML:Package xmi.id='_9_5_1_1ff104dd_1312203147610_750787_697' name='${defaultCrudPackage}'>
+#else
+												<UML:Package xmi.id='_9_5_1_1ff104dd_1312203147610_750787_697' name='${manageable.crudPackageName}'>	
+#end
 													<UML:ModelElement.stereotype>
 														<UML:Stereotype href='andromda-profile-presentation-3.1.xml.zip|_9_5_1_296d0470_1149599775233_317498_0'>
 															<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
@@ -30,7 +38,7 @@
 														</UML:Stereotype>
 													</UML:ModelElement.stereotype>
 													<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
-														<moduleRoot xmi.value='${modelroot}::CRUD$manageable.name'/>
+														<moduleRoot xmi.value='${modelroot}::${manageable.crudPackageName}'/>
 													</XMI.extension>
 													<UML:Namespace.ownedElement>
 														<UML:Package xmi.id='_9_5_1_1ff104dd_1312203157107_396789_716' name='consultar${manageable.name}'>

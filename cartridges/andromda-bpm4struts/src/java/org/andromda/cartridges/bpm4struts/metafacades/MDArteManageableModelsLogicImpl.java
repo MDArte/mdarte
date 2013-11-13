@@ -3,6 +3,8 @@ package org.andromda.cartridges.bpm4struts.metafacades;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.andromda.cartridges.bpm4struts.Bpm4StrutsProfile;
+
 
 /**
  * MetafacadeLogic implementation for org.andromda.cartridges.bpm4struts.metafacades.MDArteManageableModels.
@@ -39,8 +41,12 @@ public class MDArteManageableModelsLogicImpl
     	String[] packages = packageName.split("\\.");
     	
     	for (int i = 0; i < packages.length ; i++) lista.add(packages[i]);
-    	
+
     	return lista;
     }
+    
+    protected String handleGetCrudPackageName() {
+    	 return (String) findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_MANAGEABLE_CRUD_PACKAGE_NAME);
+	}
 
 }
