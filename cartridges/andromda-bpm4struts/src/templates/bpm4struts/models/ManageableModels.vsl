@@ -4,7 +4,6 @@
 #end
 #set ($newPackageName = $stringUtils.replaceSuffix(${manageable.packageName}, ${modelPackageName}, ${webPackageName}))
 #set($modelroot = $newPackageName.replace(".", "::"))
-
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- <!DOCTYPE XMI SYSTEM "uml14xmi12.dtd"> -->
 <!-- This xmi file is optimized for MagicDraw UML. Some references are not saved. -->
