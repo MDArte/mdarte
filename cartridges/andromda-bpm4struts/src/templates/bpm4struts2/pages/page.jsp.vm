@@ -225,7 +225,6 @@
 	</security:containsOperationMode>
 #end
 #end
-
 #macro (renderTableLookupGrid2 $action $indent $rowIndex)
 #set($linkParameters="")
 ###set($useCaseName = $action.useCase.name)
@@ -242,7 +241,6 @@
 #set($delim = "${delim}${teste}")
 #set($i = $i + 1)
 #end
-
 ## properly add a suffix when that last entry was an updateable field so the javascript does not have
 ## an unclosed literal
 #set ($valueConfirmMessage = "")
@@ -252,7 +250,6 @@
 #if( $valueOperationMode != "" && !${action.useCase.openAccess})
 	<security:containsOperationMode value="$valueOperationMode" useCase="${useCaseName}">
 #end
-
 #if ($securityEnabled && !${action.useCase.openAccess}) 
 		<security:containsPermission name="$action.imageMessageKey">
 #end
@@ -265,7 +262,6 @@
 	</security:containsOperationMode>
 #end
 #end
-
 #macro (renderLookupGrid2 $action)
 #set ($messageKey = $action.messageKey)
 #set ($trigger = $action.actionTrigger)
@@ -370,13 +366,13 @@
 #else
 #set ($readonly = '')
 #end
-#set($form="#session.form.")
-#set ($propertyValue = "${beanName}.${fieldName}")
+##set($form="#session.")
+#set ($propertyValue = "#session.${beanName}.${fieldName}")
 #set($requiredness = ($clientValidation || $serverValidation))
 #if ($field.type.dateType && $beanName=="row")
 	<fmt:formatDate var="value" value="${${propertyValue}}" pattern="$field.dateFormat"/>
 #else
-	<s:set name="__value" value="#session.${propertyValue}"/>
+	<s:set name="__value" value="${propertyValue}"/>
 #end
 ##
 ##  Depending on the type of the input field we render a different widget
@@ -388,7 +384,7 @@
 	<div id="div${field.name}${action.useCase.name}" class="radio field">
 #if ($requiredness && $field.required)<label class="radioLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="radioLabel"><bean:message key="$field.messageKey"/></label>#end<br class="clear"/>
 #if ($field.optionKeys.empty)
-		<s:radio id="${field.name}${action.useCase.name}" label="$field.name" name="$field.name" list="${form}${field.name}ComboList"  title="" />
+		<s:radio id="${field.name}${action.useCase.name}" label="$field.name" name="$field.name" list="${propertyValue}ComboList"  title="" />
 	</div><div class="clear"></div>
 #else
 #foreach ($optionKey in $field.optionKeys)
@@ -414,15 +410,11 @@
 	<div id="div${field.name}${action.useCase.name}" class="multibox field">
 		#if ($requiredness && $field.required)<label class="multiboxLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
 		#end
-		<s:checkboxlist id="${field.name}${action.useCase.name}" name="$fieldName" listKey="value" listValue="label" list="${form}${field.backingListName}"/>
+		<s:checkboxlist id="${field.name}${action.useCase.name}" name="$fieldName" listKey="value" listValue="label" list="${field.backingListName}"/>
 	</div><br class="clear"/>
 #elseif($field.custom)
 	<div id="div${field.name}${action.useCase.name}" class="custom field">
 		<%@ include file="${field.name}.jsp"  %>
-	</div>
-#elseif($field.ajax)
-	<div id="div${field.name}${action.useCase.name}" class="ajax field">
-		<%@ include file="${field.name}Ajax.jsp"  %>
 	</div>
 ##
 ##     P A S S W O R D
@@ -431,7 +423,7 @@
 	<div id="div${field.name}${action.useCase.name}" class="password field">
 		#if ($requiredness && $field.required)<label class="passwordLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="passwordLabel"><bean:message key="$field.messageKey"/></label>
 		#end
-        <s:password id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{#value}" $disabled  title=""  $readonly$columnCount />
+        <s:password id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${propertyValue}}" $disabled  title=""  $readonly$columnCount />
 	</div>
 ##      T E X T F I E L D       &       P A S S W O R D
 ##
@@ -440,20 +432,20 @@
 		#if ($requiredness && $field.required)
 		<label class="dateLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="multiboxLabel"><bean:message key="$field.messageKey"/></label>
 		#end
-        <input  class="span2" type="text" id="${field.name}${action.useCase.name}" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
+        <input  class="span2" type="text" id="${field.name}${action.useCase.name}" value="%{$propertyValue}" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
 		<span class="add-on"><i class="icon-th"></i></span>
 	</div>
 #elseif ($field.autocomplete )
 	<div id="div${field.name}${action.useCase.name}" class="field autocomplete">
 	#if ($requiredness && $field.required)<label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 	#end
-		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{${form}$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 	</div>
 #elseif ( ($field.textField) )
 	<div id="div${field.name}${action.useCase.name}" class="textfield field">
 	#if ($requiredness && $field.required)<label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 	#end
-		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${form}$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 	</div>
 #elseif ($field.money)
 	<div id="div${field.name}${action.useCase.name}" class="money field">
@@ -495,7 +487,7 @@
 #if($field.multiple)#set($multiple='multiple="multiple"')#else#set($multiple='')#end
 #if($field.type.collectionType)#set($selectProperty="${fieldName}AsArray")#else#set($selectProperty="$fieldName")
 #end
-		<s:select id="${field.name}${action.useCase.name}" label="" name="${field.name}" headerKey="" headerValue="" list="${form}${field.name}ComboList"/>
+		<s:select id="${field.name}${action.useCase.name}" label="" name="${field.name}" headerKey="" headerValue="" list="${propertyValue}ComboList"/>
 	</div>
 ##
 ##	D O U B L E   S E L E C T
@@ -511,7 +503,6 @@
     		doubleName="${selectProperty}__Double" doubleList="${form}${field.name}Map.get(top)"
     		doubleListKey="value" doubleListValue="label" />
 	</div>
-
 ##
 ##      L I N K
 ##
@@ -544,7 +535,7 @@
 #else
 	<div id="div${field.name}${action.useCase.name}" class="exibir field">
 		<label class="exibirLabel"><bean:message key="$field.messageKey"/></label>
-		<p><s:property value="#session.${propertyValue}" /></p>
+		<p><s:property value="${propertyValue}" /></p>
 	</div>
 #end
 ##${indent}<label id="$field.name"><c:out value="${__value}"/></label>
