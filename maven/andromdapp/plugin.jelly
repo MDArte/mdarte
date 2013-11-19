@@ -590,31 +590,31 @@
 
         <j:while test="${empty(projectCreator)}">
             <i:ask
-                question="Please enter your first and last name (i.e. Chad Brandon):"
+                question="Please enter your first and last name (i.e. Rodrigo Salvador):"
                 answer="projectCreator"/>
         </j:while>
 
         <j:while test="${empty(projectName)}">
             <i:ask
-                question="Please enter the name of your J2EE project (i.e. Animal Quiz):"
+                question="Please enter the name of your J2EE project (i.e. Sistema Academico):"
                 answer="projectName"/>
         </j:while>
 
         <j:while test="${empty(projectId)}">
             <i:ask
-                question="Please enter the id for your J2EE project (i.e. animalquiz):"
+                question="Please enter the id for your J2EE project (i.e. sistemaacademico):"
                 answer="projectId"/>
         </j:while>
 
         <j:while test="${empty(projectVersion)}">
             <i:ask
-                question="Please enter a version for your project (i.e. 1.0-SNAPSHOT):"
+                question="Please enter a version for your project (i.e. 1.0):"
                 answer="projectVersion"/>
         </j:while>
 
         <j:while test="${empty(baseProjectPackage)}">
             <i:ask
-                question="Please enter the base package name for your J2EE project (i.e. org.andromda.samples):"
+                question="Please enter the base package name for your J2EE project (i.e. br.mdarte.exemplo.academico):"
                 answer="baseProjectPackage"/>
         </j:while>
 <!--
