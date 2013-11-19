@@ -36,7 +36,7 @@ public final class LoginOAuthUC extends Action
 {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-		RequestDispatcher rd = request.getRequestDispatcher("/$controleAcessoDir/pagina-de-login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/${stringUtils.replace($secureDir,'.','/')}/pagina-de-login.jsp");
 		if(rd!=null){
 			rd.forward(request, response);
 		}

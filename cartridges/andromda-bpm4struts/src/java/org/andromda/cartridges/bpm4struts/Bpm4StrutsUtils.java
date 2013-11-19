@@ -1,7 +1,9 @@
 package org.andromda.cartridges.bpm4struts;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,11 +12,22 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.andromda.metafacades.uml.ManageableEntity;
 import org.andromda.utils.StringUtilsHelper;
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 /**
  * Contains utilities for bpm4struts.
@@ -25,7 +38,6 @@ public final class Bpm4StrutsUtils
 {
 	
 	private static Collection itens   = new ArrayList();
-	
 	
 	public static  void add(Object item){
 		itens.add(item);
@@ -326,6 +338,96 @@ public final class Bpm4StrutsUtils
                 StringUtils.trimToEmpty(rightEntity.getName()));
         }
     }
+    
+    public static String getNewMagicDrawID(String entity, String name)
+    {
+    	String id = "";
+
+    	// 1312207235890
+    	//id += "_" + generateIntegerStr(14);
+    	String encodedEntity = Base64.encode(entity.getBytes()); 
+    	if(encodedEntity.length() > 14){
+    		id += encodedEntity.substring(0, 14);
+    	}else{
+    		id += encodedEntity;
+    	}
+    	
+    	// 30139
+		id += "_" + generateIntegerStr(5);
+		String encodedName = Base64.encode(name.getBytes()); 
+		if(encodedName.length() > 5){
+			id += encodedName.substring(0, 5);
+    	}else{
+    		id += encodedName;
+    	}
+		
+    	// 1252
+		id += "_" + generateIntegerStr(32 - id.length());
+		
+    	return id;
+    }
+
+    private static String generateIntegerStr (int length)
+    {
+    	Random randomGenerator = new Random();
+
+    	// String s = new Long(randomGenerator.nextLong((long)(Math.pow(10, length) - Math.pow(10, length-1))) + (long)Math.pow(10, length-1)).toString();
+    	String s = new Long(randomGenerator.nextLong()).toString();
+
+    	return s.substring(s.length() - length, s.length());
+    }
+    
+    public static String getDataTypeId(String nome, String dir)
+    {    	
+    	String id = new String();
+    	try {
+    		ZipFile zipFile = new ZipFile(dir + "/mda/src/uml/xml.zips/andromda-profile-datatype-3.1.xml.zip");
+    		Enumeration entries = zipFile.entries();
+    		ZipEntry entry = null;
+    		if(entries.hasMoreElements()){
+    	        entry = (ZipEntry)entries.nextElement();
+    		}
+    		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(zipFile.getInputStream(entry));
+
+			Element xmi = doc.getDocumentElement();
+			Element xmiContent = (Element) xmi.getElementsByTagName("XMI.content").item(0);
+			Element umlModel = (Element) xmiContent.getElementsByTagName("UML:Model").item(0);
+			Element ownedElement = (Element) umlModel.getElementsByTagName("UML:Namespace.ownedElement").item(0);
+			NodeList umlPackages = ownedElement.getElementsByTagName("UML:Package");
+			int i = 0;
+			while (i < umlPackages.getLength()){
+				Element umlPackage = (Element) umlPackages.item(i);
+				if(umlPackage.getAttribute("name").equals("datatype")){
+					Element packageOwnedElement = (Element) umlPackage.getElementsByTagName("UML:Namespace.ownedElement").item(0);
+					NodeList dataTypes = packageOwnedElement.getElementsByTagName("UML:DataType");
+					int j = 0;
+					Element dataType;
+					while (j < dataTypes.getLength()){
+						dataType = (Element) dataTypes.item(j);
+						if(dataType.getAttribute("name").equals(nome)){
+							j=dataTypes.getLength();
+							id = dataType.getAttribute("xmi.id");
+						}
+						else{
+							j++;
+						}
+					}
+					i=umlPackages.getLength();
+				}
+				else{
+					i++;
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return id;
+    }
+
 	public final static String getSuffixFromActionStruts2() {
 		return "Action2";
 	}

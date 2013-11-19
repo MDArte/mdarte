@@ -842,7 +842,7 @@
 	<!--  inicio templates oAuth -->  
 	<template
         path="templates/ejb/oAuth/OAuthImpl.java.vsl"
-        outputPattern="$controleAcessoDir/OAuthImpl.java"
+        outputPattern="$generatedFile"
         outlet="controleAcessoImpl"
         overwrite="false"/>	
     <!--  fim templates oAuth -->

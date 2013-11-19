@@ -30,7 +30,13 @@
 				<property name="outletReplaceModulo">${maven.andromda.module.name.outlet.replace}</property>
 				<property name="modulo">true</property>
 #end
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 				<property name="projectId">${application.id}</property>
+				<property name="projectDir">${projectDir}</property>
 				<property name="projectVersion">${application.version}</property>
 				<property name="contextoPrincipal">/${application.id}</property>
 				<property name="languageMappingsUri">Java</property>
@@ -51,6 +57,7 @@
 				<property name="modelPackageName">cd</property>
 				<property name="servicePackageName">cs</property>
 				<property name="webPackageName">web</property>
+				<property name="defaultCrudPackage">geral</property>
 				<property name="utilDir">util</property>
 				<property name="controleAcessoDir">${application.package}.accessControl</property>
                 <property name="controleAcessoDefault">${controleAcesso}</property>
@@ -75,6 +82,11 @@
 			<properties>
 				<property name="jboss-config">jboss-config</property>
 				<property name="dataSourceName">${dataSource.name}</property>
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 #if($modulos)
 				<property name="project-configuration">${maven.andromda.ejb.dir}</property>
 				<property name="entity-beans">${maven.andromda.core.modulo.ejb.generated.dir}</property>
@@ -129,6 +141,11 @@
 		<namespace name="ejb">
 			<properties>
 				<property name="dataSourceName">${dataSource.name}</property>
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
+#end
 #if($modulos)
 				<property name="project-configuration">${maven.andromda.ejb.dir}</property>
 				<property name="session-beans">${maven.andromda.core.modulo.ejb.generated.dir}</property>
@@ -324,6 +341,11 @@
 				<property name="struts2">true</property>
 #else
 				<property name="struts2">false</property>
+#end
+#if($oauth)
+				<property name="oAuthServer">true</property>
+#else
+				<property name="oAuthServer">false</property>
 #end
 				<property name="servletContext">/${application.id}</property>
 				<property name="reportPropertiesPath">C:\\report.properties</property>

@@ -92,6 +92,12 @@
                     The location to which shared Struts actions are generated.
                 </documentation>
             </property>
+            <property name="manageable-models">
+            	<default>mda/src/uml</default>
+                <documentation>
+                    The location to which crud models of manageable entities are generated.
+                </documentation>
+            </property>
             <property name="actionsImpl">
                 <documentation>
                     The location to which Struts actions impl are generated.
@@ -205,6 +211,11 @@
             <property name="projectDir">
             	<documentation>
             		Project's base directory. 
+            	</documentation>
+            </property>
+            <property name="defaultCrudPackage">
+            	<documentation>
+            		Default CRUD package name. 
             	</documentation>
             </property>
         </propertyGroup>
@@ -681,6 +692,12 @@
                 <default>ListaSessionsObject</default>
                 <documentation>
                      List of session Objects and their useCase on Session
+                </documentation>
+            </property>
+            <property name="pbiDir">
+                <default>pbi</default>
+                <documentation>
+                     Diretorio onde sao gerados os PBIs
                 </documentation>
             </property>
             <property name="utilDir">

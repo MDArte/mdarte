@@ -184,7 +184,9 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 
 		if (value.equals("false"))
 		{
+
 			String forward = "entrar.login";
+			
 			if (__urlCasoDeUso != null && __contexto != null)
 			{
 				setNextPath(__contexto + __urlCasoDeUso);
@@ -253,6 +255,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 			request.getSession().removeAttribute(Constantes.FORWARD);
 
 			String forward = "entrar.login";
+			
 			if (__urlCasoDeUso != null && __contexto != null)
 			{
 				setNextPath(__contexto + __urlCasoDeUso);
@@ -311,7 +314,9 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		}
 		else
 		{
+
 			String forward = "entrar.login";
+			
 			if (__urlCasoDeUso != null && __contexto != null)
 			{
 				setNextPath(__contexto + __urlCasoDeUso);

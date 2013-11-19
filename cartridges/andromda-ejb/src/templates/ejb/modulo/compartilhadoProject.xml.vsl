@@ -9,12 +9,12 @@
     <description>
         Contains the ${pom.name}-compartilhado's EJB module.
     </description>
-	#if($oAuthServer  == "true")
+#if($oAuthServer  == "true")
   <dependencies>
         <dependency>
             <groupId>oauth</groupId>
             <artifactId>oauth-core</artifactId>
-            <version>${oauthcore.version}</version>
+            <version>${oauth.core.version}</version>
             <type>jar</type>
         </dependency>
 		<dependency>
@@ -24,7 +24,7 @@
             <type>jar</type>
         </dependency>
   </dependencies>
-  #end
+#end
     <build>
         <sourceDirectory>target/src</sourceDirectory>
         <resources>

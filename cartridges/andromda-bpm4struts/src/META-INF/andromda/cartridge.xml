@@ -54,6 +54,7 @@
     <property reference="cadastroSessionObjectName"/>    
 	<property reference="maxRows"/>
 	<property reference="utilDir"/>
+	<property reference="pbiDir"/>
 	<property reference="servicePackageName"/>
 	<property reference="webPackageName"/>  
 	<property reference="modulo"/>
@@ -90,6 +91,7 @@
 	<property reference="externalHyperlink"/>
 	<property reference="projectId"/>
 	<property reference="projectDir"/>
+	<property reference="defaultCrudPackage"/>
 	<property reference="server"/>
 	<property reference="reportPropertiesPath"/>
 	<property reference="useCaseuseCaseRemove"/>
@@ -145,6 +147,20 @@
         outputPattern="$generatedFile"
         outlet="layout-util"
         overwrite="false">
+    </template>
+    
+    <template
+        path="templates/bpm4struts/models/ManageableModels.vsl"
+        outputPattern="$generatedFile"
+        outlet="manageable-models"
+        overwrite="true">
+        <modelElements variable="manageable">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.MDArteManageableModelsLogicImpl">
+        			<property name="manageable"/>
+        		</type>
+            </modelElement>
+        </modelElements>
     </template>
     
     <template
@@ -615,6 +631,19 @@
         overwrite="true"
         outputToSingleFile="true"/>    
         
+     <template
+        path="templates/bpm4struts/messages/application-resources.properties.vsl"
+        outputPattern="application-resources-modulo.properties"
+        outlet="messages-modulo"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+	  
     <template
         path="templates/bpm4struts/messages/application-resources.csv.vsl"
         outputPattern="application-resources-modulo.csv"
@@ -1884,18 +1913,18 @@
         overwrite="true"/>
     <template
         path="templates/bpm4struts/pages/oAuth/pagina-de-login.jsp.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        outputPattern="$secureDir/pagina-de-login.jsp"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
         path="templates/bpm4struts/pages/oAuth/pagina-de-login.css.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        outputPattern="$secureDir/pagina-de-login.css"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
-        path="templates/bpm4struts/pages/oAuth/pagina-de-login-javascript.jspf.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
+        path="templates/bpm4struts/pages/oAuth/pagina-de-login-actions.jsp.vsl"
+        outputPattern="$secureDir/pagina-de-login-actions.jsp"
+        outlet="controleAcessoImpl"
         overwrite="true"/>
     <template
         path="templates/bpm4struts/forms/oAuth/PaginaDeLoginLoginFormImpl.java.vsl"
@@ -1906,7 +1935,8 @@
         path="templates/bpm4struts/forms/oAuth/LoginOAuthUCFormImpl.java.vsl"
         outputPattern="$generatedFile"
         outlet="controleAcesso"
-        overwrite="true"/>        
+        overwrite="true"/>
+
 	<!-- fim oAuth templates -->
 
 </cartridge>

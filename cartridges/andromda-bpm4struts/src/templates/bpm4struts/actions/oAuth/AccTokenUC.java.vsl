@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import accessControl.OAuthImpl;
+import ${controleAcessoDir}.OAuthImpl;
 
 import java.io.OutputStream;
 

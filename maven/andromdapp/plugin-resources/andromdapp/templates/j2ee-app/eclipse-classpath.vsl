@@ -24,6 +24,10 @@
     <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/ejbs/ControleAcesso-controleacesso-1.0.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/jars/ControleAcesso-dominio-core-1.0.jar"/>
 #end
+#if($oauth)
+	<classpathentry kind="var" path="MAVEN_REPO/oauth/jars/oauth-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-codec/jars/commons-codec-1.4.jar"/>
+#end
 	<classpathentry kind="var" path="MAVEN_REPO/struts/jars/struts-1.2.7.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.4-20040521.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-validator/jars/commons-validator-1.3.1.jar"/>

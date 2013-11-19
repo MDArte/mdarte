@@ -68,6 +68,10 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_LAYOUT_NAME = profile.get("LAYOUT_NAME");
     public static final String TAGGEDVALUE_CUSTOM_LINK = profile.get("CUSTOM_LINK");
     /**
+     * Stores CRUD package name for an entity
+     */
+    public static final String TAGGEDVALUE_MANAGEABLE_CRUD_PACKAGE_NAME = profile.get("MANAGEABLE_CRUD_PACKAGE_NAME");
+    /**
      * The name used to reference external module
      */
     public static final String TAGGEDVALUE_EXTERNAL_APPLICATION_NAME = profile.get("EXTERNAL_APPLICATION_NAME");

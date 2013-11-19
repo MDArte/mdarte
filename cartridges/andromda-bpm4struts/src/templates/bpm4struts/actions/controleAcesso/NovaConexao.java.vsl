@@ -38,7 +38,6 @@ public class NovaConexao extends Action {
 		}
 
 		request.getSession().invalidate();
-
 		ActionForward forward = mapping.findForward("entrar.login");
 		response.sendRedirect("https://" + request.getServerName() + ":" + ports.getProperty("https.port") + "${contextoPrincipal}" + forward.getPath());
 		return null;

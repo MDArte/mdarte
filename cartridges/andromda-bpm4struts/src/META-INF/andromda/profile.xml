@@ -699,6 +699,16 @@
                     <value>false</value>
                 </allowedValues>
             </element>
+            <element name="MANAGEABLE_CRUD_PACKAGE_NAME">
+                <documentation>
+                    Stores CRUD package name for an entity
+                </documentation>
+                <value>@andromda.manageable.web.packagename</value>
+                <appliedOnElement><![CDATA[<<Manageable>>]]></appliedOnElement>
+                <allowedValues>
+                    <value>Any String</value>
+                </allowedValues>
+            </element>
             <element name="REPORT_NAME">
                 <documentation>
 					report name

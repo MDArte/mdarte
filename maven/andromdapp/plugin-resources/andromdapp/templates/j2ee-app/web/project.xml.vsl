@@ -555,6 +555,7 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency> -->
+		
     </dependencies>
 #if(!$modulos)
     <build>

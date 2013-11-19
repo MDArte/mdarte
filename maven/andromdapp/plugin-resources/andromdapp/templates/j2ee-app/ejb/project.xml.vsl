@@ -397,5 +397,17 @@
                 <ejb.manifest.classpath>true</ejb.manifest.classpath>
             </properties>
         </dependency>
+#if($oauth)
+        <dependency>
+            <groupId>oauth</groupId>
+            <artifactId>oauth-core</artifactId>
+            <version>${oauth.core.version}</version>
+            <type>jar</type>
+			 <properties>
+                <application.dependency>true</application.dependency>
+                <ejb.manifest.classpath>true</ejb.manifest.classpath>
+            </properties>
+        </dependency>
+#end		
     </dependencies>
 </project>
