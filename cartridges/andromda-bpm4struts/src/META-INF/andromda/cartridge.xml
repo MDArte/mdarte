@@ -31,6 +31,7 @@
     <property reference="dummyData"/>
     <property reference="onlineHelp"/>
     <property reference="hints"/>
+    <property reference="struts2"/>
     <property reference="defaultDateFormat"/>
     <property reference="defaultTimeFormat"/>
     <property reference="warningMessagesKey"/>

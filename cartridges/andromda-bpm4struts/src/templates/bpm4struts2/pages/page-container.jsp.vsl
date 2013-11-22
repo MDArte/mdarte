@@ -17,7 +17,7 @@
 #end
 #end
 #end
-#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)
+#if ($jsp.actions.size() > 0 && !$action.useCaseStart)
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($hints = $hints.equalsIgnoreCase("true"))
