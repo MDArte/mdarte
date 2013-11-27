@@ -17,7 +17,7 @@ error.exception.title=Application error
 error.exception.message=The application encountered an unexpected exception, please contact your system administrator and notify him/her of this problem.
 error.copia.parametros=Erro na passagem de parametros entre casos de uso, tipos incompativeis para o parametro {0}
 
-error.stack.trace=Um erro ocorreu. Clique aqui para ver o StackTrace
+error.stack.trace=StackTrace
 
 select.deselect.all=Select/Deselect All
 select.deselect.this.row=Select/Deselect this row
@@ -45,6 +45,7 @@ error.default.stale.stale.exception=Erro: o registro já foi alterado por outro u
 
 error.message.window=Erro
 warning.message.window=Aviso
+sucess.message.window=Sucesso
 
 error.generic.validator={0} contém caracteres não permitidos: {1}
 

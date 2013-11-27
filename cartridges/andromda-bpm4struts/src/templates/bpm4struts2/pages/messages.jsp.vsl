@@ -6,7 +6,9 @@
 
 <div id="messages">
     <logic:messagesPresent message="true" property="org.andromda.bpm4struts.successmessages">
-        <div class="messages">
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h4 class="alert-heading"><bean:message key="sucess.message.window"/></h4>
             <html:messages id="message" message="true" property="org.andromda.bpm4struts.successmessages">
                 <div class="message">${message}</div>
             </html:messages>
@@ -24,25 +26,28 @@
             String stackTrace = baos.toString();
             request.getSession().getServletContext().getContext("/$projectId").setAttribute("stackTrace", stackTrace);
     %>
-					 		          
-        <script> 
+
+        <script>
             function stackTrace() { 
-                window.open('/${projectId}/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
+                window.open('/$projectId/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
             }	
         </script>    				                     
     <%
         }
     %>
     			
-	<div id="messages">
+	<div id="messages">		
 		<logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
 			<div class="alert alert-error">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4 class="alert-heading"><bean:message key="error.message.window"/></h4>
 					<html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
-    					<strong>${error}</strong>                        
-                        <a href="javascript:stackTrace();void(0);"\>
-                            <bean:message key="error.stack.trace"/>
-                        </a>        
+    					<strong>${error}</strong>
+                    <% if(e != null) {%>
+                        <p>
+                            <a class="btn btn-danger" href="javascript:stackTrace();void(0);"><bean:message key="error.stack.trace"/></a>
+                        </p>                        
+                    <%}%>
 					</html:messages>
 			</div>
 		</logic:messagesPresent>
@@ -50,14 +55,13 @@
 		<logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
 			<div class="alert">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4 class="alert-heading"><bean:message key="warning.message.window"/></h4>
 					<html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
     					<strong>${warning}</strong>
-                        <a href="javascript:stackTrace();void(0);"\>
-                            <bean:message key="error.stack.trace"/>
-                        </a>
 					</html:messages>
 			</div>
 		</logic:messagesPresent>
 	</div>
 </logic:messagesPresent>
+
 #end

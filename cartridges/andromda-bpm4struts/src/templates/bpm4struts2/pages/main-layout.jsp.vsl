@@ -43,8 +43,8 @@
 		<div class="container-narrow">
 			<c:import url="${localLayoutPath}/conf/cabecalho.jsp" />
 			<tiles:insert attribute="menu" flush="true"/>
-			<tiles:insert attribute="body" flush="true"/>
 			<tiles:insert attribute="messages" flush="true"/>
+			<tiles:insert attribute="body" flush="true"/>
 			<c:import url="${localLayoutPath}/conf/rodape.jsp"/>
 		</div>
     </body>
