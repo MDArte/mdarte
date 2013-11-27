@@ -31,11 +31,11 @@
     </head>
 
     <body onkeypress="keySubmit(event)">
-                      
-                <tiles:insert attribute="body" flush="true"/>
-                <tiles:insert attribute="messages" flush="true"/>                  
-                <c:import url="${localLayoutPath}/conf/rodape.jsp"/>                  
-    
+        <div class="container-narrow">
+            <tiles:insert attribute="body" flush="true"/>
+            <tiles:insert attribute="messages" flush="true"/>
+            <c:import url="${localLayoutPath}/conf/rodape.jsp"/>
+        </div>
     </body>
 
 </html:html>
