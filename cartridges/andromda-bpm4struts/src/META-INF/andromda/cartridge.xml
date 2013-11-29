@@ -5,6 +5,7 @@
         <macrolibrary name="templates/bpm4struts/pages/crud/manageable.jsp.vm"/>
         <macrolibrary name="templates/bpm4struts/actions/Action.java.vm"/>
         <macrolibrary name="templates/bpm4struts2/pages/page.jsp.vm"/>
+        <macrolibrary name="templates/bpm4struts/forms/Form.java.vm"/>
         <!-- shared (meaning across subdirectories) macros -->
         <macrolibrary name="templates/bpm4struts/macros/populateCurrentFormOnError.vm"/>
         <!-- cartridge-macrolibrary merge-point-->

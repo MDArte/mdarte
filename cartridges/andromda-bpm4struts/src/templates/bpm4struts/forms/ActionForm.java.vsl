@@ -75,6 +75,9 @@ public class ${formBeanClassName}
 #end
 #else
     private $field.type.fullyQualifiedName $field.name;
+#if ($field.type.stereotypeNames.contains("ValueObject"))
+	//XXXXXXXXXXXXXXXXX
+#end	
 #end
 ## Adiciona um double para o caso do doubleSelect
 #if ($field.doubleSelect)
