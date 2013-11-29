@@ -29,7 +29,7 @@
 
         <script>
             function stackTrace() { 
-                window.open('/$projectId/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
+                window.open('/$projectId/stackTrace.jsp','StackTrace','width=1024,height=600,scrollbars=yes');
             }	
         </script>    				                     
     <%
