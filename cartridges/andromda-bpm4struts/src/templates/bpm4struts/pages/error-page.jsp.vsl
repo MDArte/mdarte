@@ -90,7 +90,7 @@
         <div id="footer">
             <div class="container">
                 <div id="link"><html:link page="/$welcomeFileName" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
-                <p class="muted credit">@MDArte</a>.</p>
+                <p class="muted credit">&copy; MDArte</a>.</p>
             </div>
         </div>
     </body>
