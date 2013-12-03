@@ -98,7 +98,6 @@ public class ${formBeanClassName}
 #if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
 	private java.lang.Object[] $field.valueListName;
 	private java.lang.Object[] $field.labelListName;
-	private java.lang.Object[] ${field.labelListName}Double;    
 	private java.lang.Object[] ${field.labelListName}Hints;
 	private java.lang.Object[] ${field.labelListName}Destination;
 #end
@@ -236,7 +235,7 @@ $field.getDocumentation("     * ")
        String s = null;
        try{
 	   if($fieldName != null){
-	   
+
 	   	String myFormat = "#,#" + "#" +"#.00";
     	   	java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
            	s = myFormatter.format($fieldName);
@@ -556,7 +555,7 @@ $field.getDocumentation("     * ")
 #end
 
 #if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
-#processLists ($field)
+#processLists2 ($field)
 #end
 
 #end
@@ -636,7 +635,7 @@ $field.getDocumentation("     * ")
         this.$field.labelListName = null;
         this.${field.labelListName}Double = null;        
         this.${field.labelListName}Hints = null;
-#end                
+#end
 #end
 #end
     }
@@ -660,14 +659,14 @@ $field.getDocumentation("     * ")
 #processListsClasses()
 #end
  
-    /** Verifica se o campo est� sendo exibido na tela */
+    /** Verifica se o campo esta sendo exibido na tela */
     public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
 	String modoPermitido = null;
 	java.util.StringTokenizer tokenizerModosPermitidos = null;
         java.util.StringTokenizer tokenizerModosPossuidos = null;
 #foreach ($field in $fields)
 #set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
-#if( $valueFieldOperationMode != "")
+#if($valueFieldOperationMode != "")
         if (field.equals("$field.name")) {
             if (modosOperacao == null || modosOperacao.isEmpty()) return false;
             tokenizerModosPermitidos = new java.util.StringTokenizer("$valueFieldOperationMode", ",");

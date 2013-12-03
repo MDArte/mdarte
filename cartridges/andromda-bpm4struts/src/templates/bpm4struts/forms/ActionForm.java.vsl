@@ -1,3 +1,4 @@
+#parse("templates/bpm4struts/forms/Form.java.vm")
 #set ($generatedFile = "${action.fullFormBeanPath}.java")
 ##
 ##  CONSTANTS
@@ -75,9 +76,6 @@ public class ${formBeanClassName}
 #end
 #else
     private $field.type.fullyQualifiedName $field.name;
-#if ($field.type.stereotypeNames.contains("ValueObject"))
-	//XXXXXXXXXXXXXXXXX
-#end	
 #end
 ## Adiciona um double para o caso do doubleSelect
 #if ($field.doubleSelect)
@@ -101,24 +99,24 @@ public class ${formBeanClassName}
 #set ($timeFormatter = "${field.name}TimeFormatter")
     private final static java.text.DateFormat $timeFormatter = new java.text.SimpleDateFormat("$field.timeFormat");
 #end
-    private java.lang.Object[] $field.valueListName;
-    private java.lang.Object[] $field.labelListName;
-    private java.lang.Object[] ${field.labelListName}Double;    
-    private java.lang.Object[] ${field.labelListName}Hints;
-    private java.lang.Object[] ${field.labelListName}Destination;
+#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+	private java.lang.Object[] $field.valueListName;
+	private java.lang.Object[] $field.labelListName;
+	private java.lang.Object[] ${field.labelListName}Double;    
+	private java.lang.Object[] ${field.labelListName}Hints;
+	private java.lang.Object[] ${field.labelListName}Destination;
+#end
 #end
 
     public ${formBeanClassName}(){
-    #foreach($field in $fields)
-    #if($field.radioButton)
-    #if($field.findTaggedValue("$radioSelected"))
+#foreach($field in $fields)
+#if($field.radioButton)
+#if($field.findTaggedValue("$radioSelected"))
     	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
-    #end
-    #end
-    #end
-    
-    
-    
+#end
+#end
+#end
+
 #foreach ($field in $fields)
 #if ($field.date)
 #set ($dateFormatter = "${field.name}DateFormatter")
@@ -538,361 +536,10 @@ $field.getDocumentation("     * ")
 
 #end
 #end
-#set ($listType = "java.lang.Object[]")
-#set ($backingListName = $field.backingListName)
-#set ($backingListMethod = $stringUtils.capitalize($backingListName))
-#set ($valueListName = $field.valueListName)
-#set ($valueListMethod = $stringUtils.capitalize($valueListName))
-#set ($labelListName = $field.labelListName)
-#set ($labelListMethod = $stringUtils.capitalize($labelListName))
-    public $listType get${backingListMethod}()
-    {
-        $listType values = this.${valueListName};
-        $listType labels = this.${labelListName};
-        $listType hints = this.${labelListName}Hints;        
 
-        if (values == null || values.length == 0)
-        {
-            return values;
-        }
-
-        if (labels == null || labels.length == 0)
-        {
-            labels = values;
-        }
-
-        if (hints == null || hints.length == 0)
-        {
-            hints = labels;
-        }
-
-        final int length = java.lang.Math.min(labels.length, values.length);
-        java.lang.Object[] backingList = new java.lang.Object[length];
-
-        for (int i=0; i<length; i++)
-        {
-            backingList[i] = new LabelValue(labels[i], values[i], hints[i]);
-        }
-
-        return backingList;
-    }
-    
-    public $listType get${backingListMethod}Double()
-    {
-#if ($field.doubleSelect)
-        $listType values = this.${valueListName}Double;
-        $listType labels = this.${labelListName}Double;
-        $listType labelsDouble = this.${field.name}IndexListDouble;
-#else
-        $listType values = this.${valueListName};
-        $listType labels = this.${labelListName};
-        $listType labelsDouble = this.${labelListName}Double;
+#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+#processLists2 ($field)
 #end
-
-        if (values == null || values.length == 0)
-        {
-            return values;
-        }
-
-        if (labels == null || labels.length == 0)
-        {
-            labels = values;
-        }
-        
-        if (labelsDouble == null || labelsDouble.length == 0)
-        {
-            labelsDouble = values;
-        }
-
-        final int length = java.lang.Math.min(labels.length, values.length);
-        java.lang.Object[] backingList = new java.lang.Object[length];
-
-        for (int i=0; i<length; i++)
-        {
-            backingList[i] = new LabelValueDouble(labels[i], labelsDouble[i], values[i]);
-        }
-
-        return backingList;
-    }
-    
-    public $listType get${backingListMethod}Destination()
-    {
-        $listType values = this.${valueListName};
-        $listType labels = this.${labelListName};
-        $listType labelsDestination = this.${labelListName}Destination;        
-
-        if (values == null || values.length == 0)
-        {
-            return values;
-        }
-
-        if (labels == null || labels.length == 0)
-        {
-            labels = values;
-        }
-        
-        if (labelsDestination == null || labelsDestination.length == 0)
-        {
-            labelsDestination = values;
-        }
-
-        final int length = java.lang.Math.min(labels.length, values.length);
-        java.lang.Object[] backingList = new java.lang.Object[length];
-
-        for (int i=0; i<length; i++)
-        {
-            backingList[i] = new LabelValueDestination(labels[i], labelsDestination[i], values[i]);
-        }
-
-        return backingList;
-    }
-
-    public $listType get${valueListMethod}()
-    {
-        return this.$valueListName;
-    }
-
-    public void set${valueListMethod}($listType $valueListName)
-    {
-        this.$valueListName = $valueListName;
-    }
-
-    public $listType get${labelListMethod}()
-    {
-        return this.$labelListName;
-    }
-
-    public $listType get${labelListMethod}Double()
-    {
-        return this.${labelListName}Double;
-    }
-    
-    public $listType get${labelListMethod}Destination()
-    {
-        return this.${labelListName}Destination;
-    }
-
-    public $listType get${labelListMethod}Hints()
-    {
-        return this.${labelListName}Hints;
-    }
-
-    public void set${labelListMethod}($listType $labelListName)
-    {
-        this.$labelListName = $labelListName;
-    }
-
-    public void set${labelListMethod}Double($listType ${labelListName}Double)
-    {
-        this.${labelListName}Double = ${labelListName}Double;
-    }
-    
-    public void set${labelListMethod}Destination($listType ${labelListName}Destination)
-    {
-        final int length = ${labelListName}Destination != null ? ${labelListName}Destination.length : 0;
-        java.lang.Object[] tempListaDestination = new java.lang.Object[length];
-
-        for (int i=0; i<length; i++)
-        {
-            Object tempDestination = ${labelListName}Destination[i];
-            if (tempDestination instanceof String) {
-                String tempStringDestination = (String) tempDestination;
-                if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
-                {
-                    tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
-                    tempDestination = tempStringDestination;
-                }
-            }
-            tempListaDestination[i] = tempDestination;
-        }
-
-        this.${labelListName}Destination = tempListaDestination;
-    }
-
-    public void set${labelListMethod}Hints($listType ${labelListName}Hints)
-    {
-        this.${labelListName}Hints = ${labelListName}Hints;
-    }
-
-    public void set${backingListMethod}Double(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty)
-    {
-        if (valueProperty == null || labelProperty == null || labelDoubleProperty == null)
-        {
-            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod}Double requires non-null property arguments");
-        }
-
-        this.${valueListName} = null;
-        this.${labelListName} = null;
-        this.${labelListName}Double = null;        
-
-        if (items != null)
-        {
-            this.${valueListName} = new java.lang.Object[items.size()];
-            this.${labelListName} = new java.lang.Object[items.size()];
-            this.${labelListName}Double = new java.lang.Object[items.size()];            
-
-            try
-            {
-                int i = 0;
-                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
-                {
-                    final java.lang.Object item = iterator.next();
-
-                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
-                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
-                    this.${labelListName}Double[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDoubleProperty);                    
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod}Double encountered an exception", ex);
-            }
-        }
-    }
-    
-    
-    public void set${backingListMethod}Destination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty)
-    {
-        if (valueProperty == null || labelProperty == null || labelDestinationProperty == null)
-        {
-            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod}Destination requires non-null property arguments");
-        }
-
-        this.${valueListName} = null;
-        this.${labelListName} = null;
-        this.${labelListName}Destination = null;        
-
-        if (items != null)
-        {
-            this.${valueListName} = new java.lang.Object[items.size()];
-            this.${labelListName} = new java.lang.Object[items.size()];
-            this.${labelListName}Destination = new java.lang.Object[items.size()];            
-
-            try
-            {
-                int i = 0;
-                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
-                {
-                    final java.lang.Object item = iterator.next();
-
-                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
-                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
-
-                    Object tempDestination = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDestinationProperty);
-                    if (tempDestination instanceof String) {
-                        String tempStringDestination = (String) tempDestination;
-                        if (tempStringDestination.length() > TAMANHO_MAXIMO_LABEL_DESTINO)
-                        {
-                            tempStringDestination = tempStringDestination.substring(0,TAMANHO_MAXIMO_LABEL_DESTINO-1);
-                            tempDestination = tempStringDestination;
-                        }
-                    }
-                    this.${labelListName}Destination[i] = tempDestination;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod}Destination encountered an exception", ex);
-            }
-        }
-    }
-
-    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
-    }	    
-    
-    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
-	for(int i = 0; i < this.${labelListName}Hints.length; i++){
-		Object label = this.${labelListName}Hints[i];
-		if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
-        		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
-	}
-    }	    
-    
-    public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
-    {
-        if (valueProperty == null || labelProperty == null)
-        {
-            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod} requires non-null property arguments");
-        }
-
-        this.${valueListName} = null;
-        this.${labelListName} = null;
-
-        if (items != null)
-        {
-            this.${valueListName} = new java.lang.Object[items.size()];
-            this.${labelListName} = new java.lang.Object[items.size()];
-
-            try
-            {
-                int i = 0;
-                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
-                {
-                    final java.lang.Object item = iterator.next();
-
-                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
-                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod} encountered an exception", ex);
-            }
-        }
-    }
-
-    public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty)
-    {
-        if (valueProperty == null || labelProperty == null || labelHintProperty == null)
-        {
-            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod} requires non-null property arguments");
-        }
-
-        this.${valueListName} = null;
-        this.${labelListName} = null;
-        this.${labelListName}Hints = null;        
-
-        if (items != null)
-        {
-            this.${valueListName} = new java.lang.Object[items.size()];
-            this.${labelListName} = new java.lang.Object[items.size()];
-            this.${labelListName}Hints = new java.lang.Object[items.size()];            
-
-            try
-            {
-                int i = 0;
-                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
-                {
-                    final java.lang.Object item = iterator.next();
-
-                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
-                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
-                    this.${labelListName}Hints[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelHintProperty);                    
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod} encountered an exception", ex);
-            }
-        }
-    }
-
 
 #end
     /**
@@ -953,11 +600,13 @@ $field.getDocumentation("     * ")
         this.$field.name = $field.nullValue;
 #if ($field.doubleSelect)
         this.${field.name}__Double = null;
-#end        
+#end
+#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
         this.$field.valueListName = null;
         this.$field.labelListName = null;
         this.${field.labelListName}Double = null;        
-        this.${field.labelListName}Hints = null;                
+        this.${field.labelListName}Hints = null;
+#end
 #end
 #end
     }
@@ -977,114 +626,9 @@ $field.getDocumentation("     * ")
         return errors;
     }
 
-    public final static class LabelValue
-    {
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-        private java.lang.Object hint = null;        
-
-        public LabelValue(Object label, java.lang.Object value)
-        {
-            this.label = label;
-            this.value = value;
-        }
-
-        public LabelValue(Object label, java.lang.Object value, Object hint)
-        {
-            this.label = label;
-            this.value = value;
-            this.hint = hint;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-        
-	public java.lang.Object getHint()
-        {
-            return this.hint;
-        }        
-
-        public java.lang.String toString()
-        {
-            return label + "=" + value;
-        }
-    }
-    
-    public final static class LabelValueDouble
-    {
-        private java.lang.Object labelDouble = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDouble = labelDouble;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDouble()
-        {
-            return this.labelDouble;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDouble + "=" + value;
-        }
-    }
-    
-    
-    public final static class LabelValueDestination
-    {
-        private java.lang.Object labelDestination = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDestination = labelDestination;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDestination()
-        {
-            return this.labelDestination;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDestination + "=" + value;
-        }
-    }
+#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+#processListsClasses()
+#end
  
     /** Verifica se o campo esta sendo exibido na tela */
     public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
@@ -1112,6 +656,7 @@ $field.getDocumentation("     * ")
     public String getOperationModeKey(){
         return "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do";
     }
+	
 #if ($hasTable)	
 	public String getActionPath(){
 		return "${action.actionPath}.do";
