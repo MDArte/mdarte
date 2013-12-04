@@ -128,6 +128,7 @@ login.submit=Login
 login.submit.title=Click to submit these credentials
 login.reset=Reset
 login.reset.title=Click to reset these credentials
+login.entrar.lembrar.senha=Remember password?
 
 login.error=Login failed, please try again or register as a new user.
 
