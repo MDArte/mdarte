@@ -1336,6 +1336,12 @@
         overwrite="false"/>   
         
     <template
+        path="templates/bpm4struts2/pages/controleAcesso/entrar-login.js.vsl"
+        outputPattern="$secureDir/entrar-login.js"
+        outlet="controleAcessoImpl"
+        overwrite="false"/> 
+        
+    <template
         path="templates/bpm4struts2/pages/controleAcesso/entrar-login-actions.jsp.vsl"
         outputPattern="$secureDir/entrar-login-actions.jsp"
         outlet="controleAcessoImpl"
