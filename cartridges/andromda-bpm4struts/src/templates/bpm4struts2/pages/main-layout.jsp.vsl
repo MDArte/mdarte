@@ -40,7 +40,7 @@
     </head>
     	
     <body onkeypress="keySubmit(event)">
-		<div class="container-narrow">
+		<div class="container">
 			<c:import url="${localLayoutPath}/conf/cabecalho.jsp" />
 			<tiles:insert attribute="menu" flush="true"/>
 			<tiles:insert attribute="messages" flush="true"/>

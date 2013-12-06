@@ -67,6 +67,6 @@ window.close();
 						<%-- <span class='menuFechar'/> --%>
 		    </a></li>
 	</ul>
-	<h3 class="muted">${projectId}</h3>
+	<h3 class="text-muted">${projectId}</h3>
 </div>        
 #end
