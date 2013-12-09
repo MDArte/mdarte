@@ -7,15 +7,21 @@
 	<head>
         <title>StackTrace</title>
         <html:base/>
-	<link rel="stylesheet" type="text/css" media="screen" href="${layoutPath}/default-application.css"></link>
-        <link rel="stylesheet" type="text/css" media="screen" href="${layoutPath}/default.css"></link>
+        <c:import url="${localLayoutPath}/conf/include-stylesheets.jsp"/>
+        <c:import url="${localLayoutPath}/conf/include-javascripts.jsp"/>
     </head>
-    
+
     <body>
-    	<div id="error">
-    		<div class="details">
-    			<code><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%> 
-			</div>
-		</div>
-	</body>
+        <div id="wrap">
+            <!-- Begin page content -->
+            <div class="container">
+                <div class="page-header">
+                    <div id="title"><h1>Stacktrace</h1></div>
+                </div>
+                <div class="error">
+                    <pre><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%></pre>
+                </div>
+            </div>            
+        </div>
+    </body>
 </html:html>    
