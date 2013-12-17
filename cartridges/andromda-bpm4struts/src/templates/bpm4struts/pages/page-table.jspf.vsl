@@ -1,4 +1,4 @@
- #parse("templates/bpm4struts/pages/page.jsp.vm")
+#parse("templates/bpm4struts/pages/page.jsp.vm")
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
 #set ($targetColumns = $table.targettedTableColumnNames)
@@ -9,19 +9,7 @@
 #set($gerarJSP = true)	
 #end
 #if($gerarJSP)
-## [MOISES-COPPETEC]
-## Acaoo a ser utilizada no link "NEXT" na paginacao.
-<% String acao_${table.name};
-   if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
-	acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-   }else{
-	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-   }
-%>
 
-
-
-## Fim
 <% 
   String nomeProjeto${table.name} = request.getContextPath(); 
   out.println("<script>");
@@ -29,36 +17,37 @@
   out.println("</script>");
 %>
 
-           <script>
-               function setaParametros${table.name}(param1, param2) {
-               		document.${table.name}.action = "";
-			document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-			document.${table.name}.name=param1;						   
-			document.${table.name}.submit(); 
-			return true;                
-               }
-			function selecionaDeseleciona(){
-				var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
-                var setChecked;
-                if(boxes.length==0){
-                    boxes.checked=!boxes.checked;
-                }else{
-                    setChecked = !boxes[0].checked;
-                }
-               
-                for(var i=0;i<boxes.length;i++)
-                    boxes[i].checked=setChecked;
-            }
-           </script>
-
+<script>
+	function setaParametros${table.name}(param1, param2) {
+		document.${table.name}.action = "";
+		document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
+		document.${table.name}.name=param1;						   
+		document.${table.name}.submit(); 
+		return true;                
+	}
+	
+	function selecionaDeseleciona(){
+		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
+		var setChecked;
+		if(boxes.length==0){
+			boxes.checked=!boxes.checked;
+		}else{
+			setChecked = !boxes[0].checked;
+		}
+		for(var i=0;i<boxes.length;i++) boxes[i].checked=setChecked;
+	}
+</script>
+## Acao a ser utilizada nos links na paginacao.
+<c:set var="acao" value='${pageContext.request.contextPath}${form.actionPath}'/>
+		   
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
     <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
 #end
 #set ($displayTableName = "form.${table.name}")
-    <display:table name="${${displayTableName}}" id="row"
+   <display:table name="${${displayTableName}}" id="row" class="table table-striped"
         ##requestURIAction -> acao a ser utilizada no link "NEXT" na paginacao
-        requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
+        requestURI="${pageContext.request.requestURL}" requestURIAction="${acao}" tableName="${table.name}"
 #if ($table.tableDecoratorRequired)
         decorator="${table.tableDecoratorFullyQualifiedName}"
 #end
@@ -167,29 +156,29 @@
 ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
             
-            #if($valueConfirmMessage !="")
+#if($valueConfirmMessage !="")
             <html:button  #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" onclick="confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false" property="$action.formBeanName">
 	           <bean:message key="$action.actionTrigger.triggerKey"/>
             </html:button>  
-            #else
+#else
 				
-				#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
+#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
 			<html:button 
 				onclick="setaAcaoForm('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', this.form )"
-				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
+#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
-				#else
+#else
 					<html:button 
 				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
-				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
+#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
-            #end  
-            #end        
-     
+#end
+#end
+
             <input type="button" value="<bean:message key="select.deselect.all"/>" onclick="selecionaDeseleciona();"/>
 #if ($securityEnabled) 
 ${indent}   </security:containsPermission>
