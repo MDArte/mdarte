@@ -8,6 +8,8 @@
   out.println("</script>");
 %>
 
+<script type="text/javascript" src="/${projectId}/layout/${layout}/javaScripts/jstorage.js"></script>
+
 <div class="container form-signin">
 	<html:form action="/secure/EntrarLoginValidar" method="post" enctype="multipart/form-data" >
 		<h2 class="form-signin-heading">Log in</h2>
@@ -16,11 +18,12 @@
 
 		<input type="password" id="senha" name="senha" property="senha" class="input-block-level" placeholder="<bean:message key="login.entrar.login.param.senha"/>"/>
 
-		<label class="checkbox">
-			<input type="checkbox" value="remember-me"> Remember me
-		</label>
+		<p class="remember_me"> 
+			<input type="checkbox" id="remember" name="remember" onchange='clearForm();'>
+	        <label for="remember_me" style="padding: 0pt; margin-left: 0px; margin-top: 10px;"><bean:message key="login.entrar.lembrar.senha"/></label>
+		</p>
 			
-		<input type="submit" class="btn btn-large btn-primary" value="Sign in" name="commit" onclick="setaAcao('/secure/EntrarLoginValidar', 'validateEntrarLoginValidarFormImpl', true)" property="loginEntrarLoginValidarForm"/>
+		<input type="submit" class="btn btn-large btn-primary" value="Sign in" name="commit" onclick="saveUsername();setaAcao('/secure/EntrarLoginValidar', 'validateEntrarLoginValidarFormImpl', true);" property="loginEntrarLoginValidarForm"/>
 
 		<html:hidden property="parametrosLogin" styleId="parametrosLogin"/> 
 
