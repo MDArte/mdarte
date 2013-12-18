@@ -68,5 +68,6 @@ window.close();
 		    </a></li>
 	</ul>
 	<h3 class="muted">${projectId}</h3>
+	<hr/>
 </div>        
 #end

@@ -293,7 +293,6 @@ $operation.getDocumentation("     * ")
 		result =  this.${pageName}AutoComplete(query, container);
 
 		JSONArray jsonArray = new JSONArray();
-    	JSONObject obj = new JSONObject();
 		
 		if(result != null)
 		{
@@ -303,10 +302,8 @@ $operation.getDocumentation("     * ")
 		    }
 		}
     	
-		obj.put("options", jsonArray);
-    	
 		container.setContentType("application/json;charset=UTF-8");
-    	container.getWriter().write(obj.toString());
+    	container.getWriter().write(jsonArray.toString());
     	
 	}
 #end

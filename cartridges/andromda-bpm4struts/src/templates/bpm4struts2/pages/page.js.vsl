@@ -367,11 +367,9 @@ $(document).ready(function(){
 #set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
 #end
 	$("input#${field.name}${jsp.useCase.name}").typeahead({
-	    source: function (query, process) {
-	        return ${dollar}.get("$url", { query: query }, function (data) {
-	            return process(data.options);
-	        });
-	    }
+		name: "${field.name}",
+		remote: "$url?query=%QUERY",
+		limit: 10
 	});
 	
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
