@@ -4,6 +4,7 @@
 ##  CONSTANTS
 ##
 #set ($hash = "#")
+#set ($labels = false)
 #set ($fields = $action.actionFormFields)
 #set ($actionParameters = $action.actionParameters)
 #set ($formBeanClassName = $action.formBeanClassName)
@@ -95,7 +96,7 @@ public class ${formBeanClassName}
 #set ($timeFormatter = "${field.name}TimeFormatter")
     private final static java.text.DateFormat $timeFormatter = new java.text.SimpleDateFormat("$field.timeFormat");
 #end
-#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+#if ($field.doubleSelect || ${field.widgetType}=="multibox")
 	private java.lang.Object[] $field.valueListName;
 	private java.lang.Object[] $field.labelListName;
 	private java.lang.Object[] ${field.labelListName}Hints;
@@ -554,7 +555,8 @@ $field.getDocumentation("     * ")
 #end
 #end
 
-#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+#if ($field.doubleSelect || ${field.widgetType}=="multibox")
+#set($labels = true)
 #processLists2 ($field)
 #end
 
@@ -632,8 +634,7 @@ $field.getDocumentation("     * ")
 #end
 #if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
         this.$field.valueListName = null;
-        this.$field.labelListName = null;
-        this.${field.labelListName}Double = null;        
+        this.$field.labelListName = null;    
         this.${field.labelListName}Hints = null;
 #end
 #end
@@ -655,7 +656,7 @@ $field.getDocumentation("     * ")
         return errors;
     }
 
-#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
+#if($labels)
 #processListsClasses()
 #end
  

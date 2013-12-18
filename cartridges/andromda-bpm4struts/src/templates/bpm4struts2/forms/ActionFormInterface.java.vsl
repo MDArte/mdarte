@@ -323,8 +323,8 @@ $field.getDocumentation("     * ")
     public void ${field.resetName}();
 
 ###if ($field.selectable)
-#if ($field.select || $field.doubleSelect || $field.enumeration || $field.radio)
-#processListsInterface ($field)
+#if ($field.doubleSelect || ${field.widgetType}=="multibox")
+#processListsInterface ($field ${operation.controller.useCase.useCaseOldStruts})
 #end
 
 ###end

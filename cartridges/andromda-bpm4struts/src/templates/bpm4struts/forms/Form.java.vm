@@ -138,7 +138,7 @@ public final static class LabelValue
     }
 #end
 
-#macro(processListsInterface $field)
+#macro(processListsInterface $field $oldStruts)
 #set ($hash = "#")
 #set ($listType = "java.lang.Object[]")
 #set ($backingListName = $field.backingListName)
@@ -161,7 +161,6 @@ public final static class LabelValue
      * @see ${hash}set${labelListMethod}(java.util.Collection,java.lang.String,java.lang.String)
      */
     public $listType get${backingListMethod}();
-    public $listType get${backingListMethod}Double();
     public $listType get${backingListMethod}Destination();
 
     /**
@@ -200,9 +199,13 @@ public final static class LabelValue
      */
     public void set${backingListMethod}(java.util.Collection items, String valueProperty, String labelProperty);
     public void set${backingListMethod}(java.util.Collection items, String valueProperty, String labelProperty, String labelHintProperty);
+#if (!$oldStruts)
     public void set${backingListMethod}Internationalized(${servletPackage}.ViewContainer container, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty);
     public void set${backingListMethod}Internationalized(${servletPackage}.ViewContainer container, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, String labelHintProperty);
-    public void set${backingListMethod}Double(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty);
+#else
+	public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty);
+    public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, String labelHintProperty);
+#end
     public void set${backingListMethod}Destination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty);
 
     /**
@@ -231,7 +234,9 @@ public final static class LabelValue
      * @see ${hash}get${backingListMethod}()
      */
     public $listType get${labelListMethod}();
+#if ($oldStruts)
     public $listType get${labelListMethod}Double();
+#end
     public $listType get${labelListMethod}Hints();
     public $listType get${labelListMethod}Destination();
 
@@ -243,7 +248,9 @@ public final static class LabelValue
      * @see ${hash}get${backingListMethod}()
      */
     public void set${labelListMethod}($listType $labelListName);
+#if ($oldStruts)
     public void set${labelListMethod}Double($listType ${labelListName}Double);
+#end
     public void set${labelListMethod}Hints($listType ${labelListName}Hints);
     public void set${labelListMethod}Destination($listType ${labelListName}Destination);
 #end
@@ -645,38 +652,6 @@ public final static class LabelValue
         return backingList;
     }
     
-    public $listType get${backingListMethod}Double()
-    {
-        $listType values = this.${valueListName};
-        $listType labels = this.${labelListName};
-        $listType labelsDouble = this.${labelListName}Double;        
-
-        if (values == null || values.length == 0)
-        {
-            return values;
-        }
-
-        if (labels == null || labels.length == 0)
-        {
-            labels = values;
-        }
-        
-        if (labelsDouble == null || labelsDouble.length == 0)
-        {
-            labelsDouble = values;
-        }
-
-        final int length = java.lang.Math.min(labels.length, values.length);
-        java.lang.Object[] backingList = new java.lang.Object[length];
-
-        for (int i=0; i<length; i++)
-        {
-            backingList[i] = new LabelValueDouble(labels[i], labelsDouble[i], values[i]);
-        }
-
-        return backingList;
-    }
-    
     public $listType get${backingListMethod}Destination()
     {
         $listType values = this.${valueListName};
@@ -723,11 +698,6 @@ public final static class LabelValue
     {
         return this.$labelListName;
     }
-
-    public $listType get${labelListMethod}Double()
-    {
-        return this.${labelListName}Double;
-    }
     
     public $listType get${labelListMethod}Destination()
     {
@@ -742,11 +712,6 @@ public final static class LabelValue
     public void set${labelListMethod}($listType $labelListName)
     {
         this.$labelListName = $labelListName;
-    }
-
-    public void set${labelListMethod}Double($listType ${labelListName}Double)
-    {
-        this.${labelListName}Double = ${labelListName}Double;
     }
     
     public void set${labelListMethod}Destination($listType ${labelListName}Destination)
@@ -775,43 +740,6 @@ public final static class LabelValue
     {
         this.${labelListName}Hints = ${labelListName}Hints;
     }
-
-    public void set${backingListMethod}Double(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDoubleProperty)
-    {
-        if (valueProperty == null || labelProperty == null || labelDoubleProperty == null)
-        {
-            throw new IllegalArgumentException("${formBeanClassName}.set${backingListMethod}Double requires non-null property arguments");
-        }
-
-        this.${valueListName} = null;
-        this.${labelListName} = null;
-        this.${labelListName}Double = null;        
-
-        if (items != null)
-        {
-            this.${valueListName} = new java.lang.Object[items.size()];
-            this.${labelListName} = new java.lang.Object[items.size()];
-            this.${labelListName}Double = new java.lang.Object[items.size()];            
-
-            try
-            {
-                int i = 0;
-                for (java.util.Iterator iterator = items.iterator(); iterator.hasNext(); i++)
-                {
-                    final java.lang.Object item = iterator.next();
-
-                    this.${valueListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, valueProperty);
-                    this.${labelListName}[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelProperty);
-                    this.${labelListName}Double[i] = org.apache.commons.beanutils.PropertyUtils.getProperty(item, labelDoubleProperty);                    
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new java.lang.RuntimeException("${formBeanClassName}.set${backingListMethod}Double encountered an exception", ex);
-            }
-        }
-    }
-    
     
     public void set${backingListMethod}Destination(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelDestinationProperty)
     {
