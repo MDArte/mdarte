@@ -234,7 +234,7 @@ public final static class LabelValue
      * @see ${hash}get${backingListMethod}()
      */
     public $listType get${labelListMethod}();
-#if ($oldStruts)
+#if ($oldStruts && $field.doubleSelect)
     public $listType get${labelListMethod}Double();
 #end
     public $listType get${labelListMethod}Hints();
@@ -248,7 +248,7 @@ public final static class LabelValue
      * @see ${hash}get${backingListMethod}()
      */
     public void set${labelListMethod}($listType $labelListName);
-#if ($oldStruts)
+#if ($oldStruts && $field.doubleSelect)
     public void set${labelListMethod}Double($listType ${labelListName}Double);
 #end
     public void set${labelListMethod}Hints($listType ${labelListName}Hints);
