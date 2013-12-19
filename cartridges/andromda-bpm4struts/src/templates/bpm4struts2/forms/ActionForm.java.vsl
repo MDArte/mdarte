@@ -577,7 +577,6 @@ $field.getDocumentation("     * ")
 ## multi-select fields need to be reset to an empty array (http://struts.apache.org/userGuide/struts-html.html#select)
         this.$field.valueListName = new java.lang.Object[0];
         this.$field.labelListName = new java.lang.Object[0];
-        this.${field.labelListName}Double = new java.lang.Object[0];
         this.${field.labelListName}Hints = new java.lang.Object[0];        
 #end
 #end

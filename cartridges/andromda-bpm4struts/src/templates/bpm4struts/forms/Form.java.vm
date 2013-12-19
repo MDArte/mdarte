@@ -294,18 +294,13 @@ public final static class LabelValue
 
         return backingList;
     }
-    
+
+#if ($field.doubleSelect)
     public $listType get${backingListMethod}Double()
     {
-#if ($field.doubleSelect)
         $listType values = this.${valueListName}Double;
         $listType labels = this.${labelListName}Double;
         $listType labelsDouble = this.${field.name}IndexListDouble;
-#else
-        $listType values = this.${valueListName};
-        $listType labels = this.${labelListName};
-        $listType labelsDouble = this.${labelListName}Double;
-#end
 
         if (values == null || values.length == 0)
         {
@@ -332,6 +327,7 @@ public final static class LabelValue
 
         return backingList;
     }
+#end
     
     public $listType get${backingListMethod}Destination()
     {
@@ -380,10 +376,12 @@ public final static class LabelValue
         return this.$labelListName;
     }
 
+#if ($field.doubleSelect)
     public $listType get${labelListMethod}Double()
     {
         return this.${labelListName}Double;
     }
+#end
     
     public $listType get${labelListMethod}Destination()
     {
@@ -400,10 +398,12 @@ public final static class LabelValue
         this.$labelListName = $labelListName;
     }
 
+#if ($field.doubleSelect)
     public void set${labelListMethod}Double($listType ${labelListName}Double)
     {
         this.${labelListName}Double = ${labelListName}Double;
     }
+#end
     
     public void set${labelListMethod}Destination($listType ${labelListName}Destination)
     {
