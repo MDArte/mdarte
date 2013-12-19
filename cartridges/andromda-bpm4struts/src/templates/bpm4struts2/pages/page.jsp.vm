@@ -439,7 +439,7 @@
 	<div id="div${field.name}${action.useCase.name}" class="field autocomplete">
 	#if ($requiredness && $field.required)<label class="textfieldLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>#else<label class="textfieldLabel" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 	#end
-		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}" autocomplete="off" data-provide="typeahead" value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+		<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" label="%{getText('$field.messageKey')}"  value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 	</div>
 #elseif ( ($field.textField) )
 	<div id="div${field.name}${action.useCase.name}" class="textfield field">
