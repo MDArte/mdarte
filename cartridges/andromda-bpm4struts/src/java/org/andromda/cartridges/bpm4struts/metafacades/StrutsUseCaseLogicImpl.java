@@ -230,27 +230,23 @@ public class StrutsUseCaseLogicImpl
      */
     public List getActions()
     {
-        final Map actions = new TreeMap();
+        final Collection actions = new HashSet();
 
         final Collection pages = getPages();
         for (final Iterator pageIterator = pages.iterator(); pageIterator.hasNext();)
         {
             final StrutsJsp jsp = (StrutsJsp)pageIterator.next();
-            for(int i =0; i < jsp.getActions().size(); i++)
-            {
-            	actions.put(((StrutsAction)jsp.getActions().get(i)).getName(), jsp.getActions().get(i));
-            }
-            //actions.addAll(jsp.getActions());
+            actions.addAll(jsp.getActions());
         }
 
         final StrutsActivityGraph graph = (StrutsActivityGraph)getActivityGraph();
         if (graph != null)
         {
             final StrutsAction action = graph.getFirstAction();
-            if (action != null) actions.put(action.getName(), action);
+            if (action != null) actions.add(action);
         }
 
-        return new ArrayList(actions.values());
+        return new ArrayList(actions);
     }
 
     protected List handleGetPageVariables()
