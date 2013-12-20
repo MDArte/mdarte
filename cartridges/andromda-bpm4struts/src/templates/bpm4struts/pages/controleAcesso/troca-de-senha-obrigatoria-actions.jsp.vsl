@@ -27,7 +27,7 @@
 		}
 	}
 </script>
-
+#if(!$struts2)
 <div id="ConteudoDiv">
 
 <div id="processar" class="action">
@@ -74,5 +74,38 @@
     </div>
 
 </div>
+#else
+<div id="ConteudoDiv">
 
+	<div id="processar" class="action">
+		<div class="trigger">
+			<form action="/secure/TrocaDeSenhaObrigatoriaProcessar" method="post"
+				enctype="multipart/form-data" class="form-horizontal" role="form">
+
+				<label><bean:message
+						key="login.troca.de.senha.obrigatoria.param.usuario" /></label> <br />
+				<html:text name="form" property="usuario" readonly="true"
+					styleId="processarUsuario" />
+				<br />  <label> <bean:message
+						key="login.troca.de.senha.obrigatoria.param.senha" />*
+				</label> <br />
+				<html:password name="form" property="senha" styleId="processarSenha" />
+				<br />  <label><bean:message
+						key="login.troca.de.senha.obrigatoria.param.nova.senha" /> *</label> <br />
+				<html:password name="form" property="novaSenha"
+					styleId="processarNovaSenha" />
+				<br /> <label><bean:message
+						key="login.troca.de.senha.obrigatoria.param.confirmacao" />*</label> <br />
+				<html:password name="form" property="confirmacao"
+					styleId="processarConfirmacao" />
+				<html:hidden property="button" value="ok" />
+				<br />
+				<button class="btn btn-primary"
+					onclick="setaAcao('/secure/TrocaDeSenhaObrigatoriaProcessar', 'validateTrocaDeSenhaObrigatoriaProcessarFormImpl', true)">
+					<bean:message key="login.troca.de.senha.obrigatoria.processar" />
+				</button>
+			</form>
+		</div>
+	</div>
+#end
 <br class="clr"/>
