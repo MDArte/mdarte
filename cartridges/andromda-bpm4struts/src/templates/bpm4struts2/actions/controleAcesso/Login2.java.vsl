@@ -205,7 +205,6 @@ public abstract class ${className} extends ActionSupport implements ServletReque
                             parametros.append("@AND@");
                         }
                     }
-                    System.out.println(parametros);
                 }
                 setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
             }
@@ -290,7 +289,6 @@ public abstract class ${className} extends ActionSupport implements ServletReque
                             parametros.append("@AND@");
                         }
                     }
-                    System.out.println(parametros);
                 }
                 setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
 			}
@@ -367,7 +365,6 @@ public abstract class ${className} extends ActionSupport implements ServletReque
                             parametros.append("@AND@");
                         }
                     }
-                    System.out.println(parametros);
                 }
                 setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
 			}
