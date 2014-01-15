@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionMapping;
 import ${packageUtil}.Constantes;
 import javax.security.auth.Subject;
 
+import java.util.Enumeration;
 
 /**
  * 
@@ -161,8 +162,23 @@ public abstract class Login extends Action
 
             if (__urlCasoDeUso != null && __contexto != null)
             {
+            	Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
-                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso);
+                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso+parametros.toString());
                 forward = redirect;
             }
             return forward;
@@ -235,8 +251,23 @@ public abstract class Login extends Action
 			
             if (__urlCasoDeUso != null && __contexto != null)
             {
+            	Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
-                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso);
+                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso+parametros.toString());
                 forward = redirect;
             }
             return forward;
@@ -297,8 +328,23 @@ public abstract class Login extends Action
 
             if (__urlCasoDeUso != null && __contexto != null)
             {
+            	Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
                 org.apache.struts.action.ActionRedirect redirect = new org.apache.struts.action.ActionRedirect(forward);
-                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso);
+                redirect.addParameter("nextPath", __contexto + __urlCasoDeUso+parametros.toString());
                 forward = redirect;
             }
             return forward;

@@ -20,6 +20,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
+import java.util.Enumeration;
+
 #set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 
@@ -60,7 +62,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 	public String execute() throws Exception
 	{
 		loadUseCaseInfo();
-
+		
 		//org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
 
 		String forward = null;
@@ -118,7 +120,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		// invalida sessao https ao trocar para http (passa a ter somente uma sessao para ambos)
 //		if (request.getScheme().equals("https") && forward != null && forward.getPath().startsWith("http://"))
 //			request.getSession().invalidate();
-
+		
 		return forward;
 	}
 
@@ -188,9 +190,24 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 			String forward = "entrar.login";
 			
 			if (__urlCasoDeUso != null && __contexto != null)
-			{
-				setNextPath(__contexto + __urlCasoDeUso);
-			}
+            {
+                Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
+                setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
+            }
 			return forward;
 		}
 		if (value.equals("true"))
@@ -258,7 +275,22 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 			
 			if (__urlCasoDeUso != null && __contexto != null)
 			{
-				setNextPath(__contexto + __urlCasoDeUso);
+				Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
+                setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
 			}
 			return forward;
 		}
@@ -319,7 +351,22 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 			
 			if (__urlCasoDeUso != null && __contexto != null)
 			{
-				setNextPath(__contexto + __urlCasoDeUso);
+				Enumeration nomeParametros = request.getParameterNames();
+                StringBuffer parametros = new StringBuffer("");
+                if(nomeParametros.hasMoreElements())
+                {
+                    parametros.append("?");
+                    while(nomeParametros.hasMoreElements()) 
+                    {
+                        String nome = nomeParametros.nextElement().toString();
+                        parametros.append(nome+"="+request.getParameter(nome));
+                        if(nomeParametros.hasMoreElements()) 
+                        {
+                            parametros.append("@AND@");
+                        }
+                    }
+                }
+                setNextPath(__contexto + __urlCasoDeUso+parametros.toString());
 			}
 			return forward;
 		}

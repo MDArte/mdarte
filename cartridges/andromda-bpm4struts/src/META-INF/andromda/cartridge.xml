@@ -431,7 +431,14 @@
         path="templates/bpm4struts/pages/error-page.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
-        overwrite="false">
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/pages/error-page.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="true">
     </template>
         
     <template
