@@ -2,9 +2,7 @@ package org.andromda.cartridges.bpm4struts.metafacades;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +33,9 @@ public class CoppetecStrutsControllerOperationLogicImpl
 
 	protected java.util.List handleGetInterfaceFormFields()
     {
-    	final Map formFieldsMap = new TreeMap();
-        final Map formFieldsIn = new TreeMap();
-        final Map formFieldsInTemp = new TreeMap();
+    	final Map formFieldsMap = new HashMap();
+        final Map formFieldsIn = new HashMap();
+        final Map formFieldsInTemp = new HashMap();
         boolean tableAction;
 
         // get all actions deferring to this operation

@@ -12,8 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsGlobals;
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsProfile;
@@ -22,7 +20,6 @@ import org.andromda.core.metafacade.MetafacadeBase;
 import org.andromda.metafacades.uml.CoppetecPackageFacade;
 import org.andromda.metafacades.uml.EventFacade;
 import org.andromda.metafacades.uml.FilteredCollection;
-import org.andromda.metafacades.uml.FrontEndControllerOperation;
 import org.andromda.metafacades.uml.FrontEndEvent;
 import org.andromda.metafacades.uml.FrontEndForward;
 import org.andromda.metafacades.uml.FrontEndUseCase;
@@ -52,7 +49,7 @@ public class StrutsActionLogicImpl
      * All action states that make up this action, this includes all possible action states traversed
      * after a decision point too.
      */
-    private Map actionStates = null;
+    private Collection actionStates = null;
 
     /**
      * All transitions leading into either a page or final state that originated from a call to this action.
@@ -86,7 +83,7 @@ public class StrutsActionLogicImpl
      */
     private void initializeCollections()
     {
-        actionStates = new TreeMap();
+        actionStates = new HashSet();
         actionForwards = new HashMap();
         decisionTransitions = new HashSet();
         transitions = new HashSet();
@@ -128,7 +125,7 @@ public class StrutsActionLogicImpl
         }
         else if (target instanceof StrutsActionState)
         {
-            actionStates.put(target.getName(), target);
+            actionStates.add(target);
             final FrontEndForward forward = ((StrutsActionState) target).getForward();
             if (forward != null)
             {
@@ -638,13 +635,7 @@ public class StrutsActionLogicImpl
     protected List handleGetActionForwards()
     {
         if (actionForwards == null) initializeCollections();
-        Map map = new TreeMap();
-        for (final Iterator iterator = actionForwards.values().iterator(); iterator.hasNext();)
-        {
-        	TransitionFacade transition = (TransitionFacade)iterator.next();
-            map.put(transition.getName(), transition);
-        }
-        return new ArrayList(map.values());
+        return new ArrayList(actionForwards.values());
     }
 
     protected List handleGetDecisionTransitions()
@@ -656,12 +647,12 @@ public class StrutsActionLogicImpl
     protected List handleGetActionStates()
     {
         if (actionStates == null) initializeCollections();
-        return new ArrayList(actionStates.values());
+        return new ArrayList(actionStates);
     }
 
     protected List handleGetActionExceptions()
     {
-        final Collection exceptions = new TreeSet();
+        final Collection exceptions = new HashSet();
         final Collection actionStates = getActionStates();
         for (final Iterator iterator = actionStates.iterator(); iterator.hasNext();)
         {
@@ -710,7 +701,7 @@ public class StrutsActionLogicImpl
 
     protected List handleGetActionFormFields()
     {
-        final Map formFieldMap = new TreeMap();
+        final Map formFieldMap = new HashMap();
 
         /**
          * for useCaseStart actions we need to detect all usecases forwarding to the one belonging to this action
@@ -813,7 +804,7 @@ public class StrutsActionLogicImpl
 
     protected List handleGetDeferredOperations()
     {
-        final Map deferredOperations = new TreeMap();
+        final Collection deferredOperations = new LinkedHashSet();
 
         final StrutsController controller = getController();
         if (controller != null)
@@ -822,11 +813,7 @@ public class StrutsActionLogicImpl
             for (int i = 0; i < actionStates.size(); i++)
             {
                 final StrutsActionState actionState = (StrutsActionState) actionStates.get(i);
-                for (int j = 0; j < actionState.getControllerCalls().size(); j++)
-                {
-                	deferredOperations.put(((FrontEndControllerOperation)actionState.getControllerCalls().get(j)).getName(), actionState.getControllerCalls().get(j));
-                }
-                //deferredOperations.addAll(actionState.getControllerCalls());
+                deferredOperations.addAll(actionState.getControllerCalls());
             }
 
             final List transitions = getDecisionTransitions();
@@ -836,11 +823,11 @@ public class StrutsActionLogicImpl
                 final FrontEndEvent trigger = forward.getDecisionTrigger();
                 if (trigger != null)
                 {
-                    deferredOperations.put(trigger.getControllerCall().getName(), trigger.getControllerCall());
+                    deferredOperations.add(trigger.getControllerCall());
                 }
             }
         }
-        return new ArrayList(deferredOperations.values());
+        return new ArrayList(deferredOperations);
     }
 
     protected List handleGetActionParameters()
@@ -860,7 +847,7 @@ public class StrutsActionLogicImpl
         else
         {
             // we don't want to list parameters with the same name to we use a hash map
-            final Map parameterMap = new TreeMap();
+            final Map parameterMap = new HashMap();
 
             final List transitions = getActionForwards();
             for (int i = 0; i < transitions.size(); i++)
@@ -888,7 +875,7 @@ public class StrutsActionLogicImpl
      */
     protected List handleGetTargetPages()
     {
-        Collection targetPages = new TreeSet();
+        Collection targetPages = new HashSet();
 
         Collection forwards = getActionForwards();
         for (final Iterator forwardIterator = forwards.iterator(); forwardIterator.hasNext();)
