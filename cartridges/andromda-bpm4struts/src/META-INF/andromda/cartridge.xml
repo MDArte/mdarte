@@ -1372,6 +1372,24 @@
         outlet="controleAcessoImpl"
         overwrite="false"/>   
         
+      <template
+        path="templates/bpm4struts2/pages/controleAcesso/troca-de-senha-obrigatoria.css.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria.css"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>    
+        
+    <template
+        path="templates/bpm4struts2/pages/controleAcesso/troca-de-senha-obrigatoria.jsp.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>  
+        
+    <template
+        path="templates/bpm4struts2/pages/controleAcesso/troca-de-senha-obrigatoria-actions.jsp.vsl"
+        outputPattern="$secureDir/troca-de-senha-obrigatoria-actions.jsp"
+        outlet="controleAcessoImpl"
+        overwrite="false"/>
+        
     <template
         path="templates/bpm4struts/pages/controleAcesso/login-layout.jsp.vsl"
         outputPattern="accessControl/login-layout.jsp"

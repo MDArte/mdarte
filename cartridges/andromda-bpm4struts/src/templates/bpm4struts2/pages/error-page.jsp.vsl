@@ -46,20 +46,20 @@
         
                 <div id="error-content">
                     <p class="lead">
-                        Message: <bean:message key="error.${param.code}.message"/><br/><hr/>
+                        Message: <br/><bean:message key="error.${param.code}.message"/><br/><hr/>
                     
                     
                         <logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
                             
                                 <html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
-                        Error: ${error}
+                        Error: <br/>${error}
                                 </html:messages>
                             
                         </logic:messagesPresent>
                         <logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
                             
                                 <html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
-                        Warning: ${warning}
+                        Warning: <br/>${warning}
                                 </html:messages>
                             
                         </logic:messagesPresent>
@@ -70,11 +70,11 @@
 #set ($requestUri = "${requestScopePrefix}javax.servlet.error.request_uri${requestScopeSuffix}")
 #set ($exception = "${requestScopePrefix}javax.servlet.error.exception${requestScopeSuffix}")
                     <c:if test="${param.exception}">
-                        Details: <code>${${exception}}</code>
+                        <br/><br/>Details: <pre>${${exception}}</pre>
                         
                     </c:if>
                     <c:if test="${param.resource}">
-                        Details: <pre>${${requestUri}}</pre>
+                        <br/><br/>Details: <pre>${${requestUri}}</pre>
                     </c:if>
                 </p>
             </div>

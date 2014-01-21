@@ -42,19 +42,19 @@
             	<div id="$action.styleId" class="action">
                 	<div class="trigger">
 #if ($action.tableAction)## this means this action allows rows to be selected and sent
-                    	<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
+                    	<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" cssClass="form-horizontal" method="post" enctype="multipart/form-data">
             				<s:actionerror />
 								<%@ include file="${jsp.fullPath}-actions.jsp" %>
 							</s:form>
 #elseif (($action.formPost || $action.hyperlink))
 #if ($action.actionParameters.empty)
 		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
-                		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">
+                		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" cssClass="form-horizontal" method="post">
 							<s:actionerror />
 								<%@ include file="${jsp.fullPath}-actions.jsp" %>
 						</s:form>
 #else
-						<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" >
+						<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" cssClass="form-horizontal" enctype="multipart/form-data" >
 							<s:actionerror />
 								<%@ include file="${jsp.fullPath}-fields.jsp" %>
 								<%@ include file="${jsp.fullPath}-actions.jsp" %>
