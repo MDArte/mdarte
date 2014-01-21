@@ -4,7 +4,6 @@
 <%@page import="java.util.Iterator"%>
 <%@ include file="/taglib-imports.jspf" %>
 
-
 <% String url = request.getScheme( ) + "://" + request.getServerName( ) + 
 		                   (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "" );   
 		                   url += "${contextoPrincipal}"; %>
@@ -69,5 +68,5 @@ window.close();
 	</ul>
 	<h3 class="muted">${projectId}</h3>
 	<hr/>
-</div>        
+</div>
 #end

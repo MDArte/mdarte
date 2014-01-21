@@ -14,50 +14,49 @@
 <%@ include file="/taglib-imports.jspf" %>
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
-<% String acao_${table.name};
-   if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
-	acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-   }else{
-	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-   }
+<% 
+	String acao_${table.name};
+	if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
+		acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+	}else{
+		acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+	}
 %>
 ## Fim
 
 <% 
-  String nomeProjeto${table.name} = request.getContextPath(); 
-  out.println("<script>");
-  out.println("function getPath${table.name}(){return \""+nomeProjeto${table.name}+"\";}");
-  out.println("</script>");
+	String nomeProjeto${table.name} = request.getContextPath(); 
+	out.println("<script>");
+	out.println("function getPath${table.name}(){return \""+nomeProjeto${table.name}+"\";}");
+	out.println("</script>");
 %>
-
-         
 
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
-    <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
+	<form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
 #end
 #set ($displayTableName = "form.${table.name}")
-    <display:table name="${${displayTableName}}" id="row" class="table table-bordered table-striped"
-        ##requestURIAction -> ação a ser utilizada no link "NEXT" na paginação
-        requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
+		<display:table name="${${displayTableName}}" id="row" class="table table-bordered table-striped"
+##requestURIAction -> ação a ser utilizada no link "NEXT" na paginação
+			requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
 #if ($table.tableDecoratorRequired)
-        decorator="${table.tableDecoratorFullyQualifiedName}"
+			decorator="${table.tableDecoratorFullyQualifiedName}"
 #end
-        export="$exportable" pagesize="$maxRows" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
+			export="$exportable" pagesize="$maxRows" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
 #if ($exportable)
 #set ($exportFileName = "${jsp.name}-${table.name}")
 #set ($exportFileName = "$bpmUtils.toWebFileName($exportFileName)")
-        <display:setProperty name="export.pdf.filename" value="${exportFileName}.pdf" />
+		<display:setProperty name="export.pdf.filename" value="${exportFileName}.pdf" />
 #end
 ##
 ##  rendering a checkbox in the first column in case we need to allow the selection of rows
 ##
 #if (!$table.tableGlobalActions.empty)
-        <display:column media="html">
+			<display:column media="html">
 #set ($actionParameter = $table.tableGlobalActionParameter)
 #set ($checkboxValue = "row.$actionParameter.name")
-            <input type="checkbox" name="${actionParameter.name}RowSelectionAsArray" value="${${checkboxValue}}"#if($hints=="true") title='<bean:message key="select.deselect.this.row"/>'#end/>
-        </display:column>
+				<input type="checkbox" name="${actionParameter.name}RowSelectionAsArray" value="${${checkboxValue}}"#if($hints=="true") title='<bean:message key="select.deselect.this.row"/>'#end/>
+ 			</display:column>
 #end
 ##
 ##  loop over each column we need to render
@@ -67,71 +66,71 @@
 #set ($tableColumnActions = $table.getTableColumnActions($columnName))
 #set ($valueProperty = "row.$columnName")
 #if ($column.type.dateType)
-        <fmt:formatDate var="value" value="<c:out value="${${valueProperty}}"/>" pattern="$column.dateFormat"/>
+			<fmt:formatDate var="value" value="<c:out value="${${valueProperty}}"/>" pattern="$column.dateFormat"/>
 #end
 ## this column element will make sure the column is properly rendered outside the browser (Excel, XML, ...)
 #if ($exportable)
-        <display:column media="$table.tableExportTypes"
-            titleKey="$table.getTableColumnMessageKey($columnName)"
-            autolink="true" paramId="$columnName">
+			<display:column media="$table.tableExportTypes"
+				titleKey="$table.getTableColumnMessageKey($columnName)"
+				autolink="true" paramId="$columnName">
 #if ($column.type.dateType)
-            <c:out value="${value}"/>
+				<c:out value="${value}"/>
 #else
-            <c:out value="${${valueProperty}}"/>
+				<c:out value="${${valueProperty}}"/>
 #end
-        </display:column>
+			</display:column>
 #end
 ## this column is the HTML representation of the value
-        <display:column media="html"
-            headerClass="$columnName" paramId="$columnName"
+			<display:column media="html"
+				headerClass="$columnName" paramId="$columnName"
 #if (!$table.tableDecoratorRequired && $table.tableSortable && (!$column.actionParameter || $column.sortableBy))
-            sortProperty="$columnName" sortable="true"
+				sortProperty="$columnName" sortable="true"
 #end
-            titleKey="$table.getTableColumnMessageKey($columnName)">
+				titleKey="$table.getTableColumnMessageKey($columnName)">
 #if ($column.actionParameter)
-            <div class="$columnName">
-#renderFormField2($column.strutsAction $column '${row_rowNum}' "                ")
-            </div>
+				<div class="$columnName">
+#renderFormField2($column.strutsAction $column '${row_rowNum}' "					")
+				</div>
 #elseif (!$tableColumnActions.empty)
 #foreach ($tableColumnAction in $tableColumnActions)
 #renderTableHyperlink2($tableColumnAction $columnName "            ")
 #end
 #else
 #if ($column.type.dateType)
-            <div class="$columnName"><c:out value="${value}"/></div>
+				<div class="$columnName"><c:out value="${value}"/></div>
 #else
-            <div class="$columnName"><c:out value="${${valueProperty}}"/></div>
+				<div class="$columnName"><c:out value="${${valueProperty}}"/></div>
 #end
 #end
-        </display:column>
+			</display:column>
 #end
 ##
 ##  any hyperlink actions ?
 ##
 #foreach ($tableAction in $table.tableHyperlinkActions)
 #if (!$tableAction.tableLinkColumnName)
-        <display:column media="html">
-#renderTableHyperlink2($tableAction false "            ")
-        </display:column>
+			<display:column media="html">
+#renderTableHyperlink2($tableAction false "				")
+			</display:column>
 #end
 #end
 ##
 ##  any button actions ?
 ##
 #foreach ($tableAction in $table.tableFormActions)
-        <display:column media="html">
-#renderTableButtonStruts2($tableAction "            " '${row_rowNum}')
-        </display:column>
+			<display:column media="html">
+#renderTableButtonStruts2($tableAction "				" '${row_rowNum}')
+			</display:column>
 #end
 #foreach ($tableAction in $table.TableLookupGridActions)
-        <display:column media="html">
-#renderTableLookupGrid2($tableAction "            " '${row_rowNum}')
-        </display:column>
+			<display:column media="html">
+#renderTableLookupGrid2($tableAction "				" '${row_rowNum}')
+			</display:column>
 #end
-    </display:table>
+		</display:table>
 #if (!$table.tableGlobalActions.empty)
 #set ($test = "!empty ${displayTableName}")
-    <c:if test="${${test}}">
+		<c:if test="${${test}}">
 #foreach ($action in $table.tableGlobalActions)
 ##set ($securityEnabled = $stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles))
 ###set($useCaseName = $action.useCase.name)
@@ -141,40 +140,40 @@
 #set ($valueConfirmMessage = "")
 #set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 #if( $valueOperationMode != "")
-<security:containsOperationMode value="$valueOperationMode" useCase="${useCaseName}">
+${indent}${indent}<security:containsOperationMode value="$valueOperationMode" useCase="${useCaseName}">
 #end
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled) 
-${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
+${indent}${indent}<security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
-            
+
 #if($valueConfirmMessage !="")
-            <input id="${action.actionTrigger.name}" class="btn btn-mini" type="button"  name="$action.formBeanName">
-	           <s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
-            </input>  
+			<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button"  name="$action.formBeanName">
+				<s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
+			</input>  
 #else
-				
+
 #if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
 			<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button" name="${action.actionName}"> 
 				<s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
 			</input>
 #else
-					<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button" property="${action.actionName}"> 
+			<input id="${action.actionTrigger.name}" class="btn btn-mini" type="button" property="${action.actionName}"> 
 				<s:property value="%{getText('$action.actionTrigger.triggerKey')}" />
 			</input>
-#end  
-#end        
-     
-            <input type="button" class="btn btn-mini select-deselect" /><s:property value="%{getText('select.deselect.all')}" /></input>
+#end
+#end
+
+			<input type="button" class="btn btn-mini select-deselect" /><s:property value="%{getText('select.deselect.all')}" /></input>
 #if ($securityEnabled) 
-${indent}   </security:containsPermission>
+${indent}${indent}</security:containsPermission>
 #end    
 #if( $valueOperationMode != "")
-</security:containsOperationMode>
+${indent}${indent}</security:containsOperationMode>
 #end               
 #end
-    </c:if>
-    </form>
+		</c:if>
+	</form>
 #end
 </div>
 

@@ -15,6 +15,20 @@
         <put name="menu" type="definition" value="menu.tile"/>
         <put name="messages" type="definition" value="messages.tile"/>
    </definition>
+   
+   definition name="main.layout2" page="/layout/main-layout2.jsp">
+        <put name="head" type="string" value=""/>
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+		<put name="pathway" type="string" value=""/>
+		<put name="vars" type="string" value=""/>
+		<put name="tables" type="string" value=""/>
+		<put name="other" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="menu" type="definition" value="menu.tile"/>
+        <put name="messages" type="definition" value="messages.tile"/>
+   </definition>
 
    <definition name="login.layout" page="/accessControl/login-layout.jsp">
         <put name="title" type="string" value=""/>

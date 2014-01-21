@@ -31,14 +31,13 @@
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set ($hints = $hints.equalsIgnoreCase("true"))
 #set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page	
-	function setaLocation(nomeAcao){
-
-		var action;
-		if (nomeAcao.indexOf("/") == 0) {
-			action=getPath() + nomeAcao + '.action';
-		}else{
-			action=getPath() + '/' + nomeAcao + '.action';
-		}
+function setaLocation(nomeAcao){
+	var action;
+	if (nomeAcao.indexOf("/") == 0) {
+		action=getPath() + nomeAcao + '.action';
+	}else{
+		action=getPath() + '/' + nomeAcao + '.action';
+	}
 #set($temLookupGrid="false")
 #foreach ($_action in $jsp.actions)
 #if($_action.lookupGrid)
@@ -50,27 +49,24 @@
 #else
 		window.open(action, '', 'width=700,height=500,top=50,left=100');
 #end
-	}
-	function apaga() {
-               document.forms[0].reset();
-		for (i=0;i<document.forms[0].elements.length;i++)
-               {
-			
-			var strtype = document.forms[0].elements[i].type;
-			if(strtype.match("select")=="select"){
-				document.forms[0].elements[i].selectedIndex=0;
-			}
-                       	if (strtype == "text" || strtype == "password")
-                       	{
-                       	        document.forms[0].elements[i].value="";
-                       	}
-                       	if (strtype == "radio" || strtype == "checkbox")
-                       	{
-                       	        document.forms[0].elements[i].checked=false;
-                       	}
-               }
-       } 
+}
 
+function apaga() {
+	document.forms[0].reset();
+	for (i=0;i<document.forms[0].elements.length;i++) {
+		var strtype = document.forms[0].elements[i].type;
+
+		if(strtype.match("select")=="select") {
+			document.forms[0].elements[i].selectedIndex=0;
+		}
+		if (strtype == "text" || strtype == "password") {
+			document.forms[0].elements[i].value="";
+		}
+		if (strtype == "radio" || strtype == "checkbox") {
+			document.forms[0].elements[i].checked=false;
+		}
+	}
+} 
 
 #set($achou = false)
 #foreach($jspAction in $jsp.actions)
@@ -83,133 +79,128 @@
 #end		
 function keySubmit(e){
 #if($defaultAction)
-		var keycode;
-		if (window.event) 
-			keycode = window.event.keyCode;
-		else if (e) 
-			keycode = e.which;
-		else 
-			return true;
+	var keycode;
+	if (window.event) 
+		keycode = window.event.keyCode;
+	else if (e) 
+		keycode = e.which;
+	else 
+		return true;
 
-		if (keycode == 13)
-   		{
-   			setaAcao('${defaultAction.actionPath}', '${defaultAction.formValidationMethodName}', ${defaultAction.validationRequired})
-   			return false;
-   		}
-		else
-  			return true;
-#end
+	if (keycode == 13)
+	{
+		setaAcao('${defaultAction.actionPath}', '${defaultAction.formValidationMethodName}', ${defaultAction.validationRequired})
+		return false;
 	}
+	else
+		return true;
+#end
+}
 	<!--Operacao de Habilitar-->
-function verificaHabilitados() {          
+function verificaHabilitados() {
 #foreach ($field in $actionParameters)
 #if($field.habilitadoPor)
-          if(
+	if(
 #foreach($habilitador in $field.habilitadoPor)
 #if($velocityCount != 1)&&#end document.getElementById('$habilitador.styleId').value != ''
 #end
-          ){
-     	  	document.getElementById('$field.styleId').disabled = false;
-	  }else {
-            	document.getElementById('$field.styleId').disabled = true;
-		if(document.getElementById('$field.styleId').value != ''){
-       			document.getElementById('$field.styleId').value = '';
+	){
+		document.getElementById('$field.styleId').disabled = false;
+	} else {
+		document.getElementById('$field.styleId').disabled = true;
+		if(document.getElementById('$field.styleId').value != '') {
+			document.getElementById('$field.styleId').value = '';
 			verificaHabilitados();
 		}
-	 }
-#end
-#end
-    }
-    <!--Operacao de Desabilitar-->
-function verificaDesabilitados() {          
-#foreach ($field in $actionParameters)
-#if($field.desabilitadoPor)
-          if(
-#foreach($desabilitador in $field.desabilitadoPor)
-#if($velocityCount != 1)||#end document.getElementById('$desabilitador.styleId').value != ''
-#end
-          ){
-          	document.getElementById('$field.styleId').disabled = true;
-          	if(document.getElementById('$field.styleId').value != ''){
-       			document.getElementById('$field.styleId').value = '';
-       			verificaDesabilitados();
-       		}
-     	  	
-	  }else {
-            	document.getElementById('$field.styleId').disabled = false;
-	  }
+	}
 #end
 #end
 }
-    
-    <!--Operacao de tornar visivel-->    
+	<!--Operacao de Desabilitar-->
+function verificaDesabilitados() {
+#foreach ($field in $actionParameters)
+#if($field.desabilitadoPor)
+	if(
+#foreach($desabilitador in $field.desabilitadoPor)
+#if($velocityCount != 1)||#end document.getElementById('$desabilitador.styleId').value != ''
+#end
+	){
+		document.getElementById('$field.styleId').disabled = true;
+		if(document.getElementById('$field.styleId').value != '') {
+			document.getElementById('$field.styleId').value = '';
+			verificaDesabilitados();
+		}
+	} else {
+		document.getElementById('$field.styleId').disabled = false;
+	}
+#end
+#end
+}
+
+	<!--Operacao de tornar visivel-->    
 function verificaVisiveis() {
-          
 #foreach ($field in $actionParameters)
 #if($field.visivelPor)
-          if(
+	if(
 #foreach($visivelPor in $field.visivelPor)
-          #if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
+#if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
 #end
-          ){
-          	document.getElementById('tr-$field.styleId').style.display ='';
-     	  }else {
-	  	document.getElementById('tr-$field.styleId').style.display ='none';
-	  	if(document.getElementById('tr-$field.styleId').value != ''){
-       			document.getElementById('tr-$field.styleId').value = '';
+	){
+		document.getElementById('tr-$field.styleId').style.display ='';
+	} else {
+		document.getElementById('tr-$field.styleId').style.display ='none';
+		if(document.getElementById('tr-$field.styleId').value != ''){
+			document.getElementById('tr-$field.styleId').value = '';
 			verificaVisiveis();
 		}
-            	
-	 }
+	}
 #end
 #end
-    }
-    
-    <!--Operacao de Esconder-->    
-    function verificaEscondidos() {
-          
+}
+
+	<!--Operacao de Esconder-->    
+function verificaEscondidos() {
 #foreach ($field in $actionParameters)
 #if($field.escondidoPor)
-          if(
+	if(
 #foreach($escondidoPor in $field.escondidoPor)
 #if($velocityCount != 1)||#end document.getElementById('$escondidoPor.styleId').value != ''
 #end
-          ){
-          	document.getElementById('tr-$field.styleId').style.display ='none';
-          	if(document.getElementById('tr-$field.styleId').value != ''){
-       			document.getElementById('tr-$field.styleId').value = '';
+	){
+		document.getElementById('tr-$field.styleId').style.display ='none';
+		if(document.getElementById('tr-$field.styleId').value != ''){
+			document.getElementById('tr-$field.styleId').value = '';
 			verificaEscondidos();
 		}
-     	  	
-	  }else {
-            	document.getElementById('tr-$field.styleId').style.display ='';
-	 }
+	} else {
+		document.getElementById('tr-$field.styleId').style.display ='';
+	}
 #end
 #end
-    }
-    
-    function verifica() {
-     	verificaHabilitados();
-     	verificaDesabilitados();
-     	verificaEscondidos();
-     	verificaVisiveis();
-    }
-	
+}
+
+function verifica() {
+	verificaHabilitados();
+	verificaDesabilitados();
+	verificaEscondidos();
+	verificaVisiveis();
+}
 
 $(document).ready(function(){			
-				$('textarea').elastic();
-				$('textarea').trigger('update');
-				$("#tabs").easytabs();
-			});
+	$('textarea').elastic();
+	$('textarea').trigger('update');
+	$("#tabs").easytabs();
+});
+
 #foreach ($field in $actionParameters)
 #if(($field.textField) && $field.calendarRequired)
-	$(function() {
-		$( "input#${field.name}${jsp.useCase.name}" ).datepicker({
-			changeMonth: true,
-			changeYear: true,
-			regional:['pt-BR']
-		});
+$(function() {
+	$( "input#${field.name}${jsp.useCase.name}" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		regional:['pt-BR']
 	});
+});
 #end
 #end
 

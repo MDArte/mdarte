@@ -33,47 +33,30 @@
 #end
 ## fim do codigo
 #end
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-	        <div id="form">
 #set ($messageKey = $action.messageKey)
 #set ($actionTrigger = $action.actionTrigger)
-            	<div id="$action.styleId" class="action">
-                	<div class="trigger">
+<div id="$action.styleId" class="action">
+	<div class="trigger">
 #if ($action.tableAction)## this means this action allows rows to be selected and sent
-                    	<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
-            				<s:actionerror />
-								<%@ include file="${jsp.fullPath}-actions.jsp" %>
-							</s:form>
+		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
+			<s:actionerror />
+			<%@ include file="${jsp.fullPath}-actions.jsp" %>
+		</s:form>
 #elseif (($action.formPost || $action.hyperlink))
 #if ($action.actionParameters.empty)
 		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
-                		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">
-							<s:actionerror />
-								<%@ include file="${jsp.fullPath}-actions.jsp" %>
-						</s:form>
+		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">
+			<s:actionerror />
+			<%@ include file="${jsp.fullPath}-actions.jsp" %>
+		</s:form>
 #else
-						<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" >
-							<s:actionerror />
-								<%@ include file="${jsp.fullPath}-fields.jsp" %>
-								<%@ include file="${jsp.fullPath}-actions.jsp" %>
-						</s:form>
+		<s:form action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" >
+			<s:actionerror />
+			<%@ include file="${jsp.fullPath}-fields.jsp" %>
+			<%@ include file="${jsp.fullPath}-actions.jsp" %>
+		</s:form>
 #end
 #end
-					</div>
-				</div>
-			</div>
-#if($jsp.temTabela)
-			<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
-#end
-#set($name = "")
-#foreach($palavra in $jsp.fullPath.split('/'))
-#set($name=$palavra)
-#end
-	        <script src="${name.toString().toLowerCase().replace(' ', '-')}.js"></script>
-			<script src="${name.toString().toLowerCase().replace(' ', '-')}-impl.js"></script>
-		</div>
 	</div>
 </div>
 #end
