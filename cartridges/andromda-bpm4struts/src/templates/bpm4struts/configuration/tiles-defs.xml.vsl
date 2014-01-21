@@ -16,7 +16,7 @@
         <put name="messages" type="definition" value="messages.tile"/>
    </definition>
    
-   definition name="main.layout2" page="/layout/main-layout2.jsp">
+   <definition name="main.layout2" page="/layout/main-layout2.jsp">
         <put name="head" type="string" value=""/>
         <put name="title" type="string" value=""/>
         <put name="style" type="string" value=""/>

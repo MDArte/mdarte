@@ -1,4 +1,4 @@
-
+#if(${jsp.oldStruts})
 #parse("templates/bpm4struts/pages/page.jsp.vm")
 #set ($generatedFile = "${jsp.fullPath}-javascript.jspf")
 ##
@@ -108,3 +108,4 @@ function descriptionDestination(key , componenteNome){
 }
 </script>
     </tiles:put>
+#end

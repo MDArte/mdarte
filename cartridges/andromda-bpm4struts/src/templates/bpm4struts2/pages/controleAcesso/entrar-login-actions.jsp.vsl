@@ -1,12 +1,6 @@
 #if(!$jsp.oldStruts)
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
-<% 
-  String nomeProjeto = request.getContextPath(); 
-  out.println("<script>");
-  out.println("function getPath(){return \""+nomeProjeto+"\";}");
-  out.println("</script>");
-%>
 
 <script type="text/javascript" src="/${projectId}/layout/${layout}/javaScripts/jstorage.js"></script>
 

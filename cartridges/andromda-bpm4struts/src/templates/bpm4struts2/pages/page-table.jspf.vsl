@@ -24,13 +24,6 @@
 %>
 ## Fim
 
-<% 
-	String nomeProjeto${table.name} = request.getContextPath(); 
-	out.println("<script>");
-	out.println("function getPath${table.name}(){return \""+nomeProjeto${table.name}+"\";}");
-	out.println("</script>");
-%>
-
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
 	<form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
@@ -170,7 +163,7 @@ ${indent}${indent}</security:containsPermission>
 #end    
 #if( $valueOperationMode != "")
 ${indent}${indent}</security:containsOperationMode>
-#end               
+#end
 #end
 		</c:if>
 	</form>

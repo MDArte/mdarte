@@ -25,6 +25,9 @@
 #end
 #end
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)
+function getPath() {
+	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !$jsp.useCase.package.hasStereotype("$moduloWebPrincipal"))/${jsp.useCase.package.webModuleName}#end";
+}
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
@@ -218,14 +221,19 @@ $(document).ready(function(){
 	atualizaElementos();
 #foreach($table in $tables)
 //Javascript da tabela $table.name
+
+	function getPath${table.name}() {
+		return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !$jsp.useCase.package.hasStereotype("$moduloWebPrincipal"))/${jsp.useCase.package.webModuleName}#end";
+	}
 	
-    function setaParametros${table.name}(param1, param2) {
-      		document.${table.name}.action = "";
-			document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-			document.${table.name}.name=param1;						   
-			document.${table.name}.submit(); 
-			return true;                
-               }
+	function setaParametros${table.name}(param1, param2) {
+		document.${table.name}.action = "";
+		document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
+		document.${table.name}.name=param1;						   
+		document.${table.name}.submit(); 
+		return true;
+	}
+	
 	function selecionaDeseleciona(){
 		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
         var setChecked = !boxes[0].checked;
