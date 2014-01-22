@@ -1,18 +1,11 @@
 #if(!$jsp.oldStruts)
 <%
-	#set($useCaseName = $jsp.useCase.name)
-	#set($jspName = $jsp.name)
+#set($useCaseName = $jsp.useCase.name)
+#set($jspName = $jsp.name)
 	Object form = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${useCaseName}.${jspName}");
 	request.getSession().setAttribute("$jsp.useCase.formKey", form);
 	request.setAttribute("$jsp.useCase.formKey", form);
-
-	// Script para setar a cao correspondente do botao no form
-	String nomeProjeto = request.getContextPath(); 
-	out.println("<script>");
-	out.println("function getPath(){return \""+nomeProjeto+"\";}");
-	out.println("</script>");
 %>
-
 #parse("templates/bpm4struts2/pages/page.jsp.vm")
 #set ($generatedFile = "${jsp.fullPath}.jsp")
 ##
@@ -38,7 +31,7 @@
 #if($jsp.useCase.hasStereotype("$simpleUseCase"))
 <tiles:insert definition="simple.layout">
 #else
-<tiles:insert definition="main.layout">
+<tiles:insert definition="main.layout2">
 #end
 #end
 
@@ -51,75 +44,91 @@
 </tiles:put>
 
 <tiles:put name="style" type="string">
-<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
-<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
-
+	<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+	<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
 #if ($jsp.calendarRequired)
-<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
+	<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
 #end
 </tiles:put>
 
 <%@ include file="${jsp.fullPath}-javascript.jspf" %>
-    	
-<tiles:put name="body" type="string">
 
-<div id="pathway">
+<tiles:put name="pathway" type="string">
+	<div id="pathway">
 #if($jsp.generateHelp)
 #if($jsp.generateHelpLink)
 #if($jsp.HelpLinkModoOperacao)
-<% boolean achouModo = false; %>
+		<% boolean achouModo = false; %>
 #foreach ($helpLink in $jsp.helpLinkList)
 #if ($helpLink.modoOperacaoSet)
-   <security:containsOperationMode value="$helpLink.modoOperacao">
-      <html:link href="" onclick="window.open('$helpLink.link','','')">
-   	     <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-      </html:link>
-      <% achouModo = true; %>
-   </security:containsOperationMode>
+		<security:containsOperationMode value="$helpLink.modoOperacao">
+			<html:link href="" onclick="window.open('$helpLink.link','','')">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</html:link>
+			<% achouModo = true; %>
+		</security:containsOperationMode>
 #else
-   <% if (!achouModo) { %>
-   ## fazer alguma checagem
-     <html:link href="" onclick="window.open('$helpLink.link','','')">
-   	    <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-     </html:link>
-   <% } %>     
+		<% if (!achouModo) { %>
+## fazer alguma checagem
+			<html:link href="" onclick="window.open('$helpLink.link','','')">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</html:link>
+		<% } %>     
 #end	
 #end
 #else
-   <html:link href="" onclick="window.open('$jsp.helpLink','','')">   
-      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-   </html:link>
+		<html:link href="" onclick="window.open('$jsp.helpLink','','')">   
+			<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+		</html:link>
 #end
 #else
-   <a href="javascript:window.open('${layoutPath}/help.jsp','','height=600,width=600,scrollbars=yes');void(0);">
-      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-   </a>
+		<a href="javascript:window.open('${layoutPath}/help.jsp','','height=600,width=600,scrollbars=yes');void(0);">
+			<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+		</a>
 #end
 #end
-
 #if ($jsp.onlineHelp)
-	<div id="helpLink">
-            <a href="" id="pageHelp" style="display:inline;" onclick="openWindow('${contextoPrincipal}${jsp.onlineHelpActionPath}.do','onlinehelp',true,false,760,540); return false;">
-                <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-            </a>
-    </div>
+		<div id="helpLink">
+			<a href="" id="pageHelp" style="display:inline;" onclick="openWindow('${contextoPrincipal}${jsp.onlineHelpActionPath}.do','onlinehelp',true,false,760,540); return false;">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</a>
+		</div>
+		
 #end
-	<h2><bean:message key="$jsp.titleKey"/></h2>
-</div>
+		<h2><bean:message key="$jsp.titleKey"/></h2>
+	</div>
+</tiles:put>
 
+<tiles:put name="vars" type="string">
 #if ($setPageVariablesInPageScope == "true" && $jsp.pageVariables.size() > 0)
-        <%@ include file="${jsp.fullPath}-vars.jspf" %>
+	<%@ include file="${jsp.fullPath}-vars.jspf" %>
 #end
+</tiles:put>
 
-<tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
+<tiles:put name="tables" type="string">
+#if($jsp.temTabela)
+	<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
+#end
+</tiles:put>
+
+<tiles:put name="other" type="string">
+#set($name = "")
+#foreach($palavra in $jsp.fullPath.split('/'))
+#set($name=$palavra)
+#end
+	<script src="${name.toString().toLowerCase().replace(' ', '-')}.js"></script>
+	<script src="${name.toString().toLowerCase().replace(' ', '-')}-impl.js"></script>
+</tiles:put>
+
+<tiles:put name="body" type="string">
+	<tiles:insert page="${jsp.fullPath}-container.jsp" flush="false"/>
 
 #if($flag > 0)
 	<bean:message key="required.fields.asterisk"/>
-#end
 
+#end
 	<div id="pageHelpSection">
 		<blockquote>
-
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set($flag=0)
 #foreach($field in $actionParameters)
@@ -129,12 +138,8 @@
 #end
 #end
 #end
-
-
-
 		</blockquote>
 	</div>
-	         
-   </tiles:put>
+</tiles:put>
 </tiles:insert>
 #end

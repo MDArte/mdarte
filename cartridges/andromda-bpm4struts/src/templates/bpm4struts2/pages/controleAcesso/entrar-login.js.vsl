@@ -22,6 +22,10 @@ $(function(){
     }
 });
 
+function getPath() {
+	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.hasStereotype("$moduloWebPrincipal")})/${jsp.useCase.package.webModuleName}#end";
+}
+
 function clearForm() {
 	if(!$('#remember').prop('checked')) {
 		$('#login').val('');
