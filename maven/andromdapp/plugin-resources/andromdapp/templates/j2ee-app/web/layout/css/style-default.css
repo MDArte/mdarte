@@ -8,6 +8,14 @@ html,body {
 	max-width: 1024px;
 }
 
+.tt-dropdown-menu {
+	width: 200px;
+}
+
+.tt-query {
+	width:300px;
+}
+
 .twitter-typeahead .tt-query,.twitter-typeahead .tt-hint {
 	margin-bottom: 0;
 	border-radius: 3px 3px 3px 3px;
