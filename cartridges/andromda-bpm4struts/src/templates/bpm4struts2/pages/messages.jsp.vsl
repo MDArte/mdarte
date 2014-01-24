@@ -38,7 +38,7 @@
 
 	<div id="messages">		
 		<logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4 class="alert-heading"><bean:message key="error.message.window"/></h4>
 				<html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
@@ -53,7 +53,7 @@
 		</logic:messagesPresent>
 
 		<logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
-			<div class="alert">
+			<div class="alert alert-warning">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4 class="alert-heading"><bean:message key="warning.message.window"/></h4>
 				<html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
