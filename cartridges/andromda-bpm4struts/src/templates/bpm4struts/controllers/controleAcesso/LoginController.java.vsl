@@ -76,7 +76,7 @@ public abstract class LoginController implements java.io.Serializable
 			String nome = principal.getOperador().getNomeIdentificadorMenu();
 			request.getSession().setAttribute("nomeIdentificadorMenu", nome);
 			posLogin(principal.getOperador(), request);
-			#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
 			String captchaExpected =(String)request.getSession().getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
 			String captchaReceived = form.getKaptcha();
 			if(captchaReceived!= null && captchaReceived.equals(captchaExpected)){
@@ -86,9 +86,9 @@ public abstract class LoginController implements java.io.Serializable
 				saveErrorMessage(request, "captcha.incorreto");
 				return false;
 			}
-			#else
+#else
 			return true;
-			#end
+#end
 		}catch (LoginException le){
 			if(le.getMessage().equals("Password Incorrect/Password Required")){
 				saveErrorMessage(request, "senha.incorreta");
@@ -126,7 +126,7 @@ public abstract class LoginController implements java.io.Serializable
     {
 		HttpSession session = request.getSession();
 		if(session.getAttribute(Constantes.USER_SESSION) == null){
-			#if($oAuthServer == "true")
+#if($oAuthServer == "true")
 			String oAuthToken = request.getParameter(OAuth.OAUTH_TOKEN);
 			if(oAuthToken!=null){
 				Subject subject = OAuthImpl.getInstance().getSubject(oAuthToken);
@@ -135,7 +135,7 @@ public abstract class LoginController implements java.io.Serializable
 					return true;
 				}
 			}
-			#end
+#end
 			return false;
 		}else{
 			return true;

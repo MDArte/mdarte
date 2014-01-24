@@ -83,7 +83,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		}
 		catch (java.lang.Exception exception)
 		{
-			#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 			throw exception;
 		}
 

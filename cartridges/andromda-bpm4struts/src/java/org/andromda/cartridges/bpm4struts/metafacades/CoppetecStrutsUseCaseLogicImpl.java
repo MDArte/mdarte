@@ -456,7 +456,7 @@ public class CoppetecStrutsUseCaseLogicImpl
 		
 		if (ret == null)
 		{
-			Object value = this.findTaggedValue(UMLProfile.TAGGEDVALUE_LAYOUT_NAME);
+			Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_LAYOUT_NAME);
 			ret = value != null ? (String) value : null;
 		}
 

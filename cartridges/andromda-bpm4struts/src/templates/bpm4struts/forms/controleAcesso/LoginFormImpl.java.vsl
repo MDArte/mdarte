@@ -773,7 +773,7 @@ public class LoginFormImpl
         final org.apache.struts.action.ActionErrors errors = super.validate(mapping, request);
         if (errors != null && !errors.isEmpty())
         {
-            #populateCurrentFormOnError()
+#populateCurrentFormOnError("            ")
         }
         return errors;
     }
