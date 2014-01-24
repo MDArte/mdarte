@@ -6,7 +6,7 @@
 
 <!--<div class="container">-->
 	<html:form action="/secure/EntrarLoginValidar" styleClass="form-signin"  method="post" enctype="multipart/form-data" >
-		<h2 class="form-signin-heading">Log in</h2>
+		<h2 class="form-signin-heading"><bean:message key="login.entrar.login.title"/></h2>
 			
 		<input type="text" id="login" name="login"  property="login" class="form-control" autofocus="" placeholder="<bean:message key="login.entrar.login.param.login"/>"/>
 
