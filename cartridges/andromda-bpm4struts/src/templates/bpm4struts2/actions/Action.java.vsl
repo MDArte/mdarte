@@ -57,6 +57,7 @@ import org.apache.struts2.ServletActionContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Enumeration;
 import java.io.PrintWriter;
 import ${servletPackage}.ActionUtil;
 import ${servletPackage}.Struts2ViewContainer;
@@ -207,44 +208,47 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end
 #else
-	 public void ${field.setterName}(java.io.File $fieldName)
-    {
-        this.$fieldName = $fieldName;
-    }
+	public void ${field.setterName}(java.io.File $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
 
-    /**
+	/**
 	$field.getDocumentation("     * ")
-     */
-    public java.io.File ${field.getterName}()
-    {
-        return this.$fieldName;
-    }
-	
-	 public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
-    {
-        this.${fieldName}ContentType = ${fieldName}ContentType;
-    }
+	*/
 
-    /**
-	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}ContentType()
-    {
-        return this.${fieldName}ContentType;
-    }
-	
-	 public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
-    {
-        this.${fieldName}FileName = ${fieldName}FileName;
-    }
+	public java.io.File ${field.getterName}()
+	{
+		return this.$fieldName;
+	}
 
-    /**
+	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
+	{
+		this.${fieldName}ContentType = ${fieldName}ContentType;
+	}
+
+	/**
 	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}FileName()
-    {
-        return this.${fieldName}FileName;
-    }
+	*/
+
+	public java.lang.String ${field.getterName}ContentType()
+	{
+		return this.${fieldName}ContentType;
+	}
+
+	public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
+	{
+		this.${fieldName}FileName = ${fieldName}FileName;
+	}
+
+	/**
+	$field.getDocumentation("     * ")
+	*/
+
+	public java.lang.String ${field.getterName}FileName()
+	{
+		return this.${fieldName}FileName;
+	}
 
 #end
 #end
@@ -290,7 +294,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	public String execute() throws Exception
 #end
 	{
-#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
+#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action "		")
 #if(${action.moduloRedirect})
 		${servletPackage}.ActionUtil.copiaParametrosSessao(request,response, "${contextoPrincipal}");
 #end
@@ -298,6 +302,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #set($useCaseName = $action.useCase.name)
 #set($jspName = $action.input.name)
 		Boolean aplicacaoPermiteUsoBackBrowser = (Boolean) request.getSession().getServletContext().getAttribute("aplicacaoPermiteUsoBackBrowser");
+		
 		if (!aplicacaoPermiteUsoBackBrowser ^#if(${action.togglePageControl}) true#else false#end)
 		{
 			if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") != null && request.getParameter("invalidatePageControlCounter") != null && !(((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).equals(Integer.valueOf(request.getParameter("invalidatePageControlCounter")))))
@@ -337,14 +342,12 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 #if (!${action.copyParameters})
 		request.getSession().setAttribute(${utilDir}.Constantes.COPY_PARAMETERS, Boolean.FALSE);
-
 #end
-
 #if ($action.useCaseStart)
 ## [MOISES-COPPETEC]
 ##Codigo para retirar os sessionobjects da sessao que nao pertencem mais ao escopo, isto eh Session Object que
 ##esta na sessao e não pertence o caso de uso anterior. Para isto utiliza-se uma lista de cadastro. 
-		#processRemovePageSO()
+#processRemovePageSO("		")
 
 		java.util.List listaCasosUso = new java.util.ArrayList();
 
@@ -399,13 +402,14 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		if(previousFormObject != null)
 		{
-			#processUseCaseStartCopy2($action.actionFormFields)
+#processUseCaseStartCopy2($action.actionFormFields "			")
 		}
 #else
 #if($action.exitingPage && !$action.lookupGrid)
 #set($useCaseName = $action.useCase.name)
 #set($jspName = $action.input.name)
-		if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
+		if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) 
+			getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
 		getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", ((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).intValue() + 1);
 #end
 #end
@@ -426,6 +430,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #if($field.table && !$possuiTable)
 #set($possuiTable = true)
 			request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.action");
+			
 			if(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA) == null)
 			{
 				request.setAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO, 1);
@@ -447,13 +452,13 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #set($finalUseCaseName = "${transition.target.targetUseCase.package.webModuleName}$transition.target.fullPath")
 #end
 
-			#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-			#processTableNameList($action)
-			#processTransitionStruts2($action)
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "			")
+#processTableNameList($action "			")
+#processTransitionStruts2($action "			")
 		}//fim try
 		catch (java.lang.Exception exception)
 		{
-			#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 			throw exception;
 		}
 #if($possuiTable)
@@ -467,9 +472,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #else
 		org.apache.struts.validator.ValidatorForm form = null;
-#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")	
-#processTableNameList($action)
-#processTransitionStruts2($action)		
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($action "		")
+#processTransitionStruts2($action "		")		
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
 #else
@@ -477,14 +482,16 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end ##if(!$action.actionFormFields.empty)
 		
-#processPageSO($action)
-#processRedirectStruts2($action)
+#processPageSO($action "		")
+#processRedirectStruts2($action "		")
 
 		if (redirect != "") {//troca de modules - to be tested
 			response.sendRedirect(redirect);
 		}
+		
 		request.removeAttribute("$forwardKey");
 		request.removeAttribute("$forwardKeyModule");
+		
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
 		return "recarregaTabelas";
 #else
@@ -512,9 +519,9 @@ $actionState.getDocumentation("	 * ")
 #if ($controllerCalls.empty)
 #saveMessages($actionState.forward "		")
 		###processOperationMode($actionState.forward ${action.useCase.name})
-		#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($actionState.forward)
-		#processTransitionStruts2($actionState.forward)
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($actionState.forward "		")
+#processTransitionStruts2($actionState.forward "		")
 #else
 	
 #if (!$controllerClass.operations.isEmpty())
@@ -527,9 +534,9 @@ $actionState.getDocumentation("	 * ")
 #end
 #end
 		##processOperationMode($actionState.forward ${action.useCase.name})
-		#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($actionState.forward)
-		#processTransitionStruts2($actionState.forward)
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($actionState.forward "		")
+#processTransitionStruts2($actionState.forward "		")
 
 #saveMessages($actionState.forward "		")
 
@@ -587,7 +594,7 @@ $actionState.getDocumentation("	 * ")
 				length = in.read(dados); 
 			}
 
-		#processTransitionStruts2($actionState.forward)
+#processTransitionStruts2($actionState.forward "		")
 		}
 		catch (Exception e)
 		{
@@ -627,21 +634,20 @@ $decisionTransition.getDocumentation("	 * ")
 		{
 #saveMessages($outcome "			")
 			###processOperationMode($outcome ${action.useCase.name})
-			#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-			#processTableNameList($outcome)
-			#processTransitionStruts2($outcome)
+#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "			")
+#processTableNameList($outcome "			")
+#processTransitionStruts2($outcome "			")
 			return forward;
 		}
 #end
 
 		// we take the last action in case we have an invalid return value from the controller
 		## #processOperationMode($defaultOutcome)
-		#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($defaultOutcome)
-		#processTransitionStruts2($defaultOutcome)
+#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($defaultOutcome "		")
+#processTransitionStruts2($defaultOutcome "		")
 		return forward;
 	}
-
 #end
 
 	private java.util.Map getInvalidatePageControlCounter(javax.servlet.http.HttpServletRequest request)

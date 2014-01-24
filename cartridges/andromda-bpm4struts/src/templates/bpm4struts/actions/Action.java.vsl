@@ -71,10 +71,7 @@ public final class $action.actionClassName extends org.apache.struts.action.Acti
 	public org.apache.struts.action.ActionForward execute(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
 #end
 	{
-
-
-#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
-
+#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action "		")
 
 #if($action.exitingPage)
 #set($useCaseName = $action.useCase.name)
@@ -113,7 +110,7 @@ public final class $action.actionClassName extends org.apache.struts.action.Acti
 ## [MOISES-COPPETEC]
 ##Código para retirar os sessionobjects da sessão que não pertencem mais ao escopo, isto é Session Object que
 ##está na sessão e não pertence o caso de uso anterior. Para isto utiliza-se uma lista de cadastro. 
-#processRemovePageSO()
+#processRemovePageSO("		")
 		
 java.util.List listaCasosUso = new java.util.ArrayList();
 	
@@ -150,7 +147,7 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 ## mais dos casos de uso que o referenciam
 
 		if(copyParameters && previousFormObject != null) {
-#processUseCaseStartCopy($action.actionFormFields)
+#processUseCaseStartCopy($action.actionFormFields "			")
 		}
 
 #else
@@ -218,11 +215,11 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 #end
 
 ## #processOperationMode($action ${action.useCase.name})
-#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")            
-#processTableNameList($action)
-#processTransition($action)
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "			")
+#processTableNameList($action "			")
+#processTransition($action "			")
 		} catch (java.lang.Exception exception) {
-#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 			throw exception;
 		}
 
@@ -241,9 +238,9 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 #else
 	
 	###processOperationMode($action ${action.useCase.name})
-#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")	
-#processTableNameList($action)
-#processTransition($action)
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "		")
+#processTableNameList($action "		")
+#processTransition($action "		")
 
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
@@ -279,9 +276,9 @@ $actionState.getDocumentation("     * ")
 #if ($controllerCalls.empty)
 #saveMessages($actionState.forward "        ")
 ###processOperationMode($actionState.forward ${action.useCase.name})
-#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")	
-#processTableNameList($actionState.forward)
-#processTransition($actionState.forward)
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "		")
+#processTableNameList($actionState.forward "		")
+#processTransition($actionState.forward "		")
 #else
 
 #if (!$controllerClass.operations.isEmpty())
@@ -296,9 +293,9 @@ $actionState.getDocumentation("     * ")
 #end
 #end
 ##processOperationMode($actionState.forward ${action.useCase.name})
-#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")	
-#processTableNameList($actionState.forward)
-#processTransition($actionState.forward)
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "		")	
+#processTableNameList($actionState.forward "		")
+#processTransition($actionState.forward "		")
 
 #saveMessages($actionState.forward "        ")
 
@@ -355,7 +352,7 @@ $actionState.getDocumentation("     * ")
 				length = in.read(dados); 
 			}
 			
-#processTransition($actionState.forward)
+#processTransition($actionState.forward "			")
 		} catch (Exception e) {
 			throw e;
 		}	
@@ -392,18 +389,18 @@ $decisionTransition.getDocumentation("     * ")
 		{
 #saveMessages($outcome "            ")
 			###processOperationMode($outcome ${action.useCase.name})
-#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")	
-#processTableNameList($outcome)
-#processTransition($outcome)
+#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "			")
+#processTableNameList($outcome "			")
+#processTransition($outcome "			")
 			return forward;
 		}
 #end
 
 		// we take the last action in case we have an invalid return value from the controller
 ## #processOperationMode($defaultOutcome)
-#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")	
-#processTableNameList($defaultOutcome)
-#processTransition($defaultOutcome)
+#processOperationMode($defaultOutcome "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "		")
+#processTableNameList($defaultOutcome "		")
+#processTransition($defaultOutcome "		")
 		return forward;
 	}
 

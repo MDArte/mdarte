@@ -52,7 +52,7 @@ public abstract class Login extends Action
         }
         catch (java.lang.Exception exception)
         {
-            #populateCurrentFormOnError()            
+#populateCurrentFormOnError("            ")
             throw exception;     
         }
         
@@ -65,7 +65,7 @@ public abstract class Login extends Action
 				if(forward != null && forward.getPath().startsWith("/${secureDir}")) {              	
 					forward = new ActionForward("https://" + (request.getServerName() + ":" + request.getSession().getServletContext().getAttribute("httpsPort") + "/${contextoPrincipal}" + forward.getPath()).replaceAll("//", "/"), true);
 	        	}
-	        	#if(${enableHttpsRequest}=="false")
+#if(${enableHttpsRequest}=="false")
 				else {
 		        	if(forward != null && request.getScheme().equals("https"))
 			        {
@@ -80,7 +80,7 @@ public abstract class Login extends Action
 						}
 					}
 		        }
-		        #end
+#end
 	        }
 		}
         

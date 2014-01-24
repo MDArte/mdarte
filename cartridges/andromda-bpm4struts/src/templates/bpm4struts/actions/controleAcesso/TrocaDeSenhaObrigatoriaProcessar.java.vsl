@@ -41,7 +41,7 @@ public final class TrocaDeSenhaObrigatoriaProcessar extends Login
         		request.getSession().setAttribute("form", request.getSession().getAttribute("form"));
         	}
 	    }catch(Exception e ){
-	            #populateCurrentFormOnError()
+#populateCurrentFormOnError("	            ")
 	            throw e; 
     	}   
     	} 	

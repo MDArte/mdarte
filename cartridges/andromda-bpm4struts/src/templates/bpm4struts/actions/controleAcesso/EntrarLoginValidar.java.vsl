@@ -33,7 +33,7 @@ public final class EntrarLoginValidar extends Action
         }
         catch (java.lang.Exception exception)
         {
-            #populateCurrentFormOnError()
+#populateCurrentFormOnError("            ")
             throw exception;      
         }
         

@@ -26,7 +26,7 @@
 #end
 #set ($webLayoutName = ${jsp.useCase.webLayoutName})
 #if ($stringUtils.isNotBlank($webLayoutName))
-<tiles:insert definition="${webLayoutName}">
+<tiles:insert definition="PERSONALIZE">
 #else
 #if($jsp.useCase.hasStereotype("$simpleUseCase"))
 <tiles:insert definition="simple.layout">
