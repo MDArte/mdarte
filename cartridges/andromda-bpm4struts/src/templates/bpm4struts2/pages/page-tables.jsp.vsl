@@ -7,7 +7,7 @@
 	<ul class="nav nav-tabs">
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
-		<li><a href="#tab-${variable.name}" data-toggle="tab">$variable.name</a></li>
+		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
 #end
 #end 
 	</ul>
