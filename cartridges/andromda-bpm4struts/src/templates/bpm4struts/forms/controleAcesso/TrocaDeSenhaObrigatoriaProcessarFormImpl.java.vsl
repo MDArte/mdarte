@@ -602,7 +602,7 @@ public class TrocaDeSenhaObrigatoriaProcessarFormImpl
         //final org.apache.struts.action.ActionErrors errors = super.validate(mapping, request);
         if (errors != null && !errors.isEmpty())
         {
-			#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 		}        
 		}else{           
         	    request.getSession().setAttribute(Constantes.MENU, "true");      

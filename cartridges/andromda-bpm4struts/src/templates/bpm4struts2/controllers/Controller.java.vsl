@@ -14,7 +14,6 @@
 #if($gerar)
 // license-header java merge-point
 package $controller.packageName;
-
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
 #set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
@@ -29,8 +28,6 @@ $controller.getDocumentation(" * ")
 public abstract class ${controller.name} implements java.io.Serializable
 {
 
-
-
 #foreach ($operation in $operations)
 #set ($parameters = $operation.arguments)
 #set ($visibility = $operation.visibility)
@@ -38,27 +35,27 @@ public abstract class ${controller.name} implements java.io.Serializable
 #if (!$returnType)
 #set ($returnType = "void")
 #end
-    /**
+	/**
 $operation.getDocumentation("     * ")
 #if ($operation.callingBackEnd)
-     *
-     * This operation delegates to
-     * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
+	 *
+	 * This operation delegates to
+	 * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
 #end
-     */
+	 */
 #if ($operation.callingBackEnd) ## remocao dos parametros actionmapping, request e response
-    $visibility $returnType ${operation.name}($operation.interfaceType form) throws java.lang.Exception
-    {
-        ${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
+	$visibility $returnType ${operation.name}($operation.interfaceType form) throws java.lang.Exception
+	{
+		${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
 #set ($comma = "")
 #foreach ($argument in $operation.backEndServiceOperation.arguments)
-            ${comma}form.${argument.getterName}()
+		${comma}form.${argument.getterName}()
 #set ($comma = ", ")
 #end
-        );
-    }
+		);
+	}
 #else
-    $visibility abstract $returnType ${operation.name}($operation.interfaceType form,  ViewContainer container) throws java.lang.Exception;
+	$visibility abstract $returnType ${operation.name}($operation.interfaceType form,  ViewContainer container) throws java.lang.Exception;
 #end
 
 #set ($returnType = false)
@@ -74,41 +71,34 @@ $operation.getDocumentation("     * ")
      * If there is no session, it will be created; if the session would not contain a session-object
      * the object will be instantiated and subsequently stored in the session.
      */
-    protected final $sessionObject.fullyQualifiedName get${accessorSuffix}(ViewContainer container)
-    {
-        $sessionObject.fullyQualifiedName object = null;
+	protected final $sessionObject.fullyQualifiedName get${accessorSuffix}(ViewContainer container)
+	{
+		$sessionObject.fullyQualifiedName object = null;
+		Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
 
-        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        
-       	#set($keep = "false")
-	#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	#set($keep = "true")
-	#end
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			object = ($sessionObject.fullyQualifiedName)attribute;
+#if($keep.equals("false") && $counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.resetSessionObjetCounter(container, object.SESSION_KEY, object.getIterations());
+#end
+		}
+		else if (attribute == null)
+		{
+			object = new $sessionObject.fullyQualifiedName ();
+			set${accessorSuffix}(object, container);
+		}
 
-	
-       #set($counterSO = false)
-       #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-       #set($counterSO = true)
-       #end
-	    
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-            object = ($sessionObject.fullyQualifiedName)attribute;
-            #if($keep.equals("false") && $counterSO)
-            ${servletPackage}.SessionObjectUtilStruts2.resetSessionObjetCounter(container, object.SESSION_KEY, object.getIterations());
-			
-            #end
-        }
-        else if (attribute == null)
-        {
-            object = new $sessionObject.fullyQualifiedName ();
-            set${accessorSuffix}(object, container);
-        }
-
-        return object;
-    }
-
-
+		return object;
+	}
 
     /**
      * Set the argument $sessionObject.name object in the session corresponding with the argument request.
@@ -117,28 +107,25 @@ $operation.getDocumentation("     * ")
      * @param createSession denotes whether or not the session should be created automatically in case it
      * would not yet exist
      */
-    protected final void set${accessorSuffix}($sessionObject.fullyQualifiedName object, ViewContainer container)
-    {
-        
-        if (container != null)
-        { 
-	    #set($keep = "false")
-	    #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	    #set($keep = "true")
-	    #end
-	
-	    #set($counterSO = false)
-	    #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-	    #set($counterSO = true)
-	    #end
-	    
-	    #if($keep.equals("true") || !$counterSO)
-	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
-	    #elseif($keep.equals("false") && $counterSO)
-	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
-	    #end	                
-        }
-    }
+	protected final void set${accessorSuffix}($sessionObject.fullyQualifiedName object, ViewContainer container)
+	{
+		if (container != null)
+		{
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+#if($keep.equals("true") || !$counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
+ #elseif($keep.equals("false") && $counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
+#end
+		}
+	}
 
     /**
      * Removes the argument $sessionObject.name object from the session corresponding with the argument request.
@@ -149,14 +136,14 @@ $operation.getDocumentation("     * ")
      *   <li>The object is not of the correct type</li>
      * </ul>
      */
-    protected final void remove${accessorSuffix}(ViewContainer container)
-    {
-        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-        	${servletPackage}.SessionObjectUtilStruts2.removeSessionObject(container, ${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        }
-    }
+	protected final void remove${accessorSuffix}(ViewContainer container)
+	{
+		Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			${servletPackage}.SessionObjectUtilStruts2.removeSessionObject(container, ${sessionObject.fullyQualifiedName}.SESSION_KEY);
+		}
+	}
 
 #end
 	
@@ -169,21 +156,19 @@ $operation.getDocumentation("     * ")
      * @param message the message key to lookup the actual message to display
      * @param arguments any arguments used within the message
      */
-    protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container)
-    {
-        
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+	protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container)
+	{
+		// we explicitely store and retrieve the messages from the session, as opposed to using
+		// Action.saveMessages because this constroller does not have access to the current Action instance
+		org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+		if (messages == null)
+		{
+			messages = new org.apache.struts.action.ActionMessages();
+			container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+		}
+		messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
 ## EM struts 2 ha s:actionmessenger e s:errormenseger como tags e addActionMenssage,addErrorMenssage		
-    }
+}
 
     /**
      * Stores a warning message in the session, if any other warning messages exist, this one

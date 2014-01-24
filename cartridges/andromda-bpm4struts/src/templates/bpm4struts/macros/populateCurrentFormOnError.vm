@@ -6,38 +6,37 @@
 ## form set within the request, because we'll lose things like select lists, and any other
 ## collections on the form)
 ##
-#macro (populateCurrentFormOnError)
+#macro (populateCurrentFormOnError $indent)
 #set ($pageKey = "${action.useCase.name}")
 #if ($stringUtils.isNotBlank(${action.source.name}))
 #set ($pageKey = "${pageKey}.${action.source.name}")
 #end
-            Object formObj = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${pageKey}");
+${indent}Object formObj = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${pageKey}");
 
-            if (formObj != null)
-            {
-                try
-                {
-                    formObj.getClass().getMethod("resetCheckBoxes", new Class[] {org.apache.struts.action.ActionMapping.class, javax.servlet.http.HttpServletRequest.class}).invoke(formObj, new Object[]{null, null});
-                }
-                catch (Exception e2)
-                {
-                    // ignoring
-                }
+${indent}if (formObj != null) {
+${indent}	try
+${indent}	{
+${indent}		formObj.getClass().getMethod("resetCheckBoxes", new Class[] {org.apache.struts.action.ActionMapping.class, javax.servlet.http.HttpServletRequest.class}).invoke(formObj, new Object[]{null, null});
+${indent}	}
+${indent}	catch (Exception e2)
+${indent}	{
+${indent}		// ignoring
+${indent}	}
 
-                final java.util.Map parameters = new java.util.HashMap();
-                for (final java.util.Enumeration names = request.getParameterNames(); names.hasMoreElements();)
-                {
-                    final String name = String.valueOf(names.nextElement());
+${indent}	final java.util.Map parameters = new java.util.HashMap();
+${indent}	for (final java.util.Enumeration names = request.getParameterNames(); names.hasMoreElements();)
+${indent}	{
+${indent}		final String name = String.valueOf(names.nextElement());
 ##                    parameters.put(name, request.getParameter(name));
-                    parameters.put(name, request.getParameterValues(name));
-                }
-                try
-                {
-                    org.apache.commons.beanutils.BeanUtils.populate(formObj, parameters);
-                }
-                catch (java.lang.Exception populateException)
-                {
-                    // ignore if we have an exception here (we just don't populate).
-                }
-            }
+${indent}		parameters.put(name, request.getParameterValues(name));
+${indent}	}
+${indent}	try
+${indent}	{
+${indent}		org.apache.commons.beanutils.BeanUtils.populate(formObj, parameters);
+${indent}	}
+${indent}	catch (java.lang.Exception populateException)
+${indent}	{
+${indent}		// ignore if we have an exception here (we just don't populate).
+${indent}	}
+${indent}}
 #end

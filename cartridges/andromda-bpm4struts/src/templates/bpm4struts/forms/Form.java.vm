@@ -28,113 +28,112 @@
 #end
 
 #macro(processListsClasses)
-public final static class LabelValue
+    public final static class LabelValue
     {
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-        private java.lang.Object hint = null;        
-
-        public LabelValue(Object label, java.lang.Object value)
-        {
-            this.label = label;
-            this.value = value;
-        }
-
-        public LabelValue(Object label, java.lang.Object value, Object hint)
-        {
-            this.label = label;
-            this.value = value;
-            this.hint = hint;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-        
-	public java.lang.Object getHint()
-        {
-            return this.hint;
-        }        
-
-        public java.lang.String toString()
-        {
-            return label + "=" + value;
-        }
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
+    	private java.lang.Object hint = null;        
+    	
+    	public LabelValue(Object label, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.value = value;
+    	}
+    	
+    	public LabelValue(Object label, java.lang.Object value, Object hint)
+    	{
+    		this.label = label;
+    		this.value = value;
+    		this.hint = hint;
+    	}
+    	
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    	
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    	
+    	public java.lang.Object getHint()
+    	{
+    		return this.hint;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "=" + value;
+    	}
     }
     
     public final static class LabelValueDouble
     {
-        private java.lang.Object labelDouble = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDouble = labelDouble;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDouble()
-        {
-            return this.labelDouble;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDouble + "=" + value;
-        }
-    }
+    	private java.lang.Object labelDouble = null;
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
     
+    	public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.labelDouble = labelDouble;
+    		this.value = value;
+    	}
+    
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    
+    	public java.lang.Object getLabelDouble()
+    	{
+    		return this.labelDouble;
+    	}
+    
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "," + labelDouble + "=" + value;
+    	}
+    }
     
     public final static class LabelValueDestination
     {
-        private java.lang.Object labelDestination = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDestination = labelDestination;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDestination()
-        {
-            return this.labelDestination;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDestination + "=" + value;
-        }
+    	private java.lang.Object labelDestination = null;
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
+    
+    	public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.labelDestination = labelDestination;
+    		this.value = value;
+    	}
+    	
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    	
+    	public java.lang.Object getLabelDestination()
+    	{
+    		return this.labelDestination;
+    	}
+    
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "," + labelDestination + "=" + value;
+    	}
     }
 #end
 
