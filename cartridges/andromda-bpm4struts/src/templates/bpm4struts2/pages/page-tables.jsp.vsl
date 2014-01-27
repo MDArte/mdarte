@@ -13,6 +13,7 @@
 		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
 #end
 #end
+#set($i=$i+1)
 #end 
 	</ul>
 
