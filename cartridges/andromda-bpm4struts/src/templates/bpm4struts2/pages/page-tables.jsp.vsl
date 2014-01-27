@@ -12,8 +12,8 @@
 #else	
 		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
 #end
-#end
 #set($i=$i+1)
+#end
 #end 
 	</ul>
 
@@ -21,13 +21,11 @@
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
 		<div class="tab-pane" id="tab-${variable.name}">
-#else
-		<div class="tab-pane" id="tab-${variable.name}" >
-#end
 			<!--<tiles:insert page="${jsp.fullPath}-${variable.name}.jspf" flush="false"/>--> 
   			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
   		</div>
 #end 
 	</div>
 </div>
+#end
 #end
