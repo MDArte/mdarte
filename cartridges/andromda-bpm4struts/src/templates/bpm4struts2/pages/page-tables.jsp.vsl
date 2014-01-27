@@ -20,7 +20,7 @@
 	<div class="tab-content">
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
-		<div class="tab-pane active" id="tab-${variable.name}">
+		<div class="tab-pane" id="tab-${variable.name}">
 #else
 		<div class="tab-pane" id="tab-${variable.name}" >
 #end
