@@ -12,8 +12,16 @@ html,body {
 	width: 200px;
 }
 
-.tt-query {
-	width:300px;
+.form-group {
+	margin-botton: 25px;
+}
+
+.tt-query, col-xs-4 input.form-control {
+	width:370px;
+}
+
+.control-label {
+	margin-top: 6px;
 }
 
 .twitter-typeahead .tt-query,.twitter-typeahead .tt-hint {
