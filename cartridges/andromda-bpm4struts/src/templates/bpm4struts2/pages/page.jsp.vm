@@ -461,8 +461,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<input  class="span2 form-control" type="text" id="${field.name}${action.useCase.name}" value="%{$propertyValue}" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
-${indent}			<span class="add-on"><i class="icon-th"></i></span>
+${indent}			<input  class="form-control" type="text" id="${field.name}${action.useCase.name}" value="<c:out value="${__value}"/>" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
 ${indent}		</div>
 ${indent}	</div>
 #elseif ($field.autocomplete )
