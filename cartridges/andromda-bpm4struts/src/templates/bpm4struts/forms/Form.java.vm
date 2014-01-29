@@ -801,7 +801,9 @@
 #end
         }
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
         ${field.setterName}ComboList(${field.name}Combo);
+#end
 #end
     }
 
@@ -820,7 +822,9 @@
 #end
         }
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
         ${field.setterName}ComboList(${field.name}Combo);
+#end
 #end
 
         for(int i = 0; i < this.${labelListName}Hints.length; i++) {

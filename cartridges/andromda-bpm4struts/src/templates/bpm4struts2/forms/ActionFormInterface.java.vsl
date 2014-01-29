@@ -22,10 +22,12 @@ public interface $operation.interfaceName
 {
 ###foreach ($field in $operation.formFields)
 #foreach ($field in $operation.interfaceFormFields)
-	#if(${field.widgetType}=="select" || ${field.radioButton})
+#if(${field.widgetType}=="select" || ${field.radioButton})
 	public java.util.Map ${field.getterName}ComboList();
+#if(!$field.type.enumeration)
 	public void ${field.setterName}ComboList(java.util.Map ${field.name}ComboList);
-	#end
+#end
+#end
 #set ($fieldType = $field.type.fullyQualifiedName)
 #set ($fieldName = $field.name)
 #set ($tableActionFound = false)
@@ -186,9 +188,12 @@ $field.getDocumentation("     * ")
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-    #set($type = ${enumeration.literalType.wrapperName})
+#set($type = ${enumeration.fullyQualifiedName})
 #else
-    #set($type = ${enumeration.literalType.fullyQualifiedName})
+#set($type = ${enumeration.fullyQualifiedName})
+#end
+#if(${field.widgetType}=="select" || ${field.radioButton})
+	public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMap();
 #end
 
     /**

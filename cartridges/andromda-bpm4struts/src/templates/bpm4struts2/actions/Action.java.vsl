@@ -128,12 +128,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	}
 
 #elseif($field.type.enumeration)
-#set($enumeration = $field.type)
-#if ($enumeration.literalType.primitive)
-	private ${enumeration.literalType.wrapperName} $field.name;
-#else
-	private ${enumeration.literalType.fullyQualifiedName} $field.name;
-#end
+	private $field.type.fullyQualifiedName $field.name;
 #else
 	private $field.type.fullyQualifiedName $field.name;
 #end
@@ -382,7 +377,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		form.${field.setterName}(this.${field.name});
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
 		form.${field.setterName}ComboList(this.${field.name}ComboList);
+#end
 #end
 #end
 

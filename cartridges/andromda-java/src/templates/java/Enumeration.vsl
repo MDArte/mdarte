@@ -6,6 +6,10 @@
 #if ($stringUtils.isNotBlank($enumeration.packageName))
 package $enumeration.packageName;
 #end
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 ## avoiding parse errors
 #set ($sharp = "#")
 
@@ -215,6 +219,18 @@ $literal.getDocumentation("     * ")
     public static java.util.Map internationalizationKeys()
     {
     	return internationalizationKeys;
+    }
+	
+	public static java.util.Map enumMap()
+    {
+    	Map<${enumeration.literalType.name}, String> map = new TreeMap<${enumeration.literalType.name}, String>();
+				
+		for(${enumeration.name} i : (Collection<${enumeration.name}>) enumerations)
+		{
+			map.put(i.getValue(), i.getInternationalizationKey());
+		}
+		
+		return map;
     }
 #end
     /**

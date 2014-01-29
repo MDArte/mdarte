@@ -78,9 +78,9 @@ ${indent}Object[] objetos = null;
 #set($enumeration = $parameter.type)
 #set($type = ${enumeration.fullyQualifiedName})
 #if ($enumeration.literalType.primitive)
-#set($type = $literalType.concat(${enumeration.literalType.wrapperName}))
+#set($type = $literalType.concat(${enumeration.fullyQualifiedName}))
 #else
-#set($type = $literalType.concat(${enumeration.literalType.fullyQualifiedName}))
+#set($type = $literalType.concat(${enumeration.fullyQualifiedName}))
 #end
 #else
 #set($type = ${parameter.type.fullyQualifiedName})
