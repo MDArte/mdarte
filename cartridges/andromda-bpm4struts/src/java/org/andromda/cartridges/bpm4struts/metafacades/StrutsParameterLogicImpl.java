@@ -1272,7 +1272,8 @@ public class StrutsParameterLogicImpl
     protected boolean handleIsReadOnly()
     {
         final Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_READONLY);
-        return Bpm4StrutsUtils.isTrue(value == null ? null : String.valueOf(value));
+   
+        return String.valueOf(value).equals("true");
     }
 
     /**

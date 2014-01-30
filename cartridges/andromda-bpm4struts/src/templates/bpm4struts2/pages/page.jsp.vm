@@ -359,9 +359,6 @@ ${indent}<input id="reset${action.actionName.toString().replace(' ','')}" class=
 #else
 #set ($disabled = '')
 #end
-#set($eventosKeyUp = 'onkeyup="verifica()"')
-#set($eventosMouseUp = 'onmouseup="verifica()"')
-#set($eventosKeyPress = 'onkeypress="keySubmit(event)"')
 #if ($field.readOnly)
 #set ($readonly = 'readonly="readonly"')
 #else
@@ -461,7 +458,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<input  class="form-control" type="text" id="${field.name}${action.useCase.name}" value="<c:out value="${__value}"/>" data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
+${indent}			<input  class="form-control" type="text" id="${field.name}${action.useCase.name}" value="<c:out value="${__value}"/>" $readonly data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
 ${indent}		</div>
 ${indent}	</div>
 #elseif ($field.autocomplete )
