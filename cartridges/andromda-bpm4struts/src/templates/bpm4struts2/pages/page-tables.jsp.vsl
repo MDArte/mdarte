@@ -16,11 +16,16 @@
 #end
 #end 
 	</ul>
-
+#set($i=1)
 	<div class="tab-content">
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
+#if($i==1)
+		<div class="tab-pane active" id="tab-${variable.name}">
+#else
 		<div class="tab-pane" id="tab-${variable.name}">
+#end
+#set($i=$i+1)
 			<!--<tiles:insert page="${jsp.fullPath}-${variable.name}.jspf" flush="false"/>--> 
   			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
   		</div>
