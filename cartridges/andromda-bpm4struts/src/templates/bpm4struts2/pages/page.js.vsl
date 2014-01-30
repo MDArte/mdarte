@@ -192,7 +192,6 @@ function verifica() {
 $(document).ready(function(){			
 	$('textarea').elastic();
 	$('textarea').trigger('update');
-	$("#tabs").easytabs();
 });
 
 #foreach ($field in $actionParameters)
@@ -212,36 +211,33 @@ function atualizaElementos(){
 #if ($variable.table)
 		$("#${variable.name}").displayTagAjax();
 #end
-#end
-		$('#tabs').easytabs(); 
-	}
-	
-$(document).ready(function(){
-#set($tables = $jsp.getTables())
-	atualizaElementos();
-#foreach($table in $tables)
-//Javascript da tabela $table.name
+#end 
+}
 
-	function getPath${table.name}() {
-		return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !$jsp.useCase.package.hasStereotype("$moduloWebPrincipal"))/${jsp.useCase.package.webModuleName}#end";
-	}
-	
-	function setaParametros${table.name}(param1, param2) {
-		document.${table.name}.action = "";
-		document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-		document.${table.name}.name=param1;						   
-		document.${table.name}.submit(); 
-		return true;
-	}
-	
-	function selecionaDeseleciona(){
-		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
-        var setChecked = !boxes[0].checked;
+#foreach($table in $jsp.getTables())
+function setaParametros${table.name}(param1, param2) {
+	document.${table.name}.action = "";
+	document.${table.name}.action = getPath() + '/' + param2 + '.do';
+	document.${table.name}.name=param1;						   
+	document.${table.name}.submit(); 
+	return true;
+}
+
+#if(${table.tableGlobalActionParameter})
+function selecionaDeseleciona${table.name}(){
+	var boxes=document.getElementsByName("${table.tableGlobalActionParameter.name}RowSelectionAsArray");
+    var setChecked = !boxes[0].checked;
                
-        for(var i=0;i<boxes.length;i++)
-			boxes[i].checked=setChecked;
-    }
-	
+    for(var i=0;i<boxes.length;i++)
+	boxes[i].checked=setChecked;
+}
+#end
+#end
+
+$(document).ready(function(){
+
+	atualizaElementos();
+
 	//Botao Select/Deselect all
 	$(".select-deselect").click(function(){
 		selecionaDeseleciona();
@@ -252,8 +248,13 @@ $(document).ready(function(){
 	
 	//Botao Close
 	$(".close-btn").click(function(){close() });
+
+#set($tables = $jsp.getTables())
+#foreach($table in $tables)
+//Javascript da tabela $table.name	
 	
 	//Table Global Actions tabela $table.name
+	
 #foreach ($_action in $table.tableGlobalActions)
 #set($valueOperationMode = "")
 #set($valueOperationMode = $_action.findTaggedValue("$operationMode"))
