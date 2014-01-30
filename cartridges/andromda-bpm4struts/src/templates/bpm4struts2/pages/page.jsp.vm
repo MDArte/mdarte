@@ -448,7 +448,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<s:password id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${propertyValue}}" $disabled  title=""  $readonly$columnCount />
+${indent}			<s:password id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${propertyValue}}" $disabled  title=""  $readonly $columnCount />
 ${indent}		</div>
 ${indent}	</div>
 ##      T E X T F I E L D       &       P A S S W O R D
@@ -494,7 +494,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 ${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  title="" $readonly$columnCount styleId="$styleId" />
+${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  title="" $readonly $columnCount styleId="$styleId" />
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -508,7 +508,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<textarea name="$fieldName" id="${field.name}${action.useCase.name}" class="form-control"  $readonly$rowCount$columnCount $disabled id="${fieldName}${action.useCase.name}"><c:out value="${__value}"/></textarea>
+${indent}			<textarea name="$fieldName" id="${field.name}${action.useCase.name}" class="form-control"  $readonly $rowCount $columnCount $disabled id="${fieldName}${action.useCase.name}"><c:out value="${__value}"/></textarea>
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -522,7 +522,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  $readonly$columnCount styleId="$styleId"/>
+${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  $readonly $columnCount styleId="$styleId"/>
 ${indent}		</div>
 ${indent}	</div>
 ##
