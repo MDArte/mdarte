@@ -24,6 +24,10 @@ html,body {
 	margin-top: 6px;
 }
 
+div.exibir .control-label {
+	margin-top: 0px;
+}
+
 .twitter-typeahead .tt-query,.twitter-typeahead .tt-hint {
 	margin-bottom: 0;
 	border-radius: 3px 3px 3px 3px;
