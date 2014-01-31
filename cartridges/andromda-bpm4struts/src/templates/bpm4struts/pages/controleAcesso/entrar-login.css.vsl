@@ -1,4 +1,4 @@
-#if(!$struts2)
+#if($struts2 == "false")
 #validar.action {}
 #validar.action #form_submit {}
 #validar.action #form_reset {}
