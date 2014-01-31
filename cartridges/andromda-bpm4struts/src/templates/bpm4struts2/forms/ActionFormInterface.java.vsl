@@ -188,9 +188,9 @@ $field.getDocumentation("     * ")
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-#set($type = ${enumeration.fullyQualifiedName})
+    #set($type = ${enumeration.literalType.wrapperName})
 #else
-#set($type = ${enumeration.fullyQualifiedName})
+#set($type = ${enumeration.literalType.fullyQualifiedName})
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
 	public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMap();

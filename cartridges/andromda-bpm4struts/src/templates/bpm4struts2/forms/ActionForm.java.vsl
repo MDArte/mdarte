@@ -64,9 +64,9 @@ public class ${formBeanClassName}
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-    private ${enumeration.fullyQualifiedName} $field.name = null;
+    private ${enumeration.literalType.wrapperName} $field.name = 32767;
 #else
-    private ${enumeration.fullyQualifiedName} $field.name = null;
+    private ${enumeration.literalType.fullyQualifiedName} $field.name = 32767;
 #end
 #else
     private $field.type.fullyQualifiedName $field.name;
@@ -104,7 +104,7 @@ public class ${formBeanClassName}
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
 #if($field.type.enumeration)
-	//public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMap();
+##
 #else
 	public java.util.Map ${field.name}ComboList;
 #end
@@ -450,9 +450,9 @@ $field.getDocumentation("     * ")
 #set($type = ${enumeration.fullyQualifiedName})
 
 #if ($enumeration.literalType.primitive)
-#set($literalType = ${enumeration.fullyQualifiedName})
+#set($literalType = ${enumeration.literalType.wrapperName})
 #else
-#set($literalType = ${enumeration.fullyQualifiedName})
+#set($literalType = ${enumeration.literalType.fullyQualifiedName})
 #end
 
     public $literalType ${field.getterName}()
@@ -462,13 +462,13 @@ $field.getDocumentation("     * ")
     
     public $type ${field.getterName}AsEnumeration()
     {
-		return this.${fieldName};
-    	//return ${type}.${enumeration.fromOperationName}(this.${fieldName});
+    	return ${type}.${enumeration.fromOperationName}(this.${fieldName});
     }
     
     public void ${field.setterName}($literalType value)
     {
-    	this.${fieldName} = value;
+		if (value != null)
+			this.${fieldName} = new ${literalType}(value);
     }
 
 #else

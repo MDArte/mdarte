@@ -128,7 +128,12 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	}
 
 #elseif($field.type.enumeration)
-	private $field.type.fullyQualifiedName $field.name;
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+	private ${enumeration.literalType.wrapperName} $field.name;
+#else
+	private ${enumeration.literalType.fullyQualifiedName} $field.name;
+#end
 #else
 	private $field.type.fullyQualifiedName $field.name;
 #end
@@ -141,8 +146,18 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	}
 #end
 #if(!($field.file))
-
-	public #if($field.strutsAction.tableAction)java.util.List ${field.getterName}RowSelection #else ${field.type.fullyQualifiedName} ${field.getterName} #end()
+#if($field.strutsAction.tableAction)
+	public java.util.List ${field.getterName}RowSelection ()
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+	public ${enumeration.literalType.wrapperName} ${field.getterName}() 
+#else
+	public ${enumeration.literalType.fullyQualifiedName} ${field.getterName}() 
+#end
+#else 
+	public ${field.type.fullyQualifiedName} ${field.getterName}() 
+#end
 	{
 #if($field.strutsAction.tableAction)
 		return ${fieldName}RowSelection;
@@ -176,6 +191,19 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	{
 		this.${fieldName}RowSelection = ${fieldName}RowSelection;
 	}
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+	public void ${field.setterName}(${enumeration.literalType.wrapperName} $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
+#else
+	public void ${field.setterName}(${enumeration.literalType.fullyQualifiedName} $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
+#end
 #else
 #if(!$field.hiddenField)
 	public void ${field.setterName}($fieldType $fieldName)
