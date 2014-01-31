@@ -1,4 +1,4 @@
-#if(!$struts2)
+#if($struts2 == "false")
 input {
 	margin-bottom: 8px;
 }

@@ -1,4 +1,4 @@
-#if(!$struts2)
+#if($struts2 == "false")
 #set ($generatedFile = "menu/menu.jsp")
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>

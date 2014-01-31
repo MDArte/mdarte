@@ -1,4 +1,4 @@
-#if($struts2)
+#if($struts2 == "true")
 #set ($generatedFile = "error-page.jsp")
 <%@ page session="true" isErrorPage="true" %>
 <%@ include file="/taglib-imports.jspf" %>

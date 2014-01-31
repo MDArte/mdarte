@@ -1,4 +1,4 @@
-#if($struts2)
+#if($struts2 == "true")
 <%@ include file="/taglib-imports.jspf" %>
 
 
