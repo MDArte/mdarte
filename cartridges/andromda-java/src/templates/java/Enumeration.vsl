@@ -104,7 +104,7 @@ $literal.getDocumentation("     * ")
      */
     public String toString()
     {
-        return "" + internationalizationKeys.get(value);
+        return "" + value;
     }
 #end
 
@@ -223,11 +223,11 @@ $literal.getDocumentation("     * ")
 	
 	public static java.util.Map enumMap()
     {
-    	Map<${enumeration.literalType.name}, ${enumeration.name}> map = new TreeMap<${enumeration.literalType.name}, ${enumeration.name}>();
+    	Map<${enumeration.literalType.name}, java.lang.String> map = new TreeMap<${enumeration.literalType.name}, java.lang.String>();
 				
 		for(${enumeration.name} i : (Collection<${enumeration.name}>) enumerations)
 		{
-			map.put(i.getValue(), i);
+			map.put(i.getValue(), i.getInternationalizationKey());
 		}
 		
 		return map;
