@@ -114,6 +114,8 @@
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162893_724415_1238' name='consulta${manageable.name}'>
 																			<UML:Event.parameter>
 #foreach ($attribute in $manageable.attributes)
+#if(!$attribute.type.enumeration)
+##
 #if ($attribute.Name != "id")
 																				<UML:Parameter xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, ${attribute.name})}' name='${attribute.name}'>
 																					<UML:Parameter.type>
@@ -159,6 +161,7 @@
 #end
 																				</UML:Parameter>
 																				
+#end
 #end
 #end
 																			</UML:Event.parameter>
@@ -337,6 +340,8 @@
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162897_678960_1245' name='salva${manageable.Name}'>
 																			<UML:Event.parameter>
 #foreach ($attribute in $manageable.attributes)
+#if(!$attribute.type.enumeration)
+##
 #if($attribute.Name != "id")
 																				<UML:Parameter xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, ${attribute.name})}' name='${attribute.name}'>
 																					<UML:Parameter.type>
@@ -381,6 +386,7 @@
 																					</UML:ModelElement.taggedValue>
 #end
 																				</UML:Parameter>																				
+#end
 #end
 #end
 																				</UML:Event.parameter>
@@ -471,6 +477,8 @@
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162898_629115_1250' name='voltar'>
 																			<UML:Event.parameter>
 #foreach ($attribute in $manageable.attributes)
+#if(!$attribute.type.enumeration)
+##
 #if($attribute.Name != "id")
 																				<UML:Parameter xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, ${attribute.name})}' name='${attribute.name}'>
 																					<UML:Parameter.type>
@@ -500,6 +508,7 @@
 																						</UML:TaggedValue>
 																					</UML:ModelElement.taggedValue>
 																				</UML:Parameter>
+#end
 #end
 #end
 																			</UML:Event.parameter>
