@@ -620,7 +620,7 @@ ${indent}	</div>
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="exibir row form-group">
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
 ${indent}		<div class="col-xs-4">
-${indent}			<p class="form-control-static"><s:property value="${propertyValue}" /></p>
+${indent}			<p id="${field.name}${action.useCase.name}" class="form-control-static"><s:property value="${propertyValue}" /></p>
 ${indent}		</div>
 ${indent}	</div>
 #end
