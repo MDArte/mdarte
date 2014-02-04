@@ -289,7 +289,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	public void validate()
 	{
 		//Removendo mensagens antigas
-		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+		//request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
 
 		//Validando campos
 #foreach ($field in $action.actionParameters)
