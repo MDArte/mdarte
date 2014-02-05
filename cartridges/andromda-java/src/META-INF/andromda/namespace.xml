@@ -26,7 +26,12 @@
                 <documentation>
                    Diretorio onde classes utilitarias sao geradas
                 </documentation>
-            </property>            
+            </property>
+            <property name="util-impl" required="false">
+                <documentation>
+                   Diretorio onde classes utilitarias sao geradas e podem ser customizadas
+                </documentation>
+            </property>
             <property name="service-impls" required="false">
                 <documentation>
                     The directory to which POJO service implementation classes are generated
