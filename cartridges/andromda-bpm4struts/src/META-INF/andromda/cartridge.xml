@@ -1701,6 +1701,13 @@
     </template>
     
     <template
+        path="templates/bpm4struts2/controllers/ControllerAbstract.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true">
+    </template>
+    
+    <template
         path="templates/bpm4struts2/pages/page-actions.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="pages"

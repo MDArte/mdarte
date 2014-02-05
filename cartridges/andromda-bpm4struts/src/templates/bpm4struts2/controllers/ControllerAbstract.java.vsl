@@ -1,0 +1,145 @@
+#set ($className = "ControllerAbstract")
+#set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/${className}.java")
+// license-header java merge-point
+package ${servletPackage};
+#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+import ${packageUtil}.Constantes;
+import ${servletPackage}.ViewContainer;
+import com.opensymphony.xwork2.ActionSupport;
+
+public abstract class ControllerAbstract implements java.io.Serializable
+{
+	
+    /**
+     * Stores a warning message in the session, if any other warning messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param session the session to which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @param arguments any arguments used within the message
+     */
+	protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container)
+	{
+		// we explicitely store and retrieve the messages from the session, as opposed to using
+		// Action.saveMessages because this constroller does not have access to the current Action instance
+		org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+		if (messages == null)
+		{
+			messages = new org.apache.struts.action.ActionMessages();
+			container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+		}
+		messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+## EM struts 2 ha s:actionmessenger e s:errormenseger como tags e addActionMenssage,addErrorMenssage		
+}
+
+    /**
+     * Stores a warning message in the session, if any other warning messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param session the session to which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveWarningMessage(String message, ViewContainer container)
+    {
+        this.saveWarningMessage(message, null, container);
+    }
+
+    /**
+     * Stores a success message in the session, if any other success messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     */
+    protected final void saveSuccessMessage(String message, String[] arguments, ViewContainer container)
+    {
+        
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+    }
+
+	protected final void saveSuccessMessage(String message, ViewContainer container)
+	{
+		this.saveSuccessMessage(message,null,container);
+	}
+
+
+    /**
+     * Stores an error message in the session, if any other error messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveErrorMessage(String message, String[] arguments, ViewContainer container)
+    {
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+    }
+
+    /**
+     * Stores an error message in the session, if any other error messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveErrorMessage(java.lang.String message,ViewContainer container)
+    {
+        this.saveErrorMessage(message, null,container);
+    }
+	
+	/**
+	 * Método a ser utilizado na recuperação de serviços.
+	 */
+	protected <T> T getService(Class<T> clazz) throws Exception	{
+		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
+	}
+
+	protected java.util.Collection<String> getModoOperacao(String nomeCasoDeUso, ViewContainer container) {
+		java.util.Collection<String> modoOperacao = new java.util.ArrayList();
+		if(container.getFromSession(Constantes.MODO_OPERACAO) != null){
+			java.util.Map map = (java.util.Map)container.getFromSession(Constantes.MODO_OPERACAO);
+			if(nomeCasoDeUso != null){
+				if(map.get(nomeCasoDeUso) != null){
+					String modoOperacaoStr = (String)map.get(nomeCasoDeUso);
+					java.util.StringTokenizer st = new java.util.StringTokenizer(modoOperacaoStr, ",");
+					while(st.hasMoreTokens()){
+						String next = st.nextToken();
+						modoOperacao.add(next);
+					}
+				}
+			}
+		}
+		return modoOperacao;
+	}
+	
+	protected String getMessage(String key) {
+		ActionSupport actionSupport = new ActionSupport();
+		return actionSupport.getText(key);
+	}
+}

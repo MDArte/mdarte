@@ -105,17 +105,16 @@
 #end
         <!-- mapping files -->
 
-#set($entities = $hibernateUtils.getEntity())        
-        
+#set($entities = $hibernateUtils.getEntity())
 #foreach($entity in $entities)
-		#if($entity.requiresMapping)
+#if($entity.requiresMapping)
         <mapping resource="${entity.packagePath}/${entity.entityName}.hbm.xml"/>
-        #end
+#end
 #if($entity.auditoria)
-		#if($entity.requiresMapping)
-			<mapping resource="${entity.packagePath}/${entity.entityName}LogRec.hbm.xml"/>        
-		#end
-		#end
+#if($entity.requiresMapping)
+			<mapping resource="${entity.packagePath}/${entity.entityName}LogRec.hbm.xml"/>
+#end
+#end
 #end
     </session-factory>
 </hibernate-configuration>
