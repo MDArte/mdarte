@@ -17,7 +17,7 @@ package $controller.packageName;
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 ##
 #set ($sharp = "#")

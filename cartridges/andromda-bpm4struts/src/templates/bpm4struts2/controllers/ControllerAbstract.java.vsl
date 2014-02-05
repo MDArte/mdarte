@@ -2,7 +2,7 @@
 #set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/${className}.java")
 // license-header java merge-point
 package ${servletPackage};
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import ${servletPackage}.ViewContainer;
 import com.opensymphony.xwork2.ActionSupport;

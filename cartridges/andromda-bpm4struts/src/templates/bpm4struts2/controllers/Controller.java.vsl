@@ -16,9 +16,12 @@
 package $controller.packageName;
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set ($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
+import ${packageUtil}.Constantes;
 import ${servletPackage}.ViewContainer;
 import ${servletPackage}.ControllerAbstract;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
 $controller.getDocumentation(" * ")

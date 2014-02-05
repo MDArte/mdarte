@@ -22,7 +22,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import java.util.Enumeration;
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 
 import com.opensymphony.xwork2.ActionSupport;
