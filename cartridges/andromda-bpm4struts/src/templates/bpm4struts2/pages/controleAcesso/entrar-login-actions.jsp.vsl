@@ -13,7 +13,7 @@
 		<input type="password" id="senha" name="senha" property="senha" class="form-control" required="" placeholder="<bean:message key="login.entrar.login.param.senha"/>"/>
 
 		<label class="checkbox">
-			<input id="remember" type="checkbox" value="remember-me">
+			<input id="remember" type="checkbox" value="remember-me" onchange="clearForm();" >
 			Remember me
 		</label>
 			
