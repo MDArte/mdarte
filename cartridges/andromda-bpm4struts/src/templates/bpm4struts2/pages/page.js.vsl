@@ -384,6 +384,21 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
 	
+#elseif($field.editor)
+	$("#${field.name}${jsp.useCase.name}").summernote({
+	  width: '100%',
+	  height: '100', 	
+	  toolbar: [
+	    ['style', ['style']],
+	    ['style', ['bold', 'italic', 'underline', 'clear']],
+	    ['color', ['color']],
+	    ['para', ['ul', 'ol', 'paragraph']],
+	    ['height', ['height']],
+	    ['insert', ['link']],
+	    ['table', ['table']],
+	    ['help', ['help']]
+	  ]
+	});
 #end
 #end
 

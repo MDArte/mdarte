@@ -420,6 +420,7 @@
                     <value>multibox</value>
                     <value>autocomplete</value>
                     <value>custom</value>
+                    <value>editor</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">

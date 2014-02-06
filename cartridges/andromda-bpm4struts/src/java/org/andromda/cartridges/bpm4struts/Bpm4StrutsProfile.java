@@ -111,6 +111,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_INPUT_TYPE_LINK = "link";
     public static final String TAGGEDVALUE_INPUT_TYPE_FILE = "file";
     public static final String TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE = "autocomplete";
+    public static final String TAGGEDVALUE_INPUT_TYPE_EDITOR = "editor";
     public static final int TAGGEDVALUE_INPUT_TYPE_OPTION_DEFAULT_COUNT = 3;
     public static final int TAGGEDVALUE_TABLE_MAXROWS_DEFAULT_COUNT = 15;
     public static final boolean TAGGEDVALUE_TABLE_SORTABLE_DEFAULT_VALUE = false;
