@@ -38,22 +38,22 @@ public class $enumeration.name
     	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}(${literal.enumerationValue}), "enum.label.${enumeration.name}.${literal.name}");
 #end    	
 #end
-##if(!$enumeration.generalization)
-##if ($enumeration.literalType.primitive)
-##    	internationalizationKeys.put(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"), "");
-##else
-##    	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"), "");
-##end
-##end  	
+#if(!$enumeration.generalization)
+#if ($enumeration.literalType.primitive)
+    	internationalizationKeys.put(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"), "");
+#else
+    	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"), "");
+#end
+#end  	
 	}
 	
-##if(!$enumeration.generalization)
-##if ($enumeration.literalType.primitive)
-##        public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"));
-##else
-##        public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"));
-##end
-##end
+#if(!$enumeration.generalization)
+#if ($enumeration.literalType.primitive)
+	public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"));
+#else
+	public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"));
+#end
+#end
     
 #foreach ($literal in $enumeration.literals)
     /**
@@ -272,11 +272,11 @@ $literal.getDocumentation("     * ")
      */
     static
     {
-##if(!$enumeration.generalization)
-##		values.put(VAZIO.value, VAZIO);
-##		enumerations.add(0, VAZIO);
-##
-##end
+#if(!$enumeration.generalization)
+		values.put(VAZIO.value, VAZIO);
+		enumerations.add(0, VAZIO);
+
+#end
 #foreach ($literal in $enumeration.literals)
 #set ($value = "${literal.name}.value")
 #if($literal.type.primitive)
@@ -288,8 +288,8 @@ $literal.getDocumentation("     * ")
         enumerations.add($literal.name);
 
 #end
-		//literals = java.util.Collections.unmodifiableList(literals);
-		//names = java.util.Collections.unmodifiableList(names);
+		literals = java.util.Collections.unmodifiableList(literals);
+		names = java.util.Collections.unmodifiableList(names);
 
     }
 }
