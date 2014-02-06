@@ -3,7 +3,7 @@
 
 #set ($login = "/")
 #set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
-<tiles:insert definition="main.layout">
+<tiles:insert definition="main.layout2">
 
     <tiles:put name="title" type="string">
         <bean:message key="login.troca.de.senha.obrigatoria.title"/>
