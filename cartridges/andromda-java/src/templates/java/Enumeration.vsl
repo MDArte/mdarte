@@ -38,7 +38,7 @@ public class $enumeration.name
     	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}(${literal.enumerationValue}), "enum.label.${enumeration.name}.${literal.name}");
 #end    	
 #end
-#if(!$enumeration.generalization)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
 #if ($enumeration.literalType.primitive)
     	internationalizationKeys.put(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"), "");
 #else
@@ -47,7 +47,7 @@ public class $enumeration.name
 #end  	
 	}
 	
-#if(!$enumeration.generalization)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
 #if ($enumeration.literalType.primitive)
 	public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"));
 #else
@@ -272,7 +272,7 @@ $literal.getDocumentation("     * ")
      */
     static
     {
-#if(!$enumeration.generalization)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
 		values.put(VAZIO.value, VAZIO);
 		enumerations.add(0, VAZIO);
 

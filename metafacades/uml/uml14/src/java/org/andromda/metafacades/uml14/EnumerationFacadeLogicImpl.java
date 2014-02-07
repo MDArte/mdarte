@@ -1,12 +1,16 @@
 package org.andromda.metafacades.uml14;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.andromda.metafacades.uml.AttributeFacade;
 import org.andromda.metafacades.uml.ClassifierFacade;
+import org.andromda.metafacades.uml.EnumerationFacade;
 import org.andromda.metafacades.uml.NameMasker;
 import org.andromda.metafacades.uml.UMLMetafacadeProperties;
+import org.andromda.metafacades.uml.UMLMetafacadeUtils;
+import org.andromda.metafacades.uml.UMLProfile;
 import org.apache.commons.lang.StringUtils;
-
-import java.util.Collection;
 
 /**
  * MetafacadeLogic implementation for org.andromda.metafacades.uml.EnumerationFacade.
@@ -89,6 +93,23 @@ public class EnumerationFacadeLogicImpl
 	protected String handleGetValorVazio()
 	{
 		return Short.toString(Short.MAX_VALUE);
+	}
+	
+	protected boolean handleIsDefaultEmptyValue()
+	{
+		/*if (!getAllGeneralizations().isEmpty()) {
+			for (Iterator iterator = getAllGeneralizations().iterator(); iterator.hasNext();) {
+				EnumerationFacade e = (EnumerationFacade) iterator.next();
+				return e.isDefaultEmptyValue();
+			}
+		}*/
+
+		System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		Object value = this.findTaggedValue(UMLProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
+		
+		if (value == null) return true;
+		System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+		return UMLMetafacadeUtils.isTrue(String.valueOf(value));
 	}
 	
 	protected boolean handleValidateLiterals()

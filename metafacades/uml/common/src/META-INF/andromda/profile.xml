@@ -316,6 +316,14 @@
                 <value>@andromda.presentation.web.layout.name</value>
                 <appliedOnElement>UseCase e Package</appliedOnElement>
             </element>
+            <element name="ENUM_EMPTY_VALUE">
+                <value>@andromda.common.enumeration.emptyValue</value>
+                <appliedOnElement>It is applicable on Enumeration elements to define if it possess the default empty value.</appliedOnElement>
+                <allowedValues>
+                    <value default="true">true</value>
+                    <value>false</value>
+                </allowedValues>
+            </element>
             <element name="WEBSERVICE_STYLE">
                 <documentation></documentation>
                 <value>@andromda.webservice.style</value>
