@@ -232,6 +232,23 @@ $literal.getDocumentation("     * ")
 		
 		return map;
     }
+	
+	public static java.util.Map enumMapNoEmptyValue()
+    {
+#if($enumeration.defaultEmptyValue)
+    	Map<${enumeration.literalType.name}, java.lang.String> map = new TreeMap<${enumeration.literalType.name}, java.lang.String>();
+				
+		for(${enumeration.name} i : (Collection<${enumeration.name}>) enumerations.subList(1,enumerations.size()))
+		{
+			map.put(i.getValue(), i.getInternationalizationKey());
+		}
+		
+		return map;
+#else
+		return enumMap();
+#end
+    }
+
 #end
     /**
      * @see java.lang.Object${sharp}equals(java.lang.Object)

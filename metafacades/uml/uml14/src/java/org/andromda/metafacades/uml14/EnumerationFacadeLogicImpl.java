@@ -97,18 +97,17 @@ public class EnumerationFacadeLogicImpl
 	
 	protected boolean handleIsDefaultEmptyValue()
 	{
-		/*if (!getAllGeneralizations().isEmpty()) {
+		if (!getAllGeneralizations().isEmpty()) {
 			for (Iterator iterator = getAllGeneralizations().iterator(); iterator.hasNext();) {
 				EnumerationFacade e = (EnumerationFacade) iterator.next();
 				return e.isDefaultEmptyValue();
 			}
-		}*/
+		}
 
-		System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		Object value = this.findTaggedValue(UMLProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
 		
 		if (value == null) return true;
-		System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
 		return UMLMetafacadeUtils.isTrue(String.valueOf(value));
 	}
 	

@@ -193,7 +193,11 @@ $field.getDocumentation("     * ")
 #set($type = ${enumeration.literalType.fullyQualifiedName})
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(${field.enumEmptyValue})
 	public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMap();
+#else
+	public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMapNoEmptyValue();
+#end
 #end
 
     /**
