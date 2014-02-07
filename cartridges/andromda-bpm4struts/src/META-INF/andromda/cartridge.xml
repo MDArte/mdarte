@@ -797,14 +797,38 @@
         path="templates/bpm4struts2/pages/menu.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
-        overwrite="false"
-        outputToSingleFile="true"/>
+        overwrite="false"/>
+     
+     <template
+        path="templates/bpm4struts2/pages/menu-open.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false">
+        	<modelElements variable="useCases">
+        		<modelElement>
+        			<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
+        		</modelElement>
+        	</modelElements>
+      </template>
+		
         
     <template
         path="templates/bpm4struts2/pages/main-layout.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"/>
+	
+	<template
+        path="templates/bpm4struts2/pages/main-layout-open.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false">
+        <modelElements variable="useCases">
+        	<modelElement>
+        		<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
+        	</modelElement>
+        </modelElements>
+    </template>
 	
     <template
         path="templates/bpm4struts/configuration/tiles-defs.xml.vsl"
