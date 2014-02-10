@@ -156,9 +156,15 @@ public abstract class AbstractDAO {
 	
 	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException;
 	
+	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc, Integer linhas, Integer paginas) throws DAOException;
+	
 	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
 	
+	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
+	
 	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao) throws DAOException;
+	
+	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
 	
 	public abstract org.hibernate.Criteria xmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws DAOException;
 	

@@ -78,13 +78,13 @@ public abstract class ${entity.name}DAO
 
 
 	protected void removeRelations(AbstractEntity obj)throws DAOException{
-	#set($vetoException = "java.beans.PropertyVetoException")
+#set($vetoException = "java.beans.PropertyVetoException")
 #set($throwsVeto = "false")
 
 		try {
-			#if($entity.generalization)
+#if($entity.generalization)
 			super.removeRelations(obj);
-			#end
+#end
 			${entity.entityName}Abstract entidade = (${entity.entityName}Abstract)obj; 		
 			Session session = currentSession();
 #foreach ($associationEnd in $entity.associationEnds)
@@ -94,23 +94,21 @@ public abstract class ${entity.name}DAO
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($throwsVeto = "true")
 #end
-	  entidade.${target.setterName}Inverse(null);
+	  		entidade.${target.setterName}Inverse(null);
 #end
 #end
 #end
 		
-	}catch (HibernateException e) {
-		throw new DAOException(e);
-	} 
+		}catch (HibernateException e) {
+			throw new DAOException(e);
+		} 
 	
-	#if($throwsVeto.equals("true"))
-catch($vetoException ve){
-	throw new RuntimeException(ve);
-}
+#if($throwsVeto.equals("true"))
+		catch($vetoException ve){
+			throw new RuntimeException(ve);
+		}
 #end
 }
-
-
 
 #if (!$entity.abstract)
 	  public List<AbstractEntity> select(long id) throws DAOException {
@@ -143,13 +141,16 @@ catch($vetoException ve){
 #if ($entity.auditoria)		
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
-String login;
+			String login;
+			
 			try {
-	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
 			} catch (Exception e)	 {
-    login = "NA";
-}
-		String operacao = "INSERCAO";
+    			login = "NA";
+			}
+			
+			String operacao = "INSERCAO";
+			
 			java.util.Date dataOperacao = new java.util.Date();
 
 			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
@@ -170,26 +171,28 @@ String login;
 	
 	public List<AbstractEntity> insertOrUpdate(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
-				#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 		try{
-		this.executarProcedure("$procedureName");
+			this.executarProcedure("$procedureName");
 		}catch(Exception e){
-		e.printStackTrace();
-		//TODO
+			e.printStackTrace();
+			//TODO
 		}
-				#end
+#end
 
 		try {
 #if ($entity.auditoria)		
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
-String login;
-try {
-	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			String login;
+			
+			try {
+	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
 			} catch (Exception e)	 {
-    login = "NA";
-}
-					String operacao = obj.getId() == null ? "INSERCAO" : "ATUALIZACAO";
+    			login = "NA";
+			}
+			
+			String operacao = obj.getId() == null ? "INSERCAO" : "ATUALIZACAO";
 			java.util.Date dataOperacao = new java.util.Date();
 
 			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
@@ -210,25 +213,27 @@ try {
 	
 	public List<AbstractEntity> update(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
-				#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 		try{
-		this.executarProcedure("$procedureName");
+			this.executarProcedure("$procedureName");
 		}catch(Exception e){
-		e.printStackTrace();
-		//TODO
+			e.printStackTrace();
+			//TODO
 		}
-				#end
+#end
 		try {
 #if ($entity.auditoria)		
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
-String login;
-try {
-	    login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			String login;
+			
+			try {
+	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
 			} catch (Exception e)	 {
-    login = "NA";
-}
-								String operacao = "ATUALIZACAO";
+    			login = "NA";
+			}
+			
+			String operacao = "ATUALIZACAO";
 			java.util.Date dataOperacao = new java.util.Date();
 
 			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
@@ -242,7 +247,7 @@ try {
 			session.flush();
 			lista.add(obj);
 			return lista;
-} catch (HibernateException e) {
+		} catch (HibernateException e) {
 			throw new DAOException(e);
 		} 
 	}
@@ -265,8 +270,20 @@ try {
 	 * 
 	 * @return Lista de objetos
 	 */
-	## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.
+## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.
 	public List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException { 
+		return list(paginacao,propriedade,desc,$maxRows,$maxPages);
+	}
+	
+## Fim
+	
+	##metodo com assinatura nova, permitindo passar o numero elementos por pagina e numero de páginas a ser buscadas por parâmetro.
+	/**
+	 * Lista todos os objetos.
+	 * 
+	 * @return Lista de objetos
+	 */
+	public List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc,Integer linhas,Integer paginas) throws DAOException { 
 		try {
 			Session session = currentSession();
 			
@@ -281,13 +298,13 @@ try {
 			
 			if (paginacao != null){
 				int extra = 0;
-				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-				qry.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-				qry.setMaxResults($maxRows*$maxPages + 1);
+				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				qry.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+				qry.setMaxResults(linhas*paginas + 1);
 			}
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
-			#end
+#end
 			List res = qry.list();
 			return res;
 
@@ -295,16 +312,14 @@ try {
 			throw new DAOException(h);
 		} 
 	}
-	
-	## Fim
-	
+	##fim do método
 	public List<AbstractEntity> list() throws DAOException { 
 		try {
 			Session session = currentSession();
 			org.hibernate.Query qry = session.createQuery("from ${entity.fullyQualifiedName}");
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
-			#end
+#end
 			List res = qry.list();
 			return res;
 
@@ -316,6 +331,11 @@ try {
 	protected abstract Object handleFilter (DataObject vo) throws DAOException;
 	
 	public List<AbstractEntity> defaultFilter(AbstractTO to, Integer paginacao) throws DAOException {
+		return defaultFilter(to,paginacao,$maxRows,$maxPages);
+		
+	}
+	
+	public List<AbstractEntity> defaultFilter(AbstractTO to, Integer paginacao, Integer linhas, Integer paginas) throws DAOException {
 		
 		Session session = currentSession();
 	    Criteria criterios = ((org.hibernate.Session) session).createCriteria(${entity.entityImplementationName}.class);
@@ -334,31 +354,31 @@ try {
 			return null;
 	    
 	    try {
-		if(criterios instanceof org.hibernate.Query){
+			if(criterios instanceof org.hibernate.Query){
             		org.hibernate.Query res = (org.hibernate.Query)criterios;
             		if (paginacao != null){
 						int extra = 0;
-						if (paginacao % 10 == 0 && paginacao != 0)  
+						if (paginacao % paginas == 0 && paginacao != 0)  
 							extra = 1;
-						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-						res.setMaxResults($maxRows*$maxPages + 1);
+						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
         		}
         		else if(criterios instanceof org.hibernate.Criteria){
         			org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
         			if (paginacao != null){
 						int extra = 0;
-						if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-						res.setMaxResults($maxRows*$maxPages + 1);
+						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						res.setFirstResult(((paginacao)/10 - extra)*linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
 				}
         		else
@@ -367,12 +387,15 @@ try {
 		} catch (HibernateException h) {
 			throw new DAOException(h);
 		} 
-		
-		
 	}
 	
 
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
+		
+		return filter(vo,paginacao,$maxRows,$maxPages );
+	}
+	
+	public List<AbstractEntity> filter(DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException { 
 		try {
         		Object obj = handleFilter(vo);
         
@@ -380,27 +403,27 @@ try {
             		org.hibernate.Query res = (org.hibernate.Query)obj;
             		if (paginacao != null){
 						int extra = 0;
-						if (paginacao % 10 == 0 && paginacao != 0)  
+						if (paginacao % paginas == 0 && paginacao != 0)  
 							extra = 1;
-						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-						res.setMaxResults($maxRows*$maxPages + 1);
+						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
         		}
         		else if(obj instanceof org.hibernate.Criteria){
         			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
         			if (paginacao != null){
 						int extra = 0;
-						if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-						res.setMaxResults($maxRows*$maxPages + 1);
+						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
 				}
         		else
@@ -798,10 +821,10 @@ $target.getDocumentation("     * ")
 
 #if ($operation.exceptionsPresent)
 
-    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters)
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters, Integer linhas, Integer colunas)
         throws DAOException, $operation.exceptionList;
 #else
-    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws DAOException;
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters, Integer linhas, Integer colunas) throws DAOException;
 #end
     /**
 $operation.getDocumentation("     * ")
@@ -809,27 +832,27 @@ $operation.getDocumentation("     * ")
 ## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
 ###if ($stringUtils.contains($returnType.fullyQualifiedName, "Collection"))
 #if($returnType.collectionType || $returnType.listType || $returnType.setType )
-	#if(!$stringUtils.isEmpty($operation.typedArgumentList))
-		#set($argumentList = "$operation.typedArgumentList , Integer paginacao")
-	#else
-		#set($argumentList = "Integer paginacao")
-	#end;
+#if(!$stringUtils.isEmpty($operation.typedArgumentList))
+#set($argumentList = "$operation.typedArgumentList , java.lang.Integer paginacao")
+#set($argumentListExtended = "$operation.typedArgumentList , java.lang.Integer paginacao, java.lang.Integer linhas, java.lang.Integer paginas")
 #else
-	#set($argumentList = $operation.typedArgumentList)
-	
+#set($argumentList = "java.lang.Integer paginacao")
+#end
+#else
+#set($argumentList = $operation.typedArgumentList)	
 #end
 
 ## Fim
      
 #if ($operation.exceptionsPresent)
-    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList)
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentListExtended)
         throws DAOException, $operation.exceptionList {
 #else
-    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList) throws DAOException {
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentListExtended) throws DAOException {
 #end
-try{
-			          Session session = currentSession();
-	#set ($parameterList = $operation.argumentNames)
+		try{
+			Session session = currentSession();
+#set ($parameterList = $operation.argumentNames)
 #if ($stringUtils.isBlank($parameterList))
 #set ($parameters = "session")
 #else
@@ -844,29 +867,29 @@ try{
             if(obj instanceof org.hibernate.Query){
             	org.hibernate.Query res = (org.hibernate.Query)obj;
             	if (paginacao != null){
-				int extra = 0;
-				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-				res.setMaxResults($maxRows*$maxPages + 1);
-			}
-		#if($hibernateEnableCache.equalsIgnoreCase("true"))
-		res.setCacheable(true);
-		#end		
-		return res.list();
-            }
-            else if(obj instanceof org.hibernate.Criteria){
+					int extra = 0;
+					if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+					res.setMaxResults(linhas*paginas + 1);
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+				res.setCacheable(true);
+#end		
+				return res.list();
+        	}
+         	else if(obj instanceof org.hibernate.Criteria){
             	org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
             	if (paginacao != null){
-				int extra = 0;
-				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-				res.setMaxResults($maxRows*$maxPages + 1);
-			}
-		#if($hibernateEnableCache.equalsIgnoreCase("true"))
-		res.setCacheable(true);
-		#end		
-		return res.list();
-	    }
+					int extra = 0;
+					if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+					res.setMaxResults(linhas*paginas + 1);
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+				res.setCacheable(true);
+#end		
+				return res.list();
+	    	}
             else
             	return null;
             	
@@ -874,13 +897,39 @@ try{
             handle${stringUtils.capitalize($operation.name)}($parameters);
             session.flush();
 #end
-			       } catch (ObjectNotFoundException onfe) {
+		} catch (ObjectNotFoundException onfe) {
 			               throw new DAOException(onfe);
-		       } catch (HibernateException he1) {
+		} catch (HibernateException he1) {
 			                        throw new DAOException(he1);
-		       } 
+		} 
     }
 
+##Operação comum
+#if ($stringUtils.isBlank($listaAtributos))
+#set ($parameters = "org.hibernate.Session session")
+#else
+#set ($parameters = "org.hibernate.Session session, ${listaAtributos}")
+#end
+#if ($operation.exceptionsPresent)
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters)
+        throws DAOException, $operation.exceptionList;
+#else
+    protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws DAOException;
+#end
+
+    /**
+$operation.getDocumentation("     * ")
+     */
+#if ($operation.exceptionsPresent)
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList)
+        throws DAOException, $operation.exceptionList {
+#else
+    $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList) throws DAOException {
+#end
+			return this.${operation.name}(${parameterList},paginacao,${maxRows},${maxPages});
+    }
+	     
+##fim da operação comum
 #end
 
 #end
@@ -909,7 +958,7 @@ $finder.getDocumentation("     * ")
 
 ## Fim
 
-    $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
+	$finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
         throws  DAOException
     {
     try{
