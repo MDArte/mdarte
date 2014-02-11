@@ -385,20 +385,18 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
 	
 #elseif($field.editor)
-	$("#${field.name}${jsp.useCase.name}").summernote({
-	  width: '100%',
-	  height: '100', 	
-	  toolbar: [
-	    ['style', ['style']],
-	    ['style', ['bold', 'italic', 'underline', 'clear']],
-	    ['color', ['color']],
-	    ['para', ['ul', 'ol', 'paragraph']],
-	    ['height', ['height']],
-	    ['insert', ['link']],
-	    ['table', ['table']],
-	    ['help', ['help']]
-	  ]
-	});
+    tinymce.init({
+        selector: "#${field.name}${jsp.useCase.name}",
+        theme: "modern",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons template paste textcolor"
+        ],
+        toolbar: "undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor emoticons | Sprint preview media",
+        menubar: "false"
+    });
 #end
 #end
 
