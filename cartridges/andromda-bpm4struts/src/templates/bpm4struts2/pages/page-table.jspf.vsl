@@ -35,7 +35,7 @@
 #if ($table.tableDecoratorRequired)
 			decorator="${table.tableDecoratorFullyQualifiedName}"
 #end
-			export="$exportable" pagesize="$maxRows" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
+			export="$exportable" pagesize="${table.tableMaxRows}" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
 #if ($exportable)
 #set ($exportFileName = "${jsp.name}-${table.name}")
 #set ($exportFileName = "$bpmUtils.toWebFileName($exportFileName)")
