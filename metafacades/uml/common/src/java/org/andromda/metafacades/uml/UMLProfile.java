@@ -318,6 +318,11 @@ public class UMLProfile
      */
     public static final String TAGGEDVALUE_MANAGEABLE_RESOLVEABLE = profile.get("MANAGEABLE_RESOLVEABLE");
     
+    /**
+     * Indicates whether or not enumeration should have an default empty value.
+     */
+    public static final String TAGGEDVALUE_ENUM_EMPTY_VALUE = profile.get("ENUM_EMPTY_VALUE");
+    
     /* ----------------- Data Types -------------------- */
 
     /**

@@ -39,6 +39,15 @@ extends CoppetecStrutsParameterLogic
 	{
 		return "doubleselect".equals(this.getWidgetType());
 	}
+	
+	protected boolean handleIsEnumEmptyValue()
+	{
+		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
+		
+		if (value == null) return true;
+
+		return Bpm4StrutsUtils.isTrue(String.valueOf(value));
+	}
 
 	protected String handleGetOnlineHelpValue()
 	{
