@@ -5,8 +5,6 @@
 #set ($ejbHomeInterface = "javax.ejb.EJBHome")
 #end
 #set ($ejbSecurityEnabled = $stringUtils.isNotBlank($securityRealm))
-
-
 #macro (renderOperationBodyPagination $operation $service)
 		boolean responsibleSession = false;
 
@@ -14,17 +12,16 @@
 			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
 
 			#if ($operation.returnTypePresent)return #end
-			#if($stringUtils.isEmpty($operation.argumentNames))
+#if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} (paginacao);
-			#else
+#else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
-			#end
+#end
 		} finally {
 			if(responsibleSession)
 				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderOperationBody $operation $service)
 		boolean responsibleSession= false;
 
@@ -32,26 +29,25 @@
 			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
 
 			#if ($operation.returnTypePresent)return #end
-			#set($paginacao = "")
-			#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-			#set($paginacao = "null")
-			#if($stringUtils.isEmpty($operation.argumentNames))
+#set($paginacao = "")
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
+#set($paginacao = "null")
+#if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
-			#else
+#else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao);
-			#end
-			#else
+#end
+#else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
-			#end
+#end
 		} finally {
 			if(responsibleSession)
 				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityBody $operation)
 		##renderParameters($operation $listaArgumentos false)
-		#set($serviceName = ${stringUtils.strip("#renderServiceName($service $operation)")})
+#set($serviceName = ${stringUtils.strip("#renderServiceName($service $operation)")})
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
 		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
@@ -69,17 +65,17 @@
 		try {
 			responsibleSession = $customTypesPackage.${modelPackageName}.AbstractDAO.getSession();
 			#if ($operation.returnTypePresent)return #end
-			#set($paginacao = "")
-			#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-			#set($paginacao = "null")
-			#if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
-			#else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao);
-			#end
-			#else
+#set($paginacao = "")
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
+#set($paginacao = "null")
+#if($stringUtils.isEmpty($operation.argumentNames))
+			handle${stringUtils.capitalize(${operation.name})} ($paginacao,linhas,paginas);
+#else
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao, linhas, paginas);
+#end
+#else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
-			#end
+#end
 		} finally {
 			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);
 			if(gerente)
@@ -88,9 +84,8 @@
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityBodyPagination $operation)
-		#set($serviceName = ${stringUtils.strip("#renderServiceNamePagination($service $operation)")})
+#set($serviceName = ${stringUtils.strip("#renderServiceNamePagination($service $operation)")})
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
 		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
@@ -108,11 +103,11 @@
 		try {
 			responsibleSession = $customTypesPackage.${modelPackageName}.AbstractDAO.getSession();
 			#if ($operation.returnTypePresent)return #end
-			#if($stringUtils.isEmpty($operation.argumentNames))
+#if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} (paginacao);
-			#else
+#else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
-			#end
+#end
 		} finally {
 			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);
 			if (gerente)
@@ -121,20 +116,19 @@
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityManipula $actionName $dependencia $isOpenAccess)
-	#if($actionName.equals("filter") || $actionName.equals("list") || $actionName.equals("export") || $actionName.equals("import"))
+#if($actionName.equals("filter") || $actionName.equals("list") || $actionName.equals("export") || $actionName.equals("import"))
 	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
 		${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = action;
-	#else
+#else
 	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) throws ${customTypesPackage}.${actionPackageName}.ActionException {
 		${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = null;
-	#end
+#end
 		${dependencia.targetElement.FullyQualifiedName}Abstract paramEntity = (${dependencia.targetElement.FullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name});
 		java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}Return = null;
 
-		#set($serviceName = ${stringUtils.strip("#renderManipulaName($service $dependencia $actionName)")})
-		#if(!$isOpenAccess)
+#set($serviceName = ${stringUtils.strip("#renderManipulaName($service $dependencia $actionName)")})
+#if(!$isOpenAccess)
 			java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
 			javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 			accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
@@ -147,39 +141,39 @@
 	
 			${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
 		
-		#end
+#end
 
 		try{
-			#if($actionName.equals("filter"))
-			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao());
-			#elseif($actionName.equals("list"))
-			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(), paramAction.getPropriedade(), paramAction.getDesc());
-			#elseif($actionName.equals("select"))
+#if($actionName.equals("filter"))
+			${actionName}Return = paramAction.defaultValues() ? paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao()) : 
+				paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(),paramAction.getLinhas(),paramAction.getPaginas());
+#elseif($actionName.equals("list"))
+			${actionName}Return = paramAction.defaultValues() ? 
+				paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(), paramAction.getPropriedade(), paramAction.getDesc()) :
+				paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(),paramAction.getPropriedade(),paramAction.getDesc(),paramAction.getLinhas(),paramAction.getPaginas());
+#elseif($actionName.equals("select"))
 			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramEntity.getId());
-			#elseif($actionName.equals("export"))
+#elseif($actionName.equals("export"))
 			((${customTypesPackage}.${exportPackageName}.Export)paramAction.getExport()).export(paramEntity.getDaoImpl(), paramAction.getVo());
-			#elseif($actionName.equals("import"))
+#elseif($actionName.equals("import"))
 			((${customTypesPackage}.${exportPackageName}.Import)paramAction.getImport()).importa(paramEntity.getDaoImpl(), paramAction.getVo());
-			#else
+#else
 			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramEntity);
-			#end
+#end
 
 			return ${actionName}Return;
 		} catch (Exception e) {
 			throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);
 		} finally {
-			#if(!$isOpenAccess)
-				${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl,listaRestricaoServico);
-				if(gerente)
-					principalImpl.setValido(false);
-			#end
+#if(!$isOpenAccess)
+			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl,listaRestricaoServico);
+			if(gerente)
+				principalImpl.setValido(false);
+#end
 		}
 	}
 
 #end
-
 #macro (renderServiceName $service $operation)#set($webService=$service.hasStereotype("$webSrv"))#set($listaArgumentos="")#if($webService)#renderParametersWS($operation $listaArgumentos false)#else#renderParameters($operation $listaArgumentos false)#end${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)#end
-
 #macro (renderServiceNamePagination $service $operation)#set($webService=$service.hasStereotype("$webSrv"))#set($listaArgumentos="")#if($webService)#renderParametersWSPaginacao($operation $listaArgumentos false)#else#renderParametersPaginacao($operation $listaArgumentos false)#end${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)#end
-
 #macro(renderManipulaName $service $dependencia $actionName)${service.fullyQualifiedName}BI.${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}#if($actionName.equals("filter")||$actionName.equals("list") ), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize(${actionName})}Action#end)#end
