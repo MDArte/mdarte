@@ -1,0 +1,71 @@
+#set($gerar=false)
+#foreach($useCase in $useCases)
+#if($useCase.openAccess && !$useCase.useCaseOldStruts)
+#set($gerar = true)
+#end
+#end
+#if($gerar)
+#set ($generatedFile = "layout/main-layout-open.jsp")
+<%@ include file="/taglib-imports.jspf" %>
+<%@ include file="/layout-configuration.jsp" %>
+        
+
+#if ($xhtml == "true")
+##<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+##     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html:xhtml/>
+
+#end
+<html:html lang="true">
+	<head>
+		<tiles:insert attribute="head" flush="true"/>
+		
+		<title>
+			<tiles:insert attribute="title" flush="true"/>
+		</title>
+		<html:base/>
+#if ($xhtml == "true")
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset:$pageEncoding" />
+#else
+		<meta http-equiv="Content-Type" content="text/html; charset:$pageEncoding" />
+#end
+<%-- uncomment this to enable the browser 'favorites' icons
+		<link rel="shortcut icon" href="my-custom-image.ico"></link>
+		<link rel="icon" type="image/gif" href="my-custom-image.gif"></link>
+--%>
+
+	## Inclui Stylesheets
+		<c:import url="${localLayoutPath}/conf/include-stylesheets.jsp"/>
+
+	## Inclui JavaScripts
+		<c:import url="${localLayoutPath}/conf/include-javascripts.jsp"/>
+	
+		<tiles:insert attribute="style" flush="true"/>
+		<tiles:insert attribute="javascript" flush="true"/>
+	
+	</head>
+
+	<body onkeypress="keySubmit(event)">
+		<div class="container">
+			<c:import url="${localLayoutPath}/conf/cabecalho.jsp" />
+			<tiles:insert attribute="menu" flush="true"/>
+			<tiles:insert attribute="messages" flush="true"/>
+			<tiles:insert attribute="pathway" flush="true"/>
+			<tiles:insert attribute="vars" flush="true"/>
+			<div class="container">
+				<div class="row">
+					<div class="span12">
+						<div id="form">
+							<tiles:insert attribute="body" flush="true"/>
+						</div>
+						<tiles:insert attribute="tables" flush="true"/>
+						<tiles:insert attribute="other" flush="true"/>
+					</div>
+				</div>
+			</div>
+			<c:import url="${localLayoutPath}/conf/rodape.jsp"/>
+		</div>
+	</body>
+
+</html:html>
+#end

@@ -16,7 +16,7 @@
         <put name="messages" type="definition" value="messages.tile"/>
    </definition>
    
-      <definition name="main.layout2" page="/layout/main-layout2.jsp">
+    <definition name="main.layout2" page="/layout/main-layout2.jsp">
         <put name="head" type="string" value=""/>
         <put name="title" type="string" value=""/>
         <put name="style" type="string" value=""/>
@@ -27,6 +27,19 @@
         <put name="javascript" type="string" value=""/>
         <put name="body" type="string" value=""/>
         <put name="menu" type="definition" value="menu.tile"/>
+        <put name="messages" type="definition" value="messages.tile"/>
+   </definition>
+   <definition name="main.layout.open" page="/layout/main-layout-open.jsp">
+        <put name="head" type="string" value=""/>
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+		<put name="pathway" type="string" value=""/>
+		<put name="vars" type="string" value=""/>
+		<put name="tables" type="string" value=""/>
+		<put name="other" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="menu" type="definition" value="menu.open"/>
         <put name="messages" type="definition" value="messages.tile"/>
    </definition>
 
@@ -47,5 +60,6 @@
     </definition>
     <definition name="messages.tile" page="/messages/messages.jsp"/>
     <definition name="menu.tile" page="/menu/menu.jsp"/>
+    <definition name="menu.open" page="/menu/menu-open.jsp"/>
     <definition name="help.layout" page="/layout/help-layout.jsp"/>
 </tiles-definitions>

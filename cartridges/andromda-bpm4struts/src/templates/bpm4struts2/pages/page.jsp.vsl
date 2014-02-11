@@ -31,7 +31,11 @@
 #if($jsp.useCase.hasStereotype("$simpleUseCase"))
 <tiles:insert definition="simple.layout">
 #else
+#if($jsp.useCase.openAccess)
+<tiles:insert definition="main.layout.open">
+#else
 <tiles:insert definition="main.layout2">
+#end
 #end
 #end
 
