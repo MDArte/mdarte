@@ -804,11 +804,6 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false">
-        	<modelElements variable="useCases">
-        		<modelElement>
-        			<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
-        		</modelElement>
-        	</modelElements>
       </template>
 		
         
@@ -823,11 +818,6 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false">
-        <modelElements variable="useCases">
-        	<modelElement>
-        		<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
-        	</modelElement>
-        </modelElements>
     </template>
 	
     <template
