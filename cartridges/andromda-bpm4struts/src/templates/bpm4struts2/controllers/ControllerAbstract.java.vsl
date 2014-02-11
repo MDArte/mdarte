@@ -138,6 +138,10 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return modoOperacao;
 	}
 	
+	protected String getMessage(br.ufrj.coppetec.Enumeration eo) {
+		return getMessage(eo.getInternationalizationKey());
+	}
+	
 	protected String getMessage(String key) {
 		ActionSupport actionSupport = new ActionSupport();
 		return actionSupport.getText(key);
