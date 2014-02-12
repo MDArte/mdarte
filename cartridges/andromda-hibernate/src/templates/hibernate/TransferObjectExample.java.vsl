@@ -22,10 +22,10 @@ extends br.ufrj.coppetec.to.AbstractTOExample
             return new ${class.name}TOExample();
         }
  	
- 	#foreach ($attribute in $class.attributes)
-	#set ($tipo = $attribute.type.fullyQualifiedName)
-	#if ($tipo.indexOf(".${modelPackageName}.") > 0)
-	#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))	  
+#foreach ($attribute in $class.attributes)
+#set ($tipo = $attribute.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))	  
 	private ${tipo}TO $attribute.name;
 
 	$attribute.visibility $tipo ${attribute.getterName}(){
@@ -35,7 +35,7 @@ extends br.ufrj.coppetec.to.AbstractTOExample
     	$attribute.visibility void ${attribute.setterName}($tipo $attribute.name){
         	this.${attribute.name} = $attribute.name;
         }    
-	#else
+#else
     	private $tipo $attribute.name;
 
 	$attribute.visibility $tipo ${attribute.getterName}(){
@@ -45,21 +45,19 @@ extends br.ufrj.coppetec.to.AbstractTOExample
     	$attribute.visibility void ${attribute.setterName}($tipo $attribute.name){
         	this.${attribute.name} = $attribute.name;
         }
-	#end
-	#end
-	
+#end
+#end
 
-	#foreach ($associationEnd in $class.associationEnds)
-	#set ($target = $associationEnd.otherEnd)
-	#if ($target.navigable)
+#foreach ($associationEnd in $class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
 	
-	#set($rtipo = $target.type.fullyQualifiedName)
-	#if($rtipo.indexOf(".${modelPackageName}.") > 0)
-	#set($rtipo = $rtipo.concat("TOExample"))
-	#set($rtipo = $stringUtils.replace($rtipo, ".${modelPackageName}.", ".${transferPackageName}."))
-	#end
-	
-	#set($tipo = 'java.util.Collection')   
+#set($rtipo = $target.type.fullyQualifiedName)
+#if($rtipo.indexOf(".${modelPackageName}.") > 0)
+#set($rtipo = $rtipo.concat("TOExample"))
+#set($rtipo = $stringUtils.replace($rtipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#end
+#set($tipo = 'java.util.Collection')   
 	
 	private $tipo $target.name = new java.util.ArrayList<$rtipo>();
 	
@@ -123,7 +121,7 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 	
 		this.${target.setterName}(${target.name});
     	}    
-    	#end
-    	#end
-    	#end	 	
+#end
+#end
+#end
 }

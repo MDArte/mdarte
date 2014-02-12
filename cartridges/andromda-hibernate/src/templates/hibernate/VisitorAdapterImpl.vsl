@@ -20,10 +20,10 @@ public class ${visitor.name}VisitorAdapterImpl implements ${visitor.name}Visitor
 	public void visit(${visitor.packageName}.${visitor.name} ${stringUtils.uncapitalize($visitor.name)}, Object object){
 	}
 	
-	#foreach($especializacao in $especializacoes)
+#foreach($especializacao in $especializacoes)
 	public void visit(${especializacao.packageName}.${especializacao.name} ${stringUtils.uncapitalize($especializacao.name)}, Object object){
 	}
-	#end
+#end
 
 }
 

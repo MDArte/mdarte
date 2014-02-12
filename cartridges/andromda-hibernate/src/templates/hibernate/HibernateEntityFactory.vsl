@@ -82,9 +82,9 @@ public abstract class ${entity.name}DAO
 #set($throwsVeto = "false")
 
 		try {
-			#if($entity.generalization)
+#if($entity.generalization)
 			super.removeRelations(obj);
-			#end
+#end
 			${entity.entityName}Abstract entidade = (${entity.entityName}Abstract)obj; 		
 			Session session = currentSession();
 #foreach ($associationEnd in $entity.associationEnds)
@@ -103,7 +103,7 @@ public abstract class ${entity.name}DAO
 		throw new DAOException(e);
 	} 
 	
-	#if($throwsVeto.equals("true"))
+#if($throwsVeto.equals("true"))
 catch($vetoException ve){
 	throw new RuntimeException(ve);
 }
@@ -130,14 +130,14 @@ catch($vetoException ve){
 
 	public List<AbstractEntity> insert(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
-		#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 		try{
 		this.executarProcedure("$procedureName");
 		}catch(Exception e){
 		e.printStackTrace();
 		//TODO
 		}
-		#end
+#end
 
 		try {
 #if ($entity.auditoria)		
@@ -170,14 +170,14 @@ String login;
 	
 	public List<AbstractEntity> insertOrUpdate(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
-				#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 		try{
 		this.executarProcedure("$procedureName");
 		}catch(Exception e){
 		e.printStackTrace();
 		//TODO
 		}
-				#end
+#end
 
 		try {
 #if ($entity.auditoria)		
@@ -210,14 +210,14 @@ try {
 	
 	public List<AbstractEntity> update(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
-				#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 		try{
 		this.executarProcedure("$procedureName");
 		}catch(Exception e){
 		e.printStackTrace();
 		//TODO
 		}
-				#end
+#end
 		try {
 #if ($entity.auditoria)		
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
@@ -285,9 +285,9 @@ try {
 				qry.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 				qry.setMaxResults($maxRows*$maxPages + 1);
 			}
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
-			#end
+#end
 			List res = qry.list();
 			return res;
 
@@ -302,9 +302,9 @@ try {
 		try {
 			Session session = currentSession();
 			org.hibernate.Query qry = session.createQuery("from ${entity.fullyQualifiedName}");
-			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
-			#end
+#end
 			List res = qry.list();
 			return res;
 
@@ -343,9 +343,9 @@ try {
 						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 						res.setMaxResults($maxRows*$maxPages + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
         		}
         		else if(criterios instanceof org.hibernate.Criteria){
@@ -356,9 +356,9 @@ try {
 						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 						res.setMaxResults($maxRows*$maxPages + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
 				}
         		else
@@ -385,9 +385,9 @@ try {
 						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 						res.setMaxResults($maxRows*$maxPages + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
         		}
         		else if(obj instanceof org.hibernate.Criteria){
@@ -398,9 +398,9 @@ try {
 						res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 						res.setMaxResults($maxRows*$maxPages + 1);
 					}
-        			#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
-        			#end		
+#end		
         			return res.list();
 				}
         		else
@@ -433,12 +433,12 @@ try {
 		}
 		catch (Exception e) { e.printStackTrace(); }
 #elseif($attribute.type.enumeration)
-		#if ($enumeration.literalType.primitive)
-		#set($enumeration = $attribute.type)
+#if ($enumeration.literalType.primitive)
+#set($enumeration = $attribute.type)
 		$enumeration.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.wrapperName}.valueOf(${stringRaiz}.valueOf("./$attribute.name")));		
-		#else
+#else
 		$enumeration.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.fullyQualifiedName}.valueOf(${stringRaiz}.valueOf("./$attribute.name")));		
-		#end
+#end
 		critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "$attribute.name" , eidValor_${stringBusca}_$attribute.name ) );
 #elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
 		$attribute.type.fullyQualifiedName eidValor_${stringBusca}_$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(${stringRaiz}.valueOf("./$attribute.name").charAt(0));
@@ -484,12 +484,12 @@ try {
 			catch (Exception e) { e.printStackTrace(); }
 
 #elseif($attribute.type.enumeration)
-			#set($enumeration = $attribute.type)
-			#if ($enumeration.literalType.primitive)
+#set($enumeration = $attribute.type)
+#if ($enumeration.literalType.primitive)
 			$enumeration.fullyQualifiedName valor$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.wrapperName}.valueOf(raiz.valueOf("./$attribute.name")));		
-			#else
+#else
 			$enumeration.fullyQualifiedName valor$attribute.name = ${enumeration.fullyQualifiedName}.${enumeration.fromOperationName}(${enumeration.literalType.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name")));		
-			#end
+#end
 			entidade.${attribute.setterName}(valor${attribute.name});
 #elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name").charAt(0));		
@@ -726,44 +726,44 @@ $target.getDocumentation("     * ")
      */
 ## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
 #if ($target.many)
-	#set($argumentList = ", Integer paginacao")
+#set($argumentList = ", Integer paginacao")
 #else
-		#set($argumentList = "")
+#set($argumentList = "")
 #end;
      
      
     public static $target.getterSetterTypeName ${target.getterName}By${entity.name}(long id $argumentList) throws DAOException {		
 		try {
 			Session session = currentSession();
-			#if ($target.many)
+#if ($target.many)
 			//org.hibernate.Query qry = session.createQuery("select t2 from ${entity.fullyQualifiedName} as t1 inner join t1.${target.name} as t2 where t1.id = " + id);
 			org.hibernate.Query qry = session.createQuery("select elements(t1.${target.name}) from ${entity.fullyQualifiedName} as t1 where t1.id = " + id);
-			#else
+#else
 			org.hibernate.Query qry = session.createQuery("select a.${target.name} from ${entity.fullyQualifiedName} a where a.id = " + id);
-			#end
-			#if ($target.many)
+#end
+#if ($target.many)
 			   if (paginacao != null){
 				int extra = 0;
 				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
 				qry.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 				qry.setMaxResults($maxRows*$maxPages + 1);
 			}
-			   #if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			   qry.setCacheable(true);
-			   #end
+#end
 			   List res = qry.list();
 			   return res;
-			#else
-			   #if($hibernateEnableCache.equalsIgnoreCase("true"))
+#else
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 			   qry.setCacheable(true);
-			   #end
+#end
 			   List res = qry.list();	
 			   if(res.isEmpty()) {
 			     return null;
 			   } else {
 			     return ($target.getterSetterTypeName)res.get(0);
 			   }
-			#end
+#end
 
 		} catch (HibernateException h) {
 			throw new DAOException(h);
@@ -789,9 +789,9 @@ $target.getDocumentation("     * ")
 ## (MDArte) Modificacao do tipo de retorno de um metodo que retorne uma colecao para Object, permitindo assim uma paginacao
 ## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
 #if($returnType.collectionType)
-	#set($return = "Object")
+#set($return = "Object")
 #else
-	#set($return = $returnType.fullyQualifiedName)
+#set($return = $returnType.fullyQualifiedName)
 #end
 
 ## Fim
@@ -809,18 +809,17 @@ $operation.getDocumentation("     * ")
 ## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
 ###if ($stringUtils.contains($returnType.fullyQualifiedName, "Collection"))
 #if($returnType.collectionType || $returnType.listType || $returnType.setType )
-	#if(!$stringUtils.isEmpty($operation.typedArgumentList))
-		#set($argumentList = "$operation.typedArgumentList , Integer paginacao")
-	#else
-		#set($argumentList = "Integer paginacao")
-	#end;
+#if(!$stringUtils.isEmpty($operation.typedArgumentList))
+#set($argumentList = "$operation.typedArgumentList , Integer paginacao")
 #else
-	#set($argumentList = $operation.typedArgumentList)
-	
+#set($argumentList = "Integer paginacao")
+#end;
+#else
+#set($argumentList = $operation.typedArgumentList)
 #end
 
 ## Fim
-     
+
 #if ($operation.exceptionsPresent)
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList)
         throws DAOException, $operation.exceptionList {
@@ -829,7 +828,7 @@ $operation.getDocumentation("     * ")
 #end
 try{
 			          Session session = currentSession();
-	#set ($parameterList = $operation.argumentNames)
+#set ($parameterList = $operation.argumentNames)
 #if ($stringUtils.isBlank($parameterList))
 #set ($parameters = "session")
 #else
@@ -849,9 +848,9 @@ try{
 				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 				res.setMaxResults($maxRows*$maxPages + 1);
 			}
-		#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 		res.setCacheable(true);
-		#end		
+#end		
 		return res.list();
             }
             else if(obj instanceof org.hibernate.Criteria){
@@ -862,9 +861,9 @@ try{
 				res.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
 				res.setMaxResults($maxRows*$maxPages + 1);
 			}
-		#if($hibernateEnableCache.equalsIgnoreCase("true"))
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
 		res.setCacheable(true);
-		#end		
+#end		
 		return res.list();
 	    }
             else
@@ -889,7 +888,6 @@ try{
 #foreach ($finder in $entity.getQueryOperations(true))
 #set ($returnType = $finder.returnType)
 
-
     /**
 $finder.getDocumentation("     * ")
      *
@@ -898,13 +896,13 @@ $finder.getDocumentation("     * ")
 ## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
 ###if ($stringUtils.contains($returnType,"Collection"))
 #if($returnType.collectionType || $returnType.listType || $returnType.setType )
-	#if(!$stringUtils.isEmpty($finder.typedArgumentList))
-		#set($argumentList = "$finder.typedArgumentList, Integer paginacao")
-	#else
-		#set($argumentList = "Integer paginacao")
-	#end
+#if(!$stringUtils.isEmpty($finder.typedArgumentList))
+#set($argumentList = "$finder.typedArgumentList, Integer paginacao")
 #else
-	#set($argumentList = "$finder.typedArgumentList")
+#set($argumentList = "Integer paginacao")
+#end
+#else
+#set($argumentList = "$finder.typedArgumentList")
 #end
 
 ## Fim

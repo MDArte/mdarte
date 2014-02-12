@@ -14,7 +14,7 @@
 
 #set ($tableName = "${entity.tableName}")
 #if($auditoria)
-	#set ($tableName = "${entity.tableName}_LOG_REC")
+#set ($tableName = "${entity.tableName}_LOG_REC")
 #end
 
 <hibernate-mapping default-cascade="$entity.hibernateDefaultCascade">

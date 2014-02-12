@@ -125,9 +125,9 @@
         ##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" index="IND_${entity.tableName}_${otherEnd.columnName}" #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
         <many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  #if(!$auditoria)foreign-key="$otherEnd.foreignKeyConstraintName" #end #if(!$auditoria) #if($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#else  #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #end #if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false">
             <column name="$otherEnd.columnName" not-null="$otherEnd.required" sql-type="$otherEnd.sqlType" #if($otherEnd.association.columnUniqueGroup) #if(!$auditoria)unique-key="$otherEnd.association.columnUniqueGroup" #end #end>
-            #if($otherEnd.association.findTaggedValue($comment))
+#if($otherEnd.association.findTaggedValue($comment))
 	    	<comment>$otherEnd.association.findTaggedValue("$comment")</comment>
-	    #end
+#end
             </column>
         </many-to-one>
 #elseif ($sourceEnd.many2Many) 
@@ -140,22 +140,22 @@
 	<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns"#*Passar order-by para tag many-to-many hibernate 3.2*# lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}" embed-xml="true">  
 	##<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}">
 ##end	
-	#if($hibernateEnableCache.equalsIgnoreCase("true") && $hibernateEnableAssociationsCache.equalsIgnoreCase("true"))      
+#if($hibernateEnableCache.equalsIgnoreCase("true") && $hibernateEnableAssociationsCache.equalsIgnoreCase("true"))      
             <cache usage="$sourceEnd.association.hibernateCacheType" />
-	#end
+#end
 	
-	#if($sourceEnd.association.findTaggedValue($comment))
+#if($sourceEnd.association.findTaggedValue($comment))
 	    <comment>$sourceEnd.association.findTaggedValue("$comment")</comment>
-	#end
+#end
 	
             <key #if(!$auditoria) foreign-key="$sourceEnd.foreignKeyConstraintName" #end >
                 <column name="$sourceEnd.columnName" sql-type="$sourceEnd.sqlType" #if(!$sourceEnd.navigable) #if(!$auditoria)unique-key="${otherEnd.association.tableName}_CT" #end #end/>
             </key>
             <many-to-many class="$otherEnd.type.fullyQualifiedEntityImplementationName" #*order-by="$otherEnd.orderByColumns" Requer hibernate 3.2 (verificar se existe a tagged value)*#foreign-key="$otherEnd.foreignKeyConstraintName" embed-xml="false">
                 <column name="$otherEnd.columnName" sql-type="$otherEnd.sqlType" #if($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#else  #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${otherEnd.association.tableName}_${otherEnd.columnName}" #end  #end #if(!$auditoria)unique-key="${otherEnd.association.tableName}_CT" #end>
-		#if($otherEnd.findTaggedValue($comment))
+#if($otherEnd.findTaggedValue($comment))
 	    		<comment>$otherEnd.findTaggedValue("$comment")</comment>
-		#end	
+#end	
 		</column>	                
             </many-to-many>
         </$otherEnd.collectionType>
@@ -169,7 +169,7 @@
 		<property name="${otherEnd.name}Log" type="java.lang.String">
 			<column name="${otherEnd.name}Log" sql-type="$entity.auditoriaListaId"  default="null"/>
 		</property>
-		#end
+#end
 #end
 #end
 #end

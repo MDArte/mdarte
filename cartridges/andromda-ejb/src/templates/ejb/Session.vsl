@@ -32,7 +32,7 @@ public interface $service.name
 #set($operations = $service.operations)
 
 #foreach($generalization in $generalizations)
-	#set($var = $operations.addAll($generalization.operations))
+#set($var = $operations.addAll($generalization.operations))
 #end
 
 
@@ -53,23 +53,22 @@ public interface $service.name
 
 
 #if ($operation.exceptionsPresent)
-	#if($operation.visibility == 'public')
-		## Only expose public methods
+#if($operation.visibility == 'public')
+## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
-	#end
-	  
+#end
+
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
-	#end
-	  
+#end
 #end
 
 ## (MDArte) Codigo para gerar metodos que receba o grupo a ser carregado na paginacao, caso este metodo retorne uma colecao
@@ -90,29 +89,28 @@ public interface $service.name
 ## Fim
 
 #if ($operation.exceptionsPresent)
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 		## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
-	#end
-	  
+#end
+
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
-	#end
-	  
+#end
 #end
 #end
 #end
 	
 	##Adicao do metodo do CRUD por dependencia com entidade
-	#foreach ($dependencia in $service.sourceDependencies)
+#foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #if($ejbSecurityEnabled)          
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
