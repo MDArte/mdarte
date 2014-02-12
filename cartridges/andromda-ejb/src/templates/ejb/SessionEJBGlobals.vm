@@ -91,6 +91,7 @@
 		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
 
 		boolean gerente = false;
+		
 		if (!principalImpl.isValido()) {
 			gerente = true;
 			principalImpl.setValido(true);

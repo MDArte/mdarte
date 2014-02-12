@@ -1,5 +1,4 @@
 #parse("templates/ejb/SessionEJBGlobals.vm")
-
 // license-header java merge-point
 //
 // Attention: Generated code! Do not modify by hand!
@@ -98,14 +97,16 @@ $operation.getDocumentation("	 * ")
 
 #set($exception = "")
 #if ($operation.exceptionsPresent)
-	#set($exception = "throws $operation.exceptionList")
+#set($exception = "throws $operation.exceptionList")
 #end
+	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception;
+	
 	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
 
 	/**
 $operation.getDocumentation("	 * ")
 	 */
-	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
+	$operation.visibility  $return ${operation.name} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception {
 #if($ejbSecurityEnabled && !${service.openAccess})
 #renderSecurityBodyPagination($operation)
 #else
@@ -113,7 +114,6 @@ $operation.getDocumentation("	 * ")
 #end
 	}
 #end
-
 #end
 
 #foreach ($dependencia in $service.sourceDependencies)
