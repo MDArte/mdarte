@@ -497,7 +497,7 @@ ${indent}	</div>
 ##
 ##      T E X T A R E A 
 ##
-#elseif ($field.textArea)
+#elseif ($field.textArea || $field.editor)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="textarea row form-group">
 #if ($requiredness && $field.required)
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/> *</label>
@@ -607,7 +607,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 ${indent}		<div class="col-xs-4">
 ${indent}			<s:file id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName"  $disabled $columnCount styleId="$styleId"/>
 ${indent}		</div>
-${indent}	</div
+${indent}	</div>
 ##
 ##      P L A I N T E X T
 ##

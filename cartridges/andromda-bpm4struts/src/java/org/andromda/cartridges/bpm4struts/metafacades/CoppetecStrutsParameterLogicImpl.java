@@ -299,6 +299,10 @@ extends CoppetecStrutsParameterLogic
 			{
 				widgetType = "text";
 			}
+			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equalsIgnoreCase(fieldType))
+			{
+				widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR;
+			}
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_MULTIBOX.equalsIgnoreCase(fieldType))
 			{
 				widgetType = "multibox";
@@ -589,7 +593,10 @@ extends CoppetecStrutsParameterLogic
 		
 		return false;
 	}
-
+	
+	protected boolean handleIsEditor(){
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equals(this.getWidgetType());
+	}
 	protected String handleGetHintKey() {
 		 return getMessageKey() + ".hint.key";
 	}
