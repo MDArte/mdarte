@@ -15,7 +15,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set ($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 
 public class ApagaSessao extends Action {

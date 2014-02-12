@@ -558,7 +558,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 #set($selectProperty="$fieldName")
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<s:select id="${field.name}${action.useCase.name}" cssClass="form-control" label="" name="${field.name}" headerKey="" headerValue="" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
+${indent}			<s:select id="${field.name}${action.useCase.name}" cssClass="form-control" label="" name="${field.name}" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
 ${indent}		</div>
 ${indent}	</div>
 ##

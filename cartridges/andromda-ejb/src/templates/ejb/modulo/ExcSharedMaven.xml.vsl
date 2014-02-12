@@ -10,8 +10,8 @@
 
 	<j:set var="libDirectory" value="${env.JBOSS_HOME}/server/${jboss.config}/lib"/>
 
-    	#set($open = "${")
-	#set($end = "}")
+#set($open = "${")
+#set($end = "}")
     	
 	<preGoal name="ejb:init">
 		<ant:mkdir dir="${open}basedir${end}/target/classes"/>
@@ -44,20 +44,20 @@
     	
     	<goal name="lib">
 
-		#set($comparacao1 = "${")
-		#set($comparacao2 = "dep.type == 'jar'}")
-		#set($comparacao = "$comparacao1$comparacao2")
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.type == 'jar'}")
+#set($comparacao = "$comparacao1$comparacao2")
 		<j:forEach var="dep" items="${pom.dependencies}">
 		<j:if test= "${comparacao}">
-			#set($comparacao1 = "${")
-			#set($comparacao2 = "dep.groupId != ")
-			#set($comparacao3 = "pom.groupId}")
-			#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.groupId != ")
+#set($comparacao3 = "pom.groupId}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
 			<j:if test= "${comparacao}">
-				#set($comparacao1 = "${")
-				#set($comparacao2 = "dep.getProperty('war.manifest.classpath') == ")
-				#set($comparacao3 = "'true'}")
-				#set($comparacao = "$comparacao1$comparacao2$comparacao3")
+#set($comparacao1 = "${")
+#set($comparacao2 = "dep.getProperty('war.manifest.classpath') == ")
+#set($comparacao3 = "'true'}")
+#set($comparacao = "$comparacao1$comparacao2$comparacao3")
 			        <j:if test= "$comparacao">	
 					<ant:copy todir="${libDirectory}">
 						<fileset dir="${user.home}/.maven/repository/${dep.groupId}/jars/">

@@ -52,9 +52,9 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
 ## (MDArte) Modificacao do tipo de retorno de um metodo que retorne uma colecao para Object, permitindo assim uma paginacao
 ## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
 #if($returnType.collectionType)
-	#set($return = "Object")
+#set($return = "Object")
 #else
-	#set($return = $returnType.fullyQualifiedName)
+#set($return = $returnType.fullyQualifiedName)
 #end
 
 ## Fim
@@ -76,10 +76,10 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
        return null;
     }
     
-    #if(!$entity.abstract)
+#if(!$entity.abstract)
     protected org.hibernate.Criteria handleXmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws $customTypesPackage.${modelPackageName}.DAOException {
 	return null;
     }
-    #end
+#end
 
 }

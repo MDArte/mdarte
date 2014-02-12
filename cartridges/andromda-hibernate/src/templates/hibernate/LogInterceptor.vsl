@@ -54,15 +54,15 @@ public class LogInterceptor extends EmptyInterceptor implements Interceptor{
 	private void atualizaCamposAuditoria (String tipoOperacao, String propriedades[], Object[] state)
 	{
 		String login;
-		#if($securityEnabled)
+#if($securityEnabled)
 		try {
 			    login = ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
 		} catch (Exception e)	 {
 		    login = "NA";
 		}
-		#else
+#else
  		login = "NA";
-		#end
+#end
 		java.util.Date dataOperacao = new java.util.Date();
 		
 		for (int i=0; i < propriedades.length; i++) 

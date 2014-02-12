@@ -318,6 +318,7 @@
 				<property name="exceptions">${maven.andromda.common.generated.dir}</property>
 				<property name="value-objects">${maven.andromda.common.generated.dir}</property>
 				<property name="util">${maven.andromda.common.generated.dir}</property>
+				<property name="util-impl">${maven.andromda.common.manual.dir}</property>
 				<property name="logger">${maven.andromda.common.generated.dir}</property>
 			</properties>
 		</namespace>

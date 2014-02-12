@@ -1,10 +1,4 @@
-#set($gerar=false)
-#foreach($useCase in $useCases)
-#if($useCase.openAccess && !$useCase.useCaseOldStruts)
-#set($gerar = true)
-#end
-#end
-#if($gerar)
+#if($struts2 == "true")
 #set ($generatedFile = "menu/menu-open.jsp")
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>

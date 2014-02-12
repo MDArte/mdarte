@@ -11,42 +11,41 @@
 #else
 #set ($generatedFile = "${entity.packagePath}/${entity.entityName}.hbm.xml")
 #end
-
 #set ($tableName = "${entity.tableName}")
 #if($auditoria)
-	#set ($tableName = "${entity.tableName}_LOG_REC")
+#set ($tableName = "${entity.tableName}_LOG_REC")
 #end
 
 <hibernate-mapping default-cascade="$entity.hibernateDefaultCascade">
-    <class name=#if($auditoria)"${entity.fullyQualifiedName}LogRec"#else"$entity.fullyQualifiedEntityImplementationName" #end table="$tableName" #if($entity.hibernateProxy) proxy="$entity.fullyQualifiedEntityImplementationName"#end dynamic-insert="$entity.dynamicInsert" dynamic-update="$entity.dynamicUpdate" batch-size="${entity.batch}">
+	<class name=#if($auditoria)"${entity.fullyQualifiedName}LogRec"#else"$entity.fullyQualifiedEntityImplementationName" #end table="$tableName" #if($entity.hibernateProxy) proxy="$entity.fullyQualifiedEntityImplementationName"#end dynamic-insert="$entity.dynamicInsert" dynamic-update="$entity.dynamicUpdate" batch-size="${entity.batch}">
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
-        <cache usage="$entity.hibernateCacheType" />
+		<cache usage="$entity.hibernateCacheType" />
 #end
-
 #if($entity.findTaggedValue($comment))
-	<comment>$entity.findTaggedValue("$comment")</comment>
+		<comment>$entity.findTaggedValue("$comment")</comment>
 #end
 
 #if (!$entity.identifiers.empty)
 #set ($identifier = $entity.identifiers.iterator().next())
 #end
-        <id name="$identifier.name" type="$identifier.type.fullyQualifiedName" unsaved-value="$identifier.type.javaNullString">
-            <column name="$identifier.columnName" sql-type="$identifier.sqlType"/>
-            <generator class="$entity.hibernateGeneratorClass">
+		<id name="$identifier.name" type="$identifier.type.fullyQualifiedName" unsaved-value="$identifier.type.javaNullString">
+			<column name="$identifier.columnName" sql-type="$identifier.sqlType"/>
+			<generator class="$entity.hibernateGeneratorClass">
 #if ($entity.sequenceHibernateGeneratorClass)
-                <param name="sequence">#if($sequenceIdentifierPrefix != "")${sequenceIdentifierPrefix}#end${entity.tableName}#if($auditoria)_LOG_REC#end#if($sequenceIdentifierSuffix != "")${sequenceIdentifierSuffix}#end</param>
+				<param name="sequence">#if($sequenceIdentifierPrefix != "")${sequenceIdentifierPrefix}#end${entity.tableName}#if($auditoria)_LOG_REC#end#if($sequenceIdentifierSuffix != "")${sequenceIdentifierSuffix}#end</param>
 #elseif ($entity.foreignHibernateGeneratorClass)
-                <param name="property">$entity.parentEnd.name</param>
+				<param name="property">$entity.parentEnd.name</param>
 #end
-            </generator>
-        </id>
+			</generator>
+		</id>
 #if (!$entity.specializations.empty && $entity.hibernateInheritanceClass)
-        <discriminator column="$entity.hibernateDiscriminatorColumn" type="$entity.hibernateDiscriminatorType"/>
+		<discriminator column="$entity.hibernateDiscriminatorColumn" type="$entity.hibernateDiscriminatorType"/>
 #end
 #if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
-        <version name="$entity.hibernateVersionProperty" type="int" insert="false">
-            <column name="${stringUtils.upperCase(${entity.hibernateVersionProperty})}" default="0"/>
- 	</version>
+
+		<version name="$entity.hibernateVersionProperty" type="int" insert="false">
+			<column name="${stringUtils.upperCase(${entity.hibernateVersionProperty})}" default="0"/>
+		</version>
 #end
 ## If super inheritance is 'interface', render super properties etc
 #foreach ($generalization in $entity.allGeneralizations)

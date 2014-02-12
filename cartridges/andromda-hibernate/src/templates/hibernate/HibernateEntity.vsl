@@ -38,20 +38,20 @@ public abstract class ${entity.entityName}Abstract
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if($entity.generalization)
     extends $entity.generalization.fullyQualifiedEntityImplementationName implements ${entity.fullyQualifiedName}
-	#if($securityEnabled && $entity.hasExactStereotype("User"))
+#if($securityEnabled && $entity.hasExactStereotype("User"))
 	 ,accessControl.Operador
-	#end
-	#if ($entity.auditoria)
+#end
+#if ($entity.auditoria)
 	 ,${customTypesPackage}.${modelPackageName}.AuditoriaEntity
-	#end
+#end
 #else
     extends ${customTypesPackage}.${modelPackageName}.AbstractEntity implements java.io.Serializable, ${entity.fullyQualifiedName}
-		#if($securityEnabled && $entity.hasExactStereotype("User"))
+#if($securityEnabled && $entity.hasExactStereotype("User"))
 	,accessControl.Operador
-	#end
-	#if ($entity.auditoria)
+#end
+#if ($entity.auditoria)
 	 ,${customTypesPackage}.${modelPackageName}.AuditoriaEntity
-	#end
+#end
 #end
 #foreach ( $parent in $entity.abstractions)
         , ${parent.packageName}.$stringUtils.capitalize(${parent.name})
@@ -65,25 +65,24 @@ public abstract class ${entity.entityName}Abstract
 		if(need) return true;
 		if(((${entity.name}TO)abstractTO).getExemploTO() == null) return false;
 		${entity.name}TO to = (${entity.name}TO)abstractTO;
-		#foreach ($associationEnd in $entity.associationEnds)
-		#set ($target = $associationEnd.otherEnd)
-		#if($target.navigable)
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if($target.navigable)
 		if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()))
-		#if($target.many)
+#if($target.many)
 		need = need || TOUtil.isCollectionChanged(to.${target.getterName}(), this.${target.getterName}());
-		#else
+#else
 		need = need || TOUtil.isEntityChanged((AbstractTO)to.${target.getterName}(), (AbstractEntity)this.${target.getterName}());
-		#end
-		#end
-		#end
+#end
+#end
+#end
 		#if($entity.generalization)if(need == false) return super.needUpdate(abstractTO);#end
 		return need;
 	}
 
 ##Transforma TO num Bean
-   #set ($tipoTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
-   #set ($tipoTO = $tipoTO.concat("TO"))
-    
+#set ($tipoTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($tipoTO = $tipoTO.concat("TO"))
 
     public static ${entity.name}Abstract getEntityFromTO($tipoTO to) throws Exception{
     	AbstractDAO.currentSession().setFlushMode(FlushMode.NEVER);
@@ -92,8 +91,8 @@ public abstract class ${entity.entityName}Abstract
     	return entity;
     	
     }
- 	
-#if(!$entity.abstract)       
+
+#if(!$entity.abstract)
     protected ${customTypesPackage}.${modelPackageName}.AbstractEntity getEntityFromTO(AbstractTO to, java.util.HashMap map) throws Exception{
     	if(map == null) map = new java.util.HashMap();
     	${entity.name}Impl bean = new ${entity.name}Impl();
@@ -111,19 +110,19 @@ public abstract class ${entity.entityName}Abstract
         {
         if(to.getId() == null){                
         #renderConstructorBody("true")
-	}else{               	
-	#if(!$entity.abstract)
+	}else{
+#if(!$entity.abstract)
 	${entity.name}DAOImpl dao = new ${entity.name}DAOImpl(); 
 	if(bean.getId() == null) bean = (${entity.name}Impl)dao.select(to.getId()).iterator().next();
 	map.put(to.getClass().toString() + to.hashCode(), bean);
-	#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
-	#set ($versionProperty = $entity.hibernateVersionProperty)
-	#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
+#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
+#set ($versionProperty = $entity.hibernateVersionProperty)
+#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
 	if(bean.get$versionPropertyCapitalized() != to.get$versionPropertyCapitalized()){
 		throw new Exception("hibernate.version.is.different");	
 	}
-	#end
-	#end
+#end
+#end
 	#renderConstructorBody("false")
         }
 		return (${entity.name}Abstract)bean;
@@ -167,12 +166,11 @@ public abstract class ${entity.entityName}Abstract
 
 ## Inicio da construcao do TO
 
-  
     public ${entity.name}TOImpl buildTO(${entity.name}TOExample exemploTO) throws Exception{
     	return (${entity.name}TOImpl)this.buildTO(exemploTO,  new java.util.HashMap());
     }
 
-    #if(!$entity.abstract)
+#if(!$entity.abstract)
     public AbstractTO buildTO(AbstractTOExample exemploTO, java.util.HashMap map) throws Exception{
     	if(map == null) map = new java.util.HashMap();
     	${entity.name}TOImpl to = new ${entity.name}TOImpl();
@@ -183,23 +181,23 @@ public abstract class ${entity.entityName}Abstract
     	if(to.getId() == null) to.setExemploTO(null);
     	return to;
     }
-    #end
+#end
 
     protected void mapEntityAttributes2TO(${entity.name}TO to){
-	#foreach ($attribute in $entity.attributes)
-	#set ($nome = $stringUtils.capitalize(${attribute.name}))
+#foreach ($attribute in $entity.attributes)
+#set ($nome = $stringUtils.capitalize(${attribute.name}))
 	to.set${nome}(this.${attribute.getterName}());
-	#end
+#end
 
-	#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
-	#set ($versionProperty = $entity.hibernateVersionProperty)
-	#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
+#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
+#set ($versionProperty = $entity.hibernateVersionProperty)
+#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
 	to.set$versionPropertyCapitalized(this.get${versionPropertyCapitalized}());
-	#end
+#end
 		
-	#if($entity.generalization)
+#if($entity.generalization)
 	super.mapEntityAttributes2TO(to);
-	#end
+#end
     }
 
     protected void mapEntityRelations2TO(${entity.name}TO to, AbstractTOExample abstractExemploTO, java.util.HashMap map) throws Exception{
@@ -207,34 +205,34 @@ public abstract class ${entity.entityName}Abstract
 	${entity.name}TOExample exemploTO = (${entity.name}TOExample)abstractExemploTO;
 	if(abstractExemploTO != null){
 		to.setExemploTO(exemploTO);
-		#foreach ($associationEnd in $entity.associationEnds)
-		#set ($target = $associationEnd.otherEnd)
-	  	#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
-    		#set ($tipo = $target.type.fullyQualifiedName)
-    		#if ($tipo.indexOf(".${modelPackageName}.") > 0)
-    		#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
-    		#end
-    		#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
+#set ($tipo = $target.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#end
+#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
      		if(exemploTO.${target.getterName}()!= null && !exemploTO.${target.getterName}().isEmpty() && this.${target.getterName}() != null){
 	  		if(map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()) == null){
 	  			${tipo}TO toTemp = (${tipo}TO)this.${target.name}.buildTO(TOUtil.getExample(exemploTO.${target.getterName}(), this.${target.name}.getTOExample()) , map);
 	  			to.${target.setterName}(toTemp);   	
 	  		}else{
 	  			to.${target.setterName}((${tipo}TO)map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()));
-	  		}     
+	  		}
      		}
-    		#elseif ($target.many)
+#elseif ($target.many)
 		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
 			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));        		
-		}        
-    		#end
-  		#end
-		#end
+		}
+#end
+#end
+#end
 
 	}
-        #if($entity.generalization)
+#if($entity.generalization)
 	super.mapEntityRelations2TO(to,exemploTO, map);
-	#end
+#end
         
     }
 
@@ -254,23 +252,22 @@ public abstract class ${entity.entityName}Abstract
   			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)it.next();
   			if(cd != null){
   				if(map.get(cd.getEntityKey() + cd.hashCode()) == null){	  
-  					#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
-  					${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map); 	  
+#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))
+  					${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map);
   					list.add(toTemp);    	
   
   				}else{	  
   					${typeTargetTO}TO toTemp = (${typeTargetTO}TO)map.get(cd.getEntityKey() + cd.hashCode());
   					list.add(toTemp);
   				}
-  			}  	  	  
+  			}
   		}
   	}
-  	return list;       
+  	return list;
  } 	
 #end
 #end
 #end
-
 
 
 ##Fim da construcao do TO
@@ -302,13 +299,12 @@ public abstract class ${entity.entityName}Abstract
 
     public ${entity.entityName}Abstract(){
     }
-    
-    #set ($identifiers = $entity.getIdentifiers(false))
-    
-    #if(!$entity.abstract && $identifiers && $identifiers.size > 0)
-    #renderConstructorMethod($entity $entity.entityName $identifiers)
-    #end
 
+#set ($identifiers = $entity.getIdentifiers(false))
+    
+#if(!$entity.abstract && $identifiers && $identifiers.size > 0)
+    #renderConstructorMethod($entity $entity.entityName $identifiers)
+#end
 
 
 #foreach ( $attribute in $entity.attributes )
@@ -318,11 +314,9 @@ public abstract class ${entity.entityName}Abstract
 #end
 
 
-
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-
 
     private $typeName $attribute.name;
 
@@ -334,17 +328,17 @@ $attribute.getDocumentation("     * ")
         return this.${attribute.name};
     }
     
-    #if($attribute.findTaggedValue($throwsVetoException).equals("true"))	
+#if($attribute.findTaggedValue($throwsVetoException).equals("true"))	
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name) throws $exceptionList
     {
     	this.${attribute.name} = $attribute.name;
     }
-    #else
+#else
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name)
     {
 	this.${attribute.name} = $attribute.name;
     }    
-    #end
+#end
 
 #end
 
@@ -353,12 +347,12 @@ $attribute.getDocumentation("     * ")
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 
- #set ($tipo = $target.getterSetterTypeName)
- #if ($tipo.indexOf(".${modelPackageName}.") > 0)
- #set ($tipo = $tipo.concat("Abstract"))
- #else
- #set($tipo = $target.getterSetterTypeName)   
- #end
+#set ($tipo = $target.getterSetterTypeName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $tipo.concat("Abstract"))
+#else
+#set($tipo = $target.getterSetterTypeName)   
+#end
 
 #if ($target.many)
     private $tipo $target.name = $target.collectionTypeImplementation;
@@ -374,42 +368,42 @@ $target.getDocumentation("     * ")
     	return ${target.name};	
     }
     
-    #if($target.findTaggedValue($throwsVetoException).equals("true"))
-	#set($exceptionList = "java.beans.PropertyVetoException")
-    #end
+#if($target.findTaggedValue($throwsVetoException).equals("true"))
+#set($exceptionList = "java.beans.PropertyVetoException")
+#end
     
     
-    #if($target.findTaggedValue($throwsVetoException).equals("true"))	
+#if($target.findTaggedValue($throwsVetoException).equals("true"))	
     public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList
-    #else      
+#else      
     public void ${target.setterName}($target.getterSetterTypeName ${target.name})    
-    #end
+#end
     {  
     	this.${target.name} = ($tipo)$target.name;
     }
     
     ## (MDArte) codigo para setar nos dois lados da associacao para resolver o problema do inverse
-    #if ($associationEnd.navigable)
-    #set($exception = "")
-    #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
-    	#set($exception = "throws java.beans.PropertyVetoException")
-    #end    
-    
-     #set ($rtipo = $target.getterSetterTypeName)
-	    #if ($rtipo.indexOf(".${modelPackageName}.") > 0)
-	    #set ($rtipo = $rtipo.concat("Abstract"))
-    
-    #else
-	    #set($rtipo = $target.getterSetterTypeName)   
-    #end	
-    
-    #set ($tipo = $target.type.fullyQualifiedName)
-	    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
-	    #set ($tipo = $tipo.concat("Abstract"))
-    
-    #else
-	    #set($tipo = $target.type.fullyQualifiedName)   
-    #end
+#if ($associationEnd.navigable)
+#set($exception = "")
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
+#set($exception = "throws java.beans.PropertyVetoException")
+#end
+
+#set ($rtipo = $target.getterSetterTypeName)
+#if ($rtipo.indexOf(".${modelPackageName}.") > 0)
+#set ($rtipo = $rtipo.concat("Abstract"))
+
+#else
+#set($rtipo = $target.getterSetterTypeName)   
+#end	
+
+#set ($tipo = $target.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $tipo.concat("Abstract"))
+
+#else
+#set($tipo = $target.type.fullyQualifiedName)   
+#end
 
     public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception    
     {  
@@ -417,8 +411,8 @@ $target.getDocumentation("     * ")
     	$target.getterSetterTypeName temp = this.${target.name};
 	this.${target.name} = ($rtipo)$target.name;
 
-	#if($associationEnd.many)	
-	#if($target.many)
+#if($associationEnd.many)	
+#if($target.many)
 	if(temp != null){
 		for(java.util.Iterator it = temp.iterator(); it.hasNext();){
 			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
@@ -435,7 +429,7 @@ $target.getDocumentation("     * ")
         ${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
         }
         }
-        #else
+#else
 
 	if(temp != null){
 		if(temp.${associationEnd.getterName}() != null)
@@ -448,9 +442,9 @@ $target.getDocumentation("     * ")
         if(!${target.name}.${associationEnd.getterName}().contains(this))
         ${target.name}.${associationEnd.getterName}().add(this);
 	}
-        #end
-	#else
-	#if($target.many)
+#end
+#else
+#if($target.many)
 	
 	if(temp != null){
 		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
@@ -465,24 +459,22 @@ $target.getDocumentation("     * ")
     	${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
     	}
     	}
-	#else
+#else
 	if(temp != null)
 		temp.${associationEnd.setterName}(null);	
 
 	if(${target.name} != null)
 		${target.name}.${associationEnd.setterName}(this);
-	#end
-	#end
+#end
+#end
 	
-	      
-    }  
-      
-    
-    #if($target.many )
-    #set($exception = "")
-    #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))	
-    #set($exception = "throws java.beans.PropertyVetoException")
-    #end
+    }
+
+#if($target.many )
+#set($exception = "")
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))	
+#set($exception = "throws java.beans.PropertyVetoException")
+#end
     public void add${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception{
     	Hibernate.initialize(${stringUtils.uncapitalize($target.type.name)}Temp);
     	Hibernate.initialize(${target.name});
@@ -490,8 +482,8 @@ $target.getDocumentation("     * ")
 		${target.setterName}(${target.collectionTypeImplementation});	
     	if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
     		${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
-    	#if($associationEnd.navigable)	
-	#if($associationEnd.many)
+#if($associationEnd.navigable)	
+#if($associationEnd.many)
 	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
 	
 	Hibernate.initialize(${associationEnd.name});
@@ -499,10 +491,10 @@ $target.getDocumentation("     * ")
 	if(!${associationEnd.name}.contains(this))
 		${associationEnd.name}.add(this);	
 	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
-	#else
+#else
 	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
-	#end
-    	#end
+#end
+#end
     	this.${target.setterName}(${target.name});
     }
     
@@ -513,24 +505,23 @@ $target.getDocumentation("     * ")
 	if(${target.name} != null){
     		${target.name}.remove(${stringUtils.uncapitalize($target.type.name)}Temp);
 	}
-    	#if($associationEnd.navigable)
-	#if($associationEnd.many)
+#if($associationEnd.navigable)
+#if($associationEnd.many)
 	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
 	Hibernate.initialize(${associationEnd.name});
 	if(${associationEnd.name} != null)
 		${associationEnd.name}.remove(this);	
 	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
-	#else
+#else
 	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);
-	#end
-    	
-    	#end
+#end
+
+#end
     	this.${target.setterName}(${target.name});
-    }    
-    #end
-    
+    }
+#end
+
     ## fim    
-      
 #end
 #end
 #end
@@ -544,7 +535,7 @@ $target.getDocumentation("     * ")
     public $target.getterSetterTypeName ${target.getterName}(Integer paginacao)
     {
     	try {
-             	#set($parameters = "this.getId(), paginacao")
+#set($parameters = "this.getId(), paginacao")
                 return ${entity.name}DAOImpl.${target.getterName}By${entity.name}($parameters);
         } catch(DAOException daoe) {
               daoe.printStackTrace();
@@ -719,10 +710,10 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 #end
 #end
 #end
-	#if($entity.generalization && $entity.generalization.hasStereotype("$wsdStereotype"))
+#if($entity.generalization && $entity.generalization.hasStereotype("$wsdStereotype"))
 	##super.setParentWebServiceObj(webServiceData, map);
 	super.getWebServiceObj(webServiceData, map);
-	#end
+#end
 	}else
 	   webServiceData = (${wsdPackage}.${entity.entityName}WS)map.get(${wsdPackage}.${entity.entityName}WS.class.toString() + this.getId().toString());		
 	
@@ -762,13 +753,13 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
     		${target.name}Obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}().getId().toString()); 
     		this.${target.setterName}(${target.name}Obj);
     	}
-    	#if ($target.otherEnd.navigable)
-    	#if(!$target.otherEnd.many)	
+#if ($target.otherEnd.navigable)
+#if(!$target.otherEnd.many)	
     	${target.name}Obj.${target.otherEnd.setterName}(this);
-    	#elseif($target.otherEnd.many)
+#elseif($target.otherEnd.many)
     	${target.name}Obj.${target.otherEnd.getterName}().add(this);
-    	#end	
-    	#end
+#end	
+#end
     }	    
 #else
     
@@ -785,12 +776,12 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 	}else
 		obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}()[i].getId().toString());	    		    
 	
-	#foreach($backAssociationEnd in $target.type.associationEnds)
-	#set($backTarget = $backAssociationEnd.otherEnd)
-	#if($backTarget.navigable && !$backTarget.many && $backTarget.type.name.equals("${entity.name}"))
+#foreach($backAssociationEnd in $target.type.associationEnds)
+#set($backTarget = $backAssociationEnd.otherEnd)
+#if($backTarget.navigable && !$backTarget.many && $backTarget.type.name.equals("${entity.name}"))
 	obj.${backTarget.setterName}(this);
-	#end
-	#end
+#end
+#end
 		
 	this.${target.getterName}().add(obj);	
     }
@@ -844,20 +835,20 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 #end
 
    public br.ufrj.coppetec.Entity getInstance(){
-   #if(!$entity.abstract)
+#if(!$entity.abstract)
    	return new ${entity.entityName}Impl();
-   #else
+#else
    	return null;
-   #end	
+#end	
    }	
-   
-   #foreach($temp in $entity.allGeneralizations)
-   #set($pai = $temp)
-   #end
 
-   #if(!$pai)
-   #set($pai = $entity)
-   #end
+#foreach($temp in $entity.allGeneralizations)
+#set($pai = $temp)
+#end
+
+#if(!$pai)
+#set($pai = $entity)
+#end
 
    public boolean instanceOf(Class<?> otherClass) {
 	return otherClass.isAssignableFrom(get${pai.entityName}Class());
@@ -869,7 +860,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
         return ${entity.entityName}Impl.class;
     }	
 
-    #if($pai.hasStereotype("$visitorAdapterRoot"))	
+#if($pai.hasStereotype("$visitorAdapterRoot"))	
     public void accept(${pai.packageName}.${pai.name}VisitorAdapter visitor, Object object) {
         visitor.visit(this, object);
     }
@@ -878,9 +869,9 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
         ${pai.packageName}.${pai.name}VisitorAdapter visitor = new ${pai.packageName}.${pai.name}VisitorAdapterImpl();
         visitor.visit(this, object);
     }
-    #end
+#end
     
-    #if(!$entity.abstract)
+#if(!$entity.abstract)
     public AbstractTOExample getTOExample(){
     	return ${entity.name}TOExample.newInstance();
     }
@@ -888,7 +879,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
     public String getEntityKey(){
     	return ENTITY_KEY;
     }
-    #end
+#end
     
 
 #if ($entity.auditoria)
@@ -916,5 +907,5 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
       this.auditoriaDataHora = auditoriaDataHora;
    }
 #end
-    
+
 }

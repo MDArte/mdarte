@@ -1,10 +1,4 @@
-#set($gerar=false)
-#foreach($useCase in $useCases)
-#if($useCase.openAccess && !$useCase.useCaseOldStruts)
-#set($gerar = true)
-#end
-#end
-#if($gerar)
+#if($struts2 == "true")
 #set ($generatedFile = "layout/main-layout-open.jsp")
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>

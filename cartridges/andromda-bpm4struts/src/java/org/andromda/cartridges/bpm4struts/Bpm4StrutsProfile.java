@@ -67,6 +67,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_INPUT_MONEY = profile.get("INPUT_MONEY");
     public static final String TAGGEDVALUE_LAYOUT_NAME = profile.get("LAYOUT_NAME");
     public static final String TAGGEDVALUE_CUSTOM_LINK = profile.get("CUSTOM_LINK");
+    public static final String TAGGEDVALUE_ENUM_EMPTY_VALUE = profile.get("ENUM_EMPTY_VALUE");
     /**
      * Stores CRUD package name for an entity
      */
