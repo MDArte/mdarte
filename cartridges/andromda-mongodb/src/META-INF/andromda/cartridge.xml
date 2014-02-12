@@ -1,0 +1,191 @@
+<cartridge>
+
+    <templateEngine>
+        <macrolibrary name="templates/mongodb/mongodb.java.vm"/>
+        <macrolibrary name="templates/mongodb/mongodb.hbm.xml.vm"/>
+        <!-- cartridge-macrolibrary merge-point-->
+    </templateEngine>
+
+    <!-- define the template objects that are made available to the template -->
+    <templateObject name="stringUtils" className="org.apache.commons.lang.StringUtils"/>
+    <templateObject name="mongoDBUtils" className="org.andromda.cartridges.mongodb.MongoDBUtils">
+        <property reference="mongoDBVersion"/>
+    </templateObject>
+
+    <!-- cartridge-templateObject merge-point-->
+
+    <property reference="projectId"/>
+    <property reference="maxSqlNameLength"/>
+    <property reference="dialetoExterno"/>
+	<property reference="modelPackageName"/>	 
+    <property reference="securityRealm"/>
+    <property reference="customTypesPackage"/>
+	<property reference="controleAcessoDir" />
+    <!-- contains the package for the MongoDB user types -->
+    <property reference="userTypesPackage"/>
+    <!-- the name to give the service locator class -->
+    <property reference="mongoDBVersion"/>
+    <property reference="driver"/>
+    <property reference="username"/>
+    <property reference="password"/>
+    <property reference="connectionUrl"/>
+    <property reference="dataSource"/>
+    <property reference="xmlEncoding"/>
+	<property reference="maxRows"/>
+    <property reference="maxPages"/>
+    <property reference="daoMethod"/>
+    <property reference="maxSizeClass"/>
+    <property reference="comment"/>
+    <property reference="procedureName"/>
+    <property reference="loginDefault"/>
+    <property reference="enumTypesPackage"/>
+
+    <!-- cartridge-property merge-point-->
+
+    <!-- cartridge-resource merge-point -->
+
+	<template
+        path="templates/mongodb/teste.vsl"
+        outputPattern="$generatedFile"
+        outlet="configuration"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/mongodb/mongodb.js.vsl"
+        outputPattern="$generatedFile"
+        outlet="configuration"
+        overwrite="true">
+    </template>
+    
+   <template
+        path="templates/mongodb/MongoDBEntityFactory.vsl"
+        outputPattern="{0}/{1}MongoDBDAO.java"
+        outlet="entities"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.MongoDBEntity">
+                </type>                
+            </modelElement>
+        </modelElements>
+    </template> 
+    
+    <template
+        path="templates/mongodb/MongoDBAbstractDAO.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>
+        
+    <template
+        path="templates/mongodb/MongoDBEntityFactoryImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="entity-impls"
+        overwrite="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.MongoDBEntity">
+                </type>                   
+            </modelElement>
+        </modelElements>
+    </template>
+
+
+    <!-- common templates -->
+
+    <template
+        path="templates/mongodb/MongoDBDAOException.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/mongodb/MongoDBConnection.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/mongodb/MongoDBEntity.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.MongoDBEntity">
+				</type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/mongodb/MongoDBEntityInterface.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true" >
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.MongoDBEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+
+   <template
+        path="templates/mongodb/MongoDBEntityImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="entity-impls"
+        overwrite="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.MongoDBEntity">
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <!-- <template
+        path="templates/mongodb/MongoDBEntityImpl.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.mongodb.metafacades.CoppetecMongoDBEntity">
+					<property name="auditoria" variable="auditoria"/>
+					<property name="auditoria">true</property>					   
+				</type>
+            </modelElement>
+        </modelElements>
+    </template> -->
+
+    <!--  <template
+        path="templates/mongodb/MongoDBEnumeration.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+        <modelElements variable="enumeration">
+            <modelElement>
+                <type name="org.andromda.metafacades.uml.EnumerationFacade"/>
+            </modelElement>
+        </modelElements>
+    </template> -->
+
+    <template
+        path="templates/mongodb/MongoDBAbstractEntity.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>
+
+    <!--  <template
+        path="templates/mongodb/EntityInterface.vsl"
+        outputPattern="$generatedFile"
+        outlet="transfers"
+        overwrite="true"/> -->
+
+    <!-- cartridge-template merge-point -->
+
+</cartridge>

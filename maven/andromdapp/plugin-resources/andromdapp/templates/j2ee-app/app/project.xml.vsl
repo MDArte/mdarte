@@ -256,5 +256,15 @@
                 <ear.bundle>true</ear.bundle>
             </properties>                     
         </dependency>
+		
+		<dependency>
+            <groupId>mongodb</groupId>
+            <artifactId>mongodb-java-driver</artifactId>
+            <version>${mongodb.version}</version>
+            <type>jar</type>
+            <properties>
+                <ear.bundle>true</ear.bundle>
+            </properties>
+        </dependency>
     </dependencies>
 </project>

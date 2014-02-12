@@ -1,0 +1,70 @@
+#set ($generatedFile = "${entity.packagePath}/${entity.entityName}MongoDBDAOImpl.java")
+
+// license-header java merge-point
+/**
+ * Attention: Generated source! Do not modify by hand!
+ */
+#if ($entity.packageName)
+package $entity.packageName;
+#end
+
+
+
+/**
+ * <p>
+ * Factory class.
+ * Is able to find and create objects of type ${entity.name}.
+ * Those can be described as follows:
+ * </p>
+ * @see $entity.fullyQualifiedName
+ */
+
+import ${customTypesPackage}.${modelPackageName}.MongoDBDAOException;
+import br.ufrj.coppetec.DataObject; 
+ 
+#if ($entity.abstract)
+public abstract class ${entity.name}MongoDBDAOImpl extends ${entity.name}MongoDBDAO {
+#else
+public class ${entity.name}MongoDBDAOImpl extends ${entity.name}MongoDBDAO {
+#end
+
+#foreach ($operation in $entity.businessOperations)
+#set ($returnType = $operation.returnType)
+#set ($parameterList = $operation.typedArgumentList)
+
+#if(!$operation.findTaggedValue($daoMethod) ||( $operation.findTaggedValue($daoMethod) && $operation.findTaggedValue($daoMethod).equals("true")))
+
+#if ($stringUtils.isBlank($parameterList))
+#set ($parameters = "com.mongodb.MongoClient session")
+#else
+#set ($parameters = "com.mongodb.MongoClient session, ${parameterList}")
+#end
+
+## (MDArte) Modificacao do tipo de retorno de um metodo que retorne uma colecao para Object, permitindo assim uma paginacao
+## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
+#if($returnType.collectionType)
+	#set($return = "Object")
+#else
+	#set($return = $returnType.fullyQualifiedName)
+#end
+
+## Fim
+
+	*/
+#if ($operation.exceptionsPresent)
+    protected $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws ${customTypesPackage}.${modelPackageName}.DAOException, $operation.exceptionList{
+#else
+    protected $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws ${customTypesPackage}.${modelPackageName}.DAOException {
+#end
+#if ($operation.returnTypePresent)
+        return $operation.returnType.javaNullString;    
+#end
+    }
+#end
+#end
+*/
+    /*protected Object handleFilter(DataObject vo) throws $customTypesPackage.${modelPackageName}.MongoDBDAOException {		
+       return null;
+    }*/
+
+}

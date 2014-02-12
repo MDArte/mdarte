@@ -15,25 +15,24 @@
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
 #if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
-        #set($action = $_action)
-        #set($achou = "true")
+#set($action = $_action)
+#set($achou = "true")
 #end
 #end
 #end
 ## fim do codigo
 
-
 ##set ($action = $jsp.actions.get(0))
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 ##
-	#set ($clientValidationDesired = ($clientValidation=='true'))
-	#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
-	#set ($formBeanName = $action.formBeanName)
-	###set ($actionParameters = $action.actionParameters)
-	## Considera os parametros de todas as acoes
-	#set ($actionParameters = $jsp.allUniqueActionParameters )
-	#set ($hints = $hints.equalsIgnoreCase("true"))
-	#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
+#set ($clientValidationDesired = ($clientValidation=='true'))
+#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
+#set ($formBeanName = $action.formBeanName)
+###set ($actionParameters = $action.actionParameters)
+## Considera os parametros de todas as acoes
+#set ($actionParameters = $jsp.allUniqueActionParameters )
+#set ($hints = $hints.equalsIgnoreCase("true"))
+#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
 
@@ -244,13 +243,13 @@
 
 
 <div id="ConteudoDiv">
-	#set ($messageKey = $action.messageKey)
-	#set ($actionTrigger = $action.actionTrigger)
+#set ($messageKey = $action.messageKey)
+#set ($actionTrigger = $action.actionTrigger)
 	<div id="$action.styleId" class="action">
     	<div class="trigger">
-	##if ($action.hyperlink)
-	##	#renderHyperlink($action "        ")
-	#if ($action.tableAction)## this means this action allows rows to be selected and sent
+##if ($action.hyperlink)
+##	#renderHyperlink($action "        ")
+#if ($action.tableAction)## this means this action allows rows to be selected and sent
 	
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
@@ -391,5 +390,4 @@
 #end
 #end
 #end
-
 

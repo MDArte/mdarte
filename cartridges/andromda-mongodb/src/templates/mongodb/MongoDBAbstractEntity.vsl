@@ -1,0 +1,14 @@
+#set ($generatedFile = "MongoDBAbstractEntity.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import com.mongodb.BasicDBObject;
+
+public abstract class MongoDBAbstractEntity extends BasicDBObject {
+	
+	public abstract Long getId();
+
+	//public abstract MongoDBAbstractDAO getDaoImpl();	
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<profile>
+    <documentation>
+        <p>
+            Dependencies can be used between Services and Entities, they
+            won't need any stereotype assigned to them. These dependencies
+            are used to reference an entity from another entity or service,
+            or to reference a service from an entity or another service.
+        </p>
+        <p>
+            Entity query operations (i.e. finders) can be denoted by setting the
+            query flag on the modeled operation to true
+            (they do not require any stereotypes).
+        </p>
+        <p>
+            Actors represent roles within your model. To designate that a role
+            has access to a given service you must draw a dependency from an Actor
+            to the
+            <a href="Service"><![CDATA[<<Service>>]]></a>. To designate the
+            role has access to to a given operation, you must draw a dependency from
+            an Actor to the operation.
+        </p>
+    </documentation>
+    <elements>
+        <elementGroup name="Stereotypes">
+            
+            <element name="DOCUMENT">
+                <documentation>
+                    Denotes a class is representing an MongoDB POJO.
+                </documentation>
+                <value>Document</value>
+                <appliedOnElement>class</appliedOnElement>
+            </element>
+            
+            <element name="ENTITY">
+                <documentation>
+                    Denotes a class is representing an MongoDB POJO. This will instruct the cartridge to generate
+                    an <code>.hbm.xml</code> descriptor and the corresponding class from it.
+                </documentation>
+                <value>Entity</value>
+                <appliedOnElement>class</appliedOnElement>
+            </element>
+            
+            <element name="SERVICE">
+                <documentation>
+                    Denotes a class is representing an EJB session bean that is supposed to be used as a facade
+                    for a set of entities.
+                </documentation>
+                <value>Service</value>
+                <appliedOnElement>class</appliedOnElement>
+            </element>
+            
+            <element name="ENUMERATION">
+                <documentation>
+                    This class will instruct the generation of a type-safe enumeration class. The class implements the
+                    required MongoDB interface to be able to be persisted. That way it is possible for Entities to
+                    use this enumeration type for their attributes.
+                </documentation>
+                <value>Enumeration</value>
+                <appliedOnElement>class</appliedOnElement>
+            </element>
+        </elementGroup>
+        <elementGroup name="Tagged Values">
+            <element name="HIBERNATE_INVERSE">
+                <value>@andromda.hibernate.inverse</value>
+            </element>
+            <element name="MONGODB_ASSOCIATION_TYPE">
+                <value>@andromda.mongodb.association.type</value>
+            </element>
+        </elementGroup>
+    </elements>
+</profile>

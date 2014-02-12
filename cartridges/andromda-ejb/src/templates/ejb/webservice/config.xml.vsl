@@ -16,22 +16,22 @@
              targetNamespace="http://${moreSpecificPackageName}"
              typeNamespace="http://${moreSpecificPackageName}/types"
              packageName="$package">
-        #foreach($webService in $webServices)
+#foreach($webService in $webServices)
         <interface name="${webService.fullyQualifiedName}Srv"
         		           servantName="${webService.fullyQualifiedName}Bean"/>
-        #end
+#end
 	        <typeMappingRegistry>
     		        <additionalTypes>
-    			            #set($webServiceDatas = $ejbUtils.getWebServiceData())
-    			            #foreach($webServiceData in $webServiceDatas)
-    			            #set($package = $webServiceData.package.fullyQualifiedName)
-							#if($stringUtils.indexOf("$package", "$modelPackageName") > 0)
-							#set($package = $stringUtils.replace("${package}", "$modelPackageName", "$wsdPackageName"))
-							#set($package = $package.concat("."))
-							#set($name = $package.concat("${webServiceData.name}WS"))
+#set($webServiceDatas = $ejbUtils.getWebServiceData())
+#foreach($webServiceData in $webServiceDatas)
+#set($package = $webServiceData.package.fullyQualifiedName)
+#if($stringUtils.indexOf("$package", "$modelPackageName") > 0)
+#set($package = $stringUtils.replace("${package}", "$modelPackageName", "$wsdPackageName"))
+#set($package = $package.concat("."))
+#set($name = $package.concat("${webServiceData.name}WS"))
     				            <class name="${name}"/>
-    			            #end
-    			            #end
+#end
+#end
 	    	        </additionalTypes>
         </typeMappingRegistry> 
     </service>

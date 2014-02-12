@@ -1,0 +1,140 @@
+#set ($generatedFile = "MongoDBAbstractDAO.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import java.net.UnknownHostException;
+
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+
+public abstract class MongoDBAbstractDAO {
+
+	public static final MongoClient mongoClient;
+	public static final DB db;
+
+	private static String BD_USUARIO = null;
+	private static String BD_NOME = null;
+
+
+	static {
+		mongoClient = getConnection();
+		db = null;
+	}
+
+	public static final ThreadLocal session = new ThreadLocal();
+
+	public static MongoClient currentSession() {
+		MongoClient s = (MongoClient) session.get();
+		// Open a new MongoClient, if this Thread has none yet
+		if (s == null) {
+			s = getConnection();
+			session.set(s);
+		}
+		return s;
+	}
+	
+	public static boolean getSession(){
+	com.mongodb.MongoClient session = (com.mongodb.MongoClient) ${customTypesPackage}.${modelPackageName}.MongoDBAbstractDAO.session.get();
+	boolean responsibleSession = false;
+	if(session == null){
+		responsibleSession = true;
+		session = ${customTypesPackage}.${modelPackageName}.MongoDBAbstractDAO.currentSession();
+	}
+	return  responsibleSession;
+    }
+	
+
+	public static void closeSession()  {
+		MongoClient s = (MongoClient) session.get();
+		session.set(null);
+		if (s != null)
+			s.close();
+	}
+
+	public static String getDatabaseName() {
+		if (BD_NOME == null && db != null) {
+			BD_NOME = db.getName();
+		}
+		return BD_NOME;
+	}
+
+	public static String getDatabaseUser() {
+		if (BD_USUARIO == null) {
+			return "";
+		}
+		return BD_USUARIO;
+	}
+	
+	public static MongoClient getConnection() {
+		
+		MongoClient mongoClient = null;
+		try
+		{
+			mongoClient = new MongoClient( "localhost" , 27017 );
+		}
+		catch (UnknownHostException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mongoClient;
+		/*MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
+                                      new ServerAddress("localhost", 27018),
+                                      new ServerAddress("localhost", 27019)));*/
+	}
+
+	public static MongoClient getConnection(String address, int port) {
+		
+		MongoClient mongoClient = null;
+		try
+		{
+			mongoClient = new MongoClient( address , port );
+		}
+		catch (UnknownHostException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mongoClient;
+		/*MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
+                                      new ServerAddress("localhost", 27018),
+                                      new ServerAddress("localhost", 27019)));*/
+	}
+	
+	public static DB connectDatabase(MongoClient conn, String database) {
+		DB db = null;
+		if (database == null || database.isEmpty()) db = conn.getDB("SistemaAcademico");
+		else db = conn.getDB(database);
+		
+		return db;
+	}
+	
+	public static DB connectDatabaseAuthenticate (MongoClient conn, String database, String username, String password) {
+		DB db = null;
+		if (database == null || database.isEmpty())  db = conn.getDB("SistemaAcademico");
+		else  db = conn.getDB(database);
+		boolean auth = db.authenticate(username, password.toCharArray());
+		
+		if (auth) return db;
+		else return null;
+	}
+	
+	/*public abstract java.util.List<MongoDBAbstractEntity> select(Long id) throws MongoDBDAOException;
+	
+	public abstract java.util.List<MongoDBAbstractEntity> insert(MongoDBAbstractEntity objTO) throws MongoDBDAOException;
+
+	public abstract java.util.List<MongoDBAbstractEntity> insertOrUpdate(MongoDBAbstractEntity objTO) throws MongoDBDAOException;
+	
+	public abstract java.util.List<MongoDBAbstractEntity> update(MongoDBAbstractEntity objTO) throws MongoDBDAOException;
+	
+	public abstract void delete(MongoDBAbstractEntity objTO) throws MongoDBDAOException;
+		
+	public abstract void deleteById(Long id) throws MongoDBDAOException;
+	
+	public abstract java.util.List<MongoDBAbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws MongoDBDAOException;*/
+	
+	//public abstract java.util.List<MongoDBAbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws MongoDBDAOException;	
+ 
+}

@@ -47,20 +47,17 @@ public abstract class ${service.name}Impl
 
 #if ($operation.exceptionsPresent)
 	 $operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) throws $operation.exceptionList{
-            #if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
                     return $operation.returnType.javaNullString;
-            #end	  
-	  
+#end
 	  }
-	  
 
 #else
 	  $operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos){
-            #if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
                     return $operation.returnType.javaNullString;
-            #end
+#end
 	  }
-
 
 #end
 
@@ -76,31 +73,26 @@ public abstract class ${service.name}Impl
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
 	
-	#if(!$stringUtils.isEmpty($listaArgumentos))
-		#set($parametros = "$operation.argumentNames, null")
-	#else
-		#set($parametros = "null")
-	#end
+#if(!$stringUtils.isEmpty($listaArgumentos))
+#set($parametros = "$operation.argumentNames, null")
+#else
+#set($parametros = "null")
+#end
 #if ($operation.exceptionsPresent)
 	  $operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) throws $operation.exceptionList {
-	  
 #else
 	  $operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) {
 #end	
 	
-	#if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
 		return handle${stringUtils.capitalize(${operation.name})}($parametros);
-	#else
+#else
 		handle${stringUtils.capitalize(${operation.name})}($parametros);
-	#end
-	
+#end
 	}
 
 #end
 
 #end
-    
-
-
 }
  

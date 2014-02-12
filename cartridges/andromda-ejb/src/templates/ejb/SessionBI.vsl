@@ -46,22 +46,22 @@ public interface ${service.name}BI
 
 
 #if ($operation.exceptionsPresent)
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  abstract $return ${operation.name} ($listaArgumentos) throws Exception, $operation.exceptionList;
-	#end
+#end
 	  
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  abstract $return ${operation.name} ($listaArgumentos) throws Exception;
-	#end
+#end
 	  
 #end
 
@@ -84,14 +84,14 @@ public interface ${service.name}BI
 
 #if ($operation.exceptionsPresent)
 
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception, $operation.exceptionList;
-	#end
+#end
 	  
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception;
-	#end
+#end
 	  
 #end
 
@@ -99,7 +99,7 @@ public interface ${service.name}BI
 #end
 
 ##Adicao do metodo do CRUD por dependencia com entidade
-	#foreach ($dependencia in $service.sourceDependencies)
+#foreach ($dependencia in $service.sourceDependencies)
 
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #if($ejbSecurityEnabled)	  

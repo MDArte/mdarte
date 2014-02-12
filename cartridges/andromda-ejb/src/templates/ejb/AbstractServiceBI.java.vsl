@@ -42,7 +42,6 @@ public interface ${service.name}BI
 	##  public $operation.returnType.fullyQualifiedName $operation.signature
 ##		throws java.rmi.RemoteException;
 
-
 #if ($operation.exceptionsPresent)
 	  $operation.visibility  abstract $return ${operation.name} ($listaArgumentos) throws Exception, $operation.exceptionList;
 #else
@@ -62,8 +61,6 @@ public interface ${service.name}BI
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
 
-
-
 ## Fim
 
 #if ($operation.exceptionsPresent)
@@ -75,7 +72,7 @@ public interface ${service.name}BI
 #end
 #end
 
-	#foreach ($dependencia in $service.sourceDependencies)
+#foreach ($dependencia in $service.sourceDependencies)
 
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #if($ejbSecurityEnabled)

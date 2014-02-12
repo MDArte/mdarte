@@ -1,0 +1,62 @@
+#set ($generatedFile = "MongoDBConnection.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import com.mongodb.MongoClient;
+import com.mongodb.DB;
+import java.net.UnknownHostException;
+
+public class MongoDBConnection {
+
+	public static MongoClient getConnection() {
+		
+		MongoClient mongoClient = null;
+		try
+		{
+			mongoClient = new MongoClient( "localhost" , 27017 );
+		}
+		catch (UnknownHostException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mongoClient;
+		/*MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
+                                      new ServerAddress("localhost", 27018),
+                                      new ServerAddress("localhost", 27019)));*/
+	}
+
+	public static MongoClient getConnection(String address, int port) {
+		
+		MongoClient mongoClient = null;
+		try
+		{
+			mongoClient = new MongoClient( address , port );
+		}
+		catch (UnknownHostException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mongoClient;
+		/*MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("localhost", 27017),
+                                      new ServerAddress("localhost", 27018),
+                                      new ServerAddress("localhost", 27019)));*/
+	}
+	
+	public static DB connectDatabase(MongoClient conn, String database) {
+		DB db = conn.getDB(database);
+		
+		return db;
+	}
+	
+	public static DB connectDatabaseAuthenticate (MongoClient conn, String database, String username, String password) {
+		DB db = conn.getDB(database);
+		boolean auth = db.authenticate(username, password.toCharArray());
+		
+		if (auth) return db;
+		else return null;
+	}
+}

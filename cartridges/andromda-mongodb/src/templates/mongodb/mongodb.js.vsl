@@ -1,0 +1,34 @@
+#set ($generatedFile = "${projectId}MongoDB.js")
+
+use ${projectId}_metadata
+
+#set($entities = $mongoDBUtils.getDocument())        
+        
+#foreach($entity in $entities)
+	db.tables.insert ({
+	name : "$entity.name",
+	attributes : {
+#foreach ( $attribute in $entity.attributes )
+#if (!$attribute.identifier) 
+	$attribute.name : {type : "$attribute.type.name"}
+#end
+#end
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+	$target.name : {type : "$target.type.name"}
+#end
+#end
+	}
+	})
+
+#end
+
+use ${projectId}
+
+#foreach($entity in $entities)
+	db.seq.insert ({
+	_id : "$entity.name",
+	seq : new NumberLong(1)})
+	
+#end

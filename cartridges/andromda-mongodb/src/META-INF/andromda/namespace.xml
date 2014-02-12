@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<namespace name="mongodb">
+    <components>
+        <component name="cartridge">
+            <path>META-INF/andromda/cartridge.xml</path>
+        </component>
+        <component name="metafacades">
+            <path>META-INF/andromda/metafacades.xml</path>
+        </component>
+        <component name="profile">
+            <path>META-INF/andromda/profile.xml</path>
+        </component>
+    </components>
+    <properties>
+        <!-- namespace-propertyGroup merge-point -->
+        <propertyGroup name="Outlets">
+            <documentation>
+                Defines the locations to which output is generated.
+            </documentation>
+            <property name="entities">
+                <documentation>
+                    The directory to which mongodb entities are generated.  Please <strong>NOTE</strong>
+                    that the entity implementation classes will also be generated to this location when
+                    <strong>no operations</strong> are present on the entity with <em>instance scope</em>.
+                </documentation>
+            </property>
+            <property name="entity-impls">
+                <documentation>
+                    The location to which mongodb entity implementation files are generated. Please <strong>NOTE</strong>
+                    that the entity implementation classes will be generated to the <em>entities</em> outlet when
+                    <strong>no operations</strong> are present on the entity with <em>instance scope</em>.
+                </documentation>
+            </property>
+            <property name="transfers">
+                <documentation>
+                </documentation>
+            </property>  
+            <property name="transfer-impls">
+                <documentation>
+                </documentation>
+            </property>                      
+            <property name="session-beans" required="false">
+                <documentation>
+                    The directory to which Session EJB service wrappers are generated.  If this
+                    property is not specified, Session EJB service wrappers will not be generated.
+                </documentation>
+            </property>
+            <property name="session-impls" required="false">
+                <documentation>
+                    The directory to which Session Bean implementation files are generated.
+                </documentation>
+            </property>
+            <property name="configuration" required="false">
+                <documentation>
+                    The directory to which the mongodb.cfg.xml file is generated.
+                </documentation>
+            </property>
+            <property name="statistics" required="false">
+                <documentation>
+                    Place which the reports will be placed. Use for internal statistics.
+                </documentation>
+            </property>
+        </propertyGroup>
+        <propertyGroup name="JDBC">
+            <property name="driver" required="false">
+                <documentation>
+                    JDBC Driver to make database connection, this should be a fully qualified Java class name.
+                </documentation>
+            </property>
+            <property name="username" required="false">
+                <documentation>
+                    The database user login name.
+                </documentation>
+            </property>
+            <property name="password" required="false">
+                <documentation>
+                    The database user password.
+                </documentation>
+            </property>
+            <property name="connectionUrl" required="false">
+                <documentation>
+                    URL for the JDBC Driver to make the connection to the database.
+                </documentation>
+            </property>
+            <property name="dataSource" required="false">
+                <documentation>
+                    JNDI name of data source to use. (would be used instead
+                    of the connection properties, driver, username, password, etc).
+                </documentation>
+            </property>
+            <property name="sequenceIdentifierPrefix">
+                <default></default>
+                <documentation>
+                    The prefix to use for identifier sequences.
+                </documentation>
+            </property>
+            <property name="sequenceIdentifierSuffix">
+                <default>_SEQ</default>
+                <documentation>
+                    The suffix to use for identifier sequences.
+                </documentation>
+            </property>
+        </propertyGroup>
+        <propertyGroup name="Name Patterns">
+            <property name="entityNamePattern">
+                <default>{0}</default>
+                <documentation>
+                    The pattern to use when constructing an entity name.
+                    <em>{0}</em> is used to represent the entity name
+                    in the model, so if you specified a value of
+                    <code>{0}Entity</code> all the entities generated
+                    would have a suffix of "Entity".
+                </documentation>
+            </property>
+            <property name="entityImplementationNamePattern">
+                <default>{0}Impl</default>
+                <documentation>
+                    The pattern to use when constructing the entity implementation name.
+                </documentation>
+            </property>
+            <property name="embeddedValueImplementationNamePattern">
+                <default>{0}Impl</default>
+                <documentation>
+                    The pattern to use when constructing an embedded value implementation name.
+                </documentation>
+            </property>
+            <property name="enumerationNamePattern">
+                <default>{0}Enum</default>
+                <documentation>
+                    The pattern to use when constructing mongodb enumerations.
+                </documentation>
+            </property>
+            <property name="ejbJndiNamePrefix" required="false">
+                <documentation>
+                    The prefix to give to the Session EJB JNDI names (this allows
+                    the same Session EJB to be deployed multiple times in the same container)
+                </documentation>
+            </property>
+        </propertyGroup>
+        <propertyGroup name="Other">
+            <property name="mongoDBVersion">
+                <default>2</default>
+                <documentation>
+                    The version of MongoDB to use when generating.
+                </documentation>
+            </property>
+            <property name="modelPackageName">
+                <default>cd</default>
+                <documentation>
+                    Nome do pacote de dominio.
+                </documentation>
+            </property>  
+            <property name="procedureName" required="false">
+            </property>
+            
+            <property name="loginDefault" required="false">
+            </property>
+            <property name="auditoriaUsaAssinaturaDigital">
+                <default>false</default>
+            </property>
+            <property name="transferPackageName">
+                <default>to</default>
+                <documentation>
+                    Nome do pacote de transferencia.
+                </documentation>
+            </property>             
+            <property name="controleAcessoDir">
+                <default>accessControl</default>
+                <documentation>
+                    Nome do pacote de controle de acesso.
+                </documentation>
+            </property>           
+            <property name="actionPackageName">
+                <default>action</default>
+                <documentation>
+                    Nome do pacote de transferencia.
+                </documentation>
+            </property>
+            <property name="mongoDBListTypeImplementation">
+                <default>com.mongodb.BasicDBList</default>
+                <documentation>
+                    The implementation type to use for association ends that are modeled as lists.
+                </documentation>
+            </property>                          
+            <property name="listTypeImplementation">
+                <default>java.util.ArrayList</default>
+                <documentation>
+                    The implementation type to use for association ends that are modeled as lists.
+                </documentation>
+            </property>
+            <property name="setTypeImplementation">
+                <default>java.util.HashSet</default>
+                <documentation>
+                    The implementation type to use for association ends that are modeled as sets.
+                </documentation>
+            </property>
+            <property name="mapTypeImplementation">
+                <default>java.util.HashMap</default>
+                <documentation>
+                    The implementation type to use for association ends that are modeled as maps.
+                </documentation>
+            </property>
+            <property name="bagTypeImplementation">
+                <default>java.util.ArrayList</default>
+                <documentation>
+                    The implementation type to use for association ends that are modeled as bags.
+                </documentation>
+            </property>
+            <property name="specificCollectionInterfaces">
+                <default>false</default>
+                <documentation>
+                    A flag indicating whether or not specific collection interfaces will be used
+                    in association end mutators and accessors (i.e. java.util.Set, java.util.List, etc).
+                    If this is set to false, then the value of the <a href="#defaultCollectionInterface">defaultCollectionInterface</a>
+                    property will used to provide the collection interface.
+                </documentation>
+            </property>
+            <property name="defaultCollectionInterface">
+                <default>java.util.List</default>
+                <documentation>
+                    The default collection interface, this is the interface used with association end
+                    accessors and mutators if the <a href="#specificCollectionInterfaces">specificCollectionInterfaces</a>
+                    flag is set to <code>false</code>.
+                </documentation>
+            </property>
+            <property name="mongoDBTypeMappingsUri" required="false">
+                <documentation>
+                    URI specifying the specific mappings from model types to mongodb types.
+                    (i.e. <code>file:${basedir}/MongoDBTypeMappings.xml</code>). This
+                    is not necessary but useful for defining mongodb user types (when
+                    mongodb doesn't support a specific type in the manner needed
+                    for your application).
+                </documentation>
+            </property>
+            <property name="securityRealm" required="false">
+                <documentation>
+                    The name of the security realm (i.e. animal-quiz, other, etc).
+                    <strong>NOTE:</strong>This enables EJB security if specified.
+                </documentation>
+            </property>
+            <property name="customTypesPackage">
+                <default>org.andromda.persistence.mongodb</default>
+                <documentation>
+                </documentation>
+            </property>
+            <property name="userTypesPackage">
+                <default>org.andromda.persistence.mongodb.usertypes</default>
+                <documentation>
+                    Defines the package for the MongoDB user types
+                </documentation>
+            </property>
+            <property name="enumTypesPackage" required="false">
+                <documentation>
+                    Optional definition of the package name where all MongoDB enumeration types are
+                    to be generated. This will overrride the default model package name where the
+                    enumeration class itself will still be placed.
+                </documentation>
+            </property>
+            <property name="serviceLocatorName">
+                <default>ServiceLocator</default>
+                <documentation>
+                    The name to give to the generated service locator class.
+                </documentation>
+            </property>
+            <property name="xmlEncoding">
+                <default>ISO-8859-1</default>
+                <documentation>
+                    Encoding for generated XML files.
+                </documentation>
+            </property>
+            <property name="generateEntityEqualsAndHashCode">
+                <default>true</default>
+                <documentation>
+                    Indicates whether or not a default equals and hashCode implementation should be generated.
+                </documentation>
+            </property>
+            <property name="maxRows">
+                <default>20</default>
+                <documentation>
+                     Number of rows by page
+                </documentation>
+            </property>
+            <property name="maxPages">
+                <default>10</default>
+                <documentation>
+                     Number of pages by group
+                </documentation>
+            </property>
+            <property name="daoMethod">
+                <default>@andromda.persistence.DAOMethod</default>
+                <documentation>
+                     Indicates if a method is or not created on DAO class
+                </documentation>
+            </property>
+            <property name="throwsVetoException">
+                <default>@andromda.persistence.throwsVetoException</default>
+                <documentation>
+                     Indicates if a method will throw PropetryVetoException
+                </documentation>
+            </property>
+            <property name="comment">
+                <default>@andromda.persistence.comment</default>
+                <documentation>
+                     Representa comentários em class, Association, AssociationEnd e Parameter
+                </documentation>
+            </property>
+            <property name="maxSizeClass">
+                <default>200</default>
+            </property>
+            <property name="projectId">
+                <default>mongodb</default>
+            </property>
+            <property name="ejb3">
+                <default>false</default>
+            </property>
+            <property name="dialetoExterno" required="false">
+                <documentation>
+                    Define o nome do arquivo externo com a configuração do dialeto 
+                </documentation>
+            </property>
+            <property name="tamanhoAssociacao">
+                <default>1024</default>
+            </property>
+        </propertyGroup>
+    </properties>
+</namespace>

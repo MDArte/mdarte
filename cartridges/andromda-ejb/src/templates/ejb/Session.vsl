@@ -16,9 +16,6 @@ package $service.packageName;
  * @see $service.fullyQualifiedName
  */
 public interface $service.name
-##if ($service.generalization)
-##    extends $service.generalization.fullyQualifiedName , ${service.name}BI
-###else
 #if($ejb3 == 'true')
     extends ${service.name}BI
 #else
@@ -28,16 +25,11 @@ public interface $service.name
 {
 
 #set($generalizations = $service.allGeneralizations)
-
 #set($operations = $service.operations)
-
 #foreach($generalization in $generalizations)
-	#set($var = $operations.addAll($generalization.operations))
+#set($var = $operations.addAll($generalization.operations))
 #end
-
-
 #set($webService = $service.hasStereotype("$webSrv"))
-
 #foreach ($operation in $operations)
 
 #set ($listaArgumentos = '')
@@ -50,32 +42,28 @@ public interface $service.name
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
 
-
-
 #if ($operation.exceptionsPresent)
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 		## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
-		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
-	#end
+	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
+#end
 	  
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
-		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
-	#end
-	  
+	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
+#end  
 #end
 
 ## (MDArte) Codigo para gerar metodos que receba o grupo a ser carregado na paginacao, caso este metodo retorne uma colecao
 ###if ($stringUtils.contains($operation.returnType.fullyQualifiedName, "Collection"))
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
-
 #set ($listaArgumentos = '')
 #set ($return = '')
 #if($webService)
@@ -85,34 +73,30 @@ public interface $service.name
 #renderParametersPaginacao($operation $listaArgumentos true)
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
-
-
 ## Fim
 
 #if ($operation.exceptionsPresent)
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 		## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
-	#end
-	  
+#end  
 #else
-	#if($operation.visibility == 'public')
+#if($operation.visibility == 'public')
 	## Only expose public methods
 	   /**
 	$operation.getDocumentation("    * ")
 	    */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
-	#end
-	  
+#end
 #end
 #end
 #end
 	
-	##Adicao do metodo do CRUD por dependencia com entidade
-	#foreach ($dependencia in $service.sourceDependencies)
+##Adicao do metodo do CRUD por dependencia com entidade
+#foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #if($ejbSecurityEnabled)          
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;

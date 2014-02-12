@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- contains the MongoDB cartridge metafacade mappings -->
+<metafacades>
+    <property reference="mongoDBVersion"/>
+    <property reference="maxSqlNameLength"/>
+    <property reference="entityNamePattern"/>
+    <property reference="entityImplementationNamePattern"/>
+    <property reference="enumerationNamePattern"/>
+    <property reference="securityRealm"/>
+    <property reference="enumTypesPackage"/>
+    <property reference="useCodeConstraint"/>
+
+    <metafacade class="org.andromda.cartridges.mongodb.metafacades.MongoDBEntityLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>DOCUMENT</stereotype>
+        </mapping>
+        <property reference="sqlMappingsUri"/>
+    </metafacade>
+
+    <metafacade class="org.andromda.cartridges.mongodb.metafacades.MongoDBAssociationEndLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.AssociationEnd$Impl">
+            <context>org.andromda.cartridges.mongodb.metafacades.MongoDBEntity</context>
+        </mapping>
+        <property reference="mongoDBListTypeImplementation"/>
+        <property reference="listTypeImplementation"/>
+        <property reference="setTypeImplementation"/>
+        <property reference="mapTypeImplementation"/>
+        <property reference="bagTypeImplementation"/>
+        <property reference="specificCollectionInterfaces"/>
+        <property reference="defaultCollectionInterface"/>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.mongodb.metafacades.MongoDBAssociationLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.UmlAssociation$Impl">
+            <context>org.andromda.cartridges.mongodb.metafacades.MongoDBEntity</context>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.mongodb.metafacades.MongoDBEnumerationLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>ENUMERATION</stereotype>
+        </mapping>
+    </metafacade>
+    <metafacade class="org.andromda.cartridges.mongodb.metafacades.MongoDBEntityAttributeLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.Attribute$Impl">
+            <context>org.andromda.cartridges.mongodb.metafacades.MongoDBEntity</context>
+        </mapping>
+    </metafacade>
+</metafacades>

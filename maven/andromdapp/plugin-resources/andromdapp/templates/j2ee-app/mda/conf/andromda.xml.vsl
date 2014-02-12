@@ -455,5 +455,31 @@
 			</properties>
 		</namespace>
 #end
+		<namespace name="mongodb">
+			<properties>
+				<property name="versionProperty">mongodb_version</property>
+				<property name="hibernateTypeMappingsUri">MongoDB</property>
+				<property name="dataSource">${dataSource}</property>
+				<property name="customTypesPackage">${application.package}</property>
+#if($modulos)
+				<property name="entities">${maven.andromda.core.dominio.generated.dir}</property>
+				<property name="entity-impls">${maven.andromda.core.dominio.manual.dir}</property>
+				<property name="configuration">${maven.andromda.core.dominio.generated.dir}</property>
+#else
+				<property name="entities">${maven.andromda.core.generated.dir}</property>
+				<property name="entity-impls">${maven.andromda.core.manual.dir}</property>
+				<property name="configuration">${maven.andromda.core.generated.dir}</property>
+#end
+				<property name="transfers">${maven.andromda.common.generated.dir}</property>
+				<property name="transfer-impls">${maven.andromda.common.manual.dir}</property>
+#if(!$securityEnabled)
+				<!-- uncomment to enable security
+#end
+				<property name="securityRealm">${application.id}</property>
+#if(!$securityEnabled)
+				--> 
+#end
+			</properties>
+		</namespace>
 	</namespaces>
 </andromda>

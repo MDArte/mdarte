@@ -98,7 +98,7 @@ $operation.getDocumentation("	 * ")
 
 #set($exception = "")
 #if ($operation.exceptionsPresent)
-	#set($exception = "throws $operation.exceptionList")
+#set($exception = "throws $operation.exceptionList")
 #end
 	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
 

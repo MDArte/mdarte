@@ -148,6 +148,12 @@
             <version>${andromda.version}</version>
             <type>jar</type>
         </dependency>
+		<dependency>
+            <groupId>andromda</groupId>
+            <artifactId>andromda-mongodb-cartridge-coppetec</artifactId>
+            <version>${cartridge.version}</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-ocl-query-library</artifactId>

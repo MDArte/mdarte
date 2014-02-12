@@ -18,20 +18,15 @@ public class ${messageDrivenClient.name}MDBClientImpl extends ${messageDrivenCli
 
 #set ($listaAtributos = $operation.typedArgumentList)
 
-    #if ($operation.exceptionsPresent)
-    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
-    #else
-    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
-    #end
-	
-    #if ($operation.returnTypePresent)
-        return $operation.returnType.javaNullString;    
-    #end
-        }
-        
-  
-
-
+#if ($operation.exceptionsPresent)
+    protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
+#else
+    protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
 #end
-
+	
+#if ($operation.returnTypePresent)
+        return $operation.returnType.javaNullString;    
+#end
+    }
+#end
 }

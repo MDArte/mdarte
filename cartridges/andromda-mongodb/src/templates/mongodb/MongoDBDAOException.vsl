@@ -1,0 +1,17 @@
+#set ($generatedFile = "MongoDBDAOException.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+public class MongoDBDAOException extends Exception {
+
+	public MongoDBDAOException(Exception e) {
+		super(e);
+	}
+
+	public MongoDBDAOException(String message) {
+		super(message);
+	}
+
+}

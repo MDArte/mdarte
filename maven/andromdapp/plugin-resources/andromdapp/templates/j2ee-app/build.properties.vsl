@@ -152,3 +152,6 @@ selenium.java.client.driver.version=1.0.2
 # junit and testFlow
 junit.version=4.8.2
 testflow.version=1.0
+
+#mongoDB
+mongodb.version=2.11.2

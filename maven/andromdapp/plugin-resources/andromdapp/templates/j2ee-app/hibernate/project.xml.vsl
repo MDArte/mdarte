@@ -206,6 +206,12 @@
                 <jar.manifest.classpath>true</jar.manifest.classpath>
             </properties>
         </dependency>
+		<dependency>
+            <groupId>mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongodb.version}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>

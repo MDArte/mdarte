@@ -1,0 +1,260 @@
+// license-header java merge-point
+/**
+ * Attention: Generated source! Do not modify by hand!
+ */
+#if ($entity.packageName)
+package $entity.packageName;
+
+#end
+
+//${entity.aggregationChain}
+
+import java.util.List;
+import java.util.ArrayList;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+
+import org.apache.commons.beanutils.PropertyUtils;
+
+import ${customTypesPackage}.${modelPackageName}.MongoDBAbstractDAO;
+import ${customTypesPackage}.${modelPackageName}.MongoDBAbstractEntity;
+
+/**
+ * <p>
+ * Factory class.
+ * Is able to find and create objects of type ${entity.name}.
+ * @see $entity.fullyQualifiedName
+ */
+public abstract class ${entity.name}MongoDBDAO 
+#if($entity.generalization)
+    extends ${entity.generalization.fullyQualifiedName}MongoDBDAOImpl
+#else
+    extends MongoDBAbstractDAO 
+#end    
+{
+
+	public Long generateId(DB db)  {
+
+		DBCollection coll = db.getCollectionFromString("seq");
+		BasicDBObject query = new BasicDBObject("_id", "${entity.name}");
+		BasicDBObject update = 
+				new BasicDBObject().append("$inc", 
+				new BasicDBObject().append("seq", 1));
+
+		
+		BasicDBObject res = (BasicDBObject) coll.findAndModify(query,update);
+		
+		return res.getLong("seq");
+	}
+
+#if (!$entity.abstract)
+	public List<${entity.name}MongoDB> select(Long id)  {
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBCollection coll = db.getCollectionFromString("${entity.name}");
+		coll.setObjectClass(${entity.name}MongoDBImpl.class);
+		DBObject query = QueryBuilder.start("_id").is(id).get();
+		${entity.name}MongoDB res = (${entity.name}MongoDB) coll.findOne(query);
+			
+		lista.add(res);
+			
+		return lista;
+	}	
+
+	public List<${entity.name}MongoDB> insert(${entity.name}MongoDB obj) {
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		obj.setId(generateId(db));
+		coll.insert(obj);
+
+		lista.add(obj);
+		return lista;
+	}
+	
+	public List<${entity.name}MongoDB> insertOrUpdate(${entity.name}MongoDB obj) {
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		if (obj.getId() == null) obj.setId(generateId(db));
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		coll.save(obj);
+
+		lista.add(obj);
+		return lista;
+	}
+	
+	public List<${entity.name}MongoDB> update(${entity.name}MongoDB obj) {
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		if (obj.getId() == null) obj.setId(generateId(db));
+		DBObject query = QueryBuilder.start("_id").is(obj.getId()).get();
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		coll.update(query, obj);
+
+		lista.add(obj);
+		return lista; 
+	}
+
+	public void delete(${entity.name}MongoDB obj) {
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		coll.remove(obj);
+	}
+	
+	public void deleteById(Long id) {
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBObject query = QueryBuilder.start("_id").is(id).get();
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		BasicDBObject res = (BasicDBObject) coll.findAndRemove(query);
+	}
+	
+
+	/**
+	 * Lista todos os objetos.
+	 * 
+	 * @return Lista de objetos
+	 */
+	## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.
+	public List<${entity.name}MongoDB> list(Integer paginacao, String propriedade, Boolean desc) { 
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+		
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		coll.setObjectClass(${entity.name}MongoDBImpl.class);
+		DBCursor cursor = coll.find().skip((paginacao - 1)*$maxRows*$maxPages).limit($maxRows*$maxPages);
+		
+		try {
+			while(cursor.hasNext()) {
+				lista.add((${entity.name}MongoDB) cursor.next());
+			}
+		} finally {
+			cursor.close();
+		}
+			
+		//List res = cursor.toArray();
+		
+		return lista;
+	}
+	
+	## Fim
+	
+	public List<${entity.name}MongoDB> list() {
+		List<${entity.name}MongoDB> lista = new ArrayList<${entity.name}MongoDB>();
+		
+		MongoClient session = currentSession();
+		DB db = connectDatabase(session, null);
+		DBCollection coll = db.getCollectionFromString("${entity.entityName}");
+		coll.setObjectClass(${entity.entityName}MongoDBImpl.class);
+		DBCursor cursor = coll.find();
+		
+		try {
+			while(cursor.hasNext()) {
+				lista.add((${entity.name}MongoDB) cursor.next());
+			}
+		} finally {
+			cursor.close();
+		}
+		
+		
+		//List res = cursor.toArray();
+		
+		return lista;
+	}	
+	
+	
+/*	protected abstract Object handleFilter (DataObject vo) throws DAOException;
+
+	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
+		try {
+            		Object obj = handleFilter(vo);
+            
+            		if(obj instanceof org.hibernate.Query){
+            		org.hibernate.Query res = (org.hibernate.Query)obj;
+            			if (paginacao != null){
+            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+					res.setMaxResults($maxRows*$maxPages);
+				}		
+			return res.list();
+            		}
+            		else if(obj instanceof org.hibernate.Criteria){
+            			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+            			if (paginacao != null){
+            				res.setFirstResult((paginacao - 1)*$maxRows*$maxPages);
+					res.setMaxResults($maxRows*$maxPages);
+				}		
+			return res.list();
+	    		}
+            		else
+            			return null;
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+	}	*/ 	
+#end
+
+## Generate finderByAssociations
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
+
+    /**
+$target.getDocumentation("     * ")
+
+## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.     
+#if ($target.many)
+	#set($argumentList = ", Integer paginacao")
+#else
+		#set($argumentList = "")
+#end;
+     
+     
+    public static $target.getterSetterTypeName ${target.getterName}By${entity.name}(long id $argumentList) throws DAOException {		
+		try {
+			Session session = currentSession();
+#if ($target.many)
+			//org.hibernate.Query qry = session.createQuery("select t2 from ${entity.fullyQualifiedName} as t1 inner join t1.${target.name} as t2 where t1.id = " + id);
+			org.hibernate.Query qry = session.createQuery("select elements(t1.${target.name}) from ${entity.fullyQualifiedName} as t1 where t1.id = " + id);
+#else
+			org.hibernate.Query qry = session.createQuery("select a.${target.name} from ${entity.fullyQualifiedName} a where a.id = " + id);
+#end
+#if ($target.many)
+			   if(paginacao != null){
+			   	qry.setFirstResult((paginacao -1)*$maxRows*$maxPages);
+			   	qry.setMaxResults($maxRows*$maxPages);
+			   }
+			   List res = qry.list();
+			   return res;
+#else
+			   List res = qry.list();	
+			   if(res.isEmpty()) {
+			     return null;
+			   } else {
+			     return ($target.getterSetterTypeName)res.get(0);
+			   }
+#end
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		} 
+    }
+*/
+## Fim
+#end
+#end
+}
+
