@@ -14,5 +14,3 @@ Adicionar css usando o seguinte formato:
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/bootstrap.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/style-default.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/datepicker.css"></link>
-<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/summernote.css"></link>
-<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/font-awesome.min.css"></link>
