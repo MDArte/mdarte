@@ -472,7 +472,7 @@ ${indent}		<div class="col-xs-4">
 ${indent}			<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" cssClass="form-control" label="%{getText('$field.messageKey')}"  value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 ${indent}		</div>
 ${indent}	</div>
-#elseif ( ($field.textField) )
+#elseif (($field.textField) || ($field.editor))
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="form-group row textfield">
 #if ($requiredness && $field.required)
 ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
