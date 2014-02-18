@@ -240,50 +240,43 @@ $field.getDocumentation("     * ")
     }
 #elseif($field.widgetType=="money")
 #set ($asType = "Double")
-   public void ${field.setterName}As${asType}(java.lang.Double $fieldName){
-       String s = null;
-       try{
-	   if($fieldName != null){
+	public void ${field.setterName}As${asType}(java.lang.Double $fieldName){
+		String s = null;
+		try{
+			if($fieldName != null){
+				String myFormat = "#,#" + "#" +"#.00";
+				java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
+				s = myFormatter.format($fieldName);
+				
+				if(s.startsWith(",")){
+					s = "0"+s;
+				}
+				
+				this.$fieldName = s;
+			}
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	   	String myFormat = "#,#" + "#" +"#.00";
-    	   	java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
-           	s = myFormatter.format($fieldName);
-           
-           	if(s.startsWith(",")){
-			s = "0"+s;
-	   	}
-	   	
-           	this.$fieldName = s;
-           }
-       }catch(Exception e)
-       {
-           throw new RuntimeException(e);
-       }
-    	
-    	
-   }
-
-   
     public java.lang.Double ${field.getterName}As${asType}(){
     	if(this.$fieldName != null && !this.${fieldName}.equals("")){
     		java.lang.String $fieldName = this.$fieldName;
     		$fieldName = ${fieldName}.replace(".", "");
-   		$fieldName = ${fieldName}.replace(",", ".");
-   		return new java.lang.Double($fieldName);
-   	}
-   	return null;
-    }
+			$fieldName = ${fieldName}.replace(",", ".");
+			return new java.lang.Double($fieldName);
+		}
+		return null;
+	}
 
-    
     public void ${field.setterName}(java.lang.String ${fieldName}){
 	    this.$fieldName = $fieldName;
     }
 
-   
     public java.lang.String ${field.getterName}(){
     	return this.$fieldName;
     }
-    
+
 #elseif ($field.date || $field.time)
 #if ($field.date)
 #set ($asType = "Date")
@@ -395,7 +388,7 @@ $field.getDocumentation("     * ")
         return this.$fieldName;
     }
 	
-	 public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
+	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
     {
         this.${fieldName}ContentType = ${fieldName}ContentType;
     }

@@ -97,18 +97,18 @@ public abstract class ${entity.entityName}Abstract
     	if(map == null) map = new java.util.HashMap();
     	${entity.name}Impl bean = new ${entity.name}Impl();
     	return getEntityFromTO((${tipoTO})to, bean, map);
-    }	
+    }
 #end
-   
+
     protected ${entity.name}Abstract getEntityFromTO (${tipoTO} to, ${entity.name} bean, java.util.HashMap map) throws Exception 
     {
 	if(to == null) return null;
-	map.put(to.getClass().toString() + to.hashCode(), bean);	
+	map.put(to.getClass().toString() + to.hashCode(), bean);
 
 
         if (to != null)
         {
-        if(to.getId() == null){                
+        if(to.getId() == null){
         #renderConstructorBody("true")
 	}else{
 #if(!$entity.abstract)
@@ -136,29 +136,28 @@ public abstract class ${entity.entityName}Abstract
 #if ($target.many)
 #set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
     private $target.getterSetterTypeName construct$stringUtils.capitalize(${target.name})($target.getterSetterTypeName ${target.name}TO, $target.getterSetterTypeName ${target.name}Entity, java.util.HashMap map) throws Exception
-   {
-   	boolean changed = TOUtil.isCollectionChanged(${target.name}TO,${target.name}Entity);
-   	java.util.Collection list;
-	if(changed)
-		list = new java.util.ArrayList();
-	else
-		list = ${target.name}Entity;
-	if(${target.name}TO != null){    
-		java.util.Iterator it = ${target.name}TO.iterator();
-		while(it.hasNext()){    
-			${typeTargetTO}TO to = (${typeTargetTO}TO) it.next();
-			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)TOUtil.getEntityFromCollection(to, ${target.name}Entity);
-			if(map.get(to.getClass().toString() + to.hashCode()) == null){     	  
-				cd = (${target.type.fullyQualifiedName}Abstract)AbstractEntity.getEntityInstanceFromTO(to, map);
-			}else{
-				cd = (${target.type.fullyQualifiedName}Abstract)map.get(to.getClass().toString() + to.hashCode());
+	{
+		boolean changed = TOUtil.isCollectionChanged(${target.name}TO,${target.name}Entity);
+		java.util.Collection list;
+		if(changed)
+			list = new java.util.ArrayList();
+		else
+			list = ${target.name}Entity;
+		if(${target.name}TO != null){    
+			java.util.Iterator it = ${target.name}TO.iterator();
+			while(it.hasNext()){
+				${typeTargetTO}TO to = (${typeTargetTO}TO) it.next();
+				${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)TOUtil.getEntityFromCollection(to, ${target.name}Entity);
+				if(map.get(to.getClass().toString() + to.hashCode()) == null){
+					cd = (${target.type.fullyQualifiedName}Abstract)AbstractEntity.getEntityInstanceFromTO(to, map);
+				}else{
+					cd = (${target.type.fullyQualifiedName}Abstract)map.get(to.getClass().toString() + to.hashCode());
+				}
+				if(changed) list.add(cd);
 			}
-			
-			if(changed) list.add(cd);
-		}
-	} 	
-	return list;
- }
+		} 	
+		return list;
+	}
 #end
 #end
 #end
@@ -201,10 +200,10 @@ public abstract class ${entity.entityName}Abstract
     }
 
     protected void mapEntityRelations2TO(${entity.name}TO to, AbstractTOExample abstractExemploTO, java.util.HashMap map) throws Exception{
-	map.put(this.getEntityKey() + this.hashCode(), to);	
-	${entity.name}TOExample exemploTO = (${entity.name}TOExample)abstractExemploTO;
-	if(abstractExemploTO != null){
-		to.setExemploTO(exemploTO);
+		map.put(this.getEntityKey() + this.hashCode(), to);	
+		${entity.name}TOExample exemploTO = (${entity.name}TOExample)abstractExemploTO;
+		if(abstractExemploTO != null){
+			to.setExemploTO(exemploTO);
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
@@ -212,31 +211,28 @@ public abstract class ${entity.entityName}Abstract
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
 #end
-#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)
      		if(exemploTO.${target.getterName}()!= null && !exemploTO.${target.getterName}().isEmpty() && this.${target.getterName}() != null){
-	  		if(map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()) == null){
-	  			${tipo}TO toTemp = (${tipo}TO)this.${target.name}.buildTO(TOUtil.getExample(exemploTO.${target.getterName}(), this.${target.name}.getTOExample()) , map);
-	  			to.${target.setterName}(toTemp);   	
-	  		}else{
-	  			to.${target.setterName}((${tipo}TO)map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()));
-	  		}
-     		}
+				if(map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()) == null){
+					${tipo}TO toTemp = (${tipo}TO)this.${target.name}.buildTO(TOUtil.getExample(exemploTO.${target.getterName}(), this.${target.name}.getTOExample()) , map);
+					to.${target.setterName}(toTemp);
+				}else{
+					to.${target.setterName}((${tipo}TO)map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()));
+				}
+			}
 #elseif ($target.many)
-		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
-			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));        		
+    		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
+    			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));
+    		}
+#end
+#end
+#end
 		}
-#end
-#end
-#end
-
-	}
 #if($entity.generalization)
 	super.mapEntityRelations2TO(to,exemploTO, map);
 #end
-        
     }
 
-    
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable)
@@ -245,33 +241,31 @@ public abstract class ${entity.entityName}Abstract
     private $target.getterSetterTypeName build$stringUtils.capitalize(${target.name})(java.util.Collection templates, ${target.getterSetterTypeName} ${target.name}, java.util.HashMap map) throws Exception
     {
     	java.util.ArrayList list = new java.util.ArrayList();
-    	if(${target.name} != null)
-  	{    
-  		java.util.Iterator it = ${target.name}.iterator();
-  		while(it.hasNext()){  
-  			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)it.next();
-  			if(cd != null){
-  				if(map.get(cd.getEntityKey() + cd.hashCode()) == null){	  
+		
+    	if(${target.name} != null) {
+			java.util.Iterator it = ${target.name}.iterator();
+			while(it.hasNext()){  
+				${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)it.next();
+				if(cd != null){
+					if(map.get(cd.getEntityKey() + cd.hashCode()) == null){
 #set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))
-  					${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map);
-  					list.add(toTemp);    	
-  
-  				}else{	  
-  					${typeTargetTO}TO toTemp = (${typeTargetTO}TO)map.get(cd.getEntityKey() + cd.hashCode());
-  					list.add(toTemp);
-  				}
-  			}
-  		}
-  	}
-  	return list;
- } 	
+						${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map);
+						list.add(toTemp);
+					}else{	  
+						${typeTargetTO}TO toTemp = (${typeTargetTO}TO)map.get(cd.getEntityKey() + cd.hashCode());
+						list.add(toTemp);
+					}
+				}
+			}
+		}
+		return list;
+	} 	
 #end
 #end
 #end
-
 
 ##Fim da construcao do TO
-    
+
     /**
      * The serial version UID of this class. Needed for serialization.
      */
@@ -301,18 +295,15 @@ public abstract class ${entity.entityName}Abstract
     }
 
 #set ($identifiers = $entity.getIdentifiers(false))
-    
 #if(!$entity.abstract && $identifiers && $identifiers.size > 0)
     #renderConstructorMethod($entity $entity.entityName $identifiers)
 #end
-
 
 #foreach ( $attribute in $entity.attributes )
 #set ($typeName = $attribute.type.fullyQualifiedName)
 #if ($attribute.containsEmbeddedObject)
 #set ($typeName = $attribute.type.fullyQualifiedEntityName)
 #end
-
 
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
@@ -337,7 +328,7 @@ $attribute.getDocumentation("     * ")
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name)
     {
 	this.${attribute.name} = $attribute.name;
-    }    
+    }
 #end
 
 #end
@@ -351,7 +342,7 @@ $attribute.getDocumentation("     * ")
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $tipo.concat("Abstract"))
 #else
-#set($tipo = $target.getterSetterTypeName)   
+#set($tipo = $target.getterSetterTypeName)
 #end
 
 #if ($target.many)
@@ -365,23 +356,22 @@ $target.getDocumentation("     * ")
      */
     public $target.getterSetterTypeName ${target.getterName}()
     {
-    	return ${target.name};	
+    	return ${target.name};
     }
-    
+
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-    
-    
+
 #if($target.findTaggedValue($throwsVetoException).equals("true"))	
     public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList
-#else      
-    public void ${target.setterName}($target.getterSetterTypeName ${target.name})    
+#else
+    public void ${target.setterName}($target.getterSetterTypeName ${target.name})
 #end
-    {  
+    {
     	this.${target.name} = ($tipo)$target.name;
     }
-    
+
     ## (MDArte) codigo para setar nos dois lados da associacao para resolver o problema do inverse
 #if ($associationEnd.navigable)
 #set($exception = "")
@@ -405,69 +395,69 @@ $target.getDocumentation("     * ")
 #set($tipo = $target.type.fullyQualifiedName)   
 #end
 
-    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception    
-    {  
-	Hibernate.initialize(${target.name});    
-    	$target.getterSetterTypeName temp = this.${target.name};
-	this.${target.name} = ($rtipo)$target.name;
+    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception
+    {
+		Hibernate.initialize(${target.name});
+		$target.getterSetterTypeName temp = this.${target.name};
+		this.${target.name} = ($rtipo)$target.name;
 
 #if($associationEnd.many)	
 #if($target.many)
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator(); it.hasNext();){
-			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-			if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
-		}
-	}
+    	if(temp != null){
+    		for(java.util.Iterator it = temp.iterator(); it.hasNext();){
+    			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+    			if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+    		}
+    	}
 
-	if(${target.name} != null){
-	for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
-        $target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-        Hibernate.initialize(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}());
-        if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
-        ${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
-        }
+		if(${target.name} != null){
+    		for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
+                $target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+                Hibernate.initialize(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}());
+                if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
+    				${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
+			}
         }
 #else
 
-	if(temp != null){
-		if(temp.${associationEnd.getterName}() != null)
-			temp.${associationEnd.getterName}().remove(this);
-	}
+    	if(temp != null){
+    		if(temp.${associationEnd.getterName}() != null)
+    			temp.${associationEnd.getterName}().remove(this);
+    	}
 
         if(${target.name} != null){
-        Hibernate.initialize(${target.name}.${associationEnd.getterName}());
-        
-        if(!${target.name}.${associationEnd.getterName}().contains(this))
-        ${target.name}.${associationEnd.getterName}().add(this);
-	}
+            Hibernate.initialize(${target.name}.${associationEnd.getterName}());
+
+            if(!${target.name}.${associationEnd.getterName}().contains(this))
+            ${target.name}.${associationEnd.getterName}().add(this);
+		}
 #end
 #else
 #if($target.many)
 	
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
-			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
-		}
-	}
+    	if(temp != null){
+    		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
+    			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+    		}
+    	}
 	
-	if(${target.name} != null){
-	for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
-    	$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-    	${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
-    	}
-    	}
+    	if(${target.name} != null){
+    		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
+    			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
+        	}
+        }
 #else
-	if(temp != null)
-		temp.${associationEnd.setterName}(null);	
+    	if(temp != null)
+    		temp.${associationEnd.setterName}(null);
 
-	if(${target.name} != null)
-		${target.name}.${associationEnd.setterName}(this);
+    	if(${target.name} != null)
+    		${target.name}.${associationEnd.setterName}(this);
 #end
 #end
-	
+
     }
 
 #if($target.many )
@@ -478,42 +468,50 @@ $target.getDocumentation("     * ")
     public void add${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception{
     	Hibernate.initialize(${stringUtils.uncapitalize($target.type.name)}Temp);
     	Hibernate.initialize(${target.name});
-	if(${target.name} == null)
-		${target.setterName}(${target.collectionTypeImplementation});	
+		
+		if(${target.name} == null)
+			${target.setterName}(${target.collectionTypeImplementation});
+
     	if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
     		${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
 #if($associationEnd.navigable)	
 #if($associationEnd.many)
-	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
-	
-	Hibernate.initialize(${associationEnd.name});
 
-	if(!${associationEnd.name}.contains(this))
-		${associationEnd.name}.add(this);	
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
+		
+		Hibernate.initialize(${associationEnd.name});
+
+    	if(!${associationEnd.name}.contains(this))
+    		${associationEnd.name}.add(this);
+	
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
 #else
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
 #end
 #end
     	this.${target.setterName}(${target.name});
     }
-    
+
     public void remove${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception{
     	$target.getterSetterTypeName ${target.name} = this.${target.getterName}();
     	Hibernate.initialize(${stringUtils.uncapitalize($target.type.name)}Temp);
     	Hibernate.initialize(${target.name});
-	if(${target.name} != null){
+		
+		if(${target.name} != null){
     		${target.name}.remove(${stringUtils.uncapitalize($target.type.name)}Temp);
-	}
+		}
 #if($associationEnd.navigable)
 #if($associationEnd.many)
-	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
-	Hibernate.initialize(${associationEnd.name});
-	if(${associationEnd.name} != null)
-		${associationEnd.name}.remove(this);	
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();
+		Hibernate.initialize(${associationEnd.name});
+		
+		if(${associationEnd.name} != null)
+			${associationEnd.name}.remove(this);
+			
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
 #else
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);
 #end
 
 #end
@@ -521,7 +519,7 @@ $target.getDocumentation("     * ")
     }
 #end
 
-    ## fim    
+## fim    
 #end
 #end
 #end
@@ -534,11 +532,11 @@ $target.getDocumentation("     * ")
 
     public $target.getterSetterTypeName ${target.getterName}(Integer paginacao)
     {
-    	try {
+		try {
 #set($parameters = "this.getId(), paginacao")
-                return ${entity.name}DAOImpl.${target.getterName}By${entity.name}($parameters);
+			return ${entity.name}DAOImpl.${target.getterName}By${entity.name}($parameters);
         } catch(DAOException daoe) {
-              daoe.printStackTrace();
+			daoe.printStackTrace();
         }
         return null;
     }
@@ -547,7 +545,6 @@ $target.getDocumentation("     * ")
 #end
 #end
 ## Fim 
-
 ## (MDArte) Retirei a parte que colocava os metodos da classe de entidade na propria entidade e passei para o DAO
 
 #foreach ($operation in $entity.businessOperations)
@@ -564,8 +561,6 @@ $target.getDocumentation("     * ")
 #else
     protected abstract $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos);
 #end
-
-
 
 #if ($operation.exceptionsPresent)
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($listaAtributos)
@@ -834,27 +829,24 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
      }
 #end
 
-   public br.ufrj.coppetec.Entity getInstance(){
+	public br.ufrj.coppetec.Entity getInstance(){
 #if(!$entity.abstract)
-   	return new ${entity.entityName}Impl();
+		return new ${entity.entityName}Impl();
 #else
-   	return null;
-#end	
-   }	
+		return null;
+#end
+	}
 
 #foreach($temp in $entity.allGeneralizations)
 #set($pai = $temp)
 #end
-
 #if(!$pai)
 #set($pai = $entity)
 #end
 
-   public boolean instanceOf(Class<?> otherClass) {
-	return otherClass.isAssignableFrom(get${pai.entityName}Class());
-   }
-
-	
+	public boolean instanceOf(Class<?> otherClass) {
+		return otherClass.isAssignableFrom(get${pai.entityName}Class());
+	}
 
     public Class<?> get${pai.entityName}Class() {
         return ${entity.entityName}Impl.class;
@@ -880,32 +872,37 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
     	return ENTITY_KEY;
     }
 #end
-    
 
 #if ($entity.auditoria)
-   private String auditoriaLogin;
-   public String getAuditoriaLogin() {
-      return this.auditoriaLogin;
-   }
-   public void setAuditoriaLogin(String auditoriaLogin) {
-      this.auditoriaLogin = auditoriaLogin;
-   }
-   
-   private String auditoriaOperacao;
-   public String getAuditoriaOperacao() {
-      return this.auditoriaOperacao;
-   }
-   public void setAuditoriaOperacao(String auditoriaOperacao) {
-       this.auditoriaOperacao = auditoriaOperacao;
-   }
-   
-   private java.util.Date auditoriaDataHora;
-   public java.util.Date getAuditoriaDataHora() {
-      return this.auditoriaDataHora;
-   }
-   public void setAuditoriaDataHora(java.util.Date auditoriaDataHora) {
-      this.auditoriaDataHora = auditoriaDataHora;
-   }
+	private String auditoriaLogin;
+
+	public String getAuditoriaLogin() {
+		return this.auditoriaLogin;
+	}
+	
+	public void setAuditoriaLogin(String auditoriaLogin) {
+		this.auditoriaLogin = auditoriaLogin;
+	}
+
+	private String auditoriaOperacao;
+	
+	public String getAuditoriaOperacao() {
+		return this.auditoriaOperacao;
+	}
+	
+	public void setAuditoriaOperacao(String auditoriaOperacao) {
+		this.auditoriaOperacao = auditoriaOperacao;
+	}
+
+	private java.util.Date auditoriaDataHora;
+
+	public java.util.Date getAuditoriaDataHora() {
+		return this.auditoriaDataHora;
+	}
+
+	public void setAuditoriaDataHora(java.util.Date auditoriaDataHora) {
+		this.auditoriaDataHora = auditoriaDataHora;
+	}
 #end
 
 }
