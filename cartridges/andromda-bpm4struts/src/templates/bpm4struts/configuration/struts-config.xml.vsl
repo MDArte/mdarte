@@ -77,19 +77,19 @@
         
         <form-bean
             name="loginTrocaDeSenhaObrigatoriaProcessarForm"
-            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessarFormImpl" />  
+            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessarFormImpl" />
         <form-bean
             name="loginLoginForm"
             type="${controleAcessoDir}.LoginFormImpl" />
         <form-bean
             name="loginEntrarLoginValidarForm"
-            type="${controleAcessoDir}.EntrarLoginValidarFormImpl" />          
+            type="${controleAcessoDir}.EntrarLoginValidarFormImpl" />
         <form-bean
             name="novaConexaoForm"
-            type="${controleAcessoDir}.NovaConexaoForm" /> 
+            type="${controleAcessoDir}.NovaConexaoForm" />
         <form-bean
             name="saidaSistemaForm"
-            type="${controleAcessoDir}.SaidaSistemaForm" />    
+            type="${controleAcessoDir}.SaidaSistemaForm" />
 ## Fim da adição                                 
 #end
     </form-beans>
@@ -166,9 +166,9 @@
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
                 type="java.lang.Throwable"
                 key="error.exception.message"
-                #if ($action.useCaseStart == false)
+#if ($action.useCaseStart == false)
                 path="${action.input.fullPath}.jsp"
-                #end
+#end
                 scope="request" />
 		
 #foreach ($actionForward in $action.actionForwards)
@@ -192,7 +192,7 @@
 				name="main"
 				path="/ForwardAction.do"
 				redirect="false" /> 
-#end                   
+#end
         </action>
 #end
 #if ($onlineHelp == "true")
@@ -288,15 +288,15 @@
             	scope="request"
             	unknown="false"
             	validate="false">
-                #set($mainPath = '')
-                #foreach($useCase in $applicationUseCases)
-                #if($useCase.applicationUseCase)
-				#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
-                #end
-                #if($mainPath.equals(''))
-                #set($mainPath = '/ForwardAction.do')
-                #end
-                #end
+#set($mainPath = '')
+#foreach($useCase in $applicationUseCases)
+#if($useCase.applicationUseCase)
+#set($mainPath = "/ForwardAction.do?path=${useCase.actionPath}.do")
+#end
+#if($mainPath.equals(''))
+#set($mainPath = '/ForwardAction.do')
+#end
+#end
 	        	<forward
 	            	name="main"
 	            	path="$mainPath"
@@ -304,8 +304,8 @@
         	</action> 
 
           
-#if ($securityEnabled)  
-#set($path = "")                
+#if ($securityEnabled)
+#set($path = "")
 #if(!$applicationUseCases.empty)
 #set($applicationUseCase=$applicationUseCases.iterator().next())
 #set($path = "${applicationUseCase.actionPath}")
@@ -316,8 +316,8 @@
 #else
 #set($manageable=$manageables.iterator().next())
 #set($path = "${manageable.actionPath}")
-#end   
-#end    
+#end
+#end
 ## Actions relativas ao oAuth
 #if($oAuthServer == "true")
 	<action
@@ -481,10 +481,10 @@
             <forward
                 name="saida.sistema"
                 path="${login}/saida-sistema.jsp"
-                redirect="false" />                            
-        </action>                                                                   
+                redirect="false" />
+        </action>
 ## Fim da adicao     
-#end            
+#end
 	<action path="/treeview"
 		type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
 		scope="request"

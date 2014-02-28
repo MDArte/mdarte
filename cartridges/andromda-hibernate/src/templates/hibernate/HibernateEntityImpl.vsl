@@ -30,7 +30,7 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
     		
     }
 
-#set ($typeTargetTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))       
+#set ($typeTargetTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
 #set ($identifiers = $entity.getIdentifiers(false))
     
 #if(!$entity.abstract && $identifiers.size > 0)
@@ -103,7 +103,6 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 
 #end
 #end
-
 
 #foreach ($operation in $entity.businessOperations)
 #set ($returnType = $operation.returnType)

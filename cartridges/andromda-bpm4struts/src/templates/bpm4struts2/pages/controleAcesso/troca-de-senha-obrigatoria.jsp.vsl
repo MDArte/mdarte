@@ -36,19 +36,18 @@
     </tiles:put>
 
     <tiles:put name="body" type="string">
-
-<div id="pathway">
-   <h2><bean:message key="login.troca.de.senha.obrigatoria.title"/></h2>
-</div>
-         <tiles:insert page="$login/troca-de-senha-obrigatoria-actions.jsp" flush="false"/>
-
-        <div id="pageHelpSection">
-            <blockquote>  
-                <bean:message key="required.fields.asterisk"/>
-
-</blockquote>
-       </div>
-	         
-   </tiles:put>
+		
+		<div id="pathway">
+			<h2><bean:message key="login.troca.de.senha.obrigatoria.title"/></h2>
+		</div>
+		
+		<tiles:insert page="$login/troca-de-senha-obrigatoria-actions.jsp" flush="false"/>
+		
+		<div id="pageHelpSection">
+			<blockquote>
+				<bean:message key="required.fields.asterisk"/>
+			</blockquote>
+		</div>
+	</tiles:put>
 </tiles:insert>
 #end

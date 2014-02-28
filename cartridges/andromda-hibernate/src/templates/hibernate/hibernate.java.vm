@@ -249,7 +249,7 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 #set ($tipo = $target.getterSetterTypeName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $tipo.concat("TO"))    
-#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))   
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
      if(get${nomeTarget}()!=null) {
      set${nomeTarget}(new ${target.getterSetterTypeName}Impl ((${tipo}Impl) otherBean.${target.getterName}()));
      }
@@ -286,15 +286,15 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
 #end
 
-#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)
 #if($semId.equals("false"))
 	if(to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()){
 #end
-	   if(to.${target.getterName}() == null) 
+	   if(to.${target.getterName}() == null)
 	   	bean.${target.setterName}(null);
-	   else{     		
+	   else{
      	   	${target.type.fullyQualifiedName} cdTemp = bean.${target.getterName}();
-     	   	if(map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode()) == null){     
+     	   	if(map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode()) == null){
 #set ($tipoTO = $stringUtils.replace(${target.type.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
 #set ($tipoTO = $tipoTO.concat("TO"))	  
      			cdTemp = (${target.type.fullyQualifiedName})AbstractEntity.getEntityInstanceFromTO((${tipoTO})to.${target.getterName}(), map);
@@ -310,9 +310,9 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
     	
 #elseif ($target.many)
 #if($semId.equals("false"))
-	if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())){  
+	if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())){
 #end
-			bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));       		
+			bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));
 #if($semId.equals("false"))
 		}
 #end
@@ -323,6 +323,5 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 #if($entity.generalization)
 #set ($tipoTO = $stringUtils.replace(${entity.generalization.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))#set ($tipoTO = $tipoTO.concat("TO"))
 	super.getEntityFromTO(($tipoTO)to, bean, map);
-#end  
-
+#end
 #end

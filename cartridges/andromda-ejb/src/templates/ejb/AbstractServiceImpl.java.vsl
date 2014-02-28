@@ -86,7 +86,7 @@ public abstract class ${service.name}Impl
 	  
 #else
 	  $operation.visibility  $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) {
-#end	
+#end
 	
 #if ($operation.returnTypePresent)
 		return handle${stringUtils.capitalize(${operation.name})}($parametros);
@@ -95,7 +95,6 @@ public abstract class ${service.name}Impl
 #end
 	
 	}
-
 #end
 #end
 

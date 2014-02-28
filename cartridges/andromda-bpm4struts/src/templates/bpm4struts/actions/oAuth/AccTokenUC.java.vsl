@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #if($oAuthServer == "true")
 // license-header java merge-point
 #set ($generatedFile = "AccTokenUC.java")
@@ -59,13 +49,7 @@ public final class AccTokenUC extends Action
 				//Usuário inválido
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			}
-				
-			
-            
 
-    
-            
-            
             response.setContentType(OAuth.FORM_ENCODED);
     		response.setHeader("Cache-Control", "no-cache");
     		
@@ -80,8 +64,6 @@ public final class AccTokenUC extends Action
 			}
 			return null;
     }
-
-	
 
 }
 #end

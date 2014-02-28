@@ -112,7 +112,7 @@ function atualizaElementos(){
      <html:link href="" onclick="window.open('$helpLink.link','','')">
    	    <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
      </html:link>
-   <% } %>     
+   <% } %>
 #end	
 #end
 #else
@@ -151,7 +151,7 @@ function atualizaElementos(){
 #if(!$achou.equals("true"))
 #if (!$action.tableLink)
         <tiles:insert page="${jsp.fullPath}-actions.jsp" flush="false"/>
-        #set($achou = "true")
+#set($achou = "true")
 #end
 #end
 #end
@@ -174,23 +174,23 @@ function atualizaElementos(){
 
         <div id="pageHelpSection">
 	<blockquote>
-	#set ($actionParameters = $jsp.allUniqueActionParameters )
-	#set($flag=0)
-	#foreach($field in $actionParameters)
-		#if($field.required)
-			#if ($jsp.validationRequired && ($clientValidation=='true' || $serverValidation=='true'))
-                	#set($flag=1)
-			#end
-		#end
-	#end
+#set ($actionParameters = $jsp.allUniqueActionParameters )
+#set($flag=0)
+#foreach($field in $actionParameters)
+#if($field.required)
+#if ($jsp.validationRequired && ($clientValidation=='true' || $serverValidation=='true'))
+#set($flag=1)
+#end
+#end
+#end
 
-	#if($flag > 0)
+#if($flag > 0)
 		<bean:message key="required.fields.asterisk"/>
-	#end
+#end
 
 </blockquote>
        </div>
-	         
+
    </tiles:put>
 </tiles:insert>
 

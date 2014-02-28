@@ -50,13 +50,13 @@ public interface VerificarLoginForm
      */
     public void resetSenha();
 	
-	#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
 	public void resetKaptcha();
 	
 	public void setKaptcha(java.lang.String kaptcha);
 	
 	public java.lang.String getKaptcha();
-	#end
+#end
 	
 	public void resetParametrosLogin();
 	

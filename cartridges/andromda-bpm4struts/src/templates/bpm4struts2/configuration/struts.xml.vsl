@@ -53,9 +53,9 @@ some fowards operations-->
         <action name="$actionName" class="${action.actionType}" method="$bpmUtils.getExecuteMethodFromActionStruts2()">
 #foreach ($actionForward in $action.actionForwards)		
     		<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
-#end		
-        </action>	
-		
+#end
+        </action>
+
 #end
 	</package>
 	
@@ -66,7 +66,7 @@ some fowards operations-->
         <action name="${useCase.onlineHelpActionPath}">
 			<result>${useCase.onlineHelpPagePath}.jsp</result>
 		</action>
-		
+
 #foreach ($page in $useCase.pages)
         <action name="${page.onlineHelpActionPath}">
 			<result>${page.onlineHelpPagePath}.jsp</result>
@@ -75,10 +75,9 @@ some fowards operations-->
 
 	</package>
 
-#end	
+#end
 
-	
-#end 	
+#end
 	
 #set($naoEntrou = true)		
 #foreach ($manageable in $manageables)

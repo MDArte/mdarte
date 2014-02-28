@@ -131,7 +131,7 @@ public abstract class ${entity.name}DAO
 #end
 
 		try {
-#if ($entity.auditoria)		
+#if ($entity.auditoria)
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
 			String login;
@@ -173,7 +173,7 @@ public abstract class ${entity.name}DAO
 #end
 
 		try {
-#if ($entity.auditoria)		
+#if ($entity.auditoria)
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
 			String login;
@@ -902,41 +902,41 @@ $finder.getDocumentation("     * ")
     $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
         throws  DAOException
     {
-    try{
-        Session session = currentSession();      
-        org.hibernate.Query query = session.createQuery("$finder.query");
+		try{
+			Session session = currentSession();      
+			org.hibernate.Query query = session.createQuery("$finder.query");
 ##
 #foreach($argument in $finder.arguments)
 #set ($index = $velocityCount - 1)
 #if ($finder.useNamedParameters)
-        query.${argument.queryArgumentNameSetter}("${argument.name}", ${argument.name});
+			query.${argument.queryArgumentNameSetter}("${argument.name}", ${argument.name});
 #else
-        query.${argument.queryArgumentNameSetter}(${index}, ${argument.name});
+			query.${argument.queryArgumentNameSetter}(${index}, ${argument.name});
 #end
 #end
 #if ($finder.useQueryCache)
-        query.setCacheable(true);
+			query.setCacheable(true);
 #end
 ##
 #if ($finder.returnType.primitive)
-        return (($finder.returnType.wrapperName)query.uniqueResult()).${returnType.fullyQualifiedName}Value();
+			return (($finder.returnType.wrapperName)query.uniqueResult()).${returnType.fullyQualifiedName}Value();
 #elseif (!$finder.returnType.collectionType)
-        return ($returnType.fullyQualifiedName)query.uniqueResult();
+			return ($returnType.fullyQualifiedName)query.uniqueResult();
 #else
-	if (paginacao != null){
-		int extra = 0;
-		if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
-		query.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
-		query.setMaxResults($maxRows*$maxPages  + 1);
-	}
-	#if($hibernateEnableCache.equalsIgnoreCase("true"))
-	query.setCacheable(true);
-	#end	
-        return query.list();
+			if (paginacao != null){
+				int extra = 0;
+				if (paginacao % 10 == 0 && paginacao != 0)  extra = 1;
+				query.setFirstResult(((paginacao)/10 - extra)*$maxRows*$maxPages);
+				query.setMaxResults($maxRows*$maxPages  + 1);
+			}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+			query.setCacheable(true);
+#end	
+			return query.list();
 #end
-			        } catch (HibernateException h) {
-			            throw new DAOException(h);
-		        } 
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		}
     }
 
 #end##foreach operation

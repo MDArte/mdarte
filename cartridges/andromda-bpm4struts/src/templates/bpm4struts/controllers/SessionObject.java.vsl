@@ -44,5 +44,5 @@ $attribute.getDocumentation("     * ")
 #end
    public Integer getIterations(){
    	return iterations;
-   }	
+   }
 }

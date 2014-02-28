@@ -42,9 +42,7 @@ public class LoginOAuthUCFormImpl
     private java.lang.Object[] loginLabelListDestination;    
 
     public LoginOAuthUCFormImpl(){
-                        
-    
-    
+
     }
 
     /**
@@ -52,14 +50,12 @@ public class LoginOAuthUCFormImpl
      */
     public void resetSenha()
     {
-	this.senha = null;
-    	    }
-
+		this.senha = null;
+	}
 
     public void setSenha(java.lang.String senha)
     {
         this.senha = senha;
-        
     }
 
     /**

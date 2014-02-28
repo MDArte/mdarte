@@ -28,6 +28,7 @@
 function getPath() {
 	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.webModulePrincipal})/${jsp.useCase.package.webModuleName}#end";
 }
+
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
@@ -99,7 +100,9 @@ function keySubmit(e){
 		return true;
 #end
 }
-	<!--Operacao de Habilitar-->
+
+<!--Operacao de Habilitar-->
+
 function verificaHabilitados() {
 #foreach ($field in $actionParameters)
 #if($field.habilitadoPor)
@@ -119,7 +122,9 @@ function verificaHabilitados() {
 #end
 #end
 }
-	<!--Operacao de Desabilitar-->
+
+<!--Operacao de Desabilitar-->
+
 function verificaDesabilitados() {
 #foreach ($field in $actionParameters)
 #if($field.desabilitadoPor)
@@ -140,7 +145,8 @@ function verificaDesabilitados() {
 #end
 }
 
-	<!--Operacao de tornar visivel-->    
+<!--Operacao de tornar visivel-->
+
 function verificaVisiveis() {
 #foreach ($field in $actionParameters)
 #if($field.visivelPor)
@@ -161,7 +167,8 @@ function verificaVisiveis() {
 #end
 }
 
-	<!--Operacao de Esconder-->    
+<!--Operacao de Esconder-->
+
 function verificaEscondidos() {
 #foreach ($field in $actionParameters)
 #if($field.escondidoPor)

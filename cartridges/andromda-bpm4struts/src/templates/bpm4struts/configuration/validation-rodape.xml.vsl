@@ -53,7 +53,7 @@
                 <arg position="0" key="login.oauth.uc.pagina.de.login.login.param.login" />
             </field>
         </form>
-		#end
+#end
     </formset>
 
 </form-validation>

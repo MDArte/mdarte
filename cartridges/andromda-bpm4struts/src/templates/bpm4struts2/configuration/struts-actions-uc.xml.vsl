@@ -87,7 +87,7 @@
 #end
 #end
 #if (${action.input})
-			<result name="handleException">${action.input.fullPath}.jsp</result>		
+			<result name="handleException">${action.input.fullPath}.jsp</result>
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>

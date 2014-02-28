@@ -130,20 +130,16 @@ $target.getDocumentation("     * ")
 		context = new InitialContext();
 			
 		queueConnectionFactory = (QueueConnectionFactory)context.lookup("$JMSConnectionFactory");
-			
 		
-		#foreach($mdb in $messageDrivenClient.sourceDependencies)
-		#if($mdb.targetElement.findTaggedValue("$JMSQueue"))
-		#set($fila = $mdb.targetElement.findTaggedValue("$JMSQueue"))
+#foreach($mdb in $messageDrivenClient.sourceDependencies)
+#if($mdb.targetElement.findTaggedValue("$JMSQueue"))
+#set($fila = $mdb.targetElement.findTaggedValue("$JMSQueue"))
 		queue = (Queue)context.lookup("queue/${fila}");
-		#else
+#else
 		queue = (Queue)context.lookup("queue/${defaultQueue}");
-		#end
-		#end
-		
-		
-		
-			
+#end
+#end
+
 		queueConnection = queueConnectionFactory.createQueueConnection();
 	    }catch(NamingException e){
 	    	    throw e;

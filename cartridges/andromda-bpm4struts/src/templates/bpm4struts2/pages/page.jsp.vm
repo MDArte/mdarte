@@ -270,7 +270,7 @@ ${indent}</security:containsOperationMode>
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))						  
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 #set($valueOperationMode = "")
 #set($valueOperationMode = $action.findTaggedValue("$operationMode"))
 #if( $valueOperationMode != "" && !${action.useCase.openAccess})
@@ -303,7 +303,7 @@ ${indent}</security:containsOperationMode>
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))						  
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 ###if ($securityEnabled)
 ##${indent}<logic:present role="$roles">
 ###end

@@ -97,7 +97,7 @@ public abstract class ${class.name}TO extends
 #foreach ($attribute in $class.attributes)
 #set ($tipo = $attribute.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
-#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))	  
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
 
     private ${tipo}TO $attribute.name;
 
@@ -203,7 +203,7 @@ $target.getDocumentation("     * ")
 #set ($rtipo = $rtipo.concat("TO"))
 
 #else
-#set($rtipo = $target.getterSetterTypeName)   
+#set($rtipo = $target.getterSetterTypeName)
 #end
 
 #set ($tipo = $target.type.fullyQualifiedName)
@@ -212,70 +212,70 @@ $target.getDocumentation("     * ")
 #set ($tipo = $tipo.concat("TO"))
     
 #else
-#set($tipo = $target.type.fullyQualifiedName)   
+#set($tipo = $target.type.fullyQualifiedName)
 #end
 
 #set($exception = "")
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($exception = "throws java.beans.PropertyVetoException")
-#end 
+#end
 
-    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception    
+    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception
     {
     	$rtipo temp = ($rtipo)this.${target.name};
-	this.${target.name} = ($rtipo)$target.name;
+		this.${target.name} = ($rtipo)$target.name;
 
-#if($associationEnd.many)	
+#if($associationEnd.many)
 #if($target.many)
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator(); it.hasNext();){
-			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-			if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+		if(temp != null){
+			for(java.util.Iterator it = temp.iterator(); it.hasNext();){
+				$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+				if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
+					${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+			}
 		}
-	}
 
-	if(${target.name} != null){
-		for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
-			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-			if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
-				${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
+		if(${target.name} != null){
+			for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
+				$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+				if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
+					${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
+			}
 		}
-	}
 #else
 
-	if(temp != null){
-		if(temp.${associationEnd.getterName}() != null)
-			temp.${associationEnd.getterName}().remove(this);
-	}
-
-	if(${target.name} != null){
-        if(!${target.name}.${associationEnd.getterName}().contains(this))
-			${target.name}.${associationEnd.getterName}().add(this);
-	}
+    	if(temp != null){
+    		if(temp.${associationEnd.getterName}() != null)
+    			temp.${associationEnd.getterName}().remove(this);
+    	}
+    
+    	if(${target.name} != null){
+            if(!${target.name}.${associationEnd.getterName}().contains(this))
+    			${target.name}.${associationEnd.getterName}().add(this);
+    	}
 #end
 #else
 #if($target.many)
 	
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
-			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
-		}
-	}
-	
-	if(${target.name} != null){
-		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
-			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
+    	if(temp != null){
+    		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
+    			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+    		}
     	}
-    }
+    	
+    	if(${target.name} != null){
+    		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
+    			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
+        	}
+        }
 #else
-	if(temp != null)
-		temp.${associationEnd.setterName}(null);	
-
-	if(${target.name} != null)
-		${target.name}.${associationEnd.setterName}(this);
+    	if(temp != null)
+    		temp.${associationEnd.setterName}(null);
+    
+    	if(${target.name} != null)
+    		${target.name}.${associationEnd.setterName}(this);
 #end
 #end
 	
@@ -283,21 +283,24 @@ $target.getDocumentation("     * ")
 
 #if($target.many )
 #set($exception = "")
-#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))	
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))
 #set($exception = "throws java.beans.PropertyVetoException")
 #end
 
     public void add${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception {
 		if(${target.name} == null)
 			${target.setterName}(${target.collectionTypeImplementation});
-			if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
-				${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
-#if($associationEnd.navigable)	
+		
+		if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
+			${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
+		
+#if($associationEnd.navigable)
 #if($associationEnd.many)
-	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();
 
 		if(!${associationEnd.name}.contains(this))
-			${associationEnd.name}.add(this);	
+			${associationEnd.name}.add(this);
+
 		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
 #else
 		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
@@ -308,14 +311,18 @@ $target.getDocumentation("     * ")
 
     public void remove${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception {
     	$rtipo ${target.name} = this.${target.getterName}();
+		
 		if(${target.name} != null){
     		${target.name}.remove(${stringUtils.uncapitalize($target.type.name)}Temp);
 		}
+		
 #if($associationEnd.navigable)
 #if($associationEnd.many)
-		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();
+		
 		if(${associationEnd.name} != null)
 			${associationEnd.name}.remove(this);	
+
 		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
 #else
 		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);

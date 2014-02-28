@@ -162,7 +162,7 @@ ${indent}forward = ${transition.target.actionMethodName}(mapping, form, request,
 #set($finalUseCaseName = "")
 #if($transition.target.findTaggedValue("$externalHyperlinkModulo"))
 #set($finalUseCaseName = "$transition.target.findTaggedValue($externalHyperlinkModulo)$transition.target.findTaggedValue($externalHyperlink)")
-#else		
+#else
 ###set($finalUseCaseName = $transition.target.targetUseCase.name)
 ##		#set($finalUseCaseName = "${transition.target.targetUseCase.package.webModuleName}$transition.target.fullPath")
 #set($finalUseCaseName = "${transition.useCase.package.webModuleName}$transition.target.fullPath")
@@ -251,7 +251,7 @@ ${indent}${servletPackage}.PageSessionObjectUtil.updatePagesSO(request);
 #if($transition.enteringPage)
 #set($useCaseName = $transition.useCase.name)
 #set($jspName = $transition.target.name)
-${indent}if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) 
+${indent}if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null)
 ${indent}	getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
 ${indent}getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", ((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).intValue() + 1);
 #end
@@ -310,7 +310,7 @@ ${indent}		break;
 ${indent}	}
 #end
 
-${indent}} 
+${indent}}
 #if($action.findTaggedValue("$breadCrumbLabel"))
 
 ${indent}if(adicionaBreadCrumb){
@@ -334,7 +334,7 @@ ${indent}	request.getSession().setAttribute("nomeDeTela", casoDeUso);
 ${indent}}
 #end
 #end
-#elseif ($action.useCase.hasStereotype("FrontEndUseCase"))	 		
+#elseif ($action.useCase.hasStereotype("FrontEndUseCase"))
 #if($action.findTaggedValue("$breadCrumbInput").equals("true"))
 
 ${indent}ArrayList breadCrumbCollection = (ArrayList)request.getSession().getAttribute("breadCrumb");
@@ -381,7 +381,7 @@ ${indent}	request.getSession().setAttribute("nomeDeTela", casoDeUso);
 ${indent}}
 #end
 #end
-#end 	   
+#end
 #end
 #macro(processRedirectStruts2 $transition $indent)
 ${indent}if(request.getAttribute("$forwardKeyModule") != null && !request.getAttribute("$forwardKeyModule").equals("$transition.useCase.package.webModuleName")){

@@ -586,7 +586,7 @@ $target.getDocumentation("     * ")
         }
 #end
 #end
-	}	
+	}
 
 #end
 #end
@@ -710,7 +710,7 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 	super.getWebServiceObj(webServiceData, map);
 #end
 	}else
-	   webServiceData = (${wsdPackage}.${entity.entityName}WS)map.get(${wsdPackage}.${entity.entityName}WS.class.toString() + this.getId().toString());		
+	   webServiceData = (${wsdPackage}.${entity.entityName}WS)map.get(${wsdPackage}.${entity.entityName}WS.class.toString() + this.getId().toString());
 	
 	return webServiceData;	
 }
@@ -719,84 +719,84 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 #set($wsdPackage = $stringUtils.replace("$entity.packageName", "$modelPackageName", "$wsdPackageName"))
 
 public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS abstractWS, java.util.HashMap map){
-   
-   ${wsdPackage}.${entity.entityName}WS webServiceObj = (${wsdPackage}.${entity.entityName}WS)abstractWS;
-   
-   try{
+
+	${wsdPackage}.${entity.entityName}WS webServiceObj = (${wsdPackage}.${entity.entityName}WS)abstractWS;
+
+	try{
 #foreach ( $attribute in $entity.attributes )
 #if(!$attribute.hasStereotype("$excludesWSDStereotype")&&!$attribute.hasStereotype("Identifier"))
 #set ($typeName = $attribute.type.fullyQualifiedName)
-	this.${attribute.setterName}(webServiceObj.${attribute.getterName}());    	
+	this.${attribute.setterName}(webServiceObj.${attribute.getterName}());
 #end
 #end
-	    
-	map.put("${entity.name}" + webServiceObj.getId().toString(), this);
+
+		map.put("${entity.name}" + webServiceObj.getId().toString(), this);
 	
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 #if(!$target.hasStereotype("$excludesWSDStereotype") && $target.type.hasStereotype("$wsdStereotype"))
 #if (!$target.many)
-    if(webServiceObj.${target.getterName}() != null){
-    	${target.getterSetterTypeName}Abstract ${target.name}Obj = null;
-    
-    	if(map.get("${target.type.name}" + webServiceObj.${target.getterName}().getId().toString()) == null){
-    		${target.name}Obj = (${target.getterSetterTypeName}Abstract)Class.forName(webServiceObj.${target.getterName}().entidade()).newInstance();
-		${target.name}Obj.setWebServiceObj(webServiceObj.${target.getterName}(), map);      
-    		this.${target.setterName}(${target.name}Obj);
-    	}else{
-    		${target.name}Obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}().getId().toString()); 
-    		this.${target.setterName}(${target.name}Obj);
-    	}
+		if(webServiceObj.${target.getterName}() != null){
+			${target.getterSetterTypeName}Abstract ${target.name}Obj = null;
+
+    		if(map.get("${target.type.name}" + webServiceObj.${target.getterName}().getId().toString()) == null){
+    			${target.name}Obj = (${target.getterSetterTypeName}Abstract)Class.forName(webServiceObj.${target.getterName}().entidade()).newInstance();
+				${target.name}Obj.setWebServiceObj(webServiceObj.${target.getterName}(), map);      
+    			this.${target.setterName}(${target.name}Obj);
+    		}else{
+				${target.name}Obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}().getId().toString()); 
+				this.${target.setterName}(${target.name}Obj);
+    		}
 #if ($target.otherEnd.navigable)
 #if(!$target.otherEnd.many)	
-    	${target.name}Obj.${target.otherEnd.setterName}(this);
+    		${target.name}Obj.${target.otherEnd.setterName}(this);
 #elseif($target.otherEnd.many)
-    	${target.name}Obj.${target.otherEnd.getterName}().add(this);
-#end	
+    		${target.name}Obj.${target.otherEnd.getterName}().add(this);
 #end
-    }	    
+#end
+    	}
 #else
-    
-   if(webServiceObj.${target.getterName}() != null){ 	
-    for(int i=0; i < webServiceObj.${target.getterName}().length;i++){	
-	${target.type.packageName}.${target.type.name}Impl obj = null;
-	
-	if(map.get("${target.type.name}" + webServiceObj.${target.getterName}()[i].getId().toString()) == null){
-		if(webServiceObj.${target.getterName}()[i].entidade() != null){
-			obj = (${target.type.packageName}.${target.type.name}Impl)Class.forName(webServiceObj.${target.getterName}()[i].entidade()).newInstance();
-			obj.setWebServiceObj(webServiceObj.${target.getterName}()[i], map);
-			//obj = new ${target.type.packageName}.${target.type.name}Impl(webServiceObj.${target.getterName}()[i], map);
-		}
-	}else
-		obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}()[i].getId().toString());	    		    
-	
+
+		if(webServiceObj.${target.getterName}() != null){
+			for(int i=0; i < webServiceObj.${target.getterName}().length;i++){
+				${target.type.packageName}.${target.type.name}Impl obj = null;
+			
+				if(map.get("${target.type.name}" + webServiceObj.${target.getterName}()[i].getId().toString()) == null){
+					if(webServiceObj.${target.getterName}()[i].entidade() != null){
+						obj = (${target.type.packageName}.${target.type.name}Impl)Class.forName(webServiceObj.${target.getterName}()[i].entidade()).newInstance();
+						obj.setWebServiceObj(webServiceObj.${target.getterName}()[i], map);
+						//obj = new ${target.type.packageName}.${target.type.name}Impl(webServiceObj.${target.getterName}()[i], map);
+					}
+				} else {
+					obj = (${target.type.packageName}.${target.type.name}Impl)map.get("${target.type.name}" + webServiceObj.${target.getterName}()[i].getId().toString());
+				}
+
 #foreach($backAssociationEnd in $target.type.associationEnds)
 #set($backTarget = $backAssociationEnd.otherEnd)
 #if($backTarget.navigable && !$backTarget.many && $backTarget.type.name.equals("${entity.name}"))
-	obj.${backTarget.setterName}(this);
+				obj.${backTarget.setterName}(this);
 #end
 #end
-		
-	this.${target.getterName}().add(obj);	
-    }
-   }
+
+				this.${target.getterName}().add(obj);
+			}
+		}
 #end
 #end
 #end
 #end
 
 #if($entity.generalization && $entity.generalization.hasStereotype("$wsdStereotype"))
-	super.setWebServiceObj(webServiceObj, map);
+		super.setWebServiceObj(webServiceObj, map);
 #end
-   }catch(Exception e){	
-	   e.printStackTrace();
-   }
+	}catch(Exception e){
+		e.printStackTrace();
+	}
 	
 }
 
 #end
-
 
 #if (!$entity.abstract)
     /**
@@ -852,7 +852,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
         return ${entity.entityName}Impl.class;
     }	
 
-#if($pai.hasStereotype("$visitorAdapterRoot"))	
+#if($pai.hasStereotype("$visitorAdapterRoot"))
     public void accept(${pai.packageName}.${pai.name}VisitorAdapter visitor, Object object) {
         visitor.visit(this, object);
     }

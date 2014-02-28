@@ -16,45 +16,50 @@ public class ActionServlet
      */
 	
 	private static java.util.Properties ports = new java.util.Properties();
-	#if($stringUtils.isNotBlank($securityRealm))
-	
+#if($stringUtils.isNotBlank($securityRealm))
+
 	static{
 		try{
-			
 			ports.load(new java.io.FileInputStream(new java.io.File((new java.net.URL(System.getProperty("jboss.server.config.url") + java.io.File.separator + "${projectId}-port.properties")).getFile())));
+
 			if(ports.getProperty("https.port") == null || ports.getProperty("http.port") == null)
 				throw new RuntimeException("error.port.configuration");
-			}catch(java.io.IOException e){
-				throw new RuntimeException("port.file.not.found");
-			}
+				
+		}catch(java.io.IOException e){
+			throw new RuntimeException("port.file.not.found");
+		}
 	}
-	#end
+#end
 	
     public void init(final javax.servlet.ServletConfig config)
         throws javax.servlet.ServletException
     {
         super.init(config);
-        
-						        String aplicacaoPermiteUsoBackBrowser = ports.getProperty("aplicacao.permite.uso.back.browser");
-        		if (aplicacaoPermiteUsoBackBrowser == null || aplicacaoPermiteUsoBackBrowser.equals("false"))
-	           this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.FALSE);
-        		else
-	           this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.TRUE);
-	           
-		#if($stringUtils.isNotBlank($securityRealm))
+		
+		String aplicacaoPermiteUsoBackBrowser = ports.getProperty("aplicacao.permite.uso.back.browser");
+		
+		if (aplicacaoPermiteUsoBackBrowser == null || aplicacaoPermiteUsoBackBrowser.equals("false"))
+			this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.FALSE);
+        else
+			this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.TRUE);
+
+#if($stringUtils.isNotBlank($securityRealm))
 		this.getServletContext().setAttribute("httpsPort", ports.getProperty("https.port"));
         this.getServletContext().setAttribute("httpPort", ports.getProperty("http.port"));
         String ipLocal = ports.getProperty("jboss.ip.local");
+		
         if (ipLocal == null || ipLocal.equals(""))
-	        this.getServletContext().setAttribute("ipLocal", "127.0.0.1");                	
+	        this.getServletContext().setAttribute("ipLocal", "127.0.0.1");
         else
 	        this.getServletContext().setAttribute("ipLocal", ipLocal);
+			
 		String aplicacaoGerenciaTrocaDePortasString = ports.getProperty("troca.de.porta.gerenciada.pela.aplicacao");
+		
 		if (aplicacaoGerenciaTrocaDePortasString != null && aplicacaoGerenciaTrocaDePortasString.equals("false"))
 	        this.getServletContext().setAttribute("aplicacaoGerenciaTrocaDePortas", Boolean.FALSE);
 		else
 	        this.getServletContext().setAttribute("aplicacaoGerenciaTrocaDePortas", Boolean.TRUE);
-        
+
         trustAllHttpsCertificates();
         
         javax.net.ssl.HostnameVerifier hv = new javax.net.ssl.HostnameVerifier()
@@ -68,8 +73,8 @@ public class ActionServlet
         };
         
         javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(hv);
-        #end
-		
+#end
+
         org.apache.commons.beanutils.ConvertUtils.register(
             new org.apache.commons.beanutils.converters.LongConverter(null), java.lang.Long.class);
         org.apache.commons.beanutils.ConvertUtils.register(
@@ -102,7 +107,7 @@ public class ActionServlet
         super.doPost(request, response);
     }
     
-    #if($stringUtils.isNotBlank($securityRealm))
+#if($stringUtils.isNotBlank($securityRealm))
     private static void trustAllHttpsCertificates()
     {
  
@@ -165,5 +170,5 @@ public class ActionServlet
             return;
         }
     }
-    #end
+#end
 }

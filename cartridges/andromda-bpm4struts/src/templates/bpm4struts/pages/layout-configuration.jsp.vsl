@@ -51,16 +51,16 @@
 	}
 	
 	
-	#if($stringUtils.isNotBlank($securityRealm))
+#if($stringUtils.isNotBlank($securityRealm))
 	String ipLocal = (String) session.getServletContext().getAttribute("ipLocal");
 	if (request.getScheme().equals("http")) {
 		pageContext.setAttribute("localURL", request.getScheme() + "://" + ipLocal + ":" + portaHttp);
 	} else {
 		pageContext.setAttribute("localURL", request.getScheme() + "://" + ipLocal + ":" + portaHttps);
 	}
-	#else
+#else
 	pageContext.setAttribute("localURL", request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort());
-	#end
+#end
 	
 	
 	} catch (Exception e) { throw new RuntimeException(e); }

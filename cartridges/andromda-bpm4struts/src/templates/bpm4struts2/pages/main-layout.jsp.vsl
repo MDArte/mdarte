@@ -2,7 +2,7 @@
 #set ($generatedFile = "layout/main-layout2.jsp")
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
-        
+
 <!DOCTYPE html>
 #if ($xhtml == "true")
 ##<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

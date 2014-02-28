@@ -98,24 +98,22 @@ $operation.getDocumentation("     * ")
         javax.servlet.http.HttpSession session = request.getSession(true);
 
         Object attribute = session.getAttribute(${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        
-       	#set($keep = "false")
-	#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	#set($keep = "true")
-	#end
 
-	
-       #set($counterSO = false)
-       #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-       #set($counterSO = true)
-       #end
-	    
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+
         if (attribute instanceof $sessionObject.fullyQualifiedName)
         {
             object = ($sessionObject.fullyQualifiedName)attribute;
-            #if($keep.equals("false") && $counterSO)
+#if($keep.equals("false") && $counterSO)
             ${servletPackage}.SessionObjectUtil.resetSessionObjetCounter(request, object.SESSION_KEY, object.getIterations());
-            #end
+#end
         }
         else if (attribute == null)
         {
@@ -147,21 +145,20 @@ $operation.getDocumentation("     * ")
         javax.servlet.http.HttpSession session = request.getSession(createSession);
         if (session != null)
         { 
-	    #set($keep = "false")
-	    #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	    #set($keep = "true")
-	    #end
-	
-	    #set($counterSO = false)
-	    #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-	    #set($counterSO = true)
-	    #end
-	    
-	    #if($keep.equals("true") || !$counterSO) 
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+
+#if($keep.equals("true") || !$counterSO) 
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
-	    #elseif($keep.equals("false") && $counterSO)
+#elseif($keep.equals("false") && $counterSO)
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
-	    #end	                
+#end
         }
     }
 
@@ -316,10 +313,10 @@ $operation.getDocumentation("     * ")
 	/**
 	 * Returns a reference to the $serviceRef.name back-end service.
 	 */
-	#set($isServiceFactory = false)
-	#if($serviceRef.hasExactSterotype("ServiceFactory"))
-		#set($isServiceFactory = true)
-	#end
+#set($isServiceFactory = false)
+#if($serviceRef.hasExactSterotype("ServiceFactory"))
+#set($isServiceFactory = true)
+#end
 
 	/**
 	 * Método a ser utilizado na recuperação de serviços.
@@ -342,14 +339,14 @@ $operation.getDocumentation("     * ")
 
 #foreach($dependencia in  $controller.sourceDependencies)
 #if($dependencia.targetElement.hasExactStereotype("ServiceFactory"))
-	#set($factorySelectNodeName = false)
-	#foreach($bean in $dependencia.targetElement.allSpecializations)
-		#if($factorySelectNodeName == false)
-			#if(${bean.findTaggedValue("$ServiceFactorySelectNodeName").length()} > 0)
-				#set($factorySelectNodeName = true)
-			#end
-		#end
-	#end
+#set($factorySelectNodeName = false)
+#foreach($bean in $dependencia.targetElement.allSpecializations)
+#if($factorySelectNodeName == false)
+#if(${bean.findTaggedValue("$ServiceFactorySelectNodeName").length()} > 0)
+#set($factorySelectNodeName = true)
+#end
+#end
+#end
 
 	/**
 	 * Método a ser utilizado na recuperação de serviços.

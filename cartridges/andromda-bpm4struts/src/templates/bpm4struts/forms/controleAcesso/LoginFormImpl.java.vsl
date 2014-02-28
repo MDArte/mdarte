@@ -39,15 +39,14 @@ public class LoginFormImpl
     private Object[] confirmacaoValueList;
     private Object[] confirmacaoLabelList;
 	private java.lang.String nextPath;
-	#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
 	private java.lang.String kaptcha;
-	#end
-	
-	
+#end
+
     public LoginFormImpl()
     {
     }
-	#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
     public void resetKaptcha()
     {
         this.kaptcha = null;
@@ -63,7 +62,7 @@ public class LoginFormImpl
         return this.kaptcha;
     }
 
-	#end
+#end
     /**
      * Resets the given <code>parametrosLogin</code>.
      */

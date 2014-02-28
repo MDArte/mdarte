@@ -36,13 +36,13 @@ public final class TrocaDeSenhaObrigatoriaProcessar extends Login
     	
     		try{
         	if(request.getSession().getAttribute(Constantes.FORWARD) != null){
-	        	request.getSession().setAttribute("form", form);		        	
+	        	request.getSession().setAttribute("form", form);
         	}else{
         		request.getSession().setAttribute("form", request.getSession().getAttribute("form"));
         	}
 	    }catch(Exception e ){
 #populateCurrentFormOnError("	            ")
-	            throw e; 
+	            throw e;
     	}   
     	} 	
         return forward;
@@ -63,7 +63,7 @@ public final class TrocaDeSenhaObrigatoriaProcessar extends Login
     {
 	ActionForward forward = mapping.findForward("troca.de.senha.obrigatoria");	
     LoginFormImpl formImpl = (LoginFormImpl)form;
-    Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);    
+    Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);
     String usuario = ControleAcessoImpl.getCallerPrincipal(subject).getName();
     formImpl.setUsuario(usuario);         	       		
 	request.getSession().removeAttribute(Constantes.MENU);
