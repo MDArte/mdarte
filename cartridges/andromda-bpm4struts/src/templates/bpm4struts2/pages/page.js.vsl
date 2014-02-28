@@ -26,7 +26,7 @@
 #end
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)
 function getPath() {
-	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !$jsp.useCase.package.hasStereotype("$moduloWebPrincipal"))/${jsp.useCase.package.webModuleName}#end";
+	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.webModulePrincipal})/${jsp.useCase.package.webModuleName}#end";
 }
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
