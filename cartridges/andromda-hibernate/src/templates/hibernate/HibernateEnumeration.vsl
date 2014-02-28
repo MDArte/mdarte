@@ -97,11 +97,13 @@ public final class $enumeration.enumerationName
 #else
 #set ($valueAssignment = "${enumeration.literalType.fullyQualifiedName}.valueOf(java.lang.String.valueOf(resultSet.getObject(values[0])))")
 #end
-        $enumeration.literalType.fullyQualifiedName value = null;
-	  try{
-		value = $valueAssignment;
-        }catch(Exception e){        	
-        }
+		$enumeration.literalType.fullyQualifiedName value = null;
+		
+		try{
+			value = $valueAssignment;
+		}catch(Exception e){
+		}
+
         return resultSet.wasNull() ? null : ${enumeration.fromOperationName}(value);
 
     }

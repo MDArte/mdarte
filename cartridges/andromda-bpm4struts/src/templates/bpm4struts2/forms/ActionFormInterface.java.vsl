@@ -94,18 +94,15 @@ $field.getDocumentation("     * ")
     public java.lang.Object[] ${field.getterName}AsArray();
 #elseif($field.widgetType=="money")
 #set ($asType = "Double")
-   
-   public void ${field.setterName}As${asType}(java.lang.Double $fieldName);
 
-   
+	public void ${field.setterName}As${asType}(java.lang.Double $fieldName);
+
     public java.lang.Double ${field.getterName}As${asType}();
 
-    
     public void ${field.setterName}(java.lang.String ${fieldName});
 
-   
     public java.lang.String ${field.getterName}();
-    
+
 #elseif ($field.date || $field.time )
 #if ($field.date)
 #set ($asType = "Date")
