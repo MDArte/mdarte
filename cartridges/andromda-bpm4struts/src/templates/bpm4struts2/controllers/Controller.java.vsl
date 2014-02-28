@@ -191,12 +191,12 @@ $operation.getDocumentation("     * ")
 #end
 #end
 
-	protected String getNomeCasoUso() {
-		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
-	}
-
 	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {
 		return getModoOperacao(this.getNomeCasoUso(), container);
+	}
+	
+	protected String getNomeCasoUso() {
+		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
 	}
 }
 
