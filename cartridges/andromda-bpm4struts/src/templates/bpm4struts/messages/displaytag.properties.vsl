@@ -19,7 +19,7 @@ export.pdf.filename=export.pdf
 #
 basic.msg.empty_list=Nada foi encontrado para exibir.
 basic.msg.empty_list_row=<tr class="empty"><td colspan="{0}">Nada foi encontrado para exibir.</td></tr>
-error.msg.invalid_page=página inválida
+error.msg.invalid_page=p&aacute;gina inv&aacute;lida
 
 export.banner=<div class="exportlinks">Op&ccedil;&otilde;es de Exporta&ccedil;&atilde;o: {0}</div>
 export.banner.sepchar= |
@@ -33,7 +33,7 @@ paging.banner.all_items_found=<span class="pagebanner">{0} {1} encontrados, exib
 
 ## (MDArte)
 ## changing the banner and removing the link to support pagination
-paging.banner.some_items_found=<span class="pagebanner">Grupo {0}, exibindo página {1} at&eacute; {2}.</span>
+paging.banner.some_items_found=<span class="pagebanner">Grupo {0}, exibindo p&aacute;gina {1} at&eacute; {2}.</span>
 
 paging.banner.full=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [<a href="{3}">Pr&oacute;ximo</a>]</span>
 paging.banner.first=<span class="pagelinks">[Primeiro/Anterior] {0} [<a href="{3}">Pr&oacute;ximo</a>]</span>
