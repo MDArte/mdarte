@@ -39,6 +39,15 @@ extends CoppetecStrutsParameterLogic
 	{
 		return "doubleselect".equals(this.getWidgetType());
 	}
+	
+	protected boolean handleIsEnumEmptyValue()
+	{
+		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
+		
+		if (value == null) return true;
+
+		return Bpm4StrutsUtils.isTrue(String.valueOf(value));
+	}
 
 	protected String handleGetOnlineHelpValue()
 	{
@@ -289,6 +298,10 @@ extends CoppetecStrutsParameterLogic
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_TEXT.equalsIgnoreCase(fieldType))
 			{
 				widgetType = "text";
+			}
+			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equalsIgnoreCase(fieldType))
+			{
+				widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR;
 			}
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_MULTIBOX.equalsIgnoreCase(fieldType))
 			{
@@ -580,7 +593,10 @@ extends CoppetecStrutsParameterLogic
 		
 		return false;
 	}
-
+	
+	protected boolean handleIsEditor(){
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equals(this.getWidgetType());
+	}
 	protected String handleGetHintKey() {
 		 return getMessageKey() + ".hint.key";
 	}

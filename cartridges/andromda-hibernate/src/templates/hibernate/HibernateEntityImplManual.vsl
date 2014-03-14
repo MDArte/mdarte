@@ -20,8 +20,5 @@ public#if ($entity.abstract) abstract#end class $entity.entityImplementationName
      */
     private static final long serialVersionUID = ${entity.serialVersionUID}L;
 
-
-
 }
-    
-    
+

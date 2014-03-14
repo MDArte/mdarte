@@ -27,7 +27,7 @@
 <form-validation>
 
     <formset>
-		#if($oAuthServer == "true")
+#if($oAuthServer == "true")
 		<form name="loginOAuthUCPaginaDeLoginLoginForm">
 
             <field property="senha" depends="genericValidator">
@@ -38,7 +38,7 @@
                 <arg position="0" key="login.oauth.uc.pagina.de.login.login.param.login" />
             </field>
         </form>
-		#end
+#end
 #foreach ($useCase in $useCases)
 #foreach ($action in $useCase.actions)
 #if ($action.validationRequired)
@@ -96,7 +96,7 @@
                 <arg position="0" key="login.troca.de.senha.obrigatoria.param.confirmacao" />
             </field>           
         </form>
-#end        
+#end
     </formset>
 
 </form-validation>

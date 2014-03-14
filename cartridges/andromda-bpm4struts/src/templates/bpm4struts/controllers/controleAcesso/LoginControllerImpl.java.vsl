@@ -6,7 +6,7 @@ package $controleAcessoDir;
 
 import javax.servlet.http.HttpServletRequest;
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import ${packageUtil}.CriptoUtils;
 import org.apache.commons.lang.StringUtils;

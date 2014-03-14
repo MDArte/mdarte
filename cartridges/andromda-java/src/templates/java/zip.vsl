@@ -1,6 +1,6 @@
-#set ($generatedFile = "${utilDir}/Zip.java")
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/Zip.java")
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
-package $package;
+package ${customTypesPackage}.${package};
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

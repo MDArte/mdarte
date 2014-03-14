@@ -499,7 +499,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		org.apache.struts.validator.ValidatorForm form = null;
 #processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
 #processTableNameList($action "		")
-#processTransitionStruts2($action "		")		
+#processTransitionStruts2($action "		")
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
 #else

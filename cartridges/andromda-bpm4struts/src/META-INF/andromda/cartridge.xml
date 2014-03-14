@@ -201,7 +201,7 @@
         overwrite="true">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
             </modelElement>
         </modelElements>
     </template>
@@ -333,7 +333,7 @@
         overwrite="true">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction">
                     <property name="actionFormFields"/>
                 </type>
             </modelElement>
@@ -448,7 +448,7 @@
         overwrite="true">
         <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>
@@ -460,7 +460,7 @@
         overwrite="true">
         <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>
@@ -473,7 +473,7 @@
         generateEmptyFiles="false">
         <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>
@@ -485,7 +485,7 @@
         overwrite="true">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction">
                     <property name="tableLink">false</property>
                     <property name="hiddenActionParameters"/>
                 </type>
@@ -513,7 +513,7 @@
         overwrite="true">
         <modelElements variable="table">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
                     <property name="table"/>
                 </type>
             </modelElement>
@@ -804,11 +804,6 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false">
-        	<modelElements variable="useCases">
-        		<modelElement>
-        			<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
-        		</modelElement>
-        	</modelElements>
       </template>
 		
         
@@ -823,11 +818,6 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false">
-        <modelElements variable="useCases">
-        	<modelElement>
-        		<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase" />
-        	</modelElement>
-        </modelElements>
     </template>
 	
     <template
@@ -962,7 +952,7 @@
         generateEmptyFiles="true">
         <modelElements variable="page">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>
@@ -1027,7 +1017,7 @@
         generateEmptyFiles="false">
         <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>
@@ -1107,7 +1097,7 @@
 		overwrite="false">
 		<modelElements variable="report">
 			<modelElement>
-				<type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+				<type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
 					<property name="report">true</property>
 				</type>
 			</modelElement>
@@ -1659,7 +1649,7 @@
         outputOnEmptyElements="false">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
             </modelElement>
         </modelElements>
     </template>
@@ -1672,7 +1662,7 @@
         outputOnEmptyElements="false">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
             </modelElement>
         </modelElements>
     </template> 
@@ -1722,6 +1712,13 @@
                 </type>
             </modelElement>
         </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/controllers/ControllerAbstract.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true">
     </template>
     
     <template
@@ -1875,7 +1872,7 @@
         outputOnEmptyElements="false">
         <modelElements variable="table">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsParameter">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
                     <property name="table"/>
                 </type>
             </modelElement>
@@ -1889,7 +1886,7 @@
         overwrite="true">
         <modelElements variable="action">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsAction">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction">
                     <property name="actionFormFields"/>
                 </type>
             </modelElement>

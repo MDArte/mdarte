@@ -8,7 +8,7 @@ package $controleAcessoDir;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.Globals;
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -18,10 +18,10 @@ import org.apache.struts.action.ActionMapping;
 public class SaidaSistema extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
-    {	
-    	request.getSession().removeAttribute(Constantes.USER_SESSION);  
+    {
+    	request.getSession().removeAttribute(Constantes.USER_SESSION);
     	request.getSession().removeAttribute(Constantes.FORWARD); 
-    	request.getSession().removeAttribute(Constantes.TROCA_SENHA_OBRIGATORIA);		 		
-    	return mapping.findForward("saida.sistema");				
-    }    	
+    	request.getSession().removeAttribute(Constantes.TROCA_SENHA_OBRIGATORIA);
+    	return mapping.findForward("saida.sistema");
+    }
 }

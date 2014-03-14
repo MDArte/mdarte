@@ -177,7 +177,7 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 		##	request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.do");	
 		## #end		
 
-#set($possuiTable = false)        
+#set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
 #if($field.table && !$possuiTable)
 #set($possuiTable = true)

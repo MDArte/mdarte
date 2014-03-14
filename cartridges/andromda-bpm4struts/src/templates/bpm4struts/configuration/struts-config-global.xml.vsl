@@ -252,12 +252,11 @@
                 <forward
                     name="main"
                     path="$mainPath"
-                    redirect="false" />                 
+                    redirect="false" />
             </action> 
 
-          
-#if ($securityEnabled)  
-#set($path = "")                
+#if ($securityEnabled)
+#set($path = "")
 #if(!$applicationUseCases.empty)
 #set($applicationUseCase=$applicationUseCases.iterator().next())
 #set($path = "${applicationUseCase.actionPath}")
@@ -268,8 +267,8 @@
 #else
 #set($manageable=$manageables.iterator().next())
 #set($path = "${manageable.actionPath}")
-#end   
-#end    
+#end
+#end
 ## Actions relativas ao oAuth
 #if($oAuthServer == "true")
 	<action
@@ -432,10 +431,10 @@
             <forward
                 name="saida.sistema"
                 path="${login}/saida-sistema.jsp"
-                redirect="false" />                            
-        </action>                                                                   
+                redirect="false" />
+        </action>
 ## Fim da adicao     
-#end            
+#end
     	<action path="/treeview"
        		type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
         	scope="request"

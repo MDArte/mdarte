@@ -65,7 +65,7 @@ $attribute.getDocumentation("	 * ")
 ##
 #set($exception = "")
 #if ($operation.exceptionsPresent)
-	#set($exception = "throws $operation.exceptionList")
+#set($exception = "throws $operation.exceptionList")
 #end
 #if(!$operation.returnType.collectionType && !$operation.returnType.listType && !$operation.returnType.setType )
 	$operation.visibility abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;

@@ -4,7 +4,6 @@
  */
 #if ($entity.packageName)
 package $entity.packageName;
-
 #end
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
@@ -39,7 +38,6 @@ import br.ufrj.coppetec.ValueObject;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.to.AbstractTO;
 
-
 #if ($entity.auditoria)
 import ${customTypesPackage}.${modelPackageName}.AuditoriaEntity;
 
@@ -65,14 +63,13 @@ import org.dom4j.Element;
  * </p>
  * @see $entity.fullyQualifiedName
  */
-public abstract class ${entity.name}DAO 
+public abstract class ${entity.name}DAO
 #if($entity.generalization)
     extends ${entity.generalization.fullyQualifiedName}DAOImpl
 #else
     extends AbstractDAO 
-#end    
+#end
 {
-
 
 	protected void removeRelations(AbstractEntity obj)throws DAOException{
 #set($vetoException = "java.beans.PropertyVetoException")
@@ -82,7 +79,7 @@ public abstract class ${entity.name}DAO
 #if($entity.generalization)
 			super.removeRelations(obj);
 #end
-			${entity.entityName}Abstract entidade = (${entity.entityName}Abstract)obj; 		
+			${entity.entityName}Abstract entidade = (${entity.entityName}Abstract)obj;
 			Session session = currentSession();
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
@@ -91,14 +88,13 @@ public abstract class ${entity.name}DAO
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($throwsVeto = "true")
 #end
-	  		entidade.${target.setterName}Inverse(null);
+			entidade.${target.setterName}Inverse(null);
 #end
 #end
 #end
-		}catch (HibernateException e) {
+		} catch (HibernateException e) {
 			throw new DAOException(e);
 		} 
-	
 #if($throwsVeto.equals("true"))
 		catch($vetoException ve){
 			throw new RuntimeException(ve);
@@ -118,36 +114,35 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(onfe);
 		} catch (HibernateException he1) {
 			throw new DAOException(he1);
-		} 		
+		}
 		return lista;
-	}	
+	}
 
 	public List<AbstractEntity> insert(AbstractEntity obj) throws DAOException {
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
 
 #if($stringUtils.isNotBlank($procedureName))
-		try{
+		try {
 			this.executarProcedure("$procedureName");
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 			//TODO
 		}
 #end
 
 		try {
-#if ($entity.auditoria)		
+#if ($entity.auditoria)
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
 			String login;
 			
 			try {
-	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
-			} catch (Exception e)	 {
-    			login = "NA";
+				login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e) {
+				login = "NA";
 			}
 			
 			String operacao = "INSERCAO";
-			
 			java.util.Date dataOperacao = new java.util.Date();
 
 			((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
@@ -165,7 +160,7 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(e);
 		} 
 	}
-	
+
 	public List<AbstractEntity> insertOrUpdate(AbstractEntity obj) throws DAOException {
 
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
@@ -180,15 +175,15 @@ public abstract class ${entity.name}DAO
 #end
 
 		try {
-#if ($entity.auditoria)		
+#if ($entity.auditoria)
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
 			String login;
 			
 			try {
-	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
-			} catch (Exception e)	 {
-    			login = "NA";
+				login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e) {
+				login = "NA";
 			}
 			
 			String operacao = obj.getId() == null ? "INSERCAO" : "ATUALIZACAO";
@@ -217,21 +212,22 @@ public abstract class ${entity.name}DAO
 #if($stringUtils.isNotBlank($procedureName))
 		try{
 			this.executarProcedure("$procedureName");
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 			//TODO
 		}
+		
 #end
 		try {
-#if ($entity.auditoria)		
+#if ($entity.auditoria)
 ## nao eh possivel acessar o ControleAcessoUtil pois esta na camada de servico
 ##			String login = ${controleAcessoDir}.ControleAcessoUtil.getPrincipal().getName();
 			String login;
 			
 			try {
-	    		login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
-			} catch (Exception e)	 {
-    			login = "NA";
+				login = ${controleAcessoDir}.ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+			} catch (Exception e) {
+				login = "NA";
 			}
 			
 			String operacao = "ATUALIZACAO";
@@ -250,7 +246,7 @@ public abstract class ${entity.name}DAO
 			return lista;
 		} catch (HibernateException e) {
 			throw new DAOException(e);
-		} 
+		}
 	}
 
 	public List<AbstractEntity> delete(AbstractEntity obj) throws DAOException {
@@ -285,6 +281,7 @@ public abstract class ${entity.name}DAO
 	 * @return Lista de objetos
 	 */
 	public List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc,Integer linhas,Integer paginas) throws DAOException { 
+
 		try {
 			Session session = currentSession();
 			
@@ -313,9 +310,9 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(h);
 		} 
 	}
-##fim do método
-
-	public List<AbstractEntity> list() throws DAOException { 
+## Fim
+	
+	public List<AbstractEntity> list() throws DAOException {
 		try {
 			Session session = currentSession();
 			org.hibernate.Query qry = session.createQuery("from ${entity.fullyQualifiedName}");
@@ -350,10 +347,11 @@ public abstract class ${entity.name}DAO
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
-			}    	
-		}else
+			}
+		} else {
 			return null;
-	    
+		}
+
 	    try {
 			if(criterios instanceof org.hibernate.Query){
             		org.hibernate.Query res = (org.hibernate.Query)criterios;
@@ -382,15 +380,18 @@ public abstract class ${entity.name}DAO
 #end		
         			return res.list();
 				}
-        		else
-        			return null;
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        		res.setCacheable(true);
+#end		
+        		return res.list();
+			} else {
+        		return null;
+			}
 
 		} catch (HibernateException h) {
 			throw new DAOException(h);
-		} 
+		}
 	}
-	
-	protected abstract Object handleFilter (DataObject vo) throws DAOException;
 
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
 		return filter(vo,paginacao,$maxRows,$maxPages );
@@ -398,7 +399,7 @@ public abstract class ${entity.name}DAO
 	
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException { 
 		try {
-        		Object obj = handleFilter(vo);
+        	Object obj = handleFilter(vo);
         
         		if(obj instanceof org.hibernate.Query){
             		org.hibernate.Query res = (org.hibernate.Query)obj;
@@ -427,19 +428,24 @@ public abstract class ${entity.name}DAO
 #end		
         			return res.list();
 				}
-        		else
-        			return null;
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+        		res.setCacheable(true);
+#end		
+        		return res.list();
+			} else {
+        		return null;
+			}
 
 		} catch (HibernateException h) {
 			throw new DAOException(h);
-		} 
+		}
 	}
 	
 	protected abstract org.hibernate.Criteria handleXmlExport (ValueObject vo, org.hibernate.Session session) throws DAOException;
 	
 	public org.hibernate.Criteria xmlExport(ValueObject vo, org.hibernate.Session session) throws DAOException {
 		return handleXmlExport(vo, session);
-	} 	 	
+	}
 	
 	public int xmlImportEntity(org.dom4j.Element raiz) throws DAOException 
 	{
@@ -451,7 +457,7 @@ public abstract class ${entity.name}DAO
 #if ($attribute.hasExactStereotype($exportId))
 #if($attribute.type.fullyQualifiedName == "java.util.Date")
 		
-		try { 
+		try {
 			java.util.Date eidValor_${stringBusca}_${attribute.name} =  java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).parse(${stringRaiz}.valueOf("./$attribute.name"));
 			critBusca_${stringBusca}.add( org.hibernate.criterion.Restrictions.eq( "${attribute.name}" , eidValor_${stringBusca}_${attribute.name} ) );	
 		} catch (Exception e) { 
@@ -625,9 +631,9 @@ public abstract class ${entity.name}DAO
 		return 0;
 	}
 
-	public Element xmlExportEntity(AbstractEntity entity) throws DAOException 
+	public Element xmlExportEntity(AbstractEntity entity) throws DAOException
 	{
-		Element raiz = org.dom4j.DocumentHelper.createElement("raiz_elemento");		
+		Element raiz = org.dom4j.DocumentHelper.createElement("raiz_elemento");
 		return xmlExportEntity(entity, raiz);
 	}
 
@@ -651,8 +657,8 @@ public abstract class ${entity.name}DAO
 				Element att$attribute.name = raiz.addElement("$attribute.name");
 				att${attribute.name}.addText(obj.${attribute.getterName}().toString());
 #end
-			}			
-#end			
+			}
+#end
 #end
 ## Adiciona cada associacao
 #foreach ($associationEnd in $entity.associationEnds)
@@ -705,7 +711,7 @@ public abstract class ${entity.name}DAO
 #if ($association_attribute.hasExactStereotype($exportId))
 #if($association_attribute.type.fullyQualifiedName == "java.util.Date")
 
-				try { 
+				try {
 					Element assAtt$association_attribute.name = assIdx${target.name}.addElement("$association_attribute.name");
 					assAtt${association_attribute.name}.addText(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.MEDIUM, java.util.Locale.US).format(((${target.type.packageName}.$target.type.entityImplementationName) array${target.name}[i]).${association_attribute.getterName}()));
 				}
@@ -716,7 +722,7 @@ public abstract class ${entity.name}DAO
 
 				Element assAtt$association_attribute.name = assIdx${target.name}.addElement("$association_attribute.name");
 				assAtt${association_attribute.name}.addText(((${target.type.packageName}.$target.type.entityImplementationName) array${target.name}[i]).${association_attribute.getterName}().toString());
-#end			
+#end
 #end
 #end
 #if ($entrada.generalization)
@@ -846,9 +852,8 @@ $operation.getDocumentation("     * ")
 #set($argumentList = $operation.typedArgumentList)	
 #set($argumentListExtended=$argumentList)
 #end
-
 ## Fim
-     
+
 #if ($operation.exceptionsPresent)
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentListExtended)
         throws DAOException, $operation.exceptionList {
@@ -865,7 +870,7 @@ $operation.getDocumentation("     * ")
 #end
 
 #if ($operation.returnTypePresent && !$operation.returnType.collectionType)
-            return handle${stringUtils.capitalize($operation.name)}($parameters);
+			return handle${stringUtils.capitalize($operation.name)}($parameters);
 #elseif($operation.returnTypePresent && $operation.returnType.collectionType)
             Object obj = handle${stringUtils.capitalize($operation.name)}($parameters,linhas,paginas);
             
@@ -890,6 +895,7 @@ $operation.getDocumentation("     * ")
 					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
 					res.setMaxResults(linhas*paginas + 1);
 				}
+
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
 #end		
@@ -961,10 +967,9 @@ $finder.getDocumentation("     * ")
 	$finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
         throws  DAOException
     {
-    	//finder method
-    	try{
-        	Session session = currentSession();      
-        	org.hibernate.Query query = session.createQuery("$finder.query");
+		try{
+			Session session = currentSession();      
+			org.hibernate.Query query = session.createQuery("$finder.query");
 ##
 #foreach($argument in $finder.arguments)
 #set ($index = $velocityCount - 1)
@@ -1095,8 +1100,7 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 #end
 #end
 			}
-		        
-		        
+
 			hashBytes = CriptoUtils.digest(hash.getBytes());
 #if ($auditoriaUsaAssinaturaDigital.equalsIgnoreCase("true"))
 			hashBytes = CriptoUtils.createSignature(hashBytes);

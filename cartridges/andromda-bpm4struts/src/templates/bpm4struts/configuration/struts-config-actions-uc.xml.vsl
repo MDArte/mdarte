@@ -28,7 +28,7 @@
 #end
             scope="$action.actionScope"
             unknown="false"
-			#set ($validate = $action.validationRequired && $validationDesired)
+#set ($validate = $action.validationRequired && $validationDesired)
             validate="$validate">
             <exception
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
@@ -58,7 +58,7 @@
 #end
         </action>
 #end
-			
+
 #end
 ##set ($roles = $action.actionRoles)
 ###if ($stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) && $useCase.secured)
@@ -81,9 +81,9 @@
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
                 type="java.lang.Throwable"
                 key="error.exception.message"
-                #if ($action.useCaseStart == false)
+#if ($action.useCaseStart == false)
                 path="${action.input.fullPath}.jsp"
-                #end
+#end
                 scope="request" />
 		
 #foreach ($actionForward in $action.actionForwards)

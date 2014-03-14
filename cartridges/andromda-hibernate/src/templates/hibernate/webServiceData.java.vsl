@@ -75,12 +75,12 @@ public class ${webServiceData.name}WS
     /**
 	$target.getDocumentation("     * ")
      */
-    
-    #if(!$target.many)
-    #set($type = "${wsdClassPackage}.${target.type.name}WS")
-    #else
-    #set($type = "${wsdClassPackage}.${target.type.name}WS[]")
-    #end
+
+#if(!$target.many)
+#set($type = "${wsdClassPackage}.${target.type.name}WS")
+#else
+#set($type = "${wsdClassPackage}.${target.type.name}WS[]")
+#end
     
     public ${type} ${target.getterName}()
     {

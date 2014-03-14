@@ -9,12 +9,12 @@
 #if ($variable.table)
 #if($i==1)
 		<li class="active"><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
-#else	
+#else
 		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
 #end
 #set($i=$i+1)
 #end
-#end 
+#end
 	</ul>
 #set($i=1)
 	<div class="tab-content">

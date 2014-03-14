@@ -28,44 +28,41 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
         
     public #if($auditoria)${entity.entityName}LogRec#else$entity.entityImplementationName#end()  {
     		
-    }  
-    	        
-    #set ($typeTargetTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))       
+    }
+
+#set ($typeTargetTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($identifiers = $entity.getIdentifiers(false))
     
-    #set ($identifiers = $entity.getIdentifiers(false))
-    
-    #if(!$entity.abstract && $identifiers.size > 0)
+#if(!$entity.abstract && $identifiers.size > 0)
     public ${entity.entityName}(){
        super();
     }
 
     #renderConstructorImplMethod($entity $entity.entityName $identifiers)
-    #end
- 
+#end
+
 #if($auditoria)
 #foreach ( $attribute in $entity.attributes )
 #set ($typeName = $attribute.type.fullyQualifiedName)
 #if ($attribute.containsEmbeddedObject)
 #set ($typeName = $attribute.type.fullyQualifiedEntityName)
 #end
-private $typeName ${attribute.name};
-public void ${attribute.setterName}($typeName ${attribute.name}){
-		    this.${attribute.name} =  ${attribute.name};
-	}
-	public  $typeName ${attribute.getterName}(){
-		    return this.${attribute.name};
+	private $typeName ${attribute.name};
+	
+	public void ${attribute.setterName}($typeName ${attribute.name}){
+		this.${attribute.name} =  ${attribute.name};
 	}
 	
+	public  $typeName ${attribute.getterName}(){
+		return this.${attribute.name};
+	}
 
 #end
-
 #else
-
 
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-    
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 	$attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name) throws $exceptionList{
 		
@@ -73,73 +70,72 @@ public void ${attribute.setterName}($typeName ${attribute.name}){
 #end
 #end
 
-
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if($auditoria && $target.navigable)
-private String ${target.name}Log = "";
+	private String ${target.name}Log = "";
 
-public void add${stringUtils.capitalize($target.name)}Log(String ${target.name}Log) {
-		    this.${target.name}Log +=  ${target.name}Log;
+	public void add${stringUtils.capitalize($target.name)}Log(String ${target.name}Log) {
+		this.${target.name}Log +=  ${target.name}Log;
 	}
-public void ${target.setterName}Log(String ${target.name}Log) {
-		    this.${target.name}Log =  ${target.name}Log;
+	
+	public void ${target.setterName}Log(String ${target.name}Log) {
+		this.${target.name}Log =  ${target.name}Log;
 	}
+	
 	public  String ${target.getterName}Log(){
-		    return this.${target.name}Log;
+		return this.${target.name}Log;
 	}
 #else
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 
-
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-    
-    
+
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 	
 	public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList{
 	
 	}
-	#end
-#end
-
 #end
 #end
 
+#end
+#end
 
- 
- 
 #foreach ($operation in $entity.businessOperations)
 #set ($returnType = $operation.returnType)
 #set ($signature = $operation.signature)
 #set ($listaAtributos = $operation.typedArgumentList)
 
 #if($operation.findTaggedValue($daoMethod) && $operation.findTaggedValue($daoMethod).equals("false"))
-    
-    #if ($operation.exceptionsPresent)
-    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
-    #else
-    	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
-    #end
+
+#if ($operation.exceptionsPresent)
+	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
+#else
+	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
+#end
 	
-    #if ($operation.returnTypePresent)
-        return $operation.returnType.javaNullString;    
-    #end
-        }
+#if ($operation.returnTypePresent)
+		return $operation.returnType.javaNullString;
+#end
+	}
 
 #end
 #end  
 #if($auditoria)
-		    private int hibernate_version;
-		    public int getHibernate_version(){
-		    return this.hibernate_version;
-		    }
-		    private void setHibernate_version(int hibernate_version){
-		    this.hibernate_version = hibernate_version;
-		    }
-    private java.lang.Long entityId;
+	private int hibernate_version;
+		
+	public int getHibernate_version(){
+		return this.hibernate_version;
+	}
+		
+	private void setHibernate_version(int hibernate_version){
+		this.hibernate_version = hibernate_version;
+	}
+		
+	private java.lang.Long entityId;
 
     /**
      * 
@@ -149,11 +145,12 @@ public void ${target.setterName}Log(String ${target.name}Log) {
         return this.entityId;
     }
     
-        public void setEntityId(java.lang.Long entityId)
+	public void setEntityId(java.lang.Long entityId)
     {
-	this.entityId = entityId;
+		this.entityId = entityId;
     }
-        private java.lang.Long version;
+
+	private java.lang.Long version;
 
     /**
      * 
@@ -163,11 +160,12 @@ public void ${target.setterName}Log(String ${target.name}Log) {
         return this.version;
     }
     
-        public void setVersion(java.lang.Long version)
+	public void setVersion(java.lang.Long version)
     {
-	this.version = version;
+		this.version = version;
     }
-        private java.lang.String hash;
+
+	private java.lang.String hash;
 
     /**
      * 
@@ -177,33 +175,40 @@ public void ${target.setterName}Log(String ${target.name}Log) {
         return this.hash;
     }
     
-        public void setHash(java.lang.String hash)
+	public void setHash(java.lang.String hash)
     {
-	this.hash = hash;
+		this.hash = hash;
     }
-       private String auditoriaLogin;
-   public String getAuditoriaLogin() {
-      return this.auditoriaLogin;
-   }
-   public void setAuditoriaLogin(String auditoriaLogin) {
-      this.auditoriaLogin = auditoriaLogin;
-   }
-   
-   private String auditoriaOperacao;
-   public String getAuditoriaOperacao() {
-      return this.auditoriaOperacao;
-   }
-   public void setAuditoriaOperacao(String auditoriaOperacao) {
-       this.auditoriaOperacao = auditoriaOperacao;
-   }
-   
-   private java.util.Date auditoriaDataHora;
-   public java.util.Date getAuditoriaDataHora() {
-      return this.auditoriaDataHora;
-   }
-   public void setAuditoriaDataHora(java.util.Date auditoriaDataHora) {
-      this.auditoriaDataHora = auditoriaDataHora;
-   }
+
+	private String auditoriaLogin;
+	
+	public String getAuditoriaLogin() {
+		return this.auditoriaLogin;
+	}
+
+	public void setAuditoriaLogin(String auditoriaLogin) {
+		this.auditoriaLogin = auditoriaLogin;
+	}
+	
+	private String auditoriaOperacao;
+	
+	public String getAuditoriaOperacao() {
+		return this.auditoriaOperacao;
+	}
+	
+	public void setAuditoriaOperacao(String auditoriaOperacao) {
+		this.auditoriaOperacao = auditoriaOperacao;
+	}
+	
+	private java.util.Date auditoriaDataHora;
+	
+	public java.util.Date getAuditoriaDataHora() {
+		return this.auditoriaDataHora;
+	}
+	
+	public void setAuditoriaDataHora(java.util.Date auditoriaDataHora) {
+		this.auditoriaDataHora = auditoriaDataHora;
+	}
 #end
 
 #if($securityEnabled && $entity.hasExactStereotype("User"))

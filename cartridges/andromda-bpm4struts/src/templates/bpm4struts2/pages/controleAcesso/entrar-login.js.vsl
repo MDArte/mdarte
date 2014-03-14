@@ -23,7 +23,7 @@ $(function(){
 });
 
 function getPath() {
-	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.hasStereotype("$moduloWebPrincipal")})/${jsp.useCase.package.webModuleName}#end";
+	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.webModulePrincipal})/${jsp.useCase.package.webModuleName}#end";
 }
 
 function clearForm() {

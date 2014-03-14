@@ -9,7 +9,7 @@ package $controleAcessoDir;
 #set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
 #end
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 ##
 #set ($sharp = "#")

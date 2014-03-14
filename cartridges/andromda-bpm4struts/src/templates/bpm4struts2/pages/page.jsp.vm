@@ -270,7 +270,7 @@ ${indent}</security:containsOperationMode>
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))						  
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 #set($valueOperationMode = "")
 #set($valueOperationMode = $action.findTaggedValue("$operationMode"))
 #if( $valueOperationMode != "" && !${action.useCase.openAccess})
@@ -303,7 +303,7 @@ ${indent}</security:containsOperationMode>
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))						  
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 ###if ($securityEnabled)
 ##${indent}<logic:present role="$roles">
 ###end
@@ -472,7 +472,7 @@ ${indent}		<div class="col-xs-4">
 ${indent}			<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" cssClass="form-control" label="%{getText('$field.messageKey')}"  value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 ${indent}		</div>
 ${indent}	</div>
-#elseif ( ($field.textField) )
+#elseif (($field.textField) || ($field.editor))
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="form-group row textfield">
 #if ($requiredness && $field.required)
 ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
@@ -497,7 +497,7 @@ ${indent}	</div>
 ##
 ##      T E X T A R E A 
 ##
-#elseif ($field.textArea)
+#elseif ($field.textArea || $field.editor)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="textarea row form-group">
 #if ($requiredness && $field.required)
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/> *</label>
@@ -558,7 +558,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 #set($selectProperty="$fieldName")
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<s:select id="${field.name}${action.useCase.name}" cssClass="form-control" label="" name="${field.name}" headerKey="" headerValue="" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
+${indent}			<s:select id="${field.name}${action.useCase.name}" cssClass="form-control" label="" name="${field.name}" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -607,7 +607,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 ${indent}		<div class="col-xs-4">
 ${indent}			<s:file id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName"  $disabled $columnCount styleId="$styleId"/>
 ${indent}		</div>
-${indent}	</div
+${indent}	</div>
 ##
 ##      P L A I N T E X T
 ##

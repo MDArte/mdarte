@@ -176,9 +176,9 @@ $field.getDocumentation("     * ")
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-    #set($type = ${enumeration.literalType.wrapperName})
+#set($type = ${enumeration.literalType.wrapperName})
 #else
-    #set($type = ${enumeration.literalType.fullyQualifiedName})
+#set($type = ${enumeration.literalType.fullyQualifiedName})
 #end
 
     /**

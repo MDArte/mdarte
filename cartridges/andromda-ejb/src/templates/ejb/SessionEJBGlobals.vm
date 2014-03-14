@@ -31,7 +31,6 @@
 			#if ($operation.returnTypePresent)return #end
 #set($paginacao = "")
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-#set($paginacao = "null")
 #if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
 #else
@@ -130,18 +129,17 @@
 
 #set($serviceName = ${stringUtils.strip("#renderManipulaName($service $dependencia $actionName)")})
 #if(!$isOpenAccess)
-			java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
-			javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
-			accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
+		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
+		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
+		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
 	
-			boolean gerente = false;
-			if (!principalImpl.isValido()) {
-				gerente = true;
-				principalImpl.setValido(true);
-			}
-	
-			${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
-		
+		boolean gerente = false;
+		if (!principalImpl.isValido()) {
+			gerente = true;
+			principalImpl.setValido(true);
+		}
+
+		${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
 #end
 
 		try{

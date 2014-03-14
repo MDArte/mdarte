@@ -64,9 +64,9 @@ public class ${formBeanClassName}
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-    private ${enumeration.literalType.wrapperName} $field.name = 32767;
+    private ${enumeration.literalType.wrapperName} $field.name#if($enumeration.defaultEmptyValue) = ${enumeration.packageName}.${enumeration.name}.VAZIO.getValue()#end;
 #else
-    private ${enumeration.literalType.fullyQualifiedName} $field.name = 32767;
+    private ${enumeration.literalType.fullyQualifiedName} $field.name#if($enumeration.defaultEmptyValue) = ${enumeration.packageName}.${enumeration.name}.VAZIO.getValue()#end;
 #end
 #else
     private $field.type.fullyQualifiedName $field.name;
@@ -81,7 +81,7 @@ public class ${formBeanClassName}
 	private java.util.Map ${field.name}Map = null;
     public $field.type.fullyQualifiedName ${field.getterName}__Double()
     {
-	return this.${field.name}__Double;    
+	return this.${field.name}__Double;
     }
     public void ${field.setterName}__Double($field.type.fullyQualifiedName ${field.name}__Double)
     {
@@ -128,7 +128,7 @@ public class ${formBeanClassName}
 #foreach($field in $fields)
 #if($field.radioButton)
 #if($field.findTaggedValue("$radioSelected"))
-    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+    	${field.setterName}(${field.findTaggedValue("$radioSelected")});
 #end
 #end
 #end
@@ -240,50 +240,43 @@ $field.getDocumentation("     * ")
     }
 #elseif($field.widgetType=="money")
 #set ($asType = "Double")
-   public void ${field.setterName}As${asType}(java.lang.Double $fieldName){
-       String s = null;
-       try{
-	   if($fieldName != null){
+	public void ${field.setterName}As${asType}(java.lang.Double $fieldName){
+		String s = null;
+		try{
+			if($fieldName != null){
+				String myFormat = "#,#" + "#" +"#.00";
+				java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
+				s = myFormatter.format($fieldName);
+				
+				if(s.startsWith(",")){
+					s = "0"+s;
+				}
+				
+				this.$fieldName = s;
+			}
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	   	String myFormat = "#,#" + "#" +"#.00";
-    	   	java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
-           	s = myFormatter.format($fieldName);
-           
-           	if(s.startsWith(",")){
-			s = "0"+s;
-	   	}
-	   	
-           	this.$fieldName = s;
-           }
-       }catch(Exception e)
-       {
-           throw new RuntimeException(e);
-       }
-    	
-    	
-   }
-
-   
     public java.lang.Double ${field.getterName}As${asType}(){
     	if(this.$fieldName != null && !this.${fieldName}.equals("")){
     		java.lang.String $fieldName = this.$fieldName;
     		$fieldName = ${fieldName}.replace(".", "");
-   		$fieldName = ${fieldName}.replace(",", ".");
-   		return new java.lang.Double($fieldName);
-   	}
-   	return null;
-    }
+			$fieldName = ${fieldName}.replace(",", ".");
+			return new java.lang.Double($fieldName);
+		}
+		return null;
+	}
 
-    
     public void ${field.setterName}(java.lang.String ${fieldName}){
 	    this.$fieldName = $fieldName;
     }
 
-   
     public java.lang.String ${field.getterName}(){
     	return this.$fieldName;
     }
-    
+
 #elseif ($field.date || $field.time)
 #if ($field.date)
 #set ($asType = "Date")
@@ -395,7 +388,7 @@ $field.getDocumentation("     * ")
         return this.$fieldName;
     }
 	
-	 public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
+	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
     {
         this.${fieldName}ContentType = ${fieldName}ContentType;
     }
@@ -443,7 +436,6 @@ $field.getDocumentation("     * ")
     {
         return this.$fieldName;
     }
-
 
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
@@ -517,12 +509,11 @@ $field.getDocumentation("     * ")
     
     	this.${fieldName}Map = temp;
     }
-        
+
 #else
     public void ${field.setterName}($fieldType $fieldName)
     {
         this.$fieldName = $fieldName;
-        
     }
 #end
 
@@ -581,7 +572,7 @@ $field.getDocumentation("     * ")
         this.$field.name = $field.nullValue;
 #if ($field.doubleSelect)
         this.${field.name}__Double = null;
-#end        
+#end
 #if ($field.selectable && $field.multiple)
 ## multi-select fields need to be reset to an empty array (http://struts.apache.org/userGuide/struts-html.html#select)
         this.$field.valueListName = new java.lang.Object[0];

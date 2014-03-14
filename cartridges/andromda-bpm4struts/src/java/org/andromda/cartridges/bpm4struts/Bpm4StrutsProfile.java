@@ -67,6 +67,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_INPUT_MONEY = profile.get("INPUT_MONEY");
     public static final String TAGGEDVALUE_LAYOUT_NAME = profile.get("LAYOUT_NAME");
     public static final String TAGGEDVALUE_CUSTOM_LINK = profile.get("CUSTOM_LINK");
+    public static final String TAGGEDVALUE_ENUM_EMPTY_VALUE = profile.get("ENUM_EMPTY_VALUE");
     /**
      * Stores CRUD package name for an entity
      */
@@ -111,6 +112,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_INPUT_TYPE_LINK = "link";
     public static final String TAGGEDVALUE_INPUT_TYPE_FILE = "file";
     public static final String TAGGEDVALUE_INPUT_TYPE_AUTOCOMPLETE = "autocomplete";
+    public static final String TAGGEDVALUE_INPUT_TYPE_EDITOR = "editor";
     public static final int TAGGEDVALUE_INPUT_TYPE_OPTION_DEFAULT_COUNT = 3;
     public static final int TAGGEDVALUE_TABLE_MAXROWS_DEFAULT_COUNT = 15;
     public static final boolean TAGGEDVALUE_TABLE_SORTABLE_DEFAULT_VALUE = false;

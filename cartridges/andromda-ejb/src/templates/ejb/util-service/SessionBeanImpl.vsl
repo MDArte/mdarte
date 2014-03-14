@@ -42,16 +42,16 @@ public class UtilServiceHandlerBeanImpl extends UtilServiceHandlerBean {
             	controles = new HashMap<String, ControleAcesso>();
             }
             controles.put("$securityRealm", controleAcesso);
-            ServicosSingleton.instance().setControles(controles);                	
-            #if(!$demanda.equals('true'))	                       
-            HashMap listaServicosProjeto = controleAcesso.listaServicos();            
+            ServicosSingleton.instance().setControles(controles);
+#if(!$demanda.equals('true'))
+            HashMap listaServicosProjeto = controleAcesso.listaServicos();
             HashMap<String, HashMap<String, java.util.Collection<Perfil>>> listaServicos = ServicosSingleton.instance().getServicos();
             if(listaServicos == null){
             	listaServicos = new HashMap<String, HashMap<String, java.util.Collection<Perfil>>>();
             }
-            listaServicos.put("$securityRealm", listaServicosProjeto);            
-            ServicosSingleton.instance().setServicos(listaServicos);            
-            #end
+            listaServicos.put("$securityRealm", listaServicosProjeto);
+            ServicosSingleton.instance().setServicos(listaServicos);
+#end
             
             HashMap<String, Boolean> demanda = ServicosSingleton.instance().getDemanda();
             if(demanda == null){

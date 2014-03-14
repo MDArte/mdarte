@@ -26,8 +26,9 @@
 #end
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)
 function getPath() {
-	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !$jsp.useCase.package.hasStereotype("$moduloWebPrincipal"))/${jsp.useCase.package.webModuleName}#end";
+	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.webModulePrincipal})/${jsp.useCase.package.webModuleName}#end";
 }
+
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
@@ -99,7 +100,9 @@ function keySubmit(e){
 		return true;
 #end
 }
-	<!--Operacao de Habilitar-->
+
+<!--Operacao de Habilitar-->
+
 function verificaHabilitados() {
 #foreach ($field in $actionParameters)
 #if($field.habilitadoPor)
@@ -119,7 +122,9 @@ function verificaHabilitados() {
 #end
 #end
 }
-	<!--Operacao de Desabilitar-->
+
+<!--Operacao de Desabilitar-->
+
 function verificaDesabilitados() {
 #foreach ($field in $actionParameters)
 #if($field.desabilitadoPor)
@@ -140,7 +145,8 @@ function verificaDesabilitados() {
 #end
 }
 
-	<!--Operacao de tornar visivel-->    
+<!--Operacao de tornar visivel-->
+
 function verificaVisiveis() {
 #foreach ($field in $actionParameters)
 #if($field.visivelPor)
@@ -161,7 +167,8 @@ function verificaVisiveis() {
 #end
 }
 
-	<!--Operacao de Esconder-->    
+<!--Operacao de Esconder-->
+
 function verificaEscondidos() {
 #foreach ($field in $actionParameters)
 #if($field.escondidoPor)
@@ -384,6 +391,19 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
 	
+#elseif($field.editor)
+	tinymce.init({
+		selector: "#${field.name}${jsp.useCase.name}",
+		theme: "modern",
+		plugins: [
+			"advlist autolink lists link image charmap print preview hr anchor pagebreak",
+			"searchreplace wordcount visualblocks visualchars code fullscreen",
+			"insertdatetime media nonbreaking save table contextmenu directionality",
+			"emoticons template paste textcolor"
+		],
+		toolbar: "undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor emoticons | Sprint preview media",
+		menubar: "false"
+	});
 #end
 #end
 

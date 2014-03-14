@@ -1,4 +1,4 @@
- #parse("templates/bpm4struts/pages/page.jsp.vm")
+#parse("templates/bpm4struts/pages/page.jsp.vm")
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
 #set ($targetColumns = $table.targettedTableColumnNames)
@@ -166,37 +166,37 @@
 #if ($securityEnabled) 
 ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
-            
-            #if($valueConfirmMessage !="")
+
+#if($valueConfirmMessage !="")
             <html:button  #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" onclick="confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false" property="$action.formBeanName">
 	           <bean:message key="$action.actionTrigger.triggerKey"/>
             </html:button>  
-            #else
-				
-				#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
+#else
+
+#if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
 			<html:button 
 				onclick="setaAcaoForm('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', this.form )"
 				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
-				#else
+#else
 					<html:button 
 				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
 				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
-            #end  
-            #end        
-     
+#end
+#end
+
             <input type="button" value="<bean:message key="select.deselect.all"/>" onclick="selecionaDeseleciona();"/>
 #if ($securityEnabled) 
 ${indent}   </security:containsPermission>
-#end    
+#end
 #if( $valueOperationMode != "")
 </security:containsOperationMode>
-#end               
+#end
 #end
     </c:if>
     </form>

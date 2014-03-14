@@ -6,15 +6,15 @@
 ## Adiciona propriedades de auditoria
 #if ($entity.auditoria)
 #if ($entity.requiresMapping) ## soh adiciona os campos para a entidade raiz de cada arquivo de mapeamento .hbm.xml
-        <property name="auditoriaLogin" type="java.lang.String">
-            <column name="ADT_LOGIN" not-null="true" sql-type="$entity.auditoriaLoginSqlType" />
-        </property>
-        <property name="auditoriaDataHora" type="java.util.Date">
-            <column name="ADT_DATA_HORA" not-null="true" sql-type="$entity.auditoriaDataSqlType" />
-        </property>
-        <property name="auditoriaOperacao" type="java.lang.String">
-            <column name="ADT_OPERACAO" not-null="true" sql-type="$entity.auditoriaOperacaoSqlType" />
-        </property>
+		<property name="auditoriaLogin" type="java.lang.String">
+			<column name="ADT_LOGIN" not-null="true" sql-type="$entity.auditoriaLoginSqlType" />
+		</property>
+		<property name="auditoriaDataHora" type="java.util.Date">
+			<column name="ADT_DATA_HORA" not-null="true" sql-type="$entity.auditoriaDataSqlType" />
+		</property>
+		<property name="auditoriaOperacao" type="java.lang.String">
+			<column name="ADT_OPERACAO" not-null="true" sql-type="$entity.auditoriaOperacaoSqlType" />
+		</property>
 #if($auditoria)
 		<property name="entityId" type="java.lang.Long">
 			<column name="ENTIY_ID" sql-type="$identifier.sqlType"/>
@@ -33,12 +33,10 @@
 #set ($fullyQualifiedPropertyType = $attribute.type.fullyQualifiedHibernateType)
 #if ($attribute.type.enumeration)
 #set ($fullyQualifiedPropertyType = $attribute.type.fullyQualifiedHibernateEnumerationType)
-
 ## Cria a check constraint
 #set($enumeration = $attribute.type)
 #set($check = $attribute.concatColumnName($paramSqlPrefix, $attribute.columnName))
 #set($check = $check.concat(" IN ("))
-
 #foreach ($literal in $enumeration.literals)
 #if(!($velocityCount == 1))
 #set($check = $check.concat(","))
@@ -46,32 +44,29 @@
 #set($enumerationValue = ${stringUtils.replace(${literal.enumerationValue}, '"', "'")})
 #set($check = $check.concat($enumerationValue))
 #end
-
 #set($check = $check.concat(")"))
-
 #else
 #set($check = false)
 #end
 
 #if ($attribute.containsEmbeddedObject)
-        <component name="$attribute.name" class="${attribute.type.packageName}.${attribute.type.implementationName}">
+		<component name="$attribute.name" class="${attribute.type.packageName}.${attribute.type.implementationName}">
 ## render the properties of the embedded type
 #set ($sqlPrefix = $attribute.columnName)
 #renderPropertiesAndAssociations3($attribute.type $sqlPrefix)
-        </component>
+		</component>
 #else
-        <property name="$attribute.name" type="$fullyQualifiedPropertyType">
+		<property name="$attribute.name" type="$fullyQualifiedPropertyType">
 #if($attribute.formula)
-            <formula name="$attribute.concatColumnName($paramSqlPrefix, $attribute.columnName)"/>
+			<formula name="$attribute.concatColumnName($paramSqlPrefix, $attribute.columnName)"/>
 #else
-            <column name="$attribute.concatColumnName($paramSqlPrefix, $attribute.columnName)" not-null="$attribute.required"#if($auditoria) unique="false"#else unique="$attribute.unique"#end sql-type="$attribute.sqlType"#if($attribute.columnIndex) index="$attribute.columnIndex"#end  #if($attribute.columnUniqueGroup)#if(!$auditoria)unique-key="$attribute.columnUniqueGroup" #end #end #if($!{attribute.defaultValue} && !$stringUtils.equals('null',${attribute.defaultValue}))default="'${attribute.defaultValue}'"#end #if($check) check="$check"  #end>
-
-            	#if($attribute.findTaggedValue("$comment"))
-            	<comment>$attribute.findTaggedValue("$comment")</comment>
-            	#end
-            </column>
+			<column name="$attribute.concatColumnName($paramSqlPrefix, $attribute.columnName)" not-null="$attribute.required"#if($auditoria) unique="false"#else unique="$attribute.unique"#end sql-type="$attribute.sqlType"#if($attribute.columnIndex) index="$attribute.columnIndex"#end  #if($attribute.columnUniqueGroup)#if(!$auditoria)unique-key="$attribute.columnUniqueGroup" #end #end #if($!{attribute.defaultValue} && !$stringUtils.equals('null',${attribute.defaultValue}))default="'${attribute.defaultValue}'"#end #if($check) check="$check"  #end>
+#if($attribute.findTaggedValue("$comment"))
+				<comment>$attribute.findTaggedValue("$comment")</comment>
 #end
-        </property>
+			</column>
+#end
+		</property>
 #end
 #end
 #end
@@ -80,31 +75,34 @@
 #set ($otherEnd = $sourceEnd.otherEnd)
 #if ($otherEnd.navigable || ($sourceEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($sourceEnd.one2One)
+
 #if ($sourceEnd.one2OneSecondary)
-        ##<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end constrained="false"#if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end />
-        <one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  constrained="false"#if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false"/>
+##<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end constrained="false"#if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end />
+		<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  constrained="false"#if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false"/>
 #else
 #if($sourceEnd.one2OnePrimary)
-        ##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" #if(!$otherEnd.required) #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
-        <many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if(!$auditoria) foreign-key="${otherEnd.foreignKeyConstraintName}" #end #if(!$auditoria)#if($attribute.columnIndex) index="$attribute.columnIndex"#elseif($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#elseif(!$otherEnd.required) #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #end #if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select" #else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false">
-        <column name="$otherEnd.columnName" not-null="$otherEnd.required" sql-type="$otherEnd.sqlType"#if ($otherEnd.required ) unique="true"#end #if($otherEnd.association.columnUniqueGroup) #if(!$auditoria)unique-key="$otherEnd.association.columnUniqueGroup" #end #end/>
-        </many-to-one>
+##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" #if(!$otherEnd.required) #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
+		<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if(!$auditoria) foreign-key="${otherEnd.foreignKeyConstraintName}" #end #if(!$auditoria)#if($attribute.columnIndex) index="$attribute.columnIndex"#elseif($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#elseif(!$otherEnd.required) #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #end #if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select" #else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false">
+			<column name="$otherEnd.columnName" not-null="$otherEnd.required" sql-type="$otherEnd.sqlType"#if ($otherEnd.required ) unique="true"#end #if($otherEnd.association.columnUniqueGroup) #if(!$auditoria)unique-key="$otherEnd.association.columnUniqueGroup" #end #end/>
+		</many-to-one>
 #else
-        ##<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" property-ref="$sourceEnd.name"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName"#if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end />
-        <one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" property-ref="$sourceEnd.name" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  #if(!$auditoria) foreign-key="$otherEnd.foreignKeyConstraintName" #end embed-xml="false"/>
+##<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" property-ref="$sourceEnd.name"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName"#if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end />
+
+		<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" property-ref="$sourceEnd.name" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  #if(!$auditoria) foreign-key="$otherEnd.foreignKeyConstraintName" #end embed-xml="false"/>
 #end
 #end
 #end
 #if ($sourceEnd.one2Many)
+
 #if ($otherEnd.set || $otherEnd.map)
-	####### De acordo com o fac do hibernate, em associacoes one2many deve-se usar fetch="subselect" ######
-        ##<$otherEnd.collectionType name="$otherEnd.name" order-by="$otherEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end#if ($stringUtils.isNotBlank($otherEnd.sortType)) sort="$otherEnd.sortType"#end>
+####### De acordo com o fac do hibernate, em associacoes one2many deve-se usar fetch="subselect" ######
+##<$otherEnd.collectionType name="$otherEnd.name" order-by="$otherEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end#if ($stringUtils.isNotBlank($otherEnd.sortType)) sort="$otherEnd.sortType"#end>
         <$otherEnd.collectionType name="$otherEnd.name" order-by="${otherEnd.orderByColumns}" lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end#if ($stringUtils.isNotBlank($otherEnd.sortType)) sort="$otherEnd.sortType"#end batch-size="${otherEnd.batch}" embed-xml="false">
 #elseif ($otherEnd.bag)
-        ##<$otherEnd.collectionType name="$otherEnd.name" order-by="$otherEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
+##<$otherEnd.collectionType name="$otherEnd.name" order-by="$otherEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
         <$otherEnd.collectionType name="$otherEnd.name" order-by="${otherEnd.orderByColumns}" lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}" embed-xml="false">
 #elseif ($otherEnd.list)
-        ##<$otherEnd.collectionType name="$otherEnd.name" #if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
+##<$otherEnd.collectionType name="$otherEnd.name" #if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
         <$otherEnd.collectionType name="$otherEnd.name" lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}" embed-xml="false">
 #end
 #if($hibernateEnableCache.equalsIgnoreCase("true") && $hibernateEnableAssociationsCache.equalsIgnoreCase("true"))      
@@ -122,41 +120,43 @@
             <one-to-many class="$otherEnd.type.fullyQualifiedEntityImplementationName" embed-xml="false"/>
         </$otherEnd.collectionType>
 #elseif ($sourceEnd.many2One)
-        ##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" index="IND_${entity.tableName}_${otherEnd.columnName}" #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
+
+##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" index="IND_${entity.tableName}_${otherEnd.columnName}" #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
         <many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end  #if(!$auditoria)foreign-key="$otherEnd.foreignKeyConstraintName" #end #if(!$auditoria) #if($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#else  #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${entity.tableName}_${otherEnd.columnName}" #end #end #end #if($otherEnd.lazy) lazy="$sourceEnd.lazyType" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end embed-xml="false">
             <column name="$otherEnd.columnName" not-null="$otherEnd.required" sql-type="$otherEnd.sqlType" #if($otherEnd.association.columnUniqueGroup) #if(!$auditoria)unique-key="$otherEnd.association.columnUniqueGroup" #end #end>
-            #if($otherEnd.association.findTaggedValue($comment))
-	    	<comment>$otherEnd.association.findTaggedValue("$comment")</comment>
-	    #end
+#if($otherEnd.association.findTaggedValue($comment))
+				<comment>$otherEnd.association.findTaggedValue("$comment")</comment>
+#end
             </column>
         </many-to-one>
-#elseif ($sourceEnd.many2Many) 
+#elseif ($sourceEnd.many2Many)
+
 ##if($otherEnd.list)
-##        <$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" #if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
-##else      
-	##<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>  
-	####### De acordo com o fac do hibernate, em associacoes many2many deve-se usar fetch="join" ######
-	#### Porem vimos que o ideal eh utilizar lasy="true" e fetch="subselect" #####
-	<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns"#*Passar order-by para tag many-to-many hibernate 3.2*# lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}" embed-xml="true">  
-	##<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}">
+##  <$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" #if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
+##else
+##<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
+####### De acordo com o fac do hibernate, em associacoes many2many deve-se usar fetch="join" ######
+#### Porem vimos que o ideal eh utilizar lasy="true" e fetch="subselect" #####
+		<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns"#*Passar order-by para tag many-to-many hibernate 3.2*# lazy="$sourceEnd.lazyType" fetch="select" inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}" embed-xml="true">
+##<$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" order-by="$sourceEnd.orderByColumns" inverse="$otherEnd.hibernateInverse" #if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end #if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end batch-size="${otherEnd.batch}">
 ##end	
-	#if($hibernateEnableCache.equalsIgnoreCase("true") && $hibernateEnableAssociationsCache.equalsIgnoreCase("true"))      
+#if($hibernateEnableCache.equalsIgnoreCase("true") && $hibernateEnableAssociationsCache.equalsIgnoreCase("true"))
             <cache usage="$sourceEnd.association.hibernateCacheType" />
-	#end
+#end
 	
-	#if($sourceEnd.association.findTaggedValue($comment))
-	    <comment>$sourceEnd.association.findTaggedValue("$comment")</comment>
-	#end
-	
+#if($sourceEnd.association.findTaggedValue($comment))
+			<comment>$sourceEnd.association.findTaggedValue("$comment")</comment>
+#end
+
             <key #if(!$auditoria) foreign-key="$sourceEnd.foreignKeyConstraintName" #end >
                 <column name="$sourceEnd.columnName" sql-type="$sourceEnd.sqlType" #if(!$sourceEnd.navigable) #if(!$auditoria)unique-key="${otherEnd.association.tableName}_CT" #end #end/>
             </key>
             <many-to-many class="$otherEnd.type.fullyQualifiedEntityImplementationName" #*order-by="$otherEnd.orderByColumns" Requer hibernate 3.2 (verificar se existe a tagged value)*#foreign-key="$otherEnd.foreignKeyConstraintName" embed-xml="false">
                 <column name="$otherEnd.columnName" sql-type="$otherEnd.sqlType" #if($sourceEnd.columnIndex) index="$sourceEnd.columnIndex"#else  #if(${otherEnd.associationIndex}) index="$criptoUtils.generateTruncatedIndex(${entity.superTableName},${otherEnd.columnName})" #else index="IND_${otherEnd.association.tableName}_${otherEnd.columnName}" #end  #end #if(!$auditoria)unique-key="${otherEnd.association.tableName}_CT" #end>
-		#if($otherEnd.findTaggedValue($comment))
-	    		<comment>$otherEnd.findTaggedValue("$comment")</comment>
-		#end	
-		</column>	                
+#if($otherEnd.findTaggedValue($comment))
+					<comment>$otherEnd.findTaggedValue("$comment")</comment>
+#end	
+				</column>
             </many-to-many>
         </$otherEnd.collectionType>
 #end
@@ -169,18 +169,16 @@
 		<property name="${otherEnd.name}Log" type="java.lang.String">
 			<column name="${otherEnd.name}Log" sql-type="$entity.auditoriaListaId"  default="null"/>
 		</property>
-		#end
 #end
 #end
 #end
-
-
+#end
 ##
 ##  This macro will render any sub mappings elements for the given $entity.
 ##
 #macro (renderSubClass3 $entity $auditoria)
 ## Should only get get invoked for inheritance class or subclass.
-#if(!$auditoria)    
+#if(!$auditoria)
         <$entity.mappingClassName name="$entity.fullyQualifiedEntityImplementationName" #if($entity.tableRequired) table="$entity.tableName" #else discriminator-value="$entity.entityImplementationName"#end#if($entity.hibernateProxy) proxy="$entity.fullyQualifiedEntityImplementationName"#end dynamic-insert="$entity.dynamicInsert" dynamic-update="$entity.dynamicUpdate" abstract="$entity.abstract">
 #else
 		<$entity.mappingClassName name="${entity.fullyQualifiedName}LogRec" #if($entity.tableRequired) table="${entity.tableName}_LOG_REC" #else discriminator-value="${entity.entityName}LogRec"#end#if($entity.hibernateProxy) proxy="${entity.fullyQualifiedName}LogRec"#end dynamic-insert="$entity.dynamicInsert" dynamic-update="$entity.dynamicUpdate" abstract="$entity.abstract">
@@ -213,4 +211,3 @@
         </$entity.mappingClassName>
 
 #end
-

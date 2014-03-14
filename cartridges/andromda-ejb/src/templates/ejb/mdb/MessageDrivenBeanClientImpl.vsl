@@ -13,24 +13,19 @@ public class ${messageDrivenClient.name}MDBClientImpl extends ${messageDrivenCli
 #foreach ($operation in $messageDrivenClient.businessOperations)
 
 #set ($returnType = $operation.returnType)
-
 #set ($signature = $operation.signature)
-
 #set ($listaAtributos = $operation.typedArgumentList)
 
-    #if ($operation.exceptionsPresent)
+#if ($operation.exceptionsPresent)
     	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos) throws $operation.exceptionList{
-    #else
+#else
     	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
-    #end
+#end
 	
-    #if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
         return $operation.returnType.javaNullString;    
-    #end
+#end
         }
-        
-  
-
 
 #end
 

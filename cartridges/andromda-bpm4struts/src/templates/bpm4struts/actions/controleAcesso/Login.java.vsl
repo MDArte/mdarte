@@ -16,7 +16,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set ($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import javax.security.auth.Subject;
 
@@ -37,7 +37,7 @@ public abstract class Login extends Action
         loadUseCaseInfo();
 
         org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
-        
+
         ActionForward forward = null;
         if(request.getSession().getAttribute(Constantes.TROCA_SENHA_OBRIGATORIA) != null && request.getParameter(Constantes.BUTTON_TROCA_SENHA) == null)
         {
@@ -53,16 +53,16 @@ public abstract class Login extends Action
         catch (java.lang.Exception exception)
         {
 #populateCurrentFormOnError("            ")
-            throw exception;     
+            throw exception;
         }
-        
+
         request.getSession().setAttribute("form", form);
-        
+
 		Boolean aplicacaoGerenciaTrocaDePortas = (Boolean) request.getSession().getServletContext().getAttribute("aplicacaoGerenciaTrocaDePortas");
         if (aplicacaoGerenciaTrocaDePortas)
         {
-	        if(forward!=null && !(forward.getPath().contains("ForwardAction"))){   
-				if(forward != null && forward.getPath().startsWith("/${secureDir}")) {              	
+	        if(forward!=null && !(forward.getPath().contains("ForwardAction"))){
+				if(forward != null && forward.getPath().startsWith("/${secureDir}")) {
 					forward = new ActionForward("https://" + (request.getServerName() + ":" + request.getSession().getServletContext().getAttribute("httpsPort") + "/${contextoPrincipal}" + forward.getPath()).replaceAll("//", "/"), true);
 	        	}
 #if(${enableHttpsRequest}=="false")
@@ -205,14 +205,12 @@ public abstract class Login extends Action
         }
         if (value.equals("true"))
         {
-            
         	return mapping.findForward("troca.de.senha.obrigatoria");
         }
-        
+
         // we take the last action in case we have an invalid return value from the controller
         return mapping.findForward("troca.de.senha.obrigatoria");
     }   
-
 
     /**
      * 
@@ -233,8 +231,6 @@ public abstract class Login extends Action
         // we take the last action in case we have an invalid return value from the controller
         return _verificaLoginESenha(mapping, form, request, response);
     }
-
-
 
     /**
      * 

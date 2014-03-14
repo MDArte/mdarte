@@ -420,6 +420,7 @@
                     <value>multibox</value>
                     <value>autocomplete</value>
                     <value>custom</value>
+                    <value>editor</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">
@@ -745,6 +746,13 @@
                 </documentation>
                 <value>@andromda.presentation.web.layout.name</value>
                 <appliedOnElement>UseCase e Package</appliedOnElement>
+            </element>
+            <element name="ENUM_EMPTY_VALUE">
+                <documentation>
+                    Usuario define uma layout personalizada
+                </documentation>
+                <value>@andromda.presentation.web.view.field.enumeration.emptyValue</value>
+                <appliedOnElement>Parameter</appliedOnElement>
             </element>
         </elementGroup>
         <elementGroup name="Data Types">
