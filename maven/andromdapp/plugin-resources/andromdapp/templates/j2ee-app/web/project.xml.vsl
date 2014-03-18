@@ -35,7 +35,7 @@
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>${pom.groupId}-compartilhado</artifactId>
-            <version>1.0</version>
+            <version>${application.version}</version>
             <type>ejb</type>
         </dependency>
 #end
