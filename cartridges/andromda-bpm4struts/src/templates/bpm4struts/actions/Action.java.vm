@@ -169,31 +169,31 @@ ${indent}forward = ${transition.target.actionMethodName}(mapping, form, request,
 #end
 #if($valueInputOperationMode != "")
 ${indent}java.util.HashMap map = new java.util.HashMap();
-${indent}if(request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO) != null)
-${indent}	map = (java.util.HashMap)request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO);		
+${indent}if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null)
+${indent}	map = (java.util.HashMap)request.getSession().getAttribute(Constantes.MODO_OPERACAO);		
 ${indent}map.put("${finalUseCaseName}", "$valueInputOperationMode");	
-${indent}request.getSession().setAttribute(${utilDir}.Constantes.MODO_OPERACAO, map);
+${indent}request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 ##request.getSession().setAttribute(${utilDir}.Constantes.MODO_OPERACAO, "$valueInputOperationMode");
 #else
 #if(!$keepOperationMode.equals("true"))
 ${indent}java.util.HashMap map = new java.util.HashMap();
-${indent}if(request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO) != null)
-${indent}	map = (java.util.HashMap)request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO);	
+${indent}if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null)
+${indent}	map = (java.util.HashMap)request.getSession().getAttribute(Constantes.MODO_OPERACAO);	
 	##map.remove("${useCaseName}");
 ${indent}map.remove("${finalUseCaseName}");
-${indent}request.getSession().setAttribute(${utilDir}.Constantes.MODO_OPERACAO, map);
+${indent}request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 
 ##request.getSession().removeAttribute(${utilDir}.Constantes.MODO_OPERACAO);
 #elseif($keepOperationMode.equals("true"))
 ${indent}java.util.HashMap map = new java.util.HashMap();
 
-${indent}if(request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO) != null)
-${indent}	map = (java.util.HashMap)request.getSession().getAttribute(${utilDir}.Constantes.MODO_OPERACAO);
+${indent}if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null)
+${indent}	map = (java.util.HashMap)request.getSession().getAttribute(Constantes.MODO_OPERACAO);
 
 ${indent}if(map.get("${useCaseName}") != null){
 ${indent}	String modoOperacao = (String)map.get("${useCaseName}");
 ${indent}	map.put("${finalUseCaseName}", modoOperacao);	
-${indent}	request.getSession().setAttribute(${utilDir}.Constantes.MODO_OPERACAO, map);
+${indent}	request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 ${indent}}
 #end
 #end

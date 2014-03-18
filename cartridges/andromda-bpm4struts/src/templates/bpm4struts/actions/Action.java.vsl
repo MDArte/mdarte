@@ -54,6 +54,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.upload.MultipartRequestWrapper;
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #if ($securityEnabled && !${action.useCase.openAccess}) 
@@ -96,13 +98,13 @@ public final class $action.actionClassName extends org.apache.struts.action.Acti
     	org.apache.struts.action.ActionForward forward = null;
     	boolean copyParameters = true;
     	
-    	if (request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS) != null) {
-    		copyParameters = (Boolean) request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
-    		request.getSession().removeAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
+    	if (request.getSession().getAttribute(Constantes.COPY_PARAMETERS) != null) {
+    		copyParameters = (Boolean) request.getSession().getAttribute(Constantes.COPY_PARAMETERS);
+    		request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
     	}
 
 #if (!${action.copyParameters})
-		request.getSession().setAttribute(${utilDir}.Constantes.COPY_PARAMETERS, Boolean.FALSE);
+		request.getSession().setAttribute(Constantes.COPY_PARAMETERS, Boolean.FALSE);
 		
 #end
 #if ($action.useCaseStart)
@@ -170,12 +172,12 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 		try
 		{
 		
-		## [MOISES-COPPETEC]
-		## Codigo responsável por pegar o parâmetro da DispayTag e colocar o nome da ação na sessão, caso esta ação 
-		## carregue dados para uma tabela e assim possibilitar a paginação.
-		## #if(!$action.actionFormFields.empty)
-		##	request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.do");	
-		## #end		
+## [MOISES-COPPETEC]
+## Codigo responsável por pegar o parâmetro da DispayTag e colocar o nome da ação na sessão, caso esta ação 
+## carregue dados para uma tabela e assim possibilitar a paginação.
+## #if(!$action.actionFormFields.empty)
+##	request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.do");	
+## #end		
 
 #set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
@@ -190,17 +192,17 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 			else {
 				request.setAttribute("displaytag", null); 
 			}
-			request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.do");	     	    
-			if(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA) == null){
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_PAGINA, 1);
-				request.setAttribute(${utilDir}.Constantes.ATTRIBUTE_TABLE, request.getParameter(${utilDir}.Constantes.PARAMETRO_TABLE));
+			request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.do");
+			if(request.getParameter(Constantes.PARAMETRO_PAGINA) == null){
+				request.setAttribute(Constantes.PARAMETRO_PAGINA, 1);
+				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameter(Constantes.PARAMETRO_TABLE));
 			} else {
-				##if ($action.formScopeRequest)
-				##form = (org.apache.struts.action.ActionForm)request.getAttribute("$action.useCase.formKey");
-				##else
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_PAGINA, Integer.valueOf(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA)));
-				##end
-				request.setAttribute(${utilDir}.Constantes.ATTRIBUTE_TABLE, request.getParameter(${utilDir}.Constantes.PARAMETRO_TABLE));        		
+##if ($action.formScopeRequest)
+##form = (org.apache.struts.action.ActionForm)request.getAttribute("$action.useCase.formKey");
+##else
+				request.setAttribute(Constantes.PARAMETRO_PAGINA, Integer.valueOf(request.getParameter(Constantes.PARAMETRO_PAGINA)));
+##end
+				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameterConstantes.PARAMETRO_TABLE));
 			}
 
 #end

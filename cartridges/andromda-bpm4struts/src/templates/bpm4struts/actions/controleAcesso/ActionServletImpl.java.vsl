@@ -5,7 +5,7 @@ package $servletPackage;
 #if($modulo != 'true')
 import java.util.HashMap;
 import java.util.Collection;
-import ${utilDir}.Constantes;
+import ${customTypesPackage}.${utilDir}.Constantes;
 import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

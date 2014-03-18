@@ -61,6 +61,8 @@ import java.util.Enumeration;
 import java.io.PrintWriter;
 import ${servletPackage}.ActionUtil;
 import ${servletPackage}.Struts2ViewContainer;
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -358,13 +360,13 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		boolean copyParameters = true;
 
-		if (request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS) != null) {
-			copyParameters = (Boolean) request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
-			request.getSession().removeAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
+		if (request.getSession().getAttribute(Constantes.COPY_PARAMETERS) != null) {
+			copyParameters = (Boolean) request.getSession().getAttribute(Constantes.COPY_PARAMETERS);
+			request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
 		}
 
 #if (!${action.copyParameters})
-		request.getSession().setAttribute(${utilDir}.Constantes.COPY_PARAMETERS, Boolean.FALSE);
+		request.getSession().setAttribute(Constantes.COPY_PARAMETERS, Boolean.FALSE);
 #end
 #if ($action.useCaseStart)
 ## [MOISES-COPPETEC]
@@ -454,19 +456,19 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #foreach($field in $action.actionFormFields)
 #if($field.table && !$possuiTable)
 #set($possuiTable = true)
-			request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.action");
+			request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.action");
 			
-			if(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA) == null)
+			if(request.getParameter(Constantes.PARAMETRO_PAGINA) == null)
 			{
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO, 1);
+				request.setAttribute(Constantes.PARAMETRO_GRUPO, 1);
 				request.getSession().setAttribute("formPaginacao", form);
 			}
 			else
 			{
 				Object previusForm = (org.apache.struts.action.ActionForm)request.getSession().getAttribute("formPaginacao");
 				org.apache.commons.beanutils.PropertyUtils.copyProperties(form, previusForm);
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO, Integer.parseInt(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA)));
-				request.setAttribute(${utilDir}.Constantes.ATTRIBUTE_TABLE, request.getParameter(${utilDir}.Constantes.PARAMETRO_TABLE));
+				request.setAttribute(Constantes.PARAMETRO_GRUPO, Integer.parseInt(request.getParameter(Constantes.PARAMETRO_PAGINA)));
+				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameter(Constantes.PARAMETRO_TABLE));
 			}
 #end
 #end

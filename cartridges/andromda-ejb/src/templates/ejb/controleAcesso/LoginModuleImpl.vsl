@@ -20,6 +20,9 @@ import accessControl.Operador;
 import accessControl.Perfil;
 import accessControl.PrincipalImpl;
 
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
+
 public class LoginModuleImpl extends DatabaseServerLoginModule {
 	
 	   protected Group[] getRoleSets() throws LoginException
@@ -31,7 +34,7 @@ public class LoginModuleImpl extends DatabaseServerLoginModule {
 	    	  
 	    	  java.util.Collection<Perfil> listaPerfis = new ArrayList<Perfil>();
 	    	 	    	  
-	    	  Group roles = new SimpleGroup(${utilDir}.Constantes.ROLES);
+	    	  Group roles = new SimpleGroup(Constantes.ROLES);
 	    	  
 		      Group[] g = super.getRoleSets();
 		      SimpleGroup simpleGroup = (SimpleGroup) g[0];
@@ -44,7 +47,7 @@ public class LoginModuleImpl extends DatabaseServerLoginModule {
 		    	  listaPerfis.add(perfil);		    	  
 		      }		  
 		      
-		     Group callerPrincipal = new SimpleGroup(${utilDir}.Constantes.CALLER_PRINCIPAL);
+		     Group callerPrincipal = new SimpleGroup(Constantes.CALLER_PRINCIPAL);
 	         PrincipalImpl principalImpl = new PrincipalImpl(getUsername());
 	         principalImpl.setPerfis(listaPerfis);
 	         principalImpl.setOperador(operador);

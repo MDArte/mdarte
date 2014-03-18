@@ -17,7 +17,8 @@
 #if($gerar)
 // license-header java merge-point
 package $controllerPackageName;
-
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes
 import ${servletPackage}.ViewContainer;
 
 /**
@@ -37,7 +38,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception
     {
     	/*Caso seja necessario usar paginacao		
-    		Integer paginacao = ((Double)container.getAttribute(util.Constantes.PARAMETRO_PAGINA)).intValue();
+    		Integer paginacao = ((Double)container.getAttribute(Constantes.PARAMETRO_PAGINA)).intValue();
     	*/##acredito que essa parte talvez seja encapsulada num aspecto.
 	
 #set($allowDummyData = ($dummyData == 'true'))

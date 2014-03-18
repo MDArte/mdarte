@@ -14,13 +14,13 @@
 <%@ include file="/taglib-imports.jspf" %>
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
-<% 
-	String acao_${table.name};
-	if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
-		acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-	}else{
-		acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
-	}
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+<% String acao_${table.name};
+   if (session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
+	acao_${table.name} = request.getContextPath() + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
+   }else{
+	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
+   }
 %>
 ## Fim
 

@@ -19,6 +19,8 @@
 package $controllerPackageName;
 
 import org.apache.struts.action.ActionMapping;
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +44,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     $visibility final $returnType ${operation.name}(ActionMapping mapping, $operation.interfaceType form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
     	/*Caso seja necessario usar paginacao		
-    		Integer paginacao = (((Integer)request.getAttribute(${utilDir}.Constantes.PARAMETRO_PAGINA)));
+    		Integer paginacao = (((Integer)request.getAttribute(Constantes.PARAMETRO_PAGINA)));
     	*/
 	
 #set($allowDummyData = ($dummyData == 'true'))

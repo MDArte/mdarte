@@ -11,11 +11,12 @@
 #if($gerarJSP)
 ## [MOISES-COPPETEC]
 ## Acaoo a ser utilizada no link "NEXT" na paginacao.
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 <% String acao_${table.name};
-   if (session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
-	acao_${table.name} = request.getContextPath() + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+   if (session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
+	acao_${table.name} = request.getContextPath() + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
    }else{
-	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${utilDir}.Constantes.ACAO_ATUAL);
+	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
    }
 %>
 
@@ -181,7 +182,7 @@ ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey"
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
 #else
-					<html:button 
+			<html:button 
 				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
 				#if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 
