@@ -17,7 +17,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import util.Constantes;
+import ${customTypesPackage}.${utilDir}.Constantes;
 
 public class SessionFilter implements Filter {
 	FilterConfig fc;
