@@ -18,7 +18,7 @@
 // license-header java merge-point
 package $controllerPackageName;
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
-import ${customTypesPackage}.${package}.Constantes
+import ${customTypesPackage}.${package}.Constantes;
 import ${servletPackage}.ViewContainer;
 
 /**
