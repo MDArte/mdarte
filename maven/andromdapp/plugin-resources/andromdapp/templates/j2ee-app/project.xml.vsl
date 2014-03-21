@@ -41,8 +41,8 @@
         </dependency>
 #if($controleAcesso)
 		<dependency>
-			<groupId>ControleAcesso</groupId>
-			<artifactId>ControleAcesso-dominio-core</artifactId>
+			<groupId>controleacesso</groupId>
+			<artifactId>controleacesso-dominio-core</artifactId>
 			<version>${controle.acesso.version}</version>
     		<properties>
     			<ejb.manifest.classpath>false</ejb.manifest.classpath>
@@ -50,8 +50,8 @@
     		<type>jar</type>
 		</dependency>
     	<dependency>
-    		<groupId>ControleAcesso</groupId>
-    		<artifactId>ControleAcesso-common</artifactId>
+    		<groupId>controleacesso</groupId>
+    		<artifactId>controleacesso-common</artifactId>
     		<version>${controle.acesso.version}</version>
     		<type>jar</type>
     		<properties>
@@ -59,8 +59,8 @@
     		</properties>
     	</dependency>
     	<dependency> 
-            <groupId>ControleAcesso</groupId>
-            <artifactId>ControleAcesso-compartilhado</artifactId>
+            <groupId>controleacesso</groupId>
+            <artifactId>controleacesso-compartilhado</artifactId>
             <version>${controle.acesso.version}</version>
             <type>ejb</type>
             <properties>

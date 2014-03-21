@@ -67,7 +67,8 @@
 #set($listaAtributos = "$listaAtributos, $attName")
 #end
 #end
-#end  ##fim foreach $parametro
+#end
+##fim foreach $parametro
 #end
 
 #macro (renderParametersPaginacao $operation $listaAtributos $nome)
@@ -86,7 +87,8 @@
 #set($listaAtributos = "$listaAtributos, $attName")
 #end
 #end
-#end  ##fim foreach $parametro
+#end
+##fim foreach $parametro
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #if($nome)
 #set($attName = "java.lang.Integer paginacao")
@@ -117,5 +119,6 @@
 #set($listaAtributos = "$listaAtributos, $attName")
 #end
 #end
-#end  ##fim foreach $parametro
+#end
+##fim foreach $parametro
 #end
