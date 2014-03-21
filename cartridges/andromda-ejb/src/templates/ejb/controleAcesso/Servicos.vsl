@@ -26,8 +26,8 @@
 #else
 #set ($codigoServico = $nome)
 #end  
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,'$nome','$codigoServico',0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #end
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #set ($listaArgumentos = "")
@@ -46,43 +46,43 @@ VALUES (SV_CA_SEQ.NEXTVAL,'$nome','$codigoServico',0,0,(SELECT ID FROM SIS_CA WH
 #else
 #set ($codigoServico = $nome)
 #end
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,'$nome','$codigoServico',0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #end
 #end
 #end
 #foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.filter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.FilterAction)'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.insert${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ListAction)'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.Action)'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.export${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ExportAction)'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.import${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ImportAction)'")
-INSERT INTO SV_CA (ID,NOME,CODIGO,NIVEL_APROVACAO_INICIAL,HIBERNATE_VERSION,SIS_CA_FK)
-VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_CA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
+VALUES (ACAO_SEQ.NEXTVAL,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 
 #end
 #end 
@@ -110,9 +110,9 @@ VALUES (SV_CA_SEQ.NEXTVAL,$codigoServico,$codigoServico,0,0,(SELECT ID FROM SIS_
 #end
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)'")
 
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #end
 #end
 
@@ -122,41 +122,41 @@ VALUES
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #set ($codigoAgrupa = "'${service.fullyQualifiedName}BI.manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.Action)'")
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.filter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.FilterAction)'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.insert${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ListAction)'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.export${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ExportAction)'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #set ($codigoEAgrupado = "'${service.fullyQualifiedName}BI.import${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ImportAction)'")
-INSERT INTO SV_SV (AGRUPA_FK, E_AGRUPADO_POR_FK)
+INSERT INTO AGRUPA_E_AGRUPADO_POR (AGRUPA_FK, E_AGRUPADO_POR_FK)
 VALUES
-((SELECT ID FROM SV_CA WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM SV_CA WHERE CODIGO = $codigoEAgrupado));
+((SELECT ID FROM ACAO WHERE CODIGO = $codigoAgrupa), (SELECT ID FROM ACAO WHERE CODIGO = $codigoEAgrupado));
 #end
 #end
 #end

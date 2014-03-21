@@ -101,7 +101,7 @@ xwork.core.version=2.1.6
 
 #if(${controleAcesso})
 # versão do controle de acesso padrão do mdarte
-controle.acesso.version=1.0
+controle.acesso.version=2.0
 #end
 
 #if(${oauth})

@@ -38,35 +38,33 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public accessControl.Operador getOperador(String usuario) throws ControleAcessoException{
-		OperadorCA operador = new OperadorCAImpl();
-		operador.setLogin(usuario);
-		OperadorCADAOImpl opDAO = new OperadorCADAOImpl();
+		
+		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+		
 		try
 		{
-			return (accessControl.Operador)
-					opDAO.recuperaOperador(usuario,
-							null).iterator().next(); //trocar para filter?
+			return (accessControl.Operador) usuarioDAO.recuperarUsuario(usuario);
 		}
 		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
 		{
 			throw new ControleAcessoException(e.getMessage());
 		}
 	}
-	private HashMap<String, Collection<Perfil>> addServices(HashMap<String,Collection<Perfil>> hmServicos, ServicoCA servico, Collection<Perfil> perfis)
+
+	private HashMap<String, Collection<accessControl.Perfil>> addServices(HashMap<String,Collection<accessControl.Perfil>> hmServicos, Acao acao, Collection<accessControl.Perfil> perfis)
 	{
-		if (hmServicos.get(servico.getCodigo()) != null)
+		if (hmServicos.get(acao.getCodigo()) != null)
 		{
-			hmServicos.get(servico.getCodigo()).addAll(perfis);
+			hmServicos.get(acao.getCodigo()).addAll(perfis);
 		}
 		else
 		{
-			hmServicos.put(servico.getCodigo(), perfis);
+			hmServicos.put(acao.getCodigo(), perfis);
 		}
-		for(ServicoCA servicoAgrupado : (Collection<ServicoCA>)
-				servico.getEAgrupadoPor())
+		
+		for(Acao acaoAgrupada : (Collection<Acao>) acao.getEAgrupadoPor())
 		{
-			hmServicos = addServices(hmServicos, servicoAgrupado,
-					perfis);
+			hmServicos = addServices(hmServicos, acaoAgrupada, perfis);
 		}
 		return hmServicos;
 	}
@@ -76,37 +74,39 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public java.util.HashMap<String, java.util.Collection<accessControl.Perfil>> listaServicos() throws ControleAcessoException {
-		HashMap<String, Collection<Perfil>> hmServicos = new
-				HashMap<String, Collection<Perfil>>();
-		ServicoCADAOImpl servDAO = new ServicoCADAOImpl();
-		List serviceList =
-				new ArrayList();
+		
+		HashMap<String, Collection<accessControl.Perfil>> hmServicos = new HashMap<String, Collection<accessControl.Perfil>>();
+		
+		AcaoDAOImpl acaoDAO = new AcaoDAOImpl();
+		
+		List acaoList = new ArrayList();
+		
 		try
 		{
-			// recupera todos os serviÃ§os
-			serviceList = servDAO.list();
+			// recupera todos os serviços
+			acaoList = acaoDAO.list();
 		}
 		catch(br.gov.mdarte.controleacesso.cd.DAOException e)
 		{
 			throw new ControleAcessoException(e.getMessage());
 		}
-		for(ServicoCA service : (Collection<ServicoCA>) serviceList)
+		
+		for(Acao acao : (Collection<Acao>) acaoList)
 		{
-			Collection<PerfilOperadorCA> perfilOperadorList =
-					service.getPerfilOperadorCAs();
-			Collection<Perfil> perfilList = new HashSet<Perfil>();
+			Collection<Perfil> perfilAcaoList = acao.getPerfils();
+			Collection<accessControl.Perfil> perfilList = new HashSet<accessControl.Perfil>();
 			// adiciona SU para todos os servicos
-			perfilList.add(new Perfil(SUPER_USUARIO));
-			for(PerfilOperadorCA perfilCA : perfilOperadorList)
+			perfilList.add(new accessControl.Perfil(SUPER_USUARIO));
+			
+			for(Perfil perfilCA : perfilAcaoList)
 			{
-				Perfil perfil = new
-						Perfil(perfilCA.getId().toString());
+				accessControl.Perfil perfil = new accessControl.Perfil(perfilCA.getId().toString());
 				perfilList.add(perfil);
 			}
-			if (!perfilList.isEmpty())
-				hmServicos = addServices(hmServicos, service,
-						perfilList);
+			
+			if (!perfilList.isEmpty()) hmServicos = addServices(hmServicos, acao, perfilList);
 		}
+
 		return hmServicos;
 	}	
 
@@ -115,27 +115,30 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public boolean trocaSenha(accessControl.Operador operador, String senhaAtual, String novaSenha) throws ControleAcessoException{
-		OperadorCADAOImpl opDAO = new OperadorCADAOImpl();
-		OperadorCAImpl opRetrieved;
-		OperadorCAImpl op = (OperadorCAImpl) operador;
-		opRetrieved = (OperadorCAImpl) getOperador(op.getLogin());
-		if (!opRetrieved.getSenha().equals(senhaAtual))
-			return false;
-		opRetrieved.setSenha(novaSenha);
+		
+		UsuarioDAOImpl usrDAO = new UsuarioDAOImpl();
+		UsuarioImpl usrRetrieved;
+		UsuarioImpl usr = (UsuarioImpl) operador;
+		usrRetrieved = (UsuarioImpl) getOperador(usr.getLogin());
+		
+		if (!usrRetrieved.getSenha().equals(senhaAtual)) return false;
+		
+		usrRetrieved.setSenha(novaSenha);
 		Calendar calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, PROXIMA_TROCA_SENHA_DIAS);
-		opRetrieved.setDataValidadeSenha(calendar.getTime());
+		usrRetrieved.setDataValidadeSenha(calendar.getTime());
+		
 		try
 		{
-			opDAO.update(opRetrieved);
+			usrDAO.update(usrRetrieved);
 		}
 		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
 		{
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
-		
 	}	
 
 	/**
@@ -216,7 +219,6 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	
 	public  static class RestricaoDinamicaImpl {
 #foreach ($service in $services)
-	
 #foreach ($operation in $service.operations )
 	
 		$operation.visibility  $operation.returnType.fullyQualifiedName ${operation.name} () {
@@ -226,7 +228,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		}
 	
 #end
-		
+
 #end
 	}	
 
@@ -262,7 +264,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	public boolean trocaSenha(accessControl.Operador operador, String senhaAtual, String novaSenha) throws ControleAcessoException{
 		return false;
 		
-	}	
+	}
 
 	/**
 	 * Bloqueia o acesso do usuário
@@ -270,7 +272,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	@Override
 	public void bloqueiaUsuario(String usuario) {
 		
-	}		
+	}
 
 	/**
 	 * Verifica se o acesso do usuário está bloqueado
@@ -342,22 +344,20 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	
 	public  static class RestricaoDinamicaImpl {
 #foreach ($service in $services)
-	
 #foreach ($operation in $service.operations )
 	
 		$operation.visibility  $operation.returnType.fullyQualifiedName ${operation.name} () {
- #if ($operation.returnTypePresent)
+#if ($operation.returnTypePresent)
                     return $operation.returnType.javaNullString;
 #end
 		}
-	
 #end
-		
+
 #end
-	}	
+	}
 
 	public void agendaTarefas() {
-	
+
 	}
 #end
 }

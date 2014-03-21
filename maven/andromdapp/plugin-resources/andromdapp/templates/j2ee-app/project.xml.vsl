@@ -39,7 +39,7 @@
                 <jar.manifest.classpath>true</jar.manifest.classpath>
             </properties>
         </dependency>
-		#if($controleAcesso)
+#if($controleAcesso)
 		<dependency>
 			<groupId>ControleAcesso</groupId>
 			<artifactId>ControleAcesso-dominio-core</artifactId>
@@ -67,6 +67,6 @@
       			<ejb.manifest.classpath>true</ejb.manifest.classpath>
   			</properties>
   		</dependency>
-    	#end
+#end
     </dependencies>
 </project>
