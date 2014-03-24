@@ -611,6 +611,17 @@
                     <value>true</value>
                 </allowedValues>
             </element>
+            <element name="TABLE_TYPE">
+                <documentation>
+                    Indicates the type of table to be displayed.
+                </documentation>
+                <value>@andromda.presentation.web.view.table.type</value>
+                <appliedOnElement>Parameter coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+                <allowedValues>
+                    <value default="true">default</value>
+                    <value>footable</value>
+                </allowedValues>
+            </element>
             <element name="TABLE_DECORATOR">
                 <documentation>
                     Whether or not to generate a displaytag table decorator for this table. Can be used
