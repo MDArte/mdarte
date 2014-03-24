@@ -43,6 +43,19 @@
 			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
 			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
 		</action>
+#elseif($parameter.tableType.equals("footable"))
+#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)) )
+#set($actionAjax= "")
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionAjax = $actionAjax.concat("$aux"))
+#end
+#set($actionAjax=$actionAjax.concat($tableName))
+		<action name="${actionAjax}Ajax" class="${useCase.getPackagePath().replace('/','.')}.${actionAjax}AjaxAction" method="execute">
+			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
+			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
+		</action>
 #end
 #end
 #end
