@@ -22,6 +22,7 @@ import ${servletPackage}.ViewContainer;
 import ${servletPackage}.ControllerAbstract;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import java.util.Collection;
 
 /**
 $controller.getDocumentation(" * ")
@@ -153,7 +154,7 @@ $operation.getDocumentation("     * ")
 #foreach($parametro in $action.getActionParameters())
 #if($parametro.autocomplete)
 #set($pageName = $parametro.name) 
-#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($palavras = $parametro.getJsp().getName().split(" "))
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
@@ -186,6 +187,64 @@ $operation.getDocumentation("     * ")
 		container.setContentType("application/json;charset=UTF-8");
     	container.getWriter().write(jsonArray.toString());
     	
+	}
+#elseif($parametro.tableType.equals("footable"))
+#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($actionName = "")
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionName = $actionName.concat("$aux"))
+#end
+#set($actionName=$actionName.concat($tableName))
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas) throws java.lang.Exception;
+	
+	protected void load${actionName}Table(ViewContainer container) throws Exception {
+		
+		Collection rows = this.load${actionName}Table(0,${parametro.tableMaxRows});
+		
+		JSONArray array = new JSONArray();
+                
+        if(rows != null) {
+            
+            java.lang.Class classe = rows.toArray()[0].getClass();
+            
+            java.lang.reflect.Method [] methods = classe.getSuperclass().getDeclaredMethods();
+            
+            java.lang.reflect.Field []  fields = classe.getSuperclass().getDeclaredFields();
+            
+            
+            for(Object row : rows) {
+            
+                JSONObject obj = new JSONObject();
+
+                for(int i = 0; i < fields.length; i++) {
+                
+                    for(int j = 0; j < methods.length; j++) {
+            
+                        String methodName = "get".concat(fields[i].getName().subSequence(0,1).toString().toUpperCase().concat(fields[i].getName().substring(1)));
+                        
+                        if(methods[j].getName().equals(methodName)) {
+            
+                            obj.put(fields[i].getName(), methods[j].invoke(row));
+                            
+                            break;
+                            
+                        }
+            
+                    }
+            
+                }
+            
+                array.add(obj);
+            
+            }
+        }
+        
+        container.setContentType("application/json;charset=UTF-8");
+        
+        container.getWriter().write(array.toString());
+
 	}
 #end
 #end
