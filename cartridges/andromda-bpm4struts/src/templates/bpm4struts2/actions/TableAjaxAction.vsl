@@ -1,0 +1,142 @@
+#if(!$parameter.getJsp().oldStruts && $parameter.tableType.equals("footable"))
+#parse("templates/bpm4struts/actions/Action.java.vm")
+#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($actionName= "")
+#set($palavras = ${parameter.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($actionName = $actionName.concat("$aux"))
+#end
+#set($actionName=$actionName.concat($tableName))
+#set($path = ${parameter.getJsp().getUseCase().getPackagePath()})
+#set($package=$path.replace('/','.'))
+#set($generatedFile = "${path}/${actionName}AjaxAction.java")
+#set($controllerClass = ${parameter.getJsp().getUseCase().getController()})
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+package ${package};
+//$parameter.table
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+import org.apache.struts2.ServletActionContext;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.PrintWriter;
+import ${servletPackage}.ActionUtil;
+import ${servletPackage}.Struts2ViewContainer;
+#if ($securityEnabled && !${action.useCase.openAccess})
+import ${controleAcessoDir}.LoginControllerFactory;
+#end
+import com.opensymphony.xwork2.ActionSupport;
+import util.Constantes;
+import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Factory;
+
+
+#if ($securityEnabled && !${action.useCase.openAccess})
+public class ${actionName}AjaxAction extends ${controleAcessoDir}.Login2
+#else
+public class ${actionName}AjaxAction extends ActionSupport implements ServletRequestAware, ServletResponseAware
+#end
+{
+#if (!($securityEnabled && !${$controllerClass.getUseCase().openAccess}))
+	private HttpServletResponse response;
+	private HttpServletRequest request;
+
+	public void setServletResponse(HttpServletResponse response)
+	{
+		this.response = response;
+	}
+
+	public void setServletRequest(HttpServletRequest request)
+	{
+		this.request = request;
+	}
+
+	protected String __casoDeUso = "/${parameter.getJsp().getUseCas().getName()}";
+	protected String __urlCasoDeUso = "/${parameter.getJsp().getUseCase().getName()}/${actionName}Ajax.action";
+	protected String __modulo = "${parameter.getJsp().getUseCase().package.webModuleName}";
+	protected String __contexto = "$stringUtils.replaceOnce(${parameter.getJsp().getUseCase().package.contexto}, ${contextoPrincipal}, "")";
+#end
+
+	public void saveErrorMessage(String message)
+	{
+		org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)request.getSession().getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
+		if (messages == null)
+		{
+			messages = new org.apache.struts.action.ActionMessages();
+			request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
+		}
+		messages.add("org.andromda.bpm4struts.errormessages", new org.apache.struts.action.ActionMessage(message, null));
+	}
+	
+	public void validate()
+	{
+		//Removendo mensagens antigas
+		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+	}
+	
+#if ($securityEnabled && !${$controllerClass.getUseCase().openAccess})
+	public String particularExecute() throws Exception
+#else
+	public String execute() throws Exception
+#end
+	{		
+		String forward = null;
+		String redirect = "";
+		request.getSession().setAttribute("form", null);
+		
+				
+		boolean copyParameters = true;
+		if (request.getSession().getAttribute(util.Constantes.COPY_PARAMETERS) != null) {
+			copyParameters = (Boolean) request.getSession().getAttribute(util.Constantes.COPY_PARAMETERS);
+			request.getSession().removeAttribute(util.Constantes.COPY_PARAMETERS);
+		}
+
+		org.apache.struts.validator.ValidatorForm form = null;
+		
+		forward = _loadTable(form);
+
+		request.removeAttribute("$forwardKey");
+		request.removeAttribute("$forwardKeyModule");
+		
+		return forward;
+		
+	}
+	
+	private String _loadTable(org.apache.struts.validator.ValidatorForm form) throws java.lang.Exception
+	{
+		String forward = null;
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#set($method=${parameter.name})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($method=$method.concat("$aux"))
+#end
+		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().load${actionName}Table(new Struts2ViewContainer(this,request,response));
+		
+		return forward;
+	}
+	
+	private java.util.Map getInvalidatePageControlCounter(javax.servlet.http.HttpServletRequest request)
+	{
+		java.util.Map invalidatePageControlCounter = (java.util.Map)request.getSession().getAttribute("invalidatePageControlCounter");
+
+		if(invalidatePageControlCounter == null)
+		{
+			invalidatePageControlCounter = new java.util.HashMap();
+			request.getSession().setAttribute("invalidatePageControlCounter", invalidatePageControlCounter);
+		}
+
+		return invalidatePageControlCounter;
+	}
+	
+	public void loadUseCaseInfo()
+	{
+		__casoDeUso = "${parameter.getJsp().getUseCase().getName()}";
+		__urlCasoDeUso = "/${parameter.getJsp().getUseCase().getName()}/${actionName}Ajax.action";
+		__modulo = "${parameter.getJsp().getUseCase().package.webModuleName}";
+		__contexto = "$stringUtils.replaceOnce(${parameter.getJsp().getUseCase().package.contexto}, ${contextoPrincipal}, "")";
+	}
+}
+#end
