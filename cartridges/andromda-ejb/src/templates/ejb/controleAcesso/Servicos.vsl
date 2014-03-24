@@ -12,8 +12,34 @@
 #else
 #set ($sequencia = "SISTEMA_SEQ.NEXTVAL")
 #end
-INSERT INTO sistema(ID, HIBERNATE_VERSION, NOME)
-VALUES ($sequencia, 0, '$projectId');
+--INSERT INTO sistema(ID, HIBERNATE_VERSION, NOME)
+--VALUES ($sequencia, 0, '$projectId');
+
+-- Adicionando perfil super_usuario ao sistema $projectId
+
+#if ($sqlMappingsUri == 'PostgreSQL')
+#set ($sequencia = "NEXTVAL('PERFIL_SEQ')")
+#else
+#set ($sequencia = "PERFIL_SEQ.NEXTVAL")
+#end
+--INSERT INTO perfil(ID, HIBERNATE_VERSION, NOME, SISTEMA_FK)
+--VALUES ($sequencia, 0, 'su', (SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+
+-- Adicionando usuario su ao sistema $projectId, a senha criptografada é su
+
+#if ($sqlMappingsUri == 'PostgreSQL')
+#set ($sequencia = "NEXTVAL('USUARIO_SEQ')")
+#else
+#set ($sequencia = "USUARIO_SEQ.NEXTVAL")
+#end
+--INSERT INTO USUARIO(ID, HIBERNATE_VERSION, LOGIN, SENHA, DATA_VALIDADE_SENHA, EMAIL, SITUACAO)
+--VALUES ($sequencia, 0, 'su', '0b180078d994cb2b5ed89d7ce8e7eea2', null , '', 1);
+
+-- Relacionado o usuario su ao perfil su do sistema $projectId
+
+--INSERT INTO PF_USR(USR_FK, PF_FK)
+--VALUES ((SELECT ID FROM USUARIO WHERE NOME = 'su'), (SELECT ID FROM PERFIL WHERE NOME = 'su' AND SISTEMA_FK = (SELECT ID FROM SISTEMA WHERE NOME = '$projectId')));
+
 
 #foreach ($service in $services)
 -- Operacoes de ${service.fullyQualifiedName}
