@@ -19,6 +19,7 @@ public class Constantes {
 	static public final String ROLES = "Roles";
 	static public final String SENHA = "pwd";
 	static public final String LOGIN = "usr";
+	static public final String SISTEMA = "$projectId";
 	static public final String TENTATIVAS_LOGIN = "tentativasLogin";
 	static public final String TROCA_SENHA_OBRIGATORIA = "trocaSenhaObrigatoria";
 	static public final String BUTTON_TROCA_SENHA = "button";

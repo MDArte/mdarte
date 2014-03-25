@@ -15,14 +15,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
 import accessControl.exception.ControleAcessoException;
 #if($controleAcessoDefault == 'true')
-import br.gov.mdarte.controleacesso.cd.*;
+import br.gov.mdarte.controleacesso.cd.Acao;
+import br.gov.mdarte.controleacesso.cd.AcaoDAOImpl;
+import br.gov.mdarte.controleacesso.cd.Perfil;
+import br.gov.mdarte.controleacesso.cd.PerfilDAOImpl;
+import br.gov.mdarte.controleacesso.cd.UsuarioDAOImpl;
+import br.gov.mdarte.controleacesso.cd.UsuarioImpl;
 #end
+
 
 public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 #if($controleAcessoDefault == 'true')
-	public static final String SUPER_USUARIO = "1";
 	public static final int PROXIMA_TROCA_SENHA_DIAS = 30;
 	/**
 	 * Verifica se o operador necessita trocar senha obrigatoria
@@ -40,31 +47,27 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		
 		UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
 		
-		try
-		{
+		try {
 			return (accessControl.Operador) usuarioDAO.recuperarUsuario(usuario);
-		}
-		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
-		{
-			throw new ControleAcessoException(e.getMessage());
+		} catch (br.gov.mdarte.controleacesso.cd.DAOException exception) {
+			throw new ControleAcessoException(exception);
+		} catch (Exception exception) {
+			throw new ControleAcessoException(exception);
 		}
 	}
 
 	private HashMap<String, Collection<accessControl.Perfil>> addServices(HashMap<String,Collection<accessControl.Perfil>> hmServicos, Acao acao, Collection<accessControl.Perfil> perfis)
 	{
-		if (hmServicos.get(acao.getCodigo()) != null)
-		{
+		if(hmServicos.get(acao.getCodigo()) != null) {
 			hmServicos.get(acao.getCodigo()).addAll(perfis);
-		}
-		else
-		{
+		} else {
 			hmServicos.put(acao.getCodigo(), perfis);
 		}
 		
-		for(Acao acaoAgrupada : (Collection<Acao>) acao.getEAgrupadoPor())
-		{
+		for(Acao acaoAgrupada : (Collection<Acao>) acao.getEAgrupadoPor()) {
 			hmServicos = addServices(hmServicos, acaoAgrupada, perfis);
 		}
+		
 		return hmServicos;
 	}
 
@@ -77,33 +80,39 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		HashMap<String, Collection<accessControl.Perfil>> hmServicos = new HashMap<String, Collection<accessControl.Perfil>>();
 		
 		AcaoDAOImpl acaoDAO = new AcaoDAOImpl();
-		
+		PerfilDAOImpl perfilDAO = new PerfilDAOImpl();
+
+		ArrayList<Long> superPerfils = new ArrayList<Long>();
 		List acaoList = new ArrayList();
 		
-		try
-		{
+		try {
+			// recupera os perfils supers do sistema
+			superPerfils = (ArrayList<Long>) perfilDAO.recuperarSuperPerfil(Constantes.SISTEMA, null);
+			
 			// recupera todos os serviços
-			acaoList = acaoDAO.list();
-		}
-		catch(br.gov.mdarte.controleacesso.cd.DAOException e)
-		{
-			throw new ControleAcessoException(e.getMessage());
+			acaoList = (List) acaoDAO.recuperarAcoes(Constantes.SISTEMA, null);
+		} catch(br.gov.mdarte.controleacesso.cd.DAOException exception) {
+			throw new ControleAcessoException(exception);
 		}
 		
-		for(Acao acao : (Collection<Acao>) acaoList)
-		{
+		for(Acao acao : (Collection<Acao>) acaoList) {
 			Collection<Perfil> perfilAcaoList = acao.getPerfils();
 			Collection<accessControl.Perfil> perfilList = new HashSet<accessControl.Perfil>();
+
 			// adiciona SU para todos os servicos
-			perfilList.add(new accessControl.Perfil(SUPER_USUARIO));
-			
-			for(Perfil perfilCA : perfilAcaoList)
-			{
+			if (superPerfils != null && !superPerfils.isEmpty()) {
+				for (Long idPerfil : superPerfils) {
+					perfilList.add(new accessControl.Perfil(idPerfil.toString()));
+				}
+			}
+
+			for(Perfil perfilCA : perfilAcaoList) {
 				accessControl.Perfil perfil = new accessControl.Perfil(perfilCA.getId().toString());
 				perfilList.add(perfil);
 			}
 			
-			if (!perfilList.isEmpty()) hmServicos = addServices(hmServicos, acao, perfilList);
+			if (!perfilList.isEmpty())
+				hmServicos = addServices(hmServicos, acao, perfilList);
 		}
 
 		return hmServicos;
@@ -127,13 +136,11 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		calendar.add(Calendar.DATE, PROXIMA_TROCA_SENHA_DIAS);
 		usrRetrieved.setDataValidadeSenha(calendar.getTime());
 		
-		try
-		{
+		try {
 			usrDAO.update(usrRetrieved);
 		}
-		catch (br.gov.mdarte.controleacesso.cd.DAOException e)
-		{
-			e.printStackTrace();
+		catch (br.gov.mdarte.controleacesso.cd.DAOException exception) {
+			exception.printStackTrace();
 			return false;
 		}
 

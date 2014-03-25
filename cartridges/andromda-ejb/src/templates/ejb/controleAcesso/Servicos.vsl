@@ -22,8 +22,8 @@
 #else
 #set ($sequencia = "PERFIL_SEQ.NEXTVAL")
 #end
---INSERT INTO perfil(ID, HIBERNATE_VERSION, NOME, SISTEMA_FK)
---VALUES ($sequencia, 0, 'su', (SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+--INSERT INTO perfil(ID, HIBERNATE_VERSION, NOME, SUPERUSUARIO, SISTEMA_FK)
+--VALUES ($sequencia, 0, 'su', true, (SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 
 -- Adicionando usuario su ao sistema $projectId, a senha criptografada é su
 
@@ -38,7 +38,7 @@
 -- Relacionado o usuario su ao perfil su do sistema $projectId
 
 --INSERT INTO PF_USR(USR_FK, PF_FK)
---VALUES ((SELECT ID FROM USUARIO WHERE NOME = 'su'), (SELECT ID FROM PERFIL WHERE NOME = 'su' AND SISTEMA_FK = (SELECT ID FROM SISTEMA WHERE NOME = '$projectId')));
+--VALUES ((SELECT ID FROM USUARIO WHERE NOME = 'su'), (SELECT ID FROM PERFIL WHERE SUPER_USUARIO = true AND SISTEMA_FK = (SELECT ID FROM SISTEMA WHERE NOME = '$projectId')));
 
 
 #foreach ($service in $services)

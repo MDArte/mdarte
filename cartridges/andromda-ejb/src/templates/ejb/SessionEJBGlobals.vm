@@ -5,7 +5,6 @@
 #set ($ejbHomeInterface = "javax.ejb.EJBHome")
 #end
 #set ($ejbSecurityEnabled = $stringUtils.isNotBlank($securityRealm))
-
 #macro (renderOperationBodyPagination $operation $service)
 		boolean responsibleSession = false;
 
@@ -23,7 +22,6 @@
 				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderOperationBody $operation $service)
 		boolean responsibleSession= false;
 
@@ -47,9 +45,8 @@
 				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityBody $operation)
-		##renderParameters($operation $listaArgumentos false)
+##renderParameters($operation $listaArgumentos false)
 #set($serviceName = ${stringUtils.strip("#renderServiceName($service $operation)")})
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
 		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
@@ -87,7 +84,6 @@
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityBodyPagination $operation)
 #set($serviceName = ${stringUtils.strip("#renderServiceNamePagination($service $operation)")})
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
@@ -120,7 +116,6 @@
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
 #end
-
 #macro (renderSecurityManipula $actionName $dependencia $isOpenAccess)
 #if($actionName.equals("filter") || $actionName.equals("list") || $actionName.equals("export") || $actionName.equals("import"))
 	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
@@ -176,9 +171,6 @@
 	}
 
 #end
-
 #macro (renderServiceName $service $operation)#set($webService=$service.hasStereotype("$webSrv"))#set($listaArgumentos="")#if($webService)#renderParametersWS($operation $listaArgumentos false)#else#renderParameters($operation $listaArgumentos false)#end${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)#end
-
 #macro (renderServiceNamePagination $service $operation)#set($webService=$service.hasStereotype("$webSrv"))#set($listaArgumentos="")#if($webService)#renderParametersWSPaginacao($operation $listaArgumentos false)#else#renderParametersPaginacao($operation $listaArgumentos false)#end${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)#end
-
 #macro(renderManipulaName $service $dependencia $actionName)${service.fullyQualifiedName}BI.${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}#if($actionName.equals("filter")||$actionName.equals("list") ), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize(${actionName})}Action#end)#end
