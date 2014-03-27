@@ -1,28 +1,28 @@
-#if(!$param.oldStruts && $param.table)
+#if(!$param.jsp.oldStruts)
 #parse("templates/bpm4struts2/pages/page.jsp.vm")
 #set($table=$param)
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
-
 #set ($sortable = $table.tableSortable)
 #set ($exportable = $table.tableExportable)
 #set($indent="	")
 #if($table.tableType.equals("footable"))
 <div id="${table.name}">
-	<table class="footable table table-bordered" data-page-navigation=".pagination" data-page-size="$table.tableMaxRows">
+	<table class="footable table table-bordered" #if(!$sortable)data-sortable="false"#end data-page-navigation=".pagination" data-page-size="$table.tableMaxRows">
 		<thead>
 			<tr>
 #foreach($column in $table.tableColumns)
 				<th data-toggle="false">#if($column.name)${column.name}#else$column#end</th>
 #end
-				<th data-ignore="true" data-hide="all">id</th>			
+				<th data-ignore="true" data-hide="all">id</th>
 			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="5">
+#set($colspan = ${table.tableColumns.size()} + 1)
+				<td colspan="$colspan">
 					<div class="pagination pagination-centered hide-if-no-paging"></div>
 				</td>
 			</tr>
@@ -30,7 +30,7 @@
 	</table>
 </div>
 #else
-#set ($targetColumns = $table.targettedTableColumnNames)
+#set($targetColumns = $table.targettedTableColumnNames)
 <%@ include file="/taglib-imports.jspf" %>
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
