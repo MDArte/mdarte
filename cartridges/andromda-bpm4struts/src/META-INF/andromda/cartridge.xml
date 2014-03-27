@@ -1925,9 +1925,7 @@
         overwrite="true">
        <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp">
-                	<property name="temTabela"/>
-                </type>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
     </template>

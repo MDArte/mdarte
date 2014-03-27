@@ -115,7 +115,7 @@
 </tiles:put>
 
 <tiles:put name="tables" type="string">
-#if($hasTable || $jsp.temTabela)
+#if($hasTable)
 	<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
 #end
 </tiles:put>
