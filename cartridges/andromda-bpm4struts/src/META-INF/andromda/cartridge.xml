@@ -525,7 +525,7 @@
         outputPattern="$generatedFile"
         outlet="pages"
         overwrite="true">
-        <modelElements variable="table">
+        <modelElements variable="param">
             <modelElement>
                 <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter">
                     <property name="table"/>
@@ -1925,7 +1925,9 @@
         overwrite="true">
        <modelElements variable="jsp">
             <modelElement>
-                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp">
+                	<property name="temTabela"/>
+                </type>
             </modelElement>
         </modelElements>
     </template>
