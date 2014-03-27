@@ -10,7 +10,7 @@
 #set($actionName=$actionName.concat($tableName))
 #set($path = ${parameter.getJsp().getUseCase().getPackagePath()})
 #set($package=$path.replace('/','.'))
-#set($generatedFile = "${path}/${actionName}AjaxAction.java")
+#set($generatedFile = "${path}/${actionName}Ajax.java")
 #set($controllerClass = ${parameter.getJsp().getUseCase().getController()})
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 package ${package};
@@ -34,9 +34,9 @@ import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Fact
 
 
 #if ($securityEnabled && !${action.useCase.openAccess})
-public class ${actionName}AjaxAction extends ${controleAcessoDir}.Login2
+public class ${actionName}Ajax extends ${controleAcessoDir}.Login2
 #else
-public class ${actionName}AjaxAction extends ActionSupport implements ServletRequestAware, ServletResponseAware
+public class ${actionName}Ajax extends ActionSupport implements ServletRequestAware, ServletResponseAware
 #end
 {
 #if (!($securityEnabled && !${$controllerClass.getUseCase().openAccess}))

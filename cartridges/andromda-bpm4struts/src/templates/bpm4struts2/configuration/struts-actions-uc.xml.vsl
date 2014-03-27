@@ -52,7 +52,7 @@
 #set($actionAjax = $actionAjax.concat("$aux"))
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
-		<action name="${actionAjax}Ajax" class="${useCase.getPackagePath().replace('/','.')}.${actionAjax}AjaxAction" method="execute">
+		<action name="${actionAjax}Ajax" class="${useCase.getPackagePath().replace('/','.')}.${actionAjax}Ajax" method="execute">
 			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
 			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
 		</action>
