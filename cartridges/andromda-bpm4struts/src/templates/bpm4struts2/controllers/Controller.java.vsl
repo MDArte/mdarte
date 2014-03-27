@@ -201,7 +201,31 @@ $operation.getDocumentation("     * ")
 	
 	protected void load${actionName}Table(ViewContainer container) throws Exception {
 		
-		Collection rows = this.load${actionName}Table(0,${parametro.tableMaxRows});
+		Integer paginacao = (container.getParameter("paginacao") != null) ? Integer.valueOf(container.getParameter("paginacao")) : 0;
+		
+		Collection rows = this.load${actionName}Table(paginacao,${parametro.tableMaxRows});
+		
+		String [] columns = {
+					"id",
+#set($i=0)
+#set($limit=$parametro.tableColumns.size() - 1)
+#foreach($column in $parametro.tableColumns)
+#if($i != $limit)
+#if($column.name)
+					"$column.name",
+#else
+					"$column",
+#end
+#else
+#if($column.name) 
+					"$column.name"
+#else
+					"$column"
+#end
+#end
+#set($i=$i+1)
+#end
+			};
 		
 		JSONArray array = new JSONArray();
                 
@@ -218,15 +242,15 @@ $operation.getDocumentation("     * ")
             
                 JSONObject obj = new JSONObject();
 
-                for(int i = 0; i < fields.length; i++) {
+                for(int i = 0; i < columns.length; i++) {
                 
                     for(int j = 0; j < methods.length; j++) {
             
-                        String methodName = "get".concat(fields[i].getName().subSequence(0,1).toString().toUpperCase().concat(fields[i].getName().substring(1)));
+                        String methodName = "get".concat(columns[i].subSequence(0,1).toString().toUpperCase().concat(columns[i].substring(1)));
                         
                         if(methods[j].getName().equals(methodName)) {
             
-                            obj.put(fields[i].getName(), methods[j].invoke(row));
+                            obj.put(columns[i], String.valueOf(methods[j].invoke(row)));
                             
                             break;
                             
@@ -235,9 +259,7 @@ $operation.getDocumentation("     * ")
                     }
             
                 }
-            
-                array.add(obj);
-            
+            	array.add(obj);
             }
         }
         
