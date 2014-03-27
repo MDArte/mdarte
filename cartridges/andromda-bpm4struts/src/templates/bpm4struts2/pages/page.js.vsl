@@ -256,10 +256,57 @@ $(document).ready(function(){
 	//Botao Close
 	$(".close-btn").click(function(){close() });
 
-#set($tables = $jsp.getTables())
-#foreach($table in $tables)
+#foreach($variable in $jsp.allUniqueActionParameters)
+#if($variable.table)
+#set($table = $variable)
+#if($table.tableType.equals("footable"))
+//Javascript da tabela $table.name
+	$("#${table.name} .footable").footable();
+#set($footableAction = "${jsp.useCase.name}")
+#set($palavras = $jsp.name.split(" "))
+#set($jspName = "")
+#foreach($palavra in $palavras)
+#set($aux = $palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($jspName = $jspName.concat($aux))
+#set($tableName = $table.name.subSequence(0,1).toUpperCase().concat($table.name.substring(1)))
+#end
+	jQuery.ajax({
+#if($jsp.useCase.package.isWebModulePrincipal())
+		url: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#else
+		url: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#end
+		data: {paginacao: 0},
+		success: function(data) {
+			var rows = "";
+			jQuery.each(data,function(index, value){
+				var row = "<tr>"
+#set($i = 0)
+#set($limit = $table.tableColumns.size() - 1)
+#foreach($column in $table.tableColumns)
+#if($i==0)
+				row = row +"<td class=\"footable-first-column\">" + value.#if(${column.name})${column.name}#else${column}#end + "</td>"
+#elseif($i==$limit)
+				row = row +"<td class=\"footable-last-column\">" + value.#if(${column.name})${column.name}#else${column}#end + "</td>"
+#else
+				row = row +"<td class=\"\">"+ value.#if(${column.name})${column.name}#else${column}#end + "</td>"
+#end
+#set($i = $i + 1)
+#end
+				row = row +"<td data-hide=\"hide-all\">"+ value.id + "</td>"
+				row = row + "</tr>";
+				
+				rows = rows + row;
+				
+			});
+			
+			
+			$("#$table.name .footable tbody").append(rows).trigger("footable_redraw");
+		}
+	});
+#else
 //Javascript da tabela $table.name	
-	
+	//$table.tableType
 	//Table Global Actions tabela $table.name
 	
 #foreach ($_action in $table.tableGlobalActions)
@@ -339,8 +386,9 @@ $(document).ready(function(){
 #end
 #end
 	//Fim Table Column Actions tabela $table.name
-	
+#end
 //Fim do Javascript da tabela $table.name
+#end
 #end
 
 //Javascript dos fields
