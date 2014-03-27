@@ -328,6 +328,8 @@ public abstract class ${entity.name}DAO
 	}	
 		
 	
+	protected abstract Object handleFilter (DataObject vo) throws DAOException;
+	
 	public List<AbstractEntity> defaultFilter(AbstractTO to, Integer paginacao) throws DAOException {
 		return defaultFilter(to,paginacao,$maxRows,$maxPages);
 		
@@ -379,20 +381,15 @@ public abstract class ${entity.name}DAO
         			res.setCacheable(true);
 #end		
         			return res.list();
-				}
-#if($hibernateEnableCache.equalsIgnoreCase("true"))
-        		res.setCacheable(true);
-#end		
-        		return res.list();
 			} else {
-        		return null;
+        			return null;
 			}
-
 		} catch (HibernateException h) {
 			throw new DAOException(h);
 		}
 	}
-
+	
+	
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
 		return filter(vo,paginacao,$maxRows,$maxPages );
 	}
@@ -423,11 +420,6 @@ public abstract class ${entity.name}DAO
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
 						res.setMaxResults(linhas*paginas + 1);
 					}
-#if($hibernateEnableCache.equalsIgnoreCase("true"))
-        			res.setCacheable(true);
-#end		
-        			return res.list();
-				}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         		res.setCacheable(true);
 #end		
