@@ -1,5 +1,4 @@
 #set ($generatedFile = "${entity.packagePath}/${entity.entityName}DAOImpl.java")
-
 // license-header java merge-point
 /**
  * Attention: Generated source! Do not modify by hand!
@@ -7,8 +6,6 @@
 #if ($entity.packageName)
 package $entity.packageName;
 #end
-
-
 
 /**
  * <p>
@@ -36,7 +33,6 @@ public abstract class ${entity.name}DAOImpl extends ${entity.name}DAO {
 #else
 public class ${entity.name}DAOImpl extends ${entity.name}DAO {
 #end
-
 #foreach ($operation in $entity.businessOperations)
 #set ($returnType = $operation.returnType)
 #set ($parameterList = $operation.typedArgumentList)
@@ -66,19 +62,19 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
     protected $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws ${customTypesPackage}.${modelPackageName}.DAOException {
 #end
 #if ($operation.returnTypePresent)
-        return $operation.returnType.javaNullString;    
+        return $operation.returnType.javaNullString;
 #end
     }
 #end
 #end
 
-    protected Object handleFilter(DataObject vo) throws $customTypesPackage.${modelPackageName}.DAOException {		
-       return null;
-    }
+    protected Object handleFilter(DataObject vo) throws $customTypesPackage.${modelPackageName}.DAOException {
+		return null;
+
     
 #if(!$entity.abstract)
     protected org.hibernate.Criteria handleXmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws $customTypesPackage.${modelPackageName}.DAOException {
-	return null;
+		return null;
     }
 #end
 
