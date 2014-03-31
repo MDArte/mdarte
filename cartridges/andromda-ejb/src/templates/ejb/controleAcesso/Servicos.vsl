@@ -67,8 +67,8 @@
 #else
 #set ($codigoServico = $nome)
 #end
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,'$codigoServico',0,'METODO_SERVICO');
 #end
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #set ($listaArgumentos = "")
@@ -87,43 +87,43 @@ VALUES ($sequencia,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA W
 #else
 #set ($codigoServico = $nome)
 #end
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,'$codigoServico',0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,'$codigoServico',0,'METODO_SERVICO');
 #end
 #end
 #end
 #foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.delete${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.filter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.FilterAction)'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.insert${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ListAction)'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName})'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.Action)'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.export${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ExportAction)'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 #set ($codigoServico = "'${service.fullyQualifiedName}BI.import${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName}, ${customTypesPackage}.${actionPackageName}.ImportAction)'")
-INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO,SISTEMA_FK)
-VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO',(SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
+INSERT INTO ACAO (ID,CODIGO,HIBERNATE_VERSION,TIPO)
+VALUES ($sequencia,$codigoServico,0,'METODO_SERVICO');
 
 #end
 #end 
