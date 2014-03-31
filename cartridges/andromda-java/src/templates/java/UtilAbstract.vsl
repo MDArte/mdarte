@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.Globals;
 import org.apache.struts.util.MessageResources;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+
 public abstract class UtilAbstract {
 
 	public static String getResourceBundleString(String key,Locale locale, ClassLoader loader)
@@ -41,5 +45,37 @@ public abstract class UtilAbstract {
 		if (resource.isPresent(locale, key))
 			msg = resource.getMessage(locale, key);
 		return msg;
+	}
+	
+	public static String md5(String senha) throws NoSuchAlgorithmException {		
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(senha.getBytes());
+		return stringHexa(md.digest());
+	}
+	
+	private static String stringHexa(byte[] bytes) {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < bytes.length; i++) {
+			int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
+			int parteBaixa = bytes[i] & 0xf;
+			if (parteAlta == 0) s.append('0');
+			s.append(Integer.toHexString(parteAlta | parteBaixa));
+		}
+		
+		return s.toString();
+	}
+	
+	public static Boolean checkEmpty(String string)	{
+		if(string == null || string.trim().isEmpty())
+			return true;
+		
+		return false;
+	}
+	
+	public static Boolean checkEmpty(Collection collection)	{
+		if( collection == null ||  collection.isEmpty())
+			return true;
+		
+		return false;
 	}
 }
