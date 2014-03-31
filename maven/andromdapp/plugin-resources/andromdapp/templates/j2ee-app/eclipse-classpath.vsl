@@ -19,10 +19,8 @@
     <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
 #if($securityRealm)
 	<classpathentry kind="var" path="MAVEN_REPO/security/jars/security-1.1.3-RC1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/jars/ControleAcesso-common-1.0.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/ejbs/ControleAcesso-compartilhado-1.0.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/ejbs/ControleAcesso-controleacesso-1.0.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/ControleAcesso/jars/ControleAcesso-dominio-core-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/controleacesso/jars/controleacesso-common-2.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/controleacesso/ejbs/controleacesso-compartilhado-2.0.jar"/>
 #end
 #if($oauth)
 	<classpathentry kind="var" path="MAVEN_REPO/oauth/jars/oauth-1.0.jar"/>
