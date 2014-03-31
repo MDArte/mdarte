@@ -356,9 +356,10 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").mouseover(function(){hints.show("${field.hintKey}","$styleId") });
 	$("input#${field.name}${jsp.useCase.name}").mouseout(function(){hints.hide()});
 #end
-#if($field.radioButton || ($field.textField && $field.calendarRequired))
+#if($field.textField && $field.calendarRequired)
 	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
-	
+	$("input#${field.name}${jsp.useCase.name}").mask('00/00/0000');
+
 #elseif($field.autocomplete)
 #set($actionName = $field.name.subSequence(0,1).toUpperCase().concat("$field.name.substring(1)") )
 #set($palavras = ${jsp.getName().split(" ")})
@@ -383,14 +384,30 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
-	
+#if ($field.textField)
+#if ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long"))
+	$("input#${field.name}${jsp.useCase.name}").mask('0#', {maxlength: false});
+#elseif ($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float"))
+    $("input#${field.name}${jsp.useCase.name}").keypress(function(event) {
+        var tecla = (window.event) ? event.keyCode : event.which;
+        if ((tecla > 47 && tecla < 58) || (tecla == 46)) return true;
+        else {
+        	if (tecla != 8) return false;
+            return true;
+        }
+    });
+#elseif ($field.type.name.equalsIgnoreCase("date"))
+	$("input#${field.name}${jsp.useCase.name}").mask('00/00/0000');
+#end
+#end
+
 #elseif($field.money)
 	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keydown(function(event){backspace(this,event); });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
-	
+
 #elseif($field.editor)
 	tinymce.init({
 		selector: "#${field.name}${jsp.useCase.name}",
