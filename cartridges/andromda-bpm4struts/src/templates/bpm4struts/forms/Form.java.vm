@@ -655,7 +655,7 @@
     {
         $listType values = this.${valueListName};
         $listType labels = this.${labelListName};
-        $listType labelsDestination = this.${labelListName}Destination;        
+        $listType labelsDestination = this.${labelListName}Destination;
 
         if (values == null || values.length == 0)
         {

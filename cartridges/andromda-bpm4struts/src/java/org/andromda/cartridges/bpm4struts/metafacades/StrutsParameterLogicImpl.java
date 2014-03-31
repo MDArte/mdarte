@@ -1142,7 +1142,7 @@ public class StrutsParameterLogicImpl
         ClassifierFacade type = getType();
         if (type != null)
         {
-            multiple = type.isCollectionType() || type.isArrayType();
+            multiple = type.isCollectionType() || type.isArrayType() || type.isEnumeration();
         }
         return multiple;
     }

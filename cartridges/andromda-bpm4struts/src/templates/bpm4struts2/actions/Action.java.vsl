@@ -113,7 +113,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	private java.util.Map $field.name = new java.util.HashMap();
 #elseif($field.widgetType=="money")
 	private java.lang.String $field.name;
-#elseif($field.widgetType=="multibox")
+#elseif($field.widgetType=="multibox" && !$field.type.enumeration)
 	private ${field.type.fullyQualifiedName} $field.name;
 #elseif ($field.doubleSelect)
 	private $field.type.fullyQualifiedName $field.name;

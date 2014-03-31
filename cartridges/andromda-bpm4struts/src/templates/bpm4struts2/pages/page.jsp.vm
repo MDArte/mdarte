@@ -354,7 +354,7 @@ ${indent}<input id="reset${action.actionName.toString().replace(' ','')}" class=
 #if($field.fieldColumnCount)#set($columnCount=" size=$quote$field.fieldColumnCount$quote")#else#set($columnCount='')#end
 #if($rowIndex=='')#set($beanName=$formBeanName)#else#set($beanName="row")#end
 #set ($styleId = "$field.styleId$rowIndex")
-#if($field.habilitadoPor)
+#if($field.habilitadoPor || $field.readOnly)
 #set ($disabled = 'disabled="true"')
 #else
 #set ($disabled = '')
@@ -428,7 +428,7 @@ ${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useC
 #else
 ${indent}		<label class="control-labe col-sm-2"><bean:message key="$field.messageKey"/></label>
 #end
-${indent}		<s:checkboxlist id="${field.name}${action.useCase.name}" cssClass="form-control"name="$fieldName" listKey="value" listValue="label" list="${field.backingListName}"/>
+${indent}		<s:checkboxlist id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
 ${indent}	</div>
 #elseif($field.custom)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="custom field">
@@ -576,9 +576,9 @@ ${indent}		<label class="doubleSelectLabel"><bean:message key="$field.messageKey
 #end
 #set($multiple='')
 #set($selectProperty="$fieldName")
-${indent}		<s:doubleselect id="${field.name}${action.useCase.name}" name="$selectProperty" list="${form}${field.name}Map.keySet()"
+${indent}		<s:doubleselect id="${field.name}${action.useCase.name}" name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
 ${indent}			listKey="value" listValue="label"
-${indent}			doubleName="${selectProperty}__Double" doubleList="${form}${field.name}Map.get(top)"
+${indent}			doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
 ${indent}			doubleListKey="value" doubleListValue="label" />
 ${indent}	</div>
 ##

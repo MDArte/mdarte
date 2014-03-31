@@ -22,6 +22,30 @@ public interface $operation.interfaceName
 {
 ###foreach ($field in $operation.formFields)
 #foreach ($field in $operation.interfaceFormFields)
+#if(${field.widgetType}=="multibox")	
+#if($field.type.enumeration)
+	
+	public java.util.Map ${field.getterName}List();
+	
+	public ${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue = new ${field.type.literalType.fullyQualifiedName}[] {};
+	
+	public ${field.type.literalType.fullyQualifiedName}[] ${field.getterName}DefaultValue();
+	
+	public void ${field.setterName}DefaultValue(${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue);
+#else
+	
+	public java.util.List ${field.getterName}List();
+
+	public void ${field.setterName}List(java.util.List ${field.name}ComboList);
+	
+	public ${field.type.fullyQualifiedName}[] ${field.name}DefaultValue = new  ${field.type.fullyQualifiedName}[] {};
+	
+	public ${field.type.fullyQualifiedName}[] ${field.getterName}DefaultValue();
+	
+	public void ${field.setterName}DefaultValue(${field.type.fullyQualifiedName}[] ${field.name}DefaultValue);
+#end
+#end
+
 #if(${field.widgetType}=="select" || ${field.radioButton})
 	public java.util.Map ${field.getterName}ComboList();
 #if(!$field.type.enumeration)
@@ -195,6 +219,8 @@ $field.getDocumentation("     * ")
 #else
 	public java.util.Map ${field.name}ComboList = ${field.type.fullyQualifiedName}.enumMapNoEmptyValue();
 #end
+#elseif (${field.widgetType}=="multibox")
+	public java.util.Map ${field.name}List = ${field.type.fullyQualifiedName}.internationalizationKeys();
 #end
 
     /**
@@ -329,9 +355,9 @@ $field.getDocumentation("     * ")
     public void ${field.resetName}();
 
 ###if ($field.selectable)
-#if ($field.doubleSelect || ${field.widgetType}=="multibox")
-#processListsInterface ($field ${operation.controller.useCase.useCaseOldStruts})
-#end
+##if ($field.doubleSelect || ${field.widgetType}=="multibox")
+##processListsInterface ($field ${operation.controller.useCase.useCaseOldStruts})
+##end
 
 ###end
 #end
