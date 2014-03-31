@@ -70,7 +70,7 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
 
     protected Object handleFilter(DataObject vo) throws $customTypesPackage.${modelPackageName}.DAOException {
 		return null;
-
+	}
     
 #if(!$entity.abstract)
     protected org.hibernate.Criteria handleXmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws $customTypesPackage.${modelPackageName}.DAOException {
