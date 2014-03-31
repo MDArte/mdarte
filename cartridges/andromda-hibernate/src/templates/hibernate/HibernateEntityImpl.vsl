@@ -11,7 +11,6 @@
 #if ($stringUtils.isNotBlank($entity.packageName))
 package $entity.packageName;
 #end
-
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
 /**
@@ -25,14 +24,13 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
      * The serial version UID of this class. Needed for serialization. 
      */
     private static final long serialVersionUID = ${entity.serialVersionUID}L;
-        
+
     public #if($auditoria)${entity.entityName}LogRec#else$entity.entityImplementationName#end()  {
-    		
+
     }
 
 #set ($typeTargetTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
 #set ($identifiers = $entity.getIdentifiers(false))
-    
 #if(!$entity.abstract && $identifiers.size > 0)
     public ${entity.entityName}(){
        super();
@@ -59,7 +57,6 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 
 #end
 #else
-
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
@@ -67,9 +64,9 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 	$attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name) throws $exceptionList{
 		
 	}
-#end
-#end
 
+#end
+#end
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if($auditoria && $target.navigable)
@@ -86,13 +83,12 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 	public  String ${target.getterName}Log(){
 		return this.${target.name}Log;
 	}
+
 #else
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
-
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 	
 	public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList{
@@ -103,12 +99,10 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 
 #end
 #end
-
 #foreach ($operation in $entity.businessOperations)
 #set ($returnType = $operation.returnType)
 #set ($signature = $operation.signature)
 #set ($listaAtributos = $operation.typedArgumentList)
-
 #if($operation.findTaggedValue($daoMethod) && $operation.findTaggedValue($daoMethod).equals("false"))
 
 #if ($operation.exceptionsPresent)
@@ -209,13 +203,14 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 	public void setAuditoriaDataHora(java.util.Date auditoriaDataHora) {
 		this.auditoriaDataHora = auditoriaDataHora;
 	}
-#end
 
+#end
 #if($securityEnabled && $entity.hasExactStereotype("User"))
 	public String getNomeIdentificadorMenu() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 #end
 
-}    
+}
