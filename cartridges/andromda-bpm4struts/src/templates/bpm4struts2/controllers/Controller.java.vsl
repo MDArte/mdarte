@@ -197,13 +197,32 @@ $operation.getDocumentation("     * ")
 #set($actionName = $actionName.concat("$aux"))
 #end
 #set($actionName=$actionName.concat($tableName))
+	protected abstract Integer get${actionName}TableLength() throws Exception;
+	
+	protected void get${actionName}TableLength(ViewContainer container) throws Exception {
+		JSONArray array = new JSONArray();
+		
+		Integer length = this.get${actionName}TableLength();
+		
+		if(length == null)
+			length = 0;
+		
+		array.add(length);
+		
+		container.setContentType("application/json;charset=UTF-8");
+        
+        container.getWriter().write(array.toString());
+	}
+
 	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas) throws java.lang.Exception;
 	
 	protected void load${actionName}Table(ViewContainer container) throws Exception {
 		
-		Integer paginacao = (container.getParameter("paginacao") != null) ? Integer.valueOf(container.getParameter("paginacao")) : 0;
+		Integer linhas = (container.getParameter("jtPageSize") != null) ? Integer.valueOf(container.getParameter("jtPageSize")) : 10;
 		
-		Collection rows = this.load${actionName}Table(paginacao,${parametro.tableMaxRows});
+		Integer paginacao = (container.getParameter("jtStartIndex") != null) ? Integer.valueOf(container.getParameter("jtStartIndex")) / linhas : 0;
+		
+		Collection rows = this.load${actionName}Table(paginacao,linhas);
 		
 		String [] columns = {
 					"id",
@@ -229,14 +248,12 @@ $operation.getDocumentation("     * ")
 		
 		JSONArray array = new JSONArray();
                 
-        if(rows != null) {
+        if(rows != null && rows.size() > 0) {
             
             java.lang.Class classe = rows.toArray()[0].getClass();
             
             java.lang.reflect.Method [] methods = classe.getSuperclass().getDeclaredMethods();
-            
-            java.lang.reflect.Field []  fields = classe.getSuperclass().getDeclaredFields();
-            
+                        
             
             for(Object row : rows) {
             
@@ -259,13 +276,19 @@ $operation.getDocumentation("     * ")
                     }
             
                 }
+                
             	array.add(obj);
+            
             }
         }
         
+        obj.put("Result","OK");
+        obj.put("TotalRecordCount", this.get${actionName}TableLength());
+        obj.put("Records",array);
+        
         container.setContentType("application/json;charset=UTF-8");
         
-        container.getWriter().write(array.toString());
+        container.getWriter().write(obj.toString());
 
 	}
 #end

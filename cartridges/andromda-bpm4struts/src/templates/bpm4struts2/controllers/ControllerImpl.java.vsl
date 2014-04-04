@@ -113,6 +113,10 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas) {
 		return null;
 	}
+	
+	public final Integer get${actionAjax}TableLength() {
+		return null;
+	}
 #end
 #end
 #end
