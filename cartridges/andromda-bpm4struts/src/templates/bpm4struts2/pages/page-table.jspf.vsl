@@ -6,28 +6,8 @@
 #set ($sortable = $table.tableSortable)
 #set ($exportable = $table.tableExportable)
 #set($indent="	")
-#if($table.tableType.equals("footable"))
+#if($table.tableType.equals("jtable"))
 <div id="${table.name}">
-	<table class="footable table table-bordered" #if(!$sortable)data-sortable="false"#end data-page-navigation=".pagination" data-page-size="$table.tableMaxRows">
-		<thead>
-			<tr>
-#foreach($column in $table.tableColumns)
-				<th data-toggle="false">#if($column.name)${column.name}#else$column#end</th>
-#end
-				<th data-ignore="true" data-hide="all">id</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-		<tfoot>
-			<tr>
-#set($colspan = ${table.tableColumns.size()} + 1)
-				<td colspan="$colspan">
-					<div class="pagination pagination-centered hide-if-no-paging"></div>
-				</td>
-			</tr>
-		</tfoot>
-	</table>
 </div>
 #else
 #set($targetColumns = $table.targettedTableColumnNames)

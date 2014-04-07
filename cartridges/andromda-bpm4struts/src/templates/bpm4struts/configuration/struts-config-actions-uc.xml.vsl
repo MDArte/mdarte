@@ -141,7 +141,7 @@
 	       	path="/ForwardAction.do"
 	       	redirect="false" /> 
 	 </action>
-#elseif($parameter.tableType.equals("footable"))	 
+#elseif($parameter.tableType.equals("jtable"))	 
 #set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
 #set($actionAjax= "")
 #set($palavras = ${parametro.getJsp().getName().split(" ")})

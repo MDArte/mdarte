@@ -188,7 +188,7 @@ $operation.getDocumentation("     * ")
     	container.getWriter().write(jsonArray.toString());
     	
 	}
-#elseif($parametro.tableType.equals("footable"))
+#elseif($parametro.tableType.equals("jtable"))
 #set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
 #set($actionName = "")
 #set($palavras = ${parametro.getJsp().getName().split(" ")})
@@ -214,7 +214,7 @@ $operation.getDocumentation("     * ")
         container.getWriter().write(array.toString());
 	}
 
-	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas) throws java.lang.Exception;
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc) throws java.lang.Exception;
 	
 	protected void load${actionName}Table(ViewContainer container) throws Exception {
 		
@@ -222,7 +222,14 @@ $operation.getDocumentation("     * ")
 		
 		Integer paginacao = (container.getParameter("jtStartIndex") != null) ? Integer.valueOf(container.getParameter("jtStartIndex")) / linhas : 0;
 		
-		Collection rows = this.load${actionName}Table(paginacao,linhas);
+		String propriedade = container.getParameter("jtSorting") != null ? container.getParameter("jtSorting").split(" ")[0] : "ID";
+		
+		Boolean desc = new Boolean(false);
+		
+		if(container.getParameter("jtSorting") != null)
+		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+		
+		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc);
 		
 		String [] columns = {
 					"id",
@@ -281,6 +288,8 @@ $operation.getDocumentation("     * ")
             
             }
         }
+        
+        JSONObject obj = new JSONObject();
         
         obj.put("Result","OK");
         obj.put("TotalRecordCount", this.get${actionName}TableLength());

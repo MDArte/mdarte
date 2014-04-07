@@ -598,8 +598,8 @@ extends CoppetecStrutsParameterLogic
 	    Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE);
 	    if(value == null)
 	        return null;
-	    if(value.toString().equals(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_FOOTABLE)) {
-	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_FOOTABLE;
+	    if(value.toString().equals(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE)) {
+	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE;
 	    } else {
 	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_DEFAULT;
 	    }

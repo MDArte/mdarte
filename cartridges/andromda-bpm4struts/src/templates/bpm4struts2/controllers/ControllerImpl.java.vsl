@@ -101,7 +101,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 	{
 		return null;
 	}
-#elseif($parameter.tableType.equals("footable"))
+#elseif($parameter.tableType.equals("jtable"))
 #set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
 #set($actionAjax= "")
 #set($palavras = ${parametro.getJsp().getName().split(" ")})
@@ -110,7 +110,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #set($actionAjax = $actionAjax.concat("$aux"))
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
-	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas) {
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc) {
 		return null;
 	}
 	

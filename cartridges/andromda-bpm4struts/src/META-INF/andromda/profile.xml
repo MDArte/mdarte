@@ -619,7 +619,7 @@
                 <appliedOnElement>Parameter coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
                 <allowedValues>
                     <value default="true">default</value>
-                    <value>footable</value>
+                    <value>jtable</value>
                 </allowedValues>
             </element>
             <element name="TABLE_DECORATOR">

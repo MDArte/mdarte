@@ -119,7 +119,7 @@ public class Bpm4StrutsProfile
     public static final boolean TAGGEDVALUE_TABLE_SORTABLE_DEFAULT_VALUE = false;
     public static final boolean TAGGEDVALUE_TABLE_EXPORTABLE_DEFAULT_VALUE = true;
     public static final String TAGGEDVALUE_TABLE_TYPE_DEFAULT = "default";
-    public static final String TAGGEDVALUE_TABLE_TYPE_FOOTABLE = "footable";
+    public static final String TAGGEDVALUE_TABLE_TYPE_JTABLE = "jtable";
     public static final String TAGGEDVALUE_REPORT_NAME = profile.get("REPORT_NAME");
     public static final String TAGGEDVALUE_REPORT_TYPE = profile.get("REPORT_TYPE");
     public static final String TAGGEDVALUE_REPORT_TYPE_PDF = "pdf";

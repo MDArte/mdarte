@@ -1,4 +1,4 @@
-#if(!$parameter.getJsp().oldStruts && $parameter.tableType.equals("footable"))
+#if(!$parameter.getJsp().oldStruts && $parameter.tableType.equals("jtable"))
 #parse("templates/bpm4struts/actions/Action.java.vm")
 #set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
 #set($actionName= "")

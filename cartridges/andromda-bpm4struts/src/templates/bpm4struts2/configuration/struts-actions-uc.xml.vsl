@@ -43,7 +43,7 @@
 			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
 			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
 		</action>
-#elseif($parameter.tableType.equals("footable"))
+#elseif($parameter.tableType.equals("jtable"))
 #set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)) )
 #set($actionAjax= "")
 #set($palavras = $parameter.getJsp().getName().split(" "))

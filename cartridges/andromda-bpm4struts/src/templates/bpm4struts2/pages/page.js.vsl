@@ -197,8 +197,8 @@ function verifica() {
 }
 
 $(document).ready(function(){			
-	$('textarea').elastic();
-	$('textarea').trigger('update');
+	//$('textarea').elastic();
+	//$('textarea').trigger('update');
 });
 
 #foreach ($field in $actionParameters)
@@ -257,56 +257,63 @@ $(document).ready(function(){
 	$(".close-btn").click(function(){close() });
 
 #foreach($variable in $jsp.allUniqueActionParameters)
+//$table.tableType 	
 #if($variable.table)
 #set($table = $variable)
-#if($table.tableType.equals("footable"))
+#if($table.tableType.equals("jtable"))
 //Javascript da tabela $table.name
-	$("#${table.name} .footable").footable();
-#set($footableAction = "${jsp.useCase.name}")
 #set($palavras = $jsp.name.split(" "))
 #set($jspName = "")
 #foreach($palavra in $palavras)
 #set($aux = $palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
 #set($jspName = $jspName.concat($aux))
+#end
 #set($tableName = $table.name.subSequence(0,1).toUpperCase().concat($table.name.substring(1)))
-#end
-	jQuery.ajax({
+	$("div#${table.name}").jtable({
+   		title: "${tableName}",
+    	paging: true,
+    	pageSize: ${table.tableMaxRows},
+    	sorting: ${table.tableSortable},
+    	multiSorting: true,
+    	defaultSorting: 'Nome ASC',
+    	actions: {
 #if($jsp.useCase.package.isWebModulePrincipal())
-		url: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+			listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
 #else
-		url: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
-#end
-		data: {paginacao: 0},
-		success: function(data) {
-			var rows = "";
-			jQuery.each(data,function(index, value){
-				var row = "<tr>"
+			listAction: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#end    
+		},
+    	fields: {
+    		"id": {
+    	    	key: true,
+				list: false
+    	    },
 #set($i = 0)
 #set($limit = $table.tableColumns.size() - 1)
 #foreach($column in $table.tableColumns)
-#if($i==0)
-				row = row +"<td class=\"footable-first-column\">" + value.#if(${column.name})${column.name}#else${column}#end + "</td>"
-#elseif($i==$limit)
-				row = row +"<td class=\"footable-last-column\">" + value.#if(${column.name})${column.name}#else${column}#end + "</td>"
+#if(${column.name})
+#set($columnName=${column.name})
 #else
-				row = row +"<td class=\"\">"+ value.#if(${column.name})${column.name}#else${column}#end + "</td>"
+#set($columnName=${column})
 #end
-#set($i = $i + 1)
+#set($title = $columnName.subSequence(0,1).toUpperCase().concat($columnName.substring(1)))
+#if($i==$limit)
+			"$columnName": {
+				title: "${title}"
+			}
+#else
+			"$columnName": {
+				title: "${title}"
+			},
 #end
-				row = row +"<td data-hide=\"hide-all\">"+ value.id + "</td>"
-				row = row + "</tr>";
-				
-				rows = rows + row;
-				
-			});
-			
-			
-			$("#$table.name .footable tbody").append(rows).trigger("footable_redraw");
-		}
+#end    	            
+    	}
 	});
+	
+	$("div#estudantes").jtable("load");
 #else
-//Javascript da tabela $table.name	
-	//$table.tableType
+//Javascript da tabela $table.name
+	//$table.tableType 	
 	//Table Global Actions tabela $table.name
 	
 #foreach ($_action in $table.tableGlobalActions)
