@@ -296,9 +296,9 @@ public abstract class ${entity.name}DAO
 			
 			if (paginacao != null){
 				int extra = 0;
-				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				qry.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				qry.setMaxResults(linhas*paginas + 1);
+				qry.setMaxResults(linhas*paginas);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
