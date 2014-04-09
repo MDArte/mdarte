@@ -20,16 +20,16 @@
 #if(${field.required} || ${field.type.name}=="Date" || 	${field.type.name}=="int" || ${field.type.name}=="Integer" || 	${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double" )
 	<field name="${field.name}">
 #if(${field.required})
-	#if(${field.type.name}=="String")
+#if(${field.type.name}=="String")
 		<field-validator type="requiredstring">
 			<message>E necessario informar o usuario</message>
 		</field-validator>
-		#else
+#else
 		<field-validator type="required">
 			<message>E necessario informar o usuario</message>
 		</field-validator>
-		#end
-	#end
+#end
+#end
 #if(${field.type.name}=="Date")
 		<field-validator type="date">
 			<message>E necessario informar o usuario</message>
@@ -44,7 +44,6 @@
 		<field-validator type="double">
 			<message>E necessario informar o usuario</message>
 		</field-validator>
-	
 #end
 	</field>
 #end

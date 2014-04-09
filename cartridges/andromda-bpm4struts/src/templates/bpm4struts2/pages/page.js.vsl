@@ -202,7 +202,7 @@ $(document).ready(function(){
 });
 
 #foreach ($field in $actionParameters)
-#if(($field.textField) && $field.calendarRequired)
+#if(($field.textField) && $field.calendarRequired && !$field.readOnly)
 $(function() {
 	$( "input#${field.name}${jsp.useCase.name}" ).datepicker({
 		changeMonth: true,
@@ -356,9 +356,11 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").mouseover(function(){hints.show("${field.hintKey}","$styleId") });
 	$("input#${field.name}${jsp.useCase.name}").mouseout(function(){hints.hide()});
 #end
-#if($field.textField && $field.calendarRequired)
-	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
+#if($field.textField && $field.type.dateType)
 	$("input#${field.name}${jsp.useCase.name}").mask('00/00/0000');
+#if($field.calendarRequired && !$field.readOnly)
+	$("input#${field.name}${jsp.useCase.name}").datepicker({language: 'pt-BR'});
+#end
 
 #elseif($field.autocomplete)
 #set($actionName = $field.name.subSequence(0,1).toUpperCase().concat("$field.name.substring(1)") )
@@ -441,7 +443,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -450,7 +452,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -511,7 +513,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -520,7 +522,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -563,7 +565,7 @@ $(document).ready(function(){
 #end
 #else
 ##se não for nenhuma das opções seta a ação do struts2
-	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
+	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired});});
 #end
 #end
 #end
@@ -584,7 +586,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -593,7 +595,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)

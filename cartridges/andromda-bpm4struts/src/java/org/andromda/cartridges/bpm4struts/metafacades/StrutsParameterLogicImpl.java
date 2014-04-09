@@ -1638,9 +1638,9 @@ public class StrutsParameterLogicImpl
         if (taggedValueObject == null)
         {
             // we resort to the default values
-            optionValues.add("0");
-            optionValues.add("1");
-            optionValues.add("2");
+            //optionValues.add("0");
+            //optionValues.add("1");
+            //optionValues.add("2");
         }
         else
         {

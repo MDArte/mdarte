@@ -276,7 +276,7 @@ function setaAcaoAjaxStruts2(nomeAcao , nomeForm, formato, idElemento) {
     $(document.forms[0]).ajaxSubmit(options);
 }
 
-function setaAcaoStruts2(nomeAcao , nomeForm, formato) {
+function setaAcaoStruts2(nomeAcao , nomeForm, formato, fcValidacao, valida) {
     document.forms[0].action = "";
     if (nomeAcao.indexOf("/") == 0) {
         document.forms[0].action = getPath() + nomeAcao + formato;
@@ -284,6 +284,14 @@ function setaAcaoStruts2(nomeAcao , nomeForm, formato) {
         document.forms[0].action = getPath() + '/' + nomeAcao + formato;
     }
     document.forms[0].name = nomeForm;
+    
+    if(valida){
+		if(eval(fcValidacao + '(document.forms[0])')){
+			document.forms[0].submit();
+		}
+	}else{
+		document.forms[0].submit();
+	}
+    
     document.forms[0].submit();
 }
-

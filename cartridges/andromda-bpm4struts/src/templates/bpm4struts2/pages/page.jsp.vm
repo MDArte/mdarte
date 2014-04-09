@@ -367,6 +367,13 @@ ${indent}<input id="reset${action.actionName.toString().replace(' ','')}" class=
 ##set($form="#session.")
 #set ($propertyValue = "#session.${beanName}.${fieldName}")
 #set($requiredness = ($clientValidation || $serverValidation))
+#if ($requiredness && $field.required)
+#set ($requiredLabel = " *")
+#set ($requiredStyle = "required='true'")
+#else
+#set ($requiredLabel = "")
+#set ($requiredStyle = "")
+#end
 #if ($field.type.dateType && $beanName=="row")
 ${indent}	<fmt:formatDate var="value" value="${${propertyValue}}" pattern="$field.dateFormat"/>
 #else
@@ -380,15 +387,11 @@ ${indent}	<s:set name="__value" value="${propertyValue}"/>
 ##
 #if ($field.radioButton)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="radiobutton form-group row">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 #if ($field.optionKeys.empty)
 ${indent}		<div class="col-xs-4">
 ${indent}			<label class="radio-inline">
-${indent}				<s:radio id="${field.name}${action.useCase.name}" cssClass="radio-inline" label="$field.name" name="$field.name" list="${propertyValue}ComboList"  title="" />
+${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="${propertyValue}ComboList"  title="" />
 ${indent}			</label>
 ${indent}		</div>
 ${indent}	</div>
@@ -397,7 +400,7 @@ ${indent}		<div class="col-xs-4">
 #foreach ($optionKey in $field.optionKeys)
 #set ($optionIndex = $velocityCount - 1)
 ${indent}			<label class="radio-inline">
-${indent}				<s:radio id="${field.name}${action.useCase.name}" cssClass="radio-inline" label="$field.name" name="$field.name" list="#{${optionIndex} : getText('${optionKey}')}"  title="" />
+${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="#{${optionIndex} : getText('${optionKey}')}"  title="" />
 ${indent}			</label>
 #end
 ${indent}		</div>
@@ -409,12 +412,8 @@ ${indent}	</div>
 #elseif($field.checkbox)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="form-group row checkbox">
 ${indent}		<label class="col-sm-2 control-label checkbox">
-${indent}			<input type="checkbox"  id="${field.name}${action.useCase.name}" name="$fieldName" value="on" <c:if test="${__value}">checked="checked" </c:if> title=""  $disabled />
-#if ($requiredness && $field.required)
-${indent}			<bean:message key="$field.messageKey"/> *
-#else
-${indent}			<bean:message key="$field.messageKey"/>
-#end
+${indent}			<input type="checkbox"  id="${field.name}${action.useCase.name}" $requiredStyle name="$fieldName" value="on" <c:if test="${__value}">checked="checked" </c:if> title=""  $disabled />
+${indent}			<bean:message key="$field.messageKey"/>$requiredLabel
 ${indent}		</label>
 ${indent}	</div>
 ##
@@ -423,12 +422,8 @@ ${indent}	</div>
 ## @todo: disable this widget if not used in a row action
 #elseif ($field.multibox)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="multibox row form-group">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-labe col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
-${indent}		<s:checkboxlist id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
+${indent}		<label class="control-labe col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
+${indent}		<s:checkboxlist id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
 ${indent}	</div>
 #elseif($field.custom)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="custom field">
@@ -439,59 +434,42 @@ ${indent}	</div>
 ##
 #elseif( ($field.password) )
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="password row form-group">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<s:password id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${propertyValue}}" $disabled  title=""  $readonly $columnCount />
+${indent}			<s:password id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{${propertyValue}}" $disabled  title=""  $readonly $columnCount />
 ${indent}		</div>
 ${indent}	</div>
 ##      T E X T F I E L D       &       P A S S W O R D
 ##
 #elseif( ($field.textField) && $field.calendarRequired )
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="input-append date row form-group" >
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<input  class="form-control" type="text" id="${field.name}${action.useCase.name}" value="<c:out value="${__value}"/>" $readonly data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
+${indent}			<input  class="form-control" type="text" id="${field.name}${action.useCase.name}" $requiredStyle value="<c:out value="${__value}"/>" $readonly data-date-format="dd/mm/yyyy" name="${fieldName}" size="80" />
 ${indent}		</div>
 ${indent}	</div>
+##
+##     A U T O C O M P L E TE
+##
 #elseif ($field.autocomplete )
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="row form-group autocomplete">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<s:textfield id="${field.name}${action.useCase.name}" name="$fieldName" cssClass="form-control" label="%{getText('$field.messageKey')}"  value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+${indent}			<s:textfield id="${field.name}${action.useCase.name}" $requiredStyle name="$fieldName" cssClass="form-control" label="%{getText('$field.messageKey')}"  value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 ${indent}		</div>
 ${indent}	</div>
 #elseif (($field.textField) || ($field.editor))
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="form-group row textfield">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<s:textfield id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
+${indent}			<s:textfield id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" label="%{getText('$field.messageKey')}" value="%{$propertyValue}" $disabled  title=""  $readonly $columnCount styleId="$styleId"  />
 ${indent}		</div>
 ${indent}	</div>
 #elseif ($field.money)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="row form-group money">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2" for="${field.name}"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  title="" $readonly $columnCount styleId="$styleId" />
+${indent}			<input type="text" id="${field.name}${action.useCase.name}" $requiredStyle class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  title="" $readonly $columnCount styleId="$styleId" />
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -499,13 +477,9 @@ ${indent}	</div>
 ##
 #elseif ($field.textArea || $field.editor)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="textarea row form-group">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<textarea name="$fieldName" id="${field.name}${action.useCase.name}" class="form-control"  $readonly $rowCount $columnCount $disabled id="${fieldName}${action.useCase.name}"><c:out value="${__value}"/></textarea>
+${indent}			<textarea name="$fieldName" id="${field.name}${action.useCase.name}" $requiredStyle class="form-control"  $readonly $rowCount $columnCount $disabled id="${fieldName}${action.useCase.name}"><c:out value="${__value}"/></textarea>
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -513,13 +487,9 @@ ${indent}	</div>
 ##
 #elseif ($field.money)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="money row form-group">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label></nobr>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<input type="text" id="${field.name}${action.useCase.name}" class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  $readonly $columnCount styleId="$styleId"/>
+${indent}			<input type="text" id="${field.name}${action.useCase.name}" $requiredStyle class="form-control" name="$fieldName" value="<c:out value="${__value}"/>" $disabled  $readonly $columnCount styleId="$styleId"/>
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -527,23 +497,15 @@ ${indent}	</div>
 ##
 #elseif ($field.hiddenField)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="hidden field">
-#if ($requiredness && $field.required)
-${indent}		<label for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label><bean:message key="$field.messageKey"/></label>
-#end
-${indent}		<input type="hidden" name="${field.name}" value="<c:out value="${__value}"/>" id="${field.name}${action.useCase.name}" $disabled  />
+${indent}		<label><bean:message key="$field.messageKey"/>$requiredLabel</label>
+${indent}		<input type="hidden" name="${field.name}" value="<c:out value="${__value}"/>" id="${field.name}${action.useCase.name}" $requiredStyle $disabled  />
 ${indent}	</div>
 ##
 ##      C O M B O B O X     &      L I S T
 ##
 #elseif ($field.combobox)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="combobox form-group row">
-#if ($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 #if ($field.readOnly)
 #set ($disabled = 'disabled="true"')
 #end
@@ -558,7 +520,7 @@ ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messa
 #set($selectProperty="$fieldName")
 #end
 ${indent}		<div class="col-xs-4">
-${indent}			<s:select id="${field.name}${action.useCase.name}" cssClass="form-control" label="" name="${field.name}" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
+${indent}			<s:select id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" label="" name="${field.name}" listKey="key" listValue="%{getText(value)}" list="${propertyValue}ComboList" value="__value"/>
 ${indent}		</div>
 ${indent}	</div>
 ##
@@ -566,17 +528,13 @@ ${indent}	</div>
 ##
 #elseif ($field.doubleSelect)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="doubleSelect field">
-#if ($requiredness && $field.required)
-${indent}		<label class="doubleSelectLabel" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="doubleSelectLabel"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="doubleSelectLabel"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 #if ($field.readOnly)
 #set ($disabled = 'disabled="true"')
 #end
 #set($multiple='')
 #set($selectProperty="$fieldName")
-${indent}		<s:doubleselect id="${field.name}${action.useCase.name}" name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
+${indent}		<s:doubleselect id="${field.name}${action.useCase.name}" $requiredStyle name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
 ${indent}			listKey="value" listValue="label"
 ${indent}			doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
 ${indent}			doubleListKey="value" doubleListValue="label" />
@@ -585,27 +543,23 @@ ${indent}	</div>
 ##      L I N K
 ##
 #elseif ($field.hyperlink)
-#foreach ($_action in $jsp.actions)
-#if ($_action.hyperlink && $_action.findTaggedValue("$fieldLink"))
-#set($fieldLinkValue = "")
-#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-#if($fieldLinkValue.equals("$fieldName"))
-#renderFieldHyperlink2($_action $field "	")
-#end
-#end
-#end
+##foreach ($_action in $jsp.actions)
+##if ($_action.hyperlink && $_action.findTaggedValue("$fieldLink"))
+##set($fieldLinkValue = "")
+##set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+##if($fieldLinkValue.equals("$fieldName"))
+#renderFieldHyperlink2($action $field "	")
+##end
+##end
+##end
 ##
 ##      F I L E
 ##
 #elseif ($field.file)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="file row form-group">
-#if($requiredness && $field.required)
-${indent}		<label class="control-label col-sm-2" for="${field.name}${action.useCase.name}"><bean:message key="$field.messageKey"/> *</label>
-#else
-${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/></label>
-#end
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 ${indent}		<div class="col-xs-4">
-${indent}			<s:file id="${field.name}${action.useCase.name}" cssClass="form-control" name="$fieldName"  $disabled $columnCount styleId="$styleId"/>
+${indent}			<s:file id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName"  $disabled $columnCount styleId="$styleId"/>
 ${indent}		</div>
 ${indent}	</div>
 ##
