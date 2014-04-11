@@ -91,7 +91,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 
 #end
 #foreach($page in $useCase.getPages())
-#foreach($parameter in $page.allUniqueActionParameters)
+#foreach($parameter in $page.getPageVariables())
 #if($parameter.autocomplete)
 #set($pageName="")
 #foreach($palavra in $page.name.split(" "))

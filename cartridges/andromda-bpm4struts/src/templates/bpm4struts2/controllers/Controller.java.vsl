@@ -149,9 +149,9 @@ $operation.getDocumentation("     * ")
 
 #end
 ##Codigo que gera automaticamente os métodos para fazer o autocomplete dos campos
-#set($actions = $controller.getUseCase().getActions())
+#set($actions = $controller.getUseCase().getPages())
 #foreach($action in $actions)
-#foreach($parametro in $action.getActionParameters())
+#foreach($parametro in $action.allUniqueActionParameters)
 #if($parametro.autocomplete)
 #set($pageName = $parametro.name) 
 #set($palavras = $parametro.getJsp().getName().split(" "))
@@ -188,7 +188,10 @@ $operation.getDocumentation("     * ")
     	container.getWriter().write(jsonArray.toString());
     	
 	}
-#elseif($parametro.tableType.equals("jtable"))
+#end
+#end
+#foreach($parametro in $action.getPageVariables())
+#if($parametro.tableType.equals("jtable"))
 #set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
 #set($actionName = "")
 #set($palavras = ${parametro.getJsp().getName().split(" ")})
@@ -232,7 +235,7 @@ $operation.getDocumentation("     * ")
 		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc);
 		
 		String [] columns = {
-					"id",
+					//"id",
 #set($i=0)
 #set($limit=$parametro.tableColumns.size() - 1)
 #foreach($column in $parametro.tableColumns)
