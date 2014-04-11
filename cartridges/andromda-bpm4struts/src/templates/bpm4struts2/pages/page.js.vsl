@@ -215,7 +215,7 @@ $(function() {
 
 function atualizaElementos(){
 #foreach ($variable in $jsp.pageVariables)
-#if ($variable.table)
+#if ($variable.table.tableType.equals("default"))
 		$("#${variable.name}").displayTagAjax();
 #end
 #end 
@@ -256,8 +256,7 @@ $(document).ready(function(){
 	//Botao Close
 	$(".close-btn").click(function(){close() });
 
-#foreach($variable in $jsp.allUniqueActionParameters)
-//$table.tableType 	
+#foreach($variable in $jsp.getPageVariables())	
 #if($variable.table)
 #set($table = $variable)
 #if($table.tableType.equals("jtable"))
@@ -270,12 +269,11 @@ $(document).ready(function(){
 #end
 #set($tableName = $table.name.subSequence(0,1).toUpperCase().concat($table.name.substring(1)))
 	$("div#${table.name}").jtable({
-   		title: "${tableName}",
     	paging: true,
     	pageSize: ${table.tableMaxRows},
     	sorting: ${table.tableSortable},
     	multiSorting: true,
-    	defaultSorting: 'Nome ASC',
+    	defaultSorting: '',
     	actions: {
 #if($jsp.useCase.package.isWebModulePrincipal())
 			listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
@@ -284,10 +282,6 @@ $(document).ready(function(){
 #end    
 		},
     	fields: {
-    		"id": {
-    	    	key: true,
-				list: false
-    	    },
 #set($i = 0)
 #set($limit = $table.tableColumns.size() - 1)
 #foreach($column in $table.tableColumns)
@@ -310,7 +304,7 @@ $(document).ready(function(){
     	}
 	});
 	
-	$("div#estudantes").jtable("load");
+	$("div#${table.name}").jtable("load");
 #else
 //Javascript da tabela $table.name
 	//$table.tableType 	
@@ -382,7 +376,7 @@ $(document).ready(function(){
 #if($column.name)#set($columnName=$column.name)#else#set($columnName=$column)#end
 #set ($tableColumnActions = $table.getTableColumnActions($columnName))
 #if($column.actionParameter)
-	##
+##
 #elseif (!$tableColumnActions.empty)
 #foreach ($tableColumnAction in $tableColumnActions)
 #if($hints)
