@@ -359,10 +359,10 @@ public abstract class ${entity.name}DAO
             		org.hibernate.Query res = (org.hibernate.Query)criterios;
             		if (paginacao != null){
 						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0)  
-							extra = 1;
+						//if (paginacao % paginas == 0 && paginacao != 0)  
+							//extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas + 1);
+						res.setMaxResults(linhas*paginas);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -373,9 +373,9 @@ public abstract class ${entity.name}DAO
         			org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
         			if (paginacao != null){
 						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas + 1);
+						res.setMaxResults(linhas*paginas);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -402,10 +402,10 @@ public abstract class ${entity.name}DAO
             		org.hibernate.Query res = (org.hibernate.Query)obj;
             		if (paginacao != null){
 						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0)  
-							extra = 1;
+						//if (paginacao % paginas == 0 && paginacao != 0)  
+						//	extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas + 1);
+						res.setMaxResults(linhas*paginas);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -416,9 +416,9 @@ public abstract class ${entity.name}DAO
         			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
         			if (paginacao != null){
 						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas + 1);
+						res.setMaxResults(linhas*paginas);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         		res.setCacheable(true);
@@ -767,9 +767,9 @@ $target.getDocumentation("     * ")
 #if ($target.many)
 			if (paginacao != null){
 				int extra = 0;
-				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				qry.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				qry.setMaxResults(linhas*paginas + 1);
+				qry.setMaxResults(linhas*paginas);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
@@ -870,9 +870,9 @@ $operation.getDocumentation("     * ")
             	org.hibernate.Query res = (org.hibernate.Query)obj;
             	if (paginacao != null){
 					int extra = 0;
-					if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+					//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-					res.setMaxResults(linhas*paginas + 1);
+					res.setMaxResults(linhas*paginas);
 				}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
@@ -883,9 +883,9 @@ $operation.getDocumentation("     * ")
             	org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
             	if (paginacao != null){
 					int extra = 0;
-					if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+					//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-					res.setMaxResults(linhas*paginas + 1);
+					res.setMaxResults(linhas*paginas);
 				}
 
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
@@ -982,9 +982,9 @@ $finder.getDocumentation("     * ")
 #else
 			if (paginacao != null){
 				int extra = 0;
-				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				query.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				query.setMaxResults(linhas*paginas  + 1);
+				query.setMaxResults(linhas*paginas);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			query.setCacheable(true);
