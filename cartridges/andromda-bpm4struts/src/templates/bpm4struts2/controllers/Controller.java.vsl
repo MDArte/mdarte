@@ -201,21 +201,6 @@ $operation.getDocumentation("     * ")
 #end
 #set($actionName=$actionName.concat($tableName))
 	protected abstract Integer get${actionName}TableLength() throws Exception;
-	
-	protected void get${actionName}TableLength(ViewContainer container) throws Exception {
-		JSONArray array = new JSONArray();
-		
-		Integer length = this.get${actionName}TableLength();
-		
-		if(length == null)
-			length = 0;
-		
-		array.add(length);
-		
-		container.setContentType("application/json;charset=UTF-8");
-        
-        container.getWriter().write(array.toString());
-	}
 
 	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc) throws java.lang.Exception;
 	
@@ -235,7 +220,6 @@ $operation.getDocumentation("     * ")
 		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc);
 		
 		String [] columns = {
-					//"id",
 #set($i=0)
 #set($limit=$parametro.tableColumns.size() - 1)
 #foreach($column in $parametro.tableColumns)
