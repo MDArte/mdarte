@@ -815,7 +815,7 @@ $target.getDocumentation("     * ")
 ## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
 #if($returnType.collectionType)
 #set($return = "Object")
-#set($parameters="${parameters}, Integer linhas, Integer colunas")
+#set($parameters="${parameters}, Integer paginacao, Integer linhas")
 #else
 #set($return = $returnType.fullyQualifiedName)
 #end
