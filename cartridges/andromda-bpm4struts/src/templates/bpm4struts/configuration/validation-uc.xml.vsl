@@ -1,4 +1,5 @@
 ## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($struts2 == "false")
 #if($modulo == 'true')
 #foreach ($action in $useCase.actions)
 #if ($action.validationRequired)
@@ -32,6 +33,7 @@
 #end
 #end
         </form>
+#end
 #end
 #end
 #end

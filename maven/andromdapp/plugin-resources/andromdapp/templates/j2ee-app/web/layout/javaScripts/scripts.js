@@ -285,13 +285,13 @@ function setaAcaoStruts2(nomeAcao , nomeForm, formato, fcValidacao, valida) {
     }
     document.forms[0].name = nomeForm;
     
-    if(valida){
+    /*if(valida){
 		if(eval(fcValidacao + '(document.forms[0])')){
 			document.forms[0].submit();
 		}
 	}else{
 		document.forms[0].submit();
-	}
+	}*/
     
     document.forms[0].submit();
 }

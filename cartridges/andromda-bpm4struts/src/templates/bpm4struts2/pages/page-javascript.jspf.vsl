@@ -19,11 +19,11 @@
 
 #if ($jsp.validationRequired && $validationDesired)
 ## using page and .do instead of action to avoid Struts2 rewrite
-	<script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/formValidation.do"/>"></script>
+##	<script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/formValidation.do"/>"></script>
 #foreach ($action in $jsp.actions)
 #if ($action.validationRequired)
 
-	<html:javascript formName="$action.formBeanName" method="$action.formValidationMethodName" dynamicJavascript="true" staticJavascript="false"#if($xhtml=="true") cdata="true"#else htmlComment="true" cdata="false"#end/>
+##	<html:javascript formName="$action.formBeanName" method="$action.formValidationMethodName" dynamicJavascript="true" staticJavascript="false"#if($xhtml=="true") cdata="true"#else htmlComment="true" cdata="false"#end/>
 #end
 #end
 #end
