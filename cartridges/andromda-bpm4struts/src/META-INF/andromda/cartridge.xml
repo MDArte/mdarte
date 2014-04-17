@@ -1657,6 +1657,19 @@
     <template
         path="templates/bpm4struts2/configuration/validation.xml.vsl"
         outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/configuration/validators.xml.vsl"
+        outputPattern="$generatedFile"
         outlet="shared-configuration-struts2"
         overwrite="true"
         outputOnEmptyElements="false">
