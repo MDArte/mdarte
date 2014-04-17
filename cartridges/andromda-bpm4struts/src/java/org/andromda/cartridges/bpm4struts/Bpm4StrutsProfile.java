@@ -32,6 +32,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_ACTION_FORM_KEY = profile.get("ACTION_FORM_KEY");
     public static final String TAGGEDVALUE_ACTION_TABLELINK = profile.get("ACTION_TABLELINK");
     public static final String TAGGEDVALUE_ACTION_COPY_PARAMETERS = profile.get("ACTION_COPY_PARAMETERS");
+    public static final String TAGGEDVALUE_ACTION_CLIENT_VALIDATION = profile.get("ACTION_CLIENT_VALIDATION");
     public static final String TAGGEDVALUE_ACTION_TOGGLE_PAGE_CONTROL = profile.get("ACTION_TOGGLE_PAGE_CONTROL");
     public static final String TAGGEDVALUE_INPUT_COLUMN_COUNT = profile.get("INPUT_COLUMN_COUNT");
     public static final String TAGGEDVALUE_INPUT_ROW_COUNT = profile.get("INPUT_ROW_COUNT");

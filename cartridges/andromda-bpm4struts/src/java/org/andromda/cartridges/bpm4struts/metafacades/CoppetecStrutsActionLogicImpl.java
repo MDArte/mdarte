@@ -57,6 +57,15 @@ public class CoppetecStrutsActionLogicImpl
         return Bpm4StrutsProfile.TAGGEDVALUE_ACTION_TYPE_IMAGE
         .equals(this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_TYPE));
 	}
+	
+	protected boolean handleIsClientValidation() {
+		Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_CLIENT_VALIDATION);
+		// the default is false
+		if (value == null || "false".equalsIgnoreCase(value.toString()))
+			return false;
+		else
+			return true;
+	}
 
 
 	protected List handleGetFieldLinkAsList() {

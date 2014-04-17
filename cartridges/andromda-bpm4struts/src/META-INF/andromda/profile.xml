@@ -134,6 +134,17 @@
                     <value default="true">false</value>
                 </allowedValues>
             </element>
+            <element name="ACTION_CLIENT_VALIDATION">
+                <documentation>
+                     Enables client side validation.
+                </documentation>
+                <value>@andromda.presentation.action.client.validation</value>
+                <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+                <allowedValues>
+                    <value>true</value>
+                    <value default="true">false</value>
+                </allowedValues>
+            </element>
             <element name="HABILITADO_POR">
                 <documentation>
                     Denota quais parametros habilitam este. 
