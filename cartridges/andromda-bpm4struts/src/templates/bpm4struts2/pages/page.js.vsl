@@ -241,6 +241,118 @@ function selecionaDeseleciona${table.name}(){
 #end
 #end
 
+#foreach($_action in $jsp.actions)
+#if($_action.clientValidation)
+#set($jsValidation = true)
+#end 
+#end
+#if($jsValidation)
+//Javascript de validação
+
+$('form').validate({
+	rules: {
+##
+#set($fieldsSize = $jsp.allUniqueActionParameters.size())
+#set($count = 1)
+##
+#foreach($field in $jsp.allUniqueActionParameters)
+##
+#set ($numeric = false)
+#if(${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer" || ${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double")
+#set ($numeric = true)
+#end
+#if($field.validatorVars && !$field.validatorVars.isEmpty())
+#set($comma = ",")
+#else
+#set($comma = "")
+#end
+##
+		${field.name}: {
+#if ((${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
+			digits: true#if(${field.required}),#else${comma}#end
+
+#end
+#if ((${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+			number: true#if(${field.required}),#else${comma}#end
+
+#end
+#if(${field.type.name}=="Date")
+			date: true#if(${field.required}),#elseif($field.validatorVars.size() > 1)${comma}#end
+
+#end
+##
+##
+#set($validatorsSize = $field.validatorVars.size())
+#set($countV = 1)
+#if(${field.type.name}=="Date")
+#set($countV = 2)
+#end
+##
+##
+#foreach ($validatorVar in $field.validatorVars)
+##
+#if($countV < $validatorsSize)
+#set($countV = $countV + 1)
+#set($commaV = ",")
+#else
+#set($commaV = "")
+#end
+##
+#if ($validatorVar.get(0)=="range" && $numeric)
+			range: [$validatorVar.get(1), $validatorVar.get(2)]${commaV}
+#end
+#if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
+			minlength: $validatorVar.get(1)${commaV}
+#end
+#if ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
+			maxlength: $validatorVar.get(1)${commaV}
+#end
+#if ($validatorVar.get(0)=="pattern" && ${field.type.name}=="String")
+			pattern: $validatorVar.get(1)${commaV}
+#end
+#if ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
+			email: true${commaV}
+#end
+#if ($validatorVar.get(0)=="creditcard" && ${field.type.name}=="String")
+			creditcard: true${commaV}
+#end
+#if ($validatorVar.get(0)=="url" && ${field.type.name}=="String")
+			url: true${commaV}
+#end
+##
+#end
+#if(${field.required})
+			required: true
+#end
+#if($count < $fieldsSize)
+#set($count = $count + 1)
+		},
+#else
+		}
+#end
+##
+#end
+	},
+	highlight: function(element) {
+		$(element).closest('.form-group').addClass('has-error');
+	},
+	unhighlight: function(element) {
+		$(element).closest('.form-group').removeClass('has-error');
+	},
+	errorElement: 'span',
+	errorClass: 'help-block',
+	errorPlacement: function(error, element) {
+		if(element.parent('.input-group').length) {
+			error.insertAfter(element.parent());
+		} else {
+			error.insertAfter(element);
+		}
+	}
+});
+
+//Fim do Javascript de validação
+#end
+
 $(document).ready(function(){
 
 	atualizaElementos();
@@ -385,7 +497,7 @@ $(document).ready(function(){
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
-	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
+	//$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
 #if ($field.textField)
 #if ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long"))
 	$("input#${field.name}${jsp.useCase.name}").mask('0#', {maxlength: false});
@@ -452,7 +564,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -522,7 +634,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -550,7 +662,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.pupUp)
+#elseif($_action.popUp)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
@@ -565,7 +677,7 @@ $(document).ready(function(){
 #end
 #else
 ##se não for nenhuma das opções seta a ação do struts2
-	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired});});
+	$("#${_action.actionName}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired});});
 #end
 #end
 #end
@@ -595,7 +707,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -623,7 +735,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.pupUp)
+#elseif($_action.popUp)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
