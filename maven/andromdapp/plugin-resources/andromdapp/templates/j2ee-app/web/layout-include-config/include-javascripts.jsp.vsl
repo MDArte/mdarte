@@ -24,7 +24,6 @@ Adicionar javascript usando o seguinte formato:
 <script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/jquery.displaytag-ajax-1.2-mdarte.js"></script>
 <script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/jquery.easytabs.js"></script>
 <script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/strutsValidations.js"></script>
-<script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/jquery.ba-hashchange.min.js"></script>
 <script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/bootstrap.min.js"></script>
 <script type="text/javascript" language="Javascript1.1" src="/${projectId}/layout/${layout}/javaScripts/bootstrap-datepicker.js"></script>
 <script type="text/javascript" language="Javascript1.1" charset="utf-8" src="/${projectId}/layout/${layout}/javaScripts/codemirror.js"></script>
