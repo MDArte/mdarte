@@ -8,9 +8,13 @@ import ${servletPackage}.ViewContainer;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+
 
 public abstract class ControllerAbstract implements java.io.Serializable
 {
+	
 	
     /**
      * Stores a warning message in the session, if any other warning messages exist, this one
@@ -206,6 +210,57 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		}
 		
 		listaModosOperacao.put(casoUso, modosOperacao);
+	}
+	
+	protected JSONObject parseObjectToJSON(Object object, String[] attributes ) throws Exception{
+		
+		java.lang.reflect.Method[] methods = object.getClass().getDeclaredMethods();
+		
+		if(object instanceof ${customTypesPackage}.${modelPackageName}.AbstractEntity)
+			methods = object.getClass().getSuperclass().getDeclaredMethods();
+				
+		JSONObject obj = new JSONObject();
+
+        for(int i = 0; i < attributes.length; i++) {
+                
+        	for(int j = 0; j < methods.length; j++) {
+            
+            	String methodName = "get".concat(attributes[i].subSequence(0,1).toString().toUpperCase().concat(attributes[i].substring(1)));
+                        
+                if(methods[j].getName().equals(methodName)) {
+            
+                    obj.put(attributes[i], String.valueOf(methods[j].invoke(object)));
+                            
+                	break;
+                            
+                }
+            
+        	}
+    	}
+        
+		return obj;	
+	}
+	
+	protected JSONArray parseArrayToJSON(Object[] objects, String[] attributes ) throws Exception {
+		
+		JSONArray array = new JSONArray();
+		
+		for(int i = 0; i < objects.length; i++){
+			array.add(this.parseObjectToJSON(objects[i],attributes));
+		}
+		
+		return array;
+	}
+	
+	protected JSONArray parseCollectionToJSON(java.util.Collection objects, String[] attributes ) throws Exception {
+		
+		JSONArray array = new JSONArray();
+		
+		for(Object obj : objects){
+			array.add(this.parseObjectToJSON(obj,attributes));
+		}
+		
+		return array;
 	}
 	
 	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {

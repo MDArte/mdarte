@@ -241,40 +241,9 @@ $operation.getDocumentation("     * ")
 			};
 		
 		JSONArray array = new JSONArray();
-                
-        if(rows != null && rows.size() > 0) {
-            
-            java.lang.Class classe = rows.toArray()[0].getClass();
-            
-            java.lang.reflect.Method [] methods = classe.getSuperclass().getDeclaredMethods();
-                        
-            
-            for(Object row : rows) {
-            
-                JSONObject obj = new JSONObject();
-
-                for(int i = 0; i < columns.length; i++) {
-                
-                    for(int j = 0; j < methods.length; j++) {
-            
-                        String methodName = "get".concat(columns[i].subSequence(0,1).toString().toUpperCase().concat(columns[i].substring(1)));
-                        
-                        if(methods[j].getName().equals(methodName)) {
-            
-                            obj.put(columns[i], String.valueOf(methods[j].invoke(row)));
-                            
-                            break;
-                            
-                        }
-            
-                    }
-            
-                }
-                
-            	array.add(obj);
-            
-            }
-        }
+		
+		if(rows != null)
+			array = this.parseCollectionToJSON(rows,columns);
         
         JSONObject obj = new JSONObject();
         
