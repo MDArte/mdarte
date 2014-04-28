@@ -176,6 +176,24 @@ acesso.negado=O usuario não possui permissão para acessar este serviço.
 subject.null=O usuario não está logado no sistema.
 
 #
+#   Messages for the client validator
+#
+
+validate.required=Campo é obrigatório.
+validate.minlength=O tamanho não pode ser menor que {0} caracteres.
+validate.maxlength=O tamanho não pode ser maior que {0} caracteres.
+
+validate.digits=O campo só pode ter caracteres numéricos.
+validate.number=Não é um número.
+
+validate.date=Não é uma data válida.
+validate.range=O valor deve estar entre {0} e {1}.
+validate.creditcard=Número de cartão de crédito inválido.
+validate.email=Endereço de e-mail inválido.
+validate.url=URL inválido.
+validate.pattern=Texto inválido.
+
+#
 #   Messages for the validator plugin
 #
 errors.required={0} is required.

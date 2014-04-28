@@ -286,6 +286,8 @@ $('form').validate({
 #set($countV = 1)
 #if(${field.type.name}=="Date")
 #set($countV = 2)
+#elseif(${field.required})
+#set($countV = 0)
 #end
 ##
 ##
@@ -307,8 +309,8 @@ $('form').validate({
 #if ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
 			maxlength: $validatorVar.get(1)${commaV}
 #end
-#if ($validatorVar.get(0)=="pattern" && ${field.type.name}=="String")
-			pattern: $validatorVar.get(1)${commaV}
+#if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
+			pattern: '$validatorVar.get(1)'${commaV}
 #end
 #if ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
 			email: true${commaV}
@@ -323,6 +325,94 @@ $('form').validate({
 #end
 #if(${field.required})
 			required: true
+#end
+#if($count < $fieldsSize)
+#set($count = $count + 1)
+		},
+#else
+		}
+#end
+##
+#end
+	},
+##
+##      Colocando mensagens de erro de validação
+##
+	messages: {
+##
+#set($fieldsSize = $jsp.allUniqueActionParameters.size())
+#set($count = 1)
+##
+#foreach($field in $jsp.allUniqueActionParameters)
+##
+#set ($numeric = false)
+#if(${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer" || ${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double")
+#set ($numeric = true)
+#end
+#if($field.validatorVars && !$field.validatorVars.isEmpty())
+#set($comma = ",")
+#else
+#set($comma = "")
+#end
+##
+		${field.name}: {
+#if ((${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
+			digits: VALID_KEYS['validate.digits']#if(${field.required}),#else${comma}#end
+
+#end
+#if ((${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+			number: VALID_KEYS['validate.number']#if(${field.required}),#else${comma}#end
+
+#end
+#if(${field.type.name}=="Date")
+			date: jQuery.validator.format(VALID_KEYS['validate.date'])#if(${field.required}),#elseif($field.validatorVars.size() > 1)${comma}#end
+
+#end
+##
+##
+#set($validatorsSize = $field.validatorVars.size())
+#set($countV = 1)
+#if(${field.type.name}=="Date")
+#set($countV = 2)
+#elseif(${field.required})
+#set($countV = 0)
+#end
+##
+##
+#foreach ($validatorVar in $field.validatorVars)
+##
+#if($countV < $validatorsSize)
+#set($countV = $countV + 1)
+#set($commaV = ",")
+#else
+#set($commaV = "")
+#end
+##
+#if ($validatorVar.get(0)=="range" && $numeric)
+			range: jQuery.validator.format(VALID_KEYS['validate.range'])${commaV}
+#end
+#if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
+			minlength: jQuery.validator.format(VALID_KEYS['validate.minlength'])${commaV}
+#end
+#if ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
+			maxlength: jQuery.validator.format(VALID_KEYS['validate.maxlength'])${commaV}
+#end
+#if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
+			pattern: VALID_KEYS['validate.pattern']${commaV}
+#end
+#if ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
+			email: VALID_KEYS['validate.email']${commaV}
+#end
+#if ($validatorVar.get(0)=="creditcard" && ${field.type.name}=="String")
+			creditcard: VALID_KEYS['validate.creditcard']${commaV}
+#end
+#if ($validatorVar.get(0)=="url" && ${field.type.name}=="String")
+			url: VALID_KEYS['validate.url']${commaV}
+#end
+##
+#end
+#if(${field.required})
+			required: VALID_KEYS['validate.required']
 #end
 #if($count < $fieldsSize)
 #set($count = $count + 1)

@@ -28,6 +28,30 @@
 #end
 #end
 
+#foreach($_action in $jsp.actions)
+#if($_action.clientValidation)
+#set($jsValidation = true)
+#end 
+#end
+
+#if($jsValidation)
+	<script type="text/javascript" language="Javascript1.1">
+		var VALID_KEYS = {
+			'validate.required':'<formatting:escape language="javascript"><bean:message key="validate.required"/></formatting:escape>',
+			'validate.minlength':'<formatting:escape language="javascript"><bean:message arg0="{0}" key="validate.minlength"/></formatting:escape>',
+			'validate.maxlength':'<formatting:escape language="javascript"><bean:message arg0="{0}" key="validate.maxlength"/></formatting:escape>',
+			'validate.digits':'<formatting:escape language="javascript"><bean:message key="validate.digits"/></formatting:escape>',
+			'validate.number':'<formatting:escape language="javascript"><bean:message key="validate.number"/></formatting:escape>',
+			'validate.date':'<formatting:escape language="javascript"><bean:message key="validate.date"/></formatting:escape>',
+			'validate.range':'<formatting:escape language="javascript"><bean:message arg0="{0}" arg1="{1}" key="validate.range"/></formatting:escape>',
+			'validate.creditcard':'<formatting:escape language="javascript"><bean:message key="validate.creditcard"/></formatting:escape>',
+			'validate.email':'<formatting:escape language="javascript"><bean:message key="validate.email"/></formatting:escape>',
+			'validate.url':'<formatting:escape language="javascript"><bean:message key="validate.url"/></formatting:escape>',
+			'validate.pattern':'<formatting:escape language="javascript"><bean:message key="validate.pattern"/></formatting:escape>',
+		}
+    </script>
+#end
+
 #if ($hints=="true")
 	<script type="text/javascript" language="Javascript1.1">
 #if ($xhtml == "true")
