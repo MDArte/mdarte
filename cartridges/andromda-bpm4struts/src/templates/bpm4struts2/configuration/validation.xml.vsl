@@ -53,24 +53,23 @@
 #end
 #if(${field.type.name}=="int" || ${field.type.name}=="Integer")
 		<field-validator type="int">
-			<message>Int validation wrong</message>
 #end
 #if(${field.type.name}=="long" || ${field.type.name}=="Long")
 		<field-validator type="long">
-			<message>Long validation wrong</message>
 #end
 #if(${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double" )
 		<field-validator type="double">
-			<message>Double validation wrong</message>
 #end
 #foreach ($validatorVar in $field.validatorVars)
 #if ($validatorVar.get(0)=="range" && (${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
 			<param name="min">$validatorVar.get(1)</param>
 			<param name="max">$validatorVar.get(2)</param>
+			<message>Range validation wrong</message>
 
 #elseif ($validatorVar.get(0)=="range" && (${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
 			<param name="minInclusive">$validatorVar.get(1)</param>
 			<param name="maxInclusive">$validatorVar.get(2)</param>
+			<message>Range validation wrong</message>
 #end
 
 #end
@@ -79,7 +78,7 @@
 
 #end
 #foreach ($validatorVar in $field.validatorVars)
-#if ($validatorVar.get(0)=="pattern" && ${field.type.name}=="String")
+#if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
 		<field-validator type="regex">
 			<param name="expression">$validatorVar.get(1)</param>
 			<message>Regex validation wrong</message>
@@ -100,10 +99,10 @@
 		</field-validator>
 #elseif (${field.type.name}=="Date")
 		<field-validator type="regex">
-#if ($validatorVar.get(0)=="strict") 
+#if ($validatorVar.get(0)=="datePatternStrict") 
 			<param name="expression">$validatorVar.get(1)</param>
-#else
-			<param name="expression">$validatorVar.get(0)</param>
+#elseif ($validatorVar.get(0)=="datePattern") 
+			<param name="expression">$validatorVar.get(1)</param>
 #end
 			<message>Date pattern validation wrong</message>
 		</field-validator>
