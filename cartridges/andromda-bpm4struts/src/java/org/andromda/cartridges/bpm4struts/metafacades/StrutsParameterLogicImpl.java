@@ -1533,7 +1533,6 @@ public class StrutsParameterLogicImpl
                 {
                     vars.put("min", Arrays.asList(new Object[]{"min", getRangeStart(format)}));
                     vars.put("max", Arrays.asList(new Object[]{"max", getRangeEnd(format)}));
-                    vars.put("range", Arrays.asList(new Object[]{"range", getRangeStart(format), getRangeEnd(format)}));
                 }
                 else
                 {
@@ -1547,10 +1546,6 @@ public class StrutsParameterLogicImpl
                             Arrays.asList(new Object[]{"maxlength", this.getMaxLengthValue(additionalFormat)}));
                         else if (isPatternFormat(additionalFormat)) vars
                             .put("mask", Arrays.asList(new Object[]{"mask", this.getPatternValue(additionalFormat)}));
-                        else if (isEmailFormat(additionalFormat)) vars
-                        	.put("email", Arrays.asList(new Object[]{"email"}));
-                        else if (isCreditCardFormat(additionalFormat)) vars
-                    		.put("creditcard", Arrays.asList(new Object[]{"creditcard"}));
                     }
                 }
             }
