@@ -294,6 +294,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		//request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
 
 		//Validando campos
+#**
 #foreach ($field in $action.actionParameters)
 #if(${field.required})
 #if(${field.type.name}=="String")
@@ -311,6 +312,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end
 #end
+*#
 	}
 
 #if ($securityEnabled && !${action.useCase.openAccess})
