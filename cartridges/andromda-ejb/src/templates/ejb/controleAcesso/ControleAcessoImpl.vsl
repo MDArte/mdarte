@@ -107,6 +107,14 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 			}
 
 			for(Perfil perfilCA : perfilAcaoList) {
+			
+				// Adiciona no mapa os perfis filhos, se houver. Implementação do agrupamento de perfis.
+				Collection<Perfil> perfisDescendentes = recuperarPerfisDescendentes(perfilCA);
+				for(Perfil perfilFilhoAtual : perfisDescendentes) {
+					accessControl.Perfil perfilFilho = new accessControl.Perfil(perfilFilhoAtual.getId().toString());
+					perfilList.add(perfilFilho);
+				}
+				
 				accessControl.Perfil perfil = new accessControl.Perfil(perfilCA.getId().toString());
 				perfilList.add(perfil);
 			}
@@ -116,7 +124,22 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		}
 
 		return hmServicos;
-	}	
+	}
+	
+	private Collection<Perfil> recuperarPerfisDescendentes(Perfil perfilUsuario) {
+		List<Perfil> perfisDescendentes = new ArrayList<Perfil>();
+		
+		if(perfilUsuario.getPerfilFilho() != null) {
+			Collection<Perfil> perfisFilhos = perfilUsuario.getPerfilFilho();
+			for(Perfil perfilAtual : perfisFilhos) {
+				perfisDescendentes.addAll(recuperarPerfisDescendentes(perfilAtual));
+			}
+		}
+		
+		perfisDescendentes.add(perfilUsuario);
+		
+		return perfisDescendentes;
+	}
 
 	/**
 	 * realiza a troca de senha do operador
