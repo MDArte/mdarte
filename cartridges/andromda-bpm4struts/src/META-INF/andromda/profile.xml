@@ -112,6 +112,13 @@
                 <value>@andromda.presentation.web.action.tablelink</value>
                 <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
             </element>
+            <element name="AJAX_TABLE">
+                <documentation>
+                    Denotes this transition represents an ajax action targeting the specified table.
+                </documentation>
+                <value>@andromda.presentation.web.action.ajax.table</value>
+                <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+            </element>
             <element name="ACTION_COPY_PARAMETERS">
                 <documentation>
                     Defines if the parameters from the previous should be copied. 
