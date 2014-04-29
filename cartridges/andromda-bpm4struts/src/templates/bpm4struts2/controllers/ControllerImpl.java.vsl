@@ -34,8 +34,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     /**
      * @see ${controllerPackageName}.${controllerClassName}#${operation.name}($operation.interfaceType)
      */
-    $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception
-    {
+    $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception {
     	/*Caso seja necessario usar paginacao		
     		Integer paginacao = ((Double)container.getAttribute(util.Constantes.PARAMETRO_PAGINA)).intValue();
     	*/##acredito que essa parte talvez seja encapsulada num aspecto.
@@ -97,24 +96,23 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #foreach($palavra in $page.name.split(" "))
 #set($pageName = $palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #end
-	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container)
-	{
+	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container) throws Exception {
 		return null;
 	}
 #elseif($parameter.tableType.equals("jtable"))
-#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)))
 #set($actionAjax= "")
-#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($palavras = ${parameter.getJsp().getName().split(" ")})
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
 #set($actionAjax = $actionAjax.concat("$aux"))
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
-	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) {
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws Exception {
 		return null;
 	}
 	
-	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) {
+	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws Exception {
 		return null;
 	}
 #end
