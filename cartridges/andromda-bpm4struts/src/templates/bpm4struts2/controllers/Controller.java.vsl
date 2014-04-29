@@ -200,9 +200,9 @@ $operation.getDocumentation("     * ")
 #set($actionName = $actionName.concat("$aux"))
 #end
 #set($actionName=$actionName.concat($tableName))
-	protected abstract Integer get${actionName}TableLength() throws Exception;
+	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws Exception;
 
-	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc) throws java.lang.Exception;
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws java.lang.Exception;
 	
 	protected void load${actionName}Table(ViewContainer container) throws Exception {
 		
@@ -210,14 +210,14 @@ $operation.getDocumentation("     * ")
 		
 		Integer paginacao = (container.getParameter("jtStartIndex") != null) ? Integer.valueOf(container.getParameter("jtStartIndex")) / linhas : 0;
 		
-		String propriedade = container.getParameter("jtSorting") != null ? container.getParameter("jtSorting").split(" ")[0] : "ID";
+		String propriedade = container.getParameter("jtSorting") != null ? container.getParameter("jtSorting").split(" ")[0] : "";
 		
 		Boolean desc = new Boolean(false);
 		
 		if(container.getParameter("jtSorting") != null)
 		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
 		
-		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc);
+		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,container);
 		
 		String [] columns = {
 #set($i=0)
@@ -248,7 +248,7 @@ $operation.getDocumentation("     * ")
         JSONObject obj = new JSONObject();
         
         obj.put("Result","OK");
-        obj.put("TotalRecordCount", this.get${actionName}TableLength());
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc,container));
         obj.put("Records",array);
         
         container.setContentType("application/json;charset=UTF-8");

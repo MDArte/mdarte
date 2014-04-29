@@ -110,11 +110,11 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #set($actionAjax = $actionAjax.concat("$aux"))
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
-	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc) {
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) {
 		return null;
 	}
 	
-	public final Integer get${actionAjax}TableLength() {
+	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) {
 		return null;
 	}
 #end
