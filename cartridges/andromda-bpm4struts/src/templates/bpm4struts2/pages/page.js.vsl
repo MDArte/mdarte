@@ -304,7 +304,7 @@ $(document).ready(function(){
     	}
 	});
 	
-	$("div#${table.name}").jtable("load");
+	$("div#${table.name}").jtable("load", {});
 #else
 //Javascript da tabela $table.name
 	//$table.tableType 	
@@ -608,7 +608,6 @@ $(document).ready(function(){
 #set ($roles = $_action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
-
 #if(!$_action.tableLink)
 #if($_action.formPost )
 #if($hints)
@@ -620,12 +619,20 @@ $(document).ready(function(){
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
+#if($_action.ajaxTable.equals(""))
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+#else
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() {
+#set($i=0)
+		$("div#${_action.ajaxTable}").jtable("load", { #foreach($param in $_action.getActionParameters()) $param.name : $("#${param.name}${jsp.useCase.name}").val() #set($i=$i+1)#if($i != $_action.getActionParameters().size()), #end#end});
+	});
+#end
 #else 
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
+###end
 #end  
 #end
 #if ($_action.resettable)
