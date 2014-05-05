@@ -108,11 +108,12 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #set($actionAjax = $actionAjax.concat("$aux"))
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
-	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws Exception {
+#set($actions = $page.getActions())
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.actionAjax && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
 		return null;
 	}
 	
-	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, ViewContainer container) throws Exception {
+	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.actionAjax && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
 		return null;
 	}
 #end

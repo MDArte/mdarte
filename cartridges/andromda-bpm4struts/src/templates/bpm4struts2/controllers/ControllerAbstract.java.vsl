@@ -263,6 +263,10 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return array;
 	}
 	
+	protected String extractParameterFromViewContainer(ViewContainer container, String parameter) {
+		return container.getParameter(parameter) == null ? "" : String.valueOf(container.getParameter(parameter));
+	}
+	
 	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {
 		return this.getModoOperacao(this.getNomeCasoUso(), container);
 	}
