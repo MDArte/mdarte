@@ -48,7 +48,7 @@
         <put name="style" type="string" value=""/>
         <put name="javascript" type="string" value=""/>
         <put name="body" type="string" value=""/>
-        <put name="messages" type="definition" value="messages.tile"/>
+        <put name="messages" type="definition" value="messages.login.tile"/>
     </definition>
     <definition name="simple.layout" page="/layout/simple-layout.jsp">
         <put name="head" type="string" value=""/>
@@ -59,6 +59,7 @@
         <put name="messages" type="definition" value="messages.tile"/>
     </definition>
     <definition name="messages.tile" page="/messages/messages.jsp"/>
+	<definition name="messages.login.tile" page="/messages/messages-login.jsp"/>
     <definition name="menu.tile" page="/menu/menu.jsp"/>
     <definition name="menu.open" page="/menu/menu-open.jsp"/>
     <definition name="help.layout" page="/layout/help-layout.jsp"/>
