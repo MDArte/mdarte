@@ -48,6 +48,12 @@ extends CoppetecStrutsParameterLogic
 
 		return Bpm4StrutsUtils.isTrue(String.valueOf(value));
 	}
+	
+	protected String handleGetFieldFormat() {
+    	Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_FORMAT);
+        final String format = value == null ? null : String.valueOf(value);
+        return (format == null) ? null : format.trim();
+    }
 
 	protected String handleGetOnlineHelpValue()
 	{
