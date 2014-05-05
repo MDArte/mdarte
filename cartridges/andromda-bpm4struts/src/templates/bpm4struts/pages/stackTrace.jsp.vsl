@@ -21,7 +21,7 @@
                 <div class="error">
                     <pre><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%></pre>
                 </div>
-            </div>            
+            </div>
         </div>
     </body>
-</html:html>    
+</html:html>

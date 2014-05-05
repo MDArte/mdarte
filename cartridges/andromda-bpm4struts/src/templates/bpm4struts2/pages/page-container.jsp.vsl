@@ -39,7 +39,6 @@
 	<div class="trigger">
 #if ($action.tableAction)## this means this action allows rows to be selected and sent
 		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
-			<s:actionerror />
 			<%@ include file="${jsp.fullPath}-actions.jsp" %>
 		</s:form>
 #elseif (($action.formPost || $action.hyperlink))

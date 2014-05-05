@@ -429,6 +429,13 @@ $('form').validate({
 	unhighlight: function(element) {
 		$(element).closest('.form-group').removeClass('has-error');
 	},
+	onkeyup: function (element, event) {
+	    if (event.which === 9 && this.elementValue(element) === "") {
+	        return;
+	    } else {
+	        this.element(element);
+	    }
+	},
 	errorElement: 'span',
 	errorClass: 'help-block',
 	errorPlacement: function(error, element) {
@@ -645,7 +652,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -654,7 +661,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -715,7 +722,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -724,7 +731,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -767,7 +774,7 @@ $(document).ready(function(){
 #end
 #else
 ##se não for nenhuma das opções seta a ação do struts2
-	$("#${_action.actionName}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired});});
+	$("#${_action.actionName}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
 #end
 #end
 #end
@@ -788,7 +795,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -797,7 +804,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
 #if ($_action.resettable)
