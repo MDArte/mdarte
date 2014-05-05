@@ -22,6 +22,7 @@
 ##  START TEMPLATE
 ##
 #if($gerar)
+#set($dollar = '$')
 #set ($generatedFile = "${action.fullActionPath}-validation.xml")
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE validators PUBLIC
@@ -38,18 +39,18 @@
 #if(${field.required})
 #if(${field.type.name}=="String")
 		<field-validator type="requiredstring">
-			<message>Required string validation wrong</message>
+			<message>${dollar}{getText("errors.requiredstring",{'${field.name}'})}</message>
 		</field-validator>
 		
 #end
 		<field-validator type="required">
-			<message>Required validation wrong</message>
+			<message>${dollar}{getText("errors.required",{'${field.name}'})}</message>
 		</field-validator>
 		
 #end
 #if(${field.type.name}=="Date")
 		<field-validator type="date">
-			<message>Date validation wrong</message>
+			<message>${dollar}{getText("errors.date",{'${field.name}'})}</message>
 #end
 #if(${field.type.name}=="int" || ${field.type.name}=="Integer")
 		<field-validator type="int">
@@ -64,14 +65,14 @@
 #if ($validatorVar.get(0)=="range" && (${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
 			<param name="min">$validatorVar.get(1)</param>
 			<param name="max">$validatorVar.get(2)</param>
-			<message>Range validation wrong</message>
+			<message>${dollar}{getText("errors.range",{'${field.name}','$validatorVar.get(1)','$validatorVar.get(2)'})}</message>
 
 #elseif ($validatorVar.get(0)=="range" && (${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
 			<param name="minInclusive">$validatorVar.get(1)</param>
 			<param name="maxInclusive">$validatorVar.get(2)</param>
-			<message>Range validation wrong</message>
-#end
+			<message>${dollar}{getText("errors.range",{'${field.name}','$validatorVar.get(1)','$validatorVar.get(2)'})}</message>
 
+#end
 #end
 #if(${field.type.name}=="Date" || 	${field.type.name}=="int" || ${field.type.name}=="Integer" || 	${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double" )
 		</field-validator>
@@ -81,33 +82,23 @@
 #if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
 		<field-validator type="regex">
 			<param name="expression">$validatorVar.get(1)</param>
-			<message>Regex validation wrong</message>
+			<message>${dollar}{getText("errors.pattern",{'${field.name}','$validatorVar.get(1)'})}</message>
 		</field-validator>
 #elseif ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
 		<field-validator type="email">
-			<message>Email validation wrong</message>
+			<message>${dollar}{getText("errors.email",{'${field.name}'})}</message>
 		</field-validator>
 #elseif ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
 		<field-validator type="stringlength">
 			<param name="minLength">$validatorVar.get(1)</param>
-			<message>minLength validation wrong</message>
+			<message>${dollar}{getText("errors.minlength",{'${field.name}','$validatorVar.get(1)'})}</message>
 		</field-validator>
 #elseif ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
 		<field-validator type="stringlength">
 			<param name="maxLength">$validatorVar.get(1)</param>
-			<message>maxLength validation wrong</message>
-		</field-validator>
-#elseif (${field.type.name}=="Date")
-		<field-validator type="regex">
-#if ($validatorVar.get(0)=="datePatternStrict") 
-			<param name="expression">$validatorVar.get(1)</param>
-#elseif ($validatorVar.get(0)=="datePattern") 
-			<param name="expression">$validatorVar.get(1)</param>
-#end
-			<message>Date pattern validation wrong</message>
+			<message>${dollar}{getText("errors.maxlength",{'${field.name}','$validatorVar.get(1)'})}</message>
 		</field-validator>
 #end
-
 #end
 	</field>
 #end
