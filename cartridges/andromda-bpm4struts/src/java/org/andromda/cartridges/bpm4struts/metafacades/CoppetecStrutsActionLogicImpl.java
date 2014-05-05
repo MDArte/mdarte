@@ -59,12 +59,14 @@ public class CoppetecStrutsActionLogicImpl
 	}
 	
 	protected boolean handleIsClientValidation() {
-		Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_CLIENT_VALIDATION);
-		// the default is false
-		if (value == null || "false".equalsIgnoreCase(value.toString()))
-			return false;
-		else
-			return true;
+		for (Iterator iterator = getActionParameters().iterator(); iterator.hasNext();) {
+			CoppetecStrutsParameter parameter = (CoppetecStrutsParameter) iterator.next();
+			if (parameter.isRequired() || (parameter.getFieldFormat() !=null  && !parameter.getFieldFormat().isEmpty()))
+				return true;
+		}
+		
+		return false;
+		
 	}
 
 
