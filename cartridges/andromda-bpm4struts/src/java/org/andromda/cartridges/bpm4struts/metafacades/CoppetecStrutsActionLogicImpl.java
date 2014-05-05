@@ -33,7 +33,7 @@ public class CoppetecStrutsActionLogicImpl
 	public String handleGetAjaxTable() 
 	{
 	    
-	    Object value =  this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_AJAX_TABLE);
+	    Object value =  this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_ASYNC_TABLE);
 	  
 	    return value == null ? "": value.toString();
 	  

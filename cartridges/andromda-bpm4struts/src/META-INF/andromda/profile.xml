@@ -112,11 +112,11 @@
                 <value>@andromda.presentation.web.action.tablelink</value>
                 <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
             </element>
-            <element name="AJAX_TABLE">
+            <element name="ASYNC_TABLE">
                 <documentation>
                     Denotes this transition represents an ajax action targeting the specified table.
                 </documentation>
-                <value>@andromda.presentation.web.action.ajax.table</value>
+                <value>@andromda.presentation.web.action.async.table</value>
                 <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
             </element>
             <element name="ACTION_COPY_PARAMETERS">
