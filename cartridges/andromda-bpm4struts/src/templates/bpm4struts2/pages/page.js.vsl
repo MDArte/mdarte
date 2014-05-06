@@ -624,7 +624,7 @@ $(document).ready(function(){
 #else
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function() {
 #set($i=0)
-		$("div#${_action.ajaxTable}").jtable("load", { #foreach($param in $_action.getActionParameters()) $param.name : $("#${param.name}${jsp.useCase.name}").val() #set($i=$i+1)#if($i != $_action.getActionParameters().size()), #end#end});
+		$("div#${_action.ajaxTable}").jtable("load", { #foreach($param in $_action.getActionParameters()) $param.name : #if($param.checkbox) document.getElementById("${param.name}${jsp.useCase.name}").checked #else$("#${param.name}${jsp.useCase.name}").val() #end#set($i=$i+1)#if($i != $_action.getActionParameters().size()), #end#end});
 	});
 #end
 #else 
