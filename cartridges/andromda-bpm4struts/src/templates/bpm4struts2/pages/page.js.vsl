@@ -290,14 +290,27 @@ $(document).ready(function(){
 #else
 #set($columnName=${column})
 #end
-#set($title = $columnName.subSequence(0,1).toUpperCase().concat($columnName.substring(1)))
-#if($i==$limit)
 			"$columnName": {
+#set($title = $columnName.subSequence(0,1).toUpperCase().concat($columnName.substring(1)))
+#foreach($tableAction in $table.getTableColumnActions($columnName))
+#if($tableAction.hyperlink)
+#set($uriQuery="")
+#set($delim='?')
+#set($prefixoLink = ${tableAction.useCase.package.contexto})
+				display: function(data) {
+#foreach ($parameter in $tableAction.actionParameters)
+##set($paramValue="${parameter.value}")#set($uriQuery="${uriQuery}${delim}${parameter.name}=")#set($delim='&')
+					var $parameter.name = data.record.${parameter.name};
+#end
+#set($first=true)
+					return "<a class='' href='"+ "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>"+data.record.${columnName}+"</a>";
+				},
+#end
+#end
 				title: "${title}"
+#if($i==$limist)
 			}
 #else
-			"$columnName": {
-				title: "${title}"
 			},
 #end
 #end    	            
