@@ -1533,7 +1533,6 @@ public class StrutsParameterLogicImpl
                 {
                     vars.put("min", Arrays.asList(new Object[]{"min", getRangeStart(format)}));
                     vars.put("max", Arrays.asList(new Object[]{"max", getRangeEnd(format)}));
-                    vars.put("range", Arrays.asList(new Object[]{"range", getRangeStart(format), getRangeEnd(format)}));
                 }
                 else
                 {
@@ -1817,6 +1816,14 @@ public class StrutsParameterLogicImpl
     {
         return UMLMetafacadeUtils.isType(this.getType(), Bpm4StrutsProfile.DOUBLE_TYPE_NAME);
     }
+    
+    /**
+     * @return <code>true</code> if the type of this field is a double precision floating point, <code>false</code> otherwise
+     */
+    protected boolean isValidatorNumeric()
+    {
+        return isValidatorDouble() || isValidatorFloat() || isValidatorShort() || isValidatorInteger() || isValidatorLong();
+    }
 
     /**
      * @return <code>true</code> if the type of this field is a date, <code>false</code> otherwise
@@ -1871,13 +1878,7 @@ public class StrutsParameterLogicImpl
      */
     protected boolean isRangeFormat(String format)
     {
-        return "range".equalsIgnoreCase(getToken(format, 0, 2)) &&
-            (isValidatorInteger() ||
-                isValidatorLong() ||
-                isValidatorShort() ||
-                isValidatorFloat() ||
-                isValidatorDouble());
-
+        return "range".equalsIgnoreCase(getToken(format, 0, 2)) && (isValidatorNumeric());
     }
 
     /**
@@ -1915,7 +1916,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the lower limit for this field's value's range
      */
-    private String getRangeStart(String format)
+    protected String getRangeStart(String format)
     {
         return getToken(format, 1, 3);
     }
@@ -1923,7 +1924,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the upper limit for this field's value's range
      */
-    private String getRangeEnd(String format)
+    protected String getRangeEnd(String format)
     {
         return getToken(format, 2, 3);
     }
@@ -1931,7 +1932,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return this field's date format
      */
-    private String getDateFormat(String format)
+    protected String getDateFormat(String format)
     {
         return (isStrictDateFormat(format)) ? getToken(format, 1, 2) : getToken(format, 0, 1);
     }
@@ -1939,7 +1940,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the minimum number of characters this field's value must consist of
      */
-    private String getMinLengthValue(String format)
+    protected String getMinLengthValue(String format)
     {
         return getToken(format, 1, 2);
     }
@@ -1947,7 +1948,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the maximum number of characters this field's value must consist of
      */
-    private String getMaxLengthValue(String format)
+    protected String getMaxLengthValue(String format)
     {
         return getToken(format, 1, 2);
     }
@@ -1955,7 +1956,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the pattern this field's value must respect
      */
-    private String getPatternValue(String format)
+    protected String getPatternValue(String format)
     {
         return '^' + getToken(format, 1, 2) + '$';
     }
@@ -1963,7 +1964,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the i-th space delimited token read from the argument String, where i does not exceed the specified limit
      */
-    private String getToken(String string,
+    protected String getToken(String string,
                             int index,
                             int limit)
     {
