@@ -48,6 +48,7 @@
 			'validate.email':'<formatting:escape language="javascript"><bean:message key="validate.email"/></formatting:escape>',
 			'validate.url':'<formatting:escape language="javascript"><bean:message key="validate.url"/></formatting:escape>',
 			'validate.pattern':'<formatting:escape language="javascript"><bean:message key="validate.pattern"/></formatting:escape>',
+			'validate.integer':'<formatting:escape language="javascript"><bean:message key="validate.integer"/></formatting:escape>'
 		}
     </script>
 #end
