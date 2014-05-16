@@ -432,7 +432,7 @@
                 </documentation>
             </property>
             <property name="disableValidationForHiddenFormFields">
-                <default>false</default>
+                <default>true</default>
                 <documentation>
                     This property only makes sense when using the
                     <a href="#clientValidation">clientValidation</a> and/or

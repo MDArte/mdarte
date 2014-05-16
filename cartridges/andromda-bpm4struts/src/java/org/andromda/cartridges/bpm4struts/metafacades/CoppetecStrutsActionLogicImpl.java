@@ -61,7 +61,7 @@ public class CoppetecStrutsActionLogicImpl
 	protected boolean handleIsClientValidation() {
 		for (Iterator iterator = getActionParameters().iterator(); iterator.hasNext();) {
 			CoppetecStrutsParameter parameter = (CoppetecStrutsParameter) iterator.next();
-			if (parameter.isRequired() || (parameter.getFieldFormat() !=null  && !parameter.getFieldFormat().isEmpty()))
+			if (parameter.isValidationRequired())
 				return true;
 		}
 		
