@@ -321,3 +321,21 @@ function limpaStringParaMoney(element, currency) {
 
 /*fim moeda*/
 
+/* Máscara para números decimais */
+
+function floatMask(event, name) {
+	var tecla = (window.event) ? window.event.keyCode : event.which;
+	var valor = String.fromCharCode(tecla);
+	var element = $(name);
+	if (element.length != 0) {
+		var newValor = element.val() + valor;
+		var regex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d*)?$/g
+		//var regex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\,\d*)?$/g --> regex para float que usam virgula como separador decimal
+		if (regex.test(newValor)) return true;
+		else {
+			if (tecla == 8 || tecla == 9 || tecla == 0 || tecla == 37 || tecla == 39 || tecla == 127) return true;
+			return false;
+		}
+	}
+}
+

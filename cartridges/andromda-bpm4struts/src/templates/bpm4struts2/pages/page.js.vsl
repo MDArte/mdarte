@@ -594,7 +594,7 @@ $(document).ready(function(){
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
-	//$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
+	$("input#${field.name}${jsp.useCase.name}").mouseup(function(event){keySubmit(event); });
 #if ($field.textField)
 ##
 #set($digits = false)
@@ -610,18 +610,7 @@ $(document).ready(function(){
 #if (!$digits && !$field.money && ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long")))
 	$("input#${field.name}${jsp.useCase.name}").mask('S0#', {maxlength: false, translation: {'S': {pattern: /[-]/, optional: true}}});
 #elseif (($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float")) && !$field.money)
-	$("input#${field.name}${jsp.useCase.name}").keypress(function(event) {
-		var tecla = (window.event) ? event.keyCode : event.which;
-		var valor = String.fromCharCode(tecla)
-		var newValor = $("input#${field.name}${jsp.useCase.name}").val() + valor;
-		var regex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d*)?$/g
-		//var regex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\,\d*)?$/g --> regex para float que usam virgula como separador decimal
-		if (regex.test(newValor)) return true;
-		else {
-			if (tecla != 8 && tecla != 0) return false;
-			return true;
-		}
-	});
+	$("input#${field.name}${jsp.useCase.name}").keypress(function(event) {return floatMask(event, "input#${field.name}${jsp.useCase.name}");});
 #elseif ($field.type.name.equalsIgnoreCase("date"))
 	$("input#${field.name}${jsp.useCase.name}").mask('00/00/0000');
 #end
