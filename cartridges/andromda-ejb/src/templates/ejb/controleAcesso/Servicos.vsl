@@ -22,7 +22,7 @@
 #else
 #set ($sequencia = "PERFIL_SEQ.NEXTVAL")
 #end
---INSERT INTO perfil(ID, HIBERNATE_VERSION, NOME, SUPERUSUARIO, SISTEMA_FK)
+--INSERT INTO perfil(ID, HIBERNATE_VERSION, NOME, SUPER_USUARIO, SISTEMA_FK)
 --VALUES ($sequencia, 0, 'su', true, (SELECT ID FROM SISTEMA WHERE NOME = '$projectId'));
 
 -- Adicionando usuario su ao sistema $projectId, a senha criptografada é su
