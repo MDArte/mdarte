@@ -308,10 +308,26 @@ $(document).ready(function(){
 #end
 #end
 				title: "${title}"
-#if($i==$limist)
-			}
-#else
+#if($i < $limit)
 			},
+#else
+			}
+#end
+#set($i=$i+1)
+#end
+#foreach($tableAction in $table.getTableFormActions())
+#if (!$tableAction.tableLinkColumnName)
+#set($first=true)
+#set($prefixoLink = ${tableAction.useCase.package.contexto})
+			, "${tableAction.name}" : {
+				display: function(data) {
+#foreach ($parameter in $tableAction.actionParameters)
+					var $parameter.name = data.record.${parameter.name};
+#end
+					return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='"+ "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>${tableAction.name}</a>";
+				},
+				title: "${tableAction.name}"
+			}
 #end
 #end    	            
     	}
