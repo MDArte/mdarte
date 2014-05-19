@@ -274,7 +274,7 @@ $('form').validate({
 			integer: true#if(${field.required}),#else${comma}#end
 
 #end
-#if ((${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+#if (!$field.money && (${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
 			number: true#if(${field.required}),#else${comma}#end
 
 #end
@@ -296,10 +296,10 @@ $('form').validate({
 #set($commaV = "")
 #end
 ##
-#if ($validatorVar.get(0)=="digits")
+#if ($validatorVar.get(0)=="digits" && !$field.money)
 			digits: true${commaV}
 #end
-#if ($validatorVar.get(0)=="range" && $numeric)
+#if ($validatorVar.get(0)=="range" && $numeric  && !$field.money)
 			range: [$validatorVar.get(1), $validatorVar.get(2)]${commaV}
 #end
 #if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
@@ -362,7 +362,7 @@ $('form').validate({
 			integer: VALID_KEYS['validate.integer']#if(${field.required}),#else${comma}#end
 
 #end
-#if ((${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+#if (!$field.money &&(${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
 			number: VALID_KEYS['validate.number']#if(${field.required}),#else${comma}#end
 
 #end
@@ -384,10 +384,10 @@ $('form').validate({
 #set($commaV = "")
 #end
 ##
-#if ($validatorVar.get(0)=="digits")
+#if ($validatorVar.get(0)=="digits"  && !$field.money)
 			digits: jQuery.validator.format(VALID_KEYS['validate.digits'])${commaV}
 #end
-#if ($validatorVar.get(0)=="range" && $numeric)
+#if ($validatorVar.get(0)=="range" && $numeric  && !$field.money)
 			range: jQuery.validator.format(VALID_KEYS['validate.range'])${commaV}
 #end
 #if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
@@ -607,9 +607,9 @@ $(document).ready(function(){
 #if ($digits && !$field.money && !$field.type.name.equalsIgnoreCase("date") && !$field.type.name.equalsIgnoreCase("double") && !$field.type.name.equalsIgnoreCase("float"))
 	$("input#${field.name}${jsp.useCase.name}").mask('0#', {maxlength: false});
 #end
-#if (!$digits && ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long")))
+#if (!$digits && !$field.money && ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long")))
 	$("input#${field.name}${jsp.useCase.name}").mask('S0#', {maxlength: false, translation: {'S': {pattern: /[-]/, optional: true}}});
-#elseif ($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float"))
+#elseif (($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float")) && !$field.money)
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event) {
 		var tecla = (window.event) ? event.keyCode : event.which;
 		var valor = String.fromCharCode(tecla)
@@ -631,7 +631,11 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keydown(function(event){backspace(this,event); });
+#if(!$field.moneyDolar)
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
+#else
+	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){dolar(this,event); });
+#end
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
 
 #elseif($field.editor)
