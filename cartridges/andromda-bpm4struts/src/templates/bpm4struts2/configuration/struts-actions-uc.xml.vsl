@@ -87,6 +87,7 @@
 #end
 #end
 #if (${action.input})
+			<result name="input">${action.input.fullPath}.jsp</result>
 			<result name="handleException">${action.input.fullPath}.jsp</result>
 #end
 ## using the interceptor
@@ -136,6 +137,7 @@
 #end
 #end
 #if (${action.input})
+			<result name="input">${action.input.fullPath}.jsp</result>
 			<result name="handleException">${action.input.fullPath}.jsp</result>
 #end
 ## using the interceptor

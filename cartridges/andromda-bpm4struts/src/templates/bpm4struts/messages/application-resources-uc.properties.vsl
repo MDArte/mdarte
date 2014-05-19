@@ -7,4 +7,13 @@ $message.key=$message.value
 $message.key=
 #end
 #end
+##
+##
+#foreach ($jsp in $useCase.pages)
+#foreach($field in $jsp.allUniqueActionParameters)
+invalid.fieldvalue.${field.name}=The value must be of type ${field.type.name}
+#end
+#end
+##
+##
 #end

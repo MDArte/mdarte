@@ -241,6 +241,215 @@ function selecionaDeseleciona${table.name}(){
 #end
 #end
 
+#foreach($_action in $jsp.actions)
+#if($_action.clientValidation)
+#set($jsValidation = true)
+#end 
+#end
+#if($jsValidation)
+//Javascript de validação
+
+$('form').validate({
+	rules: {
+##
+#set($fieldsSize = $jsp.allUniqueActionParameters.size())
+#set($count = 1)
+##
+#foreach($field in $jsp.allUniqueActionParameters)
+#if($field.validationRequired)
+##
+#set($validatorsSize = $field.validatorsStruts2.size())
+#set ($numeric = false)
+#if(${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer" || ${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double")
+#set ($numeric = true)
+#end
+#if($field.validatorsStruts2 && !$field.validatorsStruts2.isEmpty())
+#set($comma = ",")
+#else
+#set($comma = "")
+#end
+##
+		${field.name}: {
+#if ((${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
+			integer: true#if(${field.required}),#else${comma}#end
+
+#end
+#if (!$field.money && (${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+			number: true#if(${field.required}),#else${comma}#end
+
+#end
+#if(${field.type.name}=="Date")
+			date: true#if(${field.required}),#else${comma}#end
+
+#end
+##
+##
+#set($countV = 1)
+#foreach ($validatorVar in $field.validatorsStruts2)
+##
+#if($countV < $validatorsSize)
+#set($countV = $countV + 1)
+#set($commaV = ",")
+#elseif($field.required)
+#set($commaV = ",")
+#else
+#set($commaV = "")
+#end
+##
+#if ($validatorVar.get(0)=="digits" && !$field.money)
+			digits: true${commaV}
+#end
+#if ($validatorVar.get(0)=="range" && $numeric  && !$field.money)
+			range: [$validatorVar.get(1), $validatorVar.get(2)]${commaV}
+#end
+#if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
+			minlength: $validatorVar.get(1)${commaV}
+#end
+#if ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
+			maxlength: $validatorVar.get(1)${commaV}
+#end
+#if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
+			pattern: '^${validatorVar.get(1)}${dollar}'${commaV}
+#end
+#if ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
+			email: true${commaV}
+#end
+#if ($validatorVar.get(0)=="creditcard" && ${field.type.name}=="String")
+			creditcard: true${commaV}
+#end
+#if ($validatorVar.get(0)=="url" && ${field.type.name}=="String")
+			url: true${commaV}
+#end
+##
+#end
+#if(${field.required})
+			required: true
+#end
+#if($count < $fieldsSize)
+#set($count = $count + 1)
+		},
+#else
+		}
+#end
+##
+#end
+#end
+	},
+##
+##      Colocando mensagens de erro de validação
+##
+	messages: {
+##
+#set($fieldsSize = $jsp.allUniqueActionParameters.size())
+#set($count = 1)
+##
+#foreach($field in $jsp.allUniqueActionParameters)
+#if($field.validationRequired)
+##
+#set($validatorsSize = $field.validatorsStruts2.size())
+#set ($numeric = false)
+#if(${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer" || ${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double")
+#set ($numeric = true)
+#end
+#if($field.validatorsStruts2 && !$field.validatorsStruts2.isEmpty())
+#set($comma = ",")
+#else
+#set($comma = "")
+#end
+##
+		${field.name}: {
+#if ((${field.type.name}=="long" || ${field.type.name}=="Long" || ${field.type.name}=="int" || ${field.type.name}=="Integer"))
+			integer: VALID_KEYS['validate.integer']#if(${field.required}),#else${comma}#end
+
+#end
+#if (!$field.money &&(${field.type.name}=="float" || ${field.type.name}=="Float" ||	${field.type.name}=="double" || ${field.type.name}=="Double"))
+			number: VALID_KEYS['validate.number']#if(${field.required}),#else${comma}#end
+
+#end
+#if(${field.type.name}=="Date")
+			date: jQuery.validator.format(VALID_KEYS['validate.date'])#if(${field.required}),#else${comma}#end
+
+#end
+##
+##
+#set($countV = 1)
+#foreach ($validatorVar in $field.validatorsStruts2)
+##
+#if($countV < $validatorsSize)
+#set($countV = $countV + 1)
+#set($commaV = ",")
+#elseif($field.required)
+#set($commaV = ",")
+#else
+#set($commaV = "")
+#end
+##
+#if ($validatorVar.get(0)=="digits"  && !$field.money)
+			digits: jQuery.validator.format(VALID_KEYS['validate.digits'])${commaV}
+#end
+#if ($validatorVar.get(0)=="range" && $numeric  && !$field.money)
+			range: jQuery.validator.format(VALID_KEYS['validate.range'])${commaV}
+#end
+#if ($validatorVar.get(0)=="minlength" && ${field.type.name}=="String")
+			minlength: jQuery.validator.format(VALID_KEYS['validate.minlength'])${commaV}
+#end
+#if ($validatorVar.get(0)=="maxlength" && ${field.type.name}=="String")
+			maxlength: jQuery.validator.format(VALID_KEYS['validate.maxlength'])${commaV}
+#end
+#if ($validatorVar.get(0)=="mask" && ${field.type.name}=="String")
+			pattern: VALID_KEYS['validate.pattern']${commaV}
+#end
+#if ($validatorVar.get(0)=="email" && ${field.type.name}=="String")
+			email: VALID_KEYS['validate.email']${commaV}
+#end
+#if ($validatorVar.get(0)=="creditcard" && ${field.type.name}=="String")
+			creditcard: VALID_KEYS['validate.creditcard']${commaV}
+#end
+#if ($validatorVar.get(0)=="url" && ${field.type.name}=="String")
+			url: VALID_KEYS['validate.url']${commaV}
+#end
+##
+#end
+#if(${field.required})
+			required: VALID_KEYS['validate.required']
+#end
+#if($count < $fieldsSize)
+#set($count = $count + 1)
+		},
+#else
+		}
+#end
+##
+#end
+#end
+	},
+	highlight: function(element) {
+		$(element).closest('.form-group').addClass('has-error');
+	},
+	unhighlight: function(element) {
+		$(element).closest('.form-group').removeClass('has-error');
+	},
+	onkeyup: function (element, event) {
+	    if (event.which === 9 && this.elementValue(element) === "") {
+	        return;
+	    } else {
+	        this.element(element);
+	    }
+	},
+	errorElement: 'span',
+	errorClass: 'help-block',
+	errorPlacement: function(error, element) {
+		if(element.parent('.input-group').length) {
+			error.insertAfter(element.parent());
+		} else {
+			error.insertAfter(element.parent());
+		}
+	}
+});
+
+//Fim do Javascript de validação
+#end
+
 $(document).ready(function(){
 
 	atualizaElementos();
@@ -385,19 +594,23 @@ $(document).ready(function(){
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
-	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){keySubmit(event); });
+	$("input#${field.name}${jsp.useCase.name}").mouseup(function(event){keySubmit(event); });
 #if ($field.textField)
-#if ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long"))
+##
+#set($digits = false)
+#foreach ($validatorVar in $field.validatorsStruts2)
+#if ($validatorVar.get(0)=="digits")
+#set($digits = true)
+#end
+#end
+##
+#if ($digits && !$field.money && !$field.type.name.equalsIgnoreCase("date") && !$field.type.name.equalsIgnoreCase("double") && !$field.type.name.equalsIgnoreCase("float"))
 	$("input#${field.name}${jsp.useCase.name}").mask('0#', {maxlength: false});
-#elseif ($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float"))
-    $("input#${field.name}${jsp.useCase.name}").keypress(function(event) {
-        var tecla = (window.event) ? event.keyCode : event.which;
-        if ((tecla > 47 && tecla < 58) || (tecla == 46)) return true;
-        else {
-        	if (tecla != 8) return false;
-            return true;
-        }
-    });
+#end
+#if (!$digits && !$field.money && ($field.type.name.equals("Integer") || $field.type.name.equals("int") || $field.type.name.equalsIgnoreCase("short") || $field.type.name.equalsIgnoreCase("long")))
+	$("input#${field.name}${jsp.useCase.name}").mask('S0#', {maxlength: false, translation: {'S': {pattern: /[-]/, optional: true}}});
+#elseif (($field.type.name.equalsIgnoreCase("double") || $field.type.name.equalsIgnoreCase("float")) && !$field.money)
+	$("input#${field.name}${jsp.useCase.name}").keypress(function(event) {return floatMask(event, "input#${field.name}${jsp.useCase.name}");});
 #elseif ($field.type.name.equalsIgnoreCase("date"))
 	$("input#${field.name}${jsp.useCase.name}").mask('00/00/0000');
 #end
@@ -407,7 +620,11 @@ $(document).ready(function(){
 	$("input#${field.name}${jsp.useCase.name}").mouseup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica(); });
 	$("input#${field.name}${jsp.useCase.name}").keydown(function(event){backspace(this,event); });
+#if(!$field.moneyDolar)
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){reais(this,event); });
+#else
+	$("input#${field.name}${jsp.useCase.name}").keypress(function(event){dolar(this,event); });
+#end
 	$("input#${field.name}${jsp.useCase.name}").change(function(){limpaStringParaMoney(this); });
 
 #elseif($field.editor)
@@ -443,7 +660,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -452,7 +669,7 @@ $(document).ready(function(){
 	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#submit${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -513,7 +730,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -522,7 +739,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -550,7 +767,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.pupUp)
+#elseif($_action.popUp)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
@@ -565,7 +782,7 @@ $(document).ready(function(){
 #end
 #else
 ##se não for nenhuma das opções seta a ação do struts2
-	$("#${_action.actionName}").click(function(){ setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired});});
+	$("#${_action.actionName}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
 #end
 #end
 #end
@@ -586,7 +803,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").mouseout(function(){hints.hide(); });
 #end
 #if($valueConfirmMessage != "")
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ): false ;});
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){confirm ('$valueConfirmMessage')?setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}' ): false ;});
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
@@ -595,7 +812,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', '${_action.formValidationMethodName}', ${_action.validationRequired} ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
 #if ($_action.resettable)
@@ -623,7 +840,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.pupUp)
+#elseif($_action.popUp)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });

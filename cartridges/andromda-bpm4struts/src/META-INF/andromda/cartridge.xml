@@ -963,7 +963,7 @@
         outlet="shared-pages-impl"
         overwrite="false"
         outputToSingleFile="true"/>
-       
+
       <template
         path="templates/bpm4struts2/pages/messages.jsp.vsl"
         outputPattern="$generatedFile"
@@ -971,8 +971,16 @@
         overwrite="false"
         outputToSingleFile="true"
         />
-	
-	 <template
+
+      <template
+        path="templates/bpm4struts2/pages/messages-login.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages-impl"
+        overwrite="false"
+        outputToSingleFile="true"
+        />
+
+	<template
         path="templates/bpm4struts/server/users.properties.vsl"
         outputPattern="users.properties"
         outlet="server"
@@ -1656,6 +1664,19 @@
     
     <template
         path="templates/bpm4struts2/configuration/validation.xml.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts2/configuration/validators.xml.vsl"
         outputPattern="$generatedFile"
         outlet="shared-configuration-struts2"
         overwrite="true"

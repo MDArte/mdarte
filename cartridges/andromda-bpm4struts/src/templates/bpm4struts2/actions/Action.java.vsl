@@ -294,6 +294,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		//request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
 
 		//Validando campos
+#**
 #foreach ($field in $action.actionParameters)
 #if(${field.required})
 #if(${field.type.name}=="String")
@@ -311,6 +312,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end
 #end
+*#
 	}
 
 #if ($securityEnabled && !${action.useCase.openAccess})
@@ -352,6 +354,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		String forward = null;
 		String redirect = "";
+#if($action.enteringFinalState)
+		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+#end
 #if(!(${action.ajaxAction} &&  ${action.temParametroTabela}))
 #foreach ($actionForward in $actionForwards)
 		forward = "$actionForward.forwardName";
@@ -534,6 +539,9 @@ $actionState.getDocumentation("	 * ")
 	{
 		String forward = null;
 		String redirect ="";
+#if	(!$action.useCaseStart && $action.getSource().hasStereotype("FrontEndView"))
+		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+#end
 #set($parameterReport = "")
 #set ($reportName = "")
 #foreach ($parameter in $actionState.forward.trigger.parameters)

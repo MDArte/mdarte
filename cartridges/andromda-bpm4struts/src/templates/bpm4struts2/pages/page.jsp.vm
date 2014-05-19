@@ -423,7 +423,9 @@ ${indent}	</div>
 #elseif ($field.multibox)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="multibox row form-group">
 ${indent}		<label class="control-labe col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
-${indent}		<s:checkboxlist id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
+${indent}		<div>
+${indent}			<s:checkboxlist id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
+${indent}		</div>
 ${indent}	</div>
 #elseif($field.custom)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="custom field">
@@ -534,10 +536,12 @@ ${indent}		<label class="doubleSelectLabel"><bean:message key="$field.messageKey
 #end
 #set($multiple='')
 #set($selectProperty="$fieldName")
-${indent}		<s:doubleselect id="${field.name}${action.useCase.name}" $requiredStyle name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
-${indent}			listKey="value" listValue="label"
-${indent}			doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
-${indent}			doubleListKey="value" doubleListValue="label" />
+${indent}		<div class="col-xs-8">
+${indent}			<s:doubleselect id="${field.name}${action.useCase.name}" $requiredStyle name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
+${indent}				listKey="value" listValue="label"
+${indent}				doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
+${indent}				doubleListKey="value" doubleListValue="label" />
+${indent}		</div>
 ${indent}	</div>
 ##
 ##      L I N K

@@ -34,7 +34,8 @@
 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.custom.i18n.resources" value="application-resources" />
-	<constant name="struts.ui.theme" value="simple" /> 
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.locale" value="en" />
 ##	<!-- including default fowards properties -->
 ##    <include file="struts-default.xml" />	
 <!-- including actions from respective modules -->

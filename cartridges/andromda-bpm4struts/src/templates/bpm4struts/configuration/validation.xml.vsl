@@ -2,11 +2,15 @@
 ##  CONSTANTS
 ##
 #set($gerar = true)
+##if($struts2 == "false")
 #if($applicationUseCases)
 #if($modulo == 'true')
 #set($gerar = false)
 #end
 #end
+##else
+##set($gerar = false)
+##end
 #if ($pacote)#set($applicationUseCases = $pacote.useCases)#end
 #if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
 #set ($useCases = $applicationUseCase.allUseCases)
@@ -39,6 +43,7 @@
             </field>
         </form>
 #end
+#if($struts2 == "false")
 #foreach ($useCase in $useCases)
 #foreach ($action in $useCase.actions)
 #if ($action.validationRequired)
@@ -72,6 +77,7 @@
 #end
 #end
         </form>
+#end
 #end
 #end
 #end
