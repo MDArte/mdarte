@@ -1,4 +1,3 @@
-#if($struts2 == "false")
 #set ($validationDesired = ($clientValidation == 'true' || $serverValidation == 'true'))
 #if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
@@ -742,5 +741,4 @@
    </global>
 
 </form-validation>
-#end
 #end
