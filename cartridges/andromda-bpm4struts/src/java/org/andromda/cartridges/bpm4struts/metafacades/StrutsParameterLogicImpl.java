@@ -710,17 +710,17 @@ public class StrutsParameterLogicImpl
 
     protected List handleGetTableFormActions()
     {
-        return this.internalGetTableActions(false, true, false, false);
+        return this.internalGetTableActions(false, true, false, false, true);
     }
 
     protected List handleGetTableHyperlinkActions()
     {
-        return this.internalGetTableActions(true, false, false, false);
+        return this.internalGetTableActions(true, false, false, false,false);
     }
 
     protected Collection handleGetTableGlobalActions()
     {
-        return this.internalGetTableActions(false, false, true, false);
+        return this.internalGetTableActions(false, false, true, false,false);
     }
 
     protected Object handleGetTableGlobalActionParameter()
@@ -753,7 +753,8 @@ public class StrutsParameterLogicImpl
     private List internalGetTableActions(boolean hyperlink,
                                          boolean formPost,
                                          boolean tableAction,
-                                         boolean lookupGrid)
+                                         boolean lookupGrid,
+                                         boolean image)
     {
         final String name = StringUtils.trimToNull(getName());
         if (name == null || !isTable())
@@ -786,6 +787,7 @@ public class StrutsParameterLogicImpl
                                 if ((hyperlink && action.isHyperlink()) ||
                                     (formPost && action.isFormPost()) ||
                                     (tableAction && action.isTableAction())||
+                                    (image && action.isImageLink())||
                                     (lookupGrid && action.isLookupGrid()))
                                 {
                                     tableActions.add(action);
@@ -2062,6 +2064,6 @@ public class StrutsParameterLogicImpl
 
 	
 	protected Collection handleGetTableLookupGridActions() {
-		 return this.internalGetTableActions(false, false, false, true);
+		 return this.internalGetTableActions(false, false, false, true, false);
 	}
 }
