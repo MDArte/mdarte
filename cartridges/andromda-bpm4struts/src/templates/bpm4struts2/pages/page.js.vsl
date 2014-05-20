@@ -324,12 +324,12 @@ $(document).ready(function(){
 #foreach ($parameter in $tableAction.actionParameters)
 					var $parameter.name = data.record.${parameter.name};
 #end
-					return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='"+ "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>${tableAction.name}</a>";
+					return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='" + "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first) + "&" #end + "$param.name="+ $param.name  + #set($first=false)#end"'>" + #if(!$tableAction.imageLink)HINTS_ITEMS["${tableAction.name}"] #else #set($link = "")#foreach($palavra in $tableAction.imagePath.split('/') )#set($link=$palavra)#end"<img id='imgHyperlink${tableAction.name.replace(' ','')}' src='${link.toString().toLowerCase().replace(' ', '-')}' />"#end + "</a>";
 				},
-				title: "${tableAction.name}"
+				title: HINTS_ITEMS["${tableAction.name}_column_action_name"]
 			}
 #end
-#end    	            
+#end   	            
     	}
 	});
 	
