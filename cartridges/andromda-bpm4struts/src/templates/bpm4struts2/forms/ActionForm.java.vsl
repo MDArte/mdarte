@@ -63,10 +63,10 @@ public class ${formBeanClassName}
     private java.lang.String $field.name;
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
-#if ($enumeration.literalType.primitive)
-    private ${enumeration.literalType.wrapperName} $field.name#if($enumeration.defaultEmptyValue) = ${enumeration.packageName}.${enumeration.name}.VAZIO.getValue()#end;
+#if (${field.widgetType}=="multibox")
+	private ${enumeration.packageName}.${enumeration.name}[] $field.name = new ${enumeration.packageName}.${enumeration.name}[]{};
 #else
-    private ${enumeration.literalType.fullyQualifiedName} $field.name#if($enumeration.defaultEmptyValue) = ${enumeration.packageName}.${enumeration.name}.VAZIO.getValue()#end;
+	private ${enumeration.packageName}.${enumeration.name} $field.name#if($enumeration.defaultEmptyValue) = ${enumeration.packageName}.${enumeration.name}.VAZIO#end;
 #end
 #else
     private $field.type.fullyQualifiedName $field.name;
@@ -105,16 +105,16 @@ public class ${formBeanClassName}
 #if (${field.widgetType}=="multibox")
 #if (!$field.type.enumeration)
 
-	public java.util.List ${field.name}List;
+	public java.util.Map ${field.name}List;
 	
-	public java.util.List ${field.getterName}List()
+	public java.util.Map ${field.getterName}List()
     {
-		if(${field.name}List==null)${field.name}List=new java.util.ArrayList();
+		if(${field.name}List==null)${field.name}List=new java.util.HashMap();
 		
 		return ${field.name}List;
     }
 
-	public void ${field.setterName}List(java.util.List ${field.name}List)
+	public void ${field.setterName}List(java.util.Map ${field.name}List)
     {
 		this.${field.name}List = ${field.name}List;
     }
@@ -127,31 +127,41 @@ public class ${formBeanClassName}
     }
 
 #end
-#if (!$field.type.enumeration)
 	public ${field.type.fullyQualifiedName}[] ${field.name}DefaultValue;
-	
+
+#if (!$field.type.enumeration)
 	public ${field.type.fullyQualifiedName}[] ${field.getterName}DefaultValue()
     {
 		return ${field.name}DefaultValue;
     }
 
+#else
+	public ${field.type.literalType.fullyQualifiedName}[] ${field.getterName}DefaultValue()
+    {
+		${field.type.literalType.fullyQualifiedName}[] result = new ${field.type.literalType.fullyQualifiedName}[${field.name}DefaultValue.length];
+	
+		for (int i = 0; i < this.${field.name}DefaultValue.length; i++) {
+    			result[i] = this.${field.name}DefaultValue[i].getValue();
+    	}
+		
+		return result;
+    }
+	
+	public void ${field.setterName}DefaultValue(${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue)
+    {
+		this.${field.name}DefaultValue = new ${field.type.fullyQualifiedName}[${field.name}DefaultValue.length];
+		
+		for (int i = 0; i < ${field.name}DefaultValue.length; i++) {
+    			this.${field.name}DefaultValue[i] = ${field.type.fullyQualifiedName}.${field.type.fromOperationName}(${field.name}DefaultValue[i]);
+    	}
+    }
+
+#end
 	public void ${field.setterName}DefaultValue(${field.type.fullyQualifiedName}[] ${field.name}DefaultValue)
     {
 		this.${field.name}DefaultValue = ${field.name}DefaultValue;
     }
-#else
-	public ${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue;
-	
-	public ${field.type.literalType.fullyQualifiedName}[] ${field.getterName}DefaultValue()
-    {
-		return ${field.name}DefaultValue;
-    }
 
-	public void ${field.setterName}DefaultValue(${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue)
-    {
-		this.${field.name}DefaultValue = ${field.name}DefaultValue;
-    }
-#end
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
 #if($field.type.enumeration)
@@ -491,27 +501,55 @@ $field.getDocumentation("     * ")
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #set($type = ${enumeration.fullyQualifiedName})
-
 #if ($enumeration.literalType.primitive)
 #set($literalType = ${enumeration.literalType.wrapperName})
 #else
 #set($literalType = ${enumeration.literalType.fullyQualifiedName})
 #end
 
-    public $literalType ${field.getterName}()
+    public $literalType#if($field.widgetType == "multibox")[]#end ${field.getterName}()
+    {
+#if($field.widgetType == "plaintext")
+    	return this.${fieldName}.getInternationalizationKey();
+#elseif($field.widgetType == "multibox")
+		${literalType}[] result = new ${literalType}[this.${fieldName}.length];
+	
+		for (int i = 0; i < this.${fieldName}.length; i++) {
+			result[i] = this.${fieldName}[i].getValue();
+		}
+		
+		return result;
+#else
+		return this.${fieldName}.getValue();
+#end
+    }
+    
+    public $type#if($field.widgetType == "multibox")[]#end ${field.getterName}AsEnumeration()
     {
     	return this.${fieldName};
     }
     
-    public $type ${field.getterName}AsEnumeration()
+    public void ${field.setterName}($literalType#if($field.widgetType == "multibox")[]#end value)
     {
-    	return ${type}.${enumeration.fromOperationName}(this.${fieldName});
-    }
-    
-    public void ${field.setterName}($literalType value)
-    {
+#if($field.widgetType == "multibox")
+		if (value != null) {
+			this.${fieldName} = new ${type}[value.length];
+	
+    		for (int i = 0; i < value.length; i++) {
+    			this.${fieldName}[i] =  ${type}.${enumeration.fromOperationName}(value[i]);
+    		}
+		}
+#else
 		if (value != null)
-			this.${fieldName} = new ${literalType}(value);
+			this.${fieldName} =  ${type}.${enumeration.fromOperationName}(value);
+#end
+    }
+	
+	public void ${field.setterName}($type#if($field.widgetType == "multibox")[]#end value)
+    {
+		if (value != null) {
+			this.${fieldName} = value;
+		}
     }
 
 #else

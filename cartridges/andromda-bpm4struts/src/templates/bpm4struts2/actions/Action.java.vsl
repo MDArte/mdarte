@@ -99,6 +99,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 ##
 #foreach ($field in $action.actionFormFields)
+
 #set ($fieldName = $field.name)
 #set ($fieldType = $field.type.fullyQualifiedName)
 #if ($field.file)
@@ -113,8 +114,8 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	private java.util.Map $field.name = new java.util.HashMap();
 #elseif($field.widgetType=="money")
 	private java.lang.String $field.name;
-#elseif($field.widgetType=="multibox" && !$field.type.enumeration)
-	private ${field.type.fullyQualifiedName} $field.name;
+#elseif($field.widgetType=="multibox")
+	private ${field.type.fullyQualifiedName}#if($field.type.enumeration)[]#end $field.name;
 #elseif ($field.doubleSelect)
 	private $field.type.fullyQualifiedName $field.name;
 	private $field.type.fullyQualifiedName ${field.name}__Double;
@@ -129,13 +130,6 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		this.${fieldName}__Double = ${fieldName}__Double;
 	}
 
-#elseif($field.type.enumeration)
-#set($enumeration = $field.type)
-#if ($enumeration.literalType.primitive)
-	private ${enumeration.literalType.wrapperName} $field.name;
-#else
-	private ${enumeration.literalType.fullyQualifiedName} $field.name;
-#end
 #else
 	private $field.type.fullyQualifiedName $field.name;
 #end
@@ -153,16 +147,29 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if ($enumeration.literalType.primitive)
-	public ${enumeration.literalType.wrapperName} ${field.getterName}() 
+#set($literalType = $enumeration.literalType.wrapperName)
 #else
-	public ${enumeration.literalType.fullyQualifiedName} ${field.getterName}() 
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
 #end
+	public ${literalType}#if($field.widgetType == "multibox")[]#end ${field.getterName}() 
 #else 
 	public ${field.type.fullyQualifiedName} ${field.getterName}() 
 #end
 	{
 #if($field.strutsAction.tableAction)
 		return ${fieldName}RowSelection;
+#elseif($field.type.enumeration)
+#if($field.widgetType == "multibox")
+		${literalType}[] result = new ${literalType}[${fieldName}.length];
+	
+		for (int i = 0; i < this.${fieldName}.length; i++) {
+			result[i] = ${fieldName}[i].getValue();
+		}
+		
+		return result;
+#else
+		return ${fieldName}.getValue();
+#end
 #else
 		return ${fieldName};
 #end
@@ -195,17 +202,33 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	}
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
+#set($type = $enumeration.fullyQualifiedName)
 #if ($enumeration.literalType.primitive)
-	public void ${field.setterName}(${enumeration.literalType.wrapperName} $fieldName)
-	{
-		this.$fieldName = $fieldName;
-	}
+#set($literalType = $enumeration.literalType.wrapperName)
 #else
-	public void ${field.setterName}(${enumeration.literalType.fullyQualifiedName} $fieldName)
-	{
-		this.$fieldName = $fieldName;
-	}
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
 #end
+	public void ${field.setterName}($literalType#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+#if($field.widgetType == "multibox")
+		if ($fieldName != null) {
+			this.${fieldName} = new ${type}[${fieldName}.length];
+	
+    		for (int i = 0; i < ${fieldName}.length; i++) {
+    			this.${fieldName}[i] =  ${type}.${enumeration.fromOperationName}(${fieldName}[i]);
+    		}
+		}
+#else
+		if ($fieldName != null)
+			this.${fieldName} = ${type}.${enumeration.fromOperationName}($fieldName);
+#end
+    }
+	
+	public void ${field.setterName}($type#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+		if ($fieldName != null)
+			this.${fieldName} = $fieldName;
+    }
 #else
 #if(!$field.hiddenField)
 	public void ${field.setterName}($fieldType $fieldName)

@@ -82,6 +82,9 @@ ${indent}Object[] objetos = null;
 #else
 #set($type = $literalType.concat(${enumeration.literalType.fullyQualifiedName}))
 #end
+#if($parameter.multibox)
+#set($type = $type.concat("[]"))
+#end
 #else
 #set($type = ${parameter.type.fullyQualifiedName})
 #end

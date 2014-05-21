@@ -22,28 +22,26 @@ public interface $operation.interfaceName
 {
 ###foreach ($field in $operation.formFields)
 #foreach ($field in $operation.interfaceFormFields)
-#if(${field.widgetType}=="multibox")	
-#if($field.type.enumeration)
+#if(${field.widgetType}=="multibox")
+#set($type = ${field.type.literalType.fullyQualifiedName})
 	
 	public java.util.Map ${field.getterName}List();
-	
-	public ${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue = new ${field.type.literalType.fullyQualifiedName}[] {};
-	
-	public ${field.type.literalType.fullyQualifiedName}[] ${field.getterName}DefaultValue();
-	
-	public void ${field.setterName}DefaultValue(${field.type.literalType.fullyQualifiedName}[] ${field.name}DefaultValue);
-#else
-	
-	public java.util.List ${field.getterName}List();
 
-	public void ${field.setterName}List(java.util.List ${field.name}ComboList);
+#if(!$field.type.enumeration)
+#set($type = ${field.type.fullyQualifiedName})
+	public void ${field.setterName}List(java.util.Map ${field.name}ComboList);
 	
-	public ${field.type.fullyQualifiedName}[] ${field.name}DefaultValue = new  ${field.type.fullyQualifiedName}[] {};
+#end
+	public ${field.type.fullyQualifiedName}[] ${field.name}DefaultValue = new ${field.type.fullyQualifiedName}[] {};
 	
-	public ${field.type.fullyQualifiedName}[] ${field.getterName}DefaultValue();
+	public ${type}[] ${field.getterName}DefaultValue();
 	
 	public void ${field.setterName}DefaultValue(${field.type.fullyQualifiedName}[] ${field.name}DefaultValue);
+
+#if($field.type.enumeration)
+	public void ${field.setterName}DefaultValue(${type}[] ${field.name}DefaultValue);
 #end
+
 #end
 
 #if(${field.widgetType}=="select" || ${field.radioButton})
@@ -224,20 +222,17 @@ $field.getDocumentation("     * ")
 #end
 
     /**
-     * Sets the <code>$field.name</code> field.
-     *
-$field.getDocumentation("     * ")
-     */
-    public void ${field.setterName}($type $fieldName);
-
-    /**
      * Gets the <code>$field.name</code> field.
      *
 $field.getDocumentation("     * ")
      */
-    public ${enumeration.fullyQualifiedName} ${field.getterName}AsEnumeration();
+    public ${enumeration.fullyQualifiedName}#if($field.widgetType == "multibox")[]#end ${field.getterName}AsEnumeration();
     
-    public $type ${field.getterName}();
+    public $type#if($field.widgetType == "multibox")[]#end ${field.getterName}();
+	
+	public void ${field.setterName}($type#if($field.widgetType == "multibox")[]#end value);
+	
+	public void ${field.setterName}(${enumeration.fullyQualifiedName}#if($field.widgetType == "multibox")[]#end value);
 
 #elseif ($field.file)
     /**
