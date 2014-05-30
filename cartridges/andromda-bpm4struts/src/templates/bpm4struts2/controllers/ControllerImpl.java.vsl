@@ -90,7 +90,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 
 #end
 #foreach($page in $controller.useCase.getPages())
-#foreach($parameter in $page.getPageVariables())
+#foreach($parameter in $page.allUniqueActionParameters)
 #if($parameter.autocomplete)
 #set($pageName="")
 #foreach($palavra in $page.name.split(" "))
@@ -99,7 +99,10 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container) throws Exception {
 		return null;
 	}
-#elseif($parameter.tableType.equals("jtable"))
+#end
+#end
+#foreach($parameter in $page.getPageVariables())
+#if($parameter.tableType.equals("jtable"))
 #set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)))
 #set($actionAjax = "")
 #set($palavras = ${parameter.getJsp().getName().split(" ")} )
