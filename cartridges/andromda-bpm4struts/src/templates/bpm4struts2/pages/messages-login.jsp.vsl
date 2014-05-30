@@ -1,4 +1,3 @@
-#if($struts2 == "true")
 #set ($generatedFile = "messages/messages-login.jsp")
 
 <%@ include file="/taglib-imports.jspf" %>
@@ -63,5 +62,3 @@
 		</logic:messagesPresent>
 	</div>
 </logic:messagesPresent>
-
-#end
