@@ -3,7 +3,6 @@
 <%@ page session="true" isErrorPage="true" %>
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
-
 #if ($xhtml == "true")
 #*
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -19,7 +18,6 @@
 
 #end
 <html:html lang="true">
-
     <head>
         <title><bean:message key="error.${param.code}.title"/></title>
         <html:base/>
@@ -40,49 +38,61 @@
         <div id="wrap">
             <!-- Begin page content -->
             <div class="container">
+				<% 
+					java.util.HashMap paramsPrincipal = new java.util.HashMap();
+					paramsPrincipal.put("modulo", "");
+					paramsPrincipal.put("path","");
+					pageContext.setAttribute("paramsPrincipal", paramsPrincipal);
+				%>
+				
+				<html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title">
+					<bean:message key="error.link.text"/>
+				</html:link>
+				
                 <div class="page-header">
                     <div id="title"><h1><bean:message key="error.${param.code}.title"/></h1></div>
-                    
                 </div>
-        
+				
+				<%  Exception e = (Exception)request.getSession().getAttribute(org.apache.struts.Globals.EXCEPTION_KEY); 
+					request.getSession().removeAttribute(org.apache.struts.Globals.EXCEPTION_KEY);
+					if(e != null) {
+						java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+						java.io.PrintStream ps = new java.io.PrintStream(baos);
+						e.printStackTrace(ps);
+						String stackTrace = baos.toString();
+						request.getSession().getServletContext().getContext("/$projectId").setAttribute("stackTrace", stackTrace);
+					}
+				%>
+				
                 <div id="message">
+					<logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
+						<div class="errors">
+							<html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
+								<div class="error"><p class="lead">${error}</p></div>
+							</html:messages>
+						</div>
+					</logic:messagesPresent>
+					<logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
+						<div class="warnings">
+							<html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
+								<div class="warning"><p class="lead">${warning}</p></div>
+							</html:messages>
+						</div>
+					</logic:messagesPresent>
+					
+					<% if(e != null) { %>
                     <p class="lead">
-                        <bean:message key="error.${param.code}.message"/>
+                        Error : <%=e.toString()%>
                     </p>
-                    <!--<p class="lead">
-                        <logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
-                            <div class="errors">
-                                <html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
-                                    <div class="error">${error}</div>
-                                </html:messages>
-                            </div>
-                        </logic:messagesPresent>
-                        <logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
-                            <div class="warnings">
-                                <html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
-                                    <div class="warning">${warning}</div>
-                                </html:messages>
-                            </div>
-                        </logic:messagesPresent>
-                    </p>-->
                 </div>
-                <p>
-#set ($quote = '"')
-#set ($requestScopePrefix = "requestScope[${quote}")
-#set ($requestScopeSuffix = "${quote}]")
-#set ($requestUri = "${requestScopePrefix}javax.servlet.error.request_uri${requestScopeSuffix}")
-#set ($exception = "${requestScopePrefix}javax.servlet.error.exception${requestScopeSuffix}")
-                    <c:if test="${param.exception}">
-                        <div class="details">
-                            <pre>${${exception}}</pre>
-                        </div>
-                    </c:if>
-                    <c:if test="${param.resource}">
-                        <div class="details">
-                            <pre>${${requestUri}}</pre>
-                        </div>
-                    </c:if>
+
+				<p class="lead">
+					Stacktrace:
+					<div class="error">
+						<pre><%=(String)request.getSession().getServletContext().getContext("/$projectId").getAttribute("stackTrace")%></pre>
+					</div>
                 </p>
+				<% } %>
             </div>
 
             <div id="push"></div>
@@ -90,7 +100,7 @@
 
         <div id="footer">
             <div class="container">
-                <div id="link"><html:link page="/$welcomeFileName" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
+                <div id="link"><html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
                 <p class="muted credit">&copy; MDArte</a>.</p>
             </div>
         </div>
