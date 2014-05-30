@@ -82,13 +82,13 @@
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end
 #if (!${action.input})
-			<result name="handleException">${actionForward.forwardPath}</result>
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
 #end
 #end
 #end
 #if (${action.input})
 			<result name="input">${action.input.fullPath}.jsp</result>
-			<result name="handleException">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
@@ -133,12 +133,12 @@
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end
 #if (!${action.input})
-			<result name="handleException">${actionForward.forwardPath}</result>
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
 #end
 #end
 #if (${action.input})
 			<result name="input">${action.input.fullPath}.jsp</result>
-			<result name="handleException">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>

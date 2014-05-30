@@ -83,6 +83,8 @@
                 key="error.exception.message"
 #if ($action.useCaseStart == false)
                 path="${action.input.fullPath}.jsp"
+#else
+                path="/error-page.jsp?code=exception"
 #end
                 scope="request" />
 		
