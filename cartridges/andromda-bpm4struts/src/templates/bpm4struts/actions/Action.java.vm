@@ -125,6 +125,21 @@ ${indent}}
 #if(!$transition.lookupGrid)
 #processInvalidatePageControlCounter($transition ${indent})
 #end
+#set($Q = '"')
+#if(!$transition.actionParameters.isEmpty())
+#set($parameters="${Q}?")
+#set($count=0)
+#set($size=$transition.actionParameters.size())
+#foreach($param in $transition.actionParameters)
+#set($count=$count+1)
+#set($parameters="${parameters}${param.name}=${Q} + specificForm.${param.getterName}()")
+#if($count!=$size)
+#set($parameters="${parameters} + ${Q}&")
+#end
+#end
+#else
+#set($parameters="")
+#end
 ${indent}if (request.getAttribute("$forwardKey") != null) {
 ${indent}	forward = new org.apache.struts.action.ActionForward((String)request.getAttribute("$forwardKey"), true);
 ${indent}} else {
@@ -139,7 +154,7 @@ ${indent}	}
 ${indent}	org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, mapAtributos, this.getServlet().getServletContext().getContext("$servletContext"));
 
 ${indent}	String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
-${indent}	forward = new org.apache.struts.action.ActionForward(uriForward + "$transition.forwardPath", true);
+${indent}	forward = new org.apache.struts.action.ActionForward(uriForward + "$transition.forwardPath" + ${parameters}, true);
 ${indent}}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
@@ -176,6 +191,7 @@ ${indent}if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null)
 ${indent}	map = (java.util.HashMap)request.getSession().getAttribute(Constantes.MODO_OPERACAO);		
 ${indent}map.put("${finalUseCaseName}", "$valueInputOperationMode");	
 ${indent}request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
+
 ##request.getSession().setAttribute(${utilDir}.Constantes.MODO_OPERACAO, "$valueInputOperationMode");
 #else
 #if(!$keepOperationMode.equals("true"))
@@ -198,6 +214,7 @@ ${indent}	String modoOperacao = (String)map.get("${useCaseName}");
 ${indent}	map.put("${finalUseCaseName}", modoOperacao);	
 ${indent}	request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 ${indent}}
+
 #end
 #end
 #end
@@ -216,6 +233,7 @@ ${indent}	}
 
 ${indent}	request.getSession().removeAttribute("tableNameList");
 ${indent}}
+
 #end
 #end
 #end
@@ -405,6 +423,7 @@ ${indent}}
 #elseif ($transition.moduloRedirect) ## ( TROCA DE MODULO )
 #if(!$transition.lookupGrid)
 #processInvalidatePageControlCounter($transition $indent)
+
 #end
 ${indent}if (request.getAttribute("$forwardKey") != null) {
 ${indent}	forward = (String)request.getAttribute("$forwardKey");
@@ -441,13 +460,16 @@ ${indent}}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
 #processInvalidatePageControlCounter($transition $indent)
+
 #end
 #processPageSO($transition $indent)
+
 ${indent}if (request.getAttribute("$forwardKey") != null) {
 ${indent}	forward = (String)request.getAttribute("$forwardKey"); 
 ${indent}} else {
 ${indent}	forward ="$transition.forwardName"; 
 ${indent}}
+
 #elseif ($transition.enteringDecisionPoint)
 ${indent}forward = __${transition.operationCall.name}(form);
 
