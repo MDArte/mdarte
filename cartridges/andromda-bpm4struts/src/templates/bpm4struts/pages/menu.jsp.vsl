@@ -4,13 +4,13 @@
 <%@page import="java.util.Iterator"%>
 <%@ include file="/taglib-imports.jspf" %>
 
-
 <% String url = request.getScheme( ) + "://" + request.getServerName( ) + 
-		                   (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "" );   
-		                   url += "${contextoPrincipal}"; %>
+	(request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "" );   
+	url += "${contextoPrincipal}"; 
+%>
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#if ($securityEnabled) 
+#if ($securityEnabled)
 <SCRIPT LANGUAGE="Javascript"> 	 
 function sair( )
 {
@@ -34,12 +34,13 @@ window.close();
 <a href="<%=url%>/${secureDir}/TrocaDeSenhaObrigatoriaProcessar.do?menu=true"><bean:message key="login.troca.de.senha.title"/></a>
 #end
 <% 
-       		java.util.HashMap paramsPrincipal = new java.util.HashMap();
+		java.util.HashMap paramsPrincipal = new java.util.HashMap();
 		paramsPrincipal.put("modulo", "");
 		paramsPrincipal.put("path","");
 		pageContext.setAttribute("paramsPrincipal", paramsPrincipal);
         %>
-		       <html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page">
+
+	<html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page">
        <span class='menuHome'/>
 	</html:link>
 
@@ -48,18 +49,18 @@ window.close();
 				<%-- <span class='menuFechar'/> --%>
     </a>
        
-</div>  
+</div>
 <div id="barraNav1">
 	<div id="breadCrumb">
 		<%
 			Iterator breadCrumbIt = null;
-			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb"); 
+			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb");
 			
 			if (breadCrumbCollection != null){
 				
 				breadCrumbIt = breadCrumbCollection.iterator();
 				 
-				while (breadCrumbIt.hasNext()) {	   
+				while (breadCrumbIt.hasNext()) {
 				
 	
 					out.print(breadCrumbIt.next().toString());
@@ -82,5 +83,5 @@ window.close();
 	%>
 
   </h2>
- </div>          
+ </div>
 #end

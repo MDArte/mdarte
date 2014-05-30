@@ -10,8 +10,8 @@
 %>
 
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#if ($securityEnabled) 
-<SCRIPT LANGUAGE="Javascript"> 	 
+#if ($securityEnabled)
+<SCRIPT LANGUAGE="Javascript">
 function sair( )
 {
 	var msg = <%out.print("\"");%><bean:message key="saida.sistema.confirma.saida"/><%out.print("\"");%>;
@@ -21,7 +21,7 @@ function sair( )
 </script> 
 
 #else
-<SCRIPT LANGUAGE="Javascript"> 	 
+<SCRIPT LANGUAGE="Javascript">
 function closeWindow() {
 	window.open('','_parent','');
 	window.close();

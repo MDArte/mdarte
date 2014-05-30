@@ -134,8 +134,6 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 
 #if ($action.useCaseStart)
 
-
-
 ## for each final state targetting this use-case we check the incoming variables that ought to
 ## survive the trip to this use-case, those parameters will have been put into session scope
 ## and here we move them into the new form
@@ -160,7 +158,6 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 		if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
 		getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", ((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).intValue() + 1);
 #end
-
 #end
 
 #if ($action.formScopeRequest)
@@ -171,14 +168,12 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 
 		try
 		{
-		
 ## [MOISES-COPPETEC]
 ## Codigo responsável por pegar o parâmetro da DispayTag e colocar o nome da ação na sessão, caso esta ação 
 ## carregue dados para uma tabela e assim possibilitar a paginação.
 ## #if(!$action.actionFormFields.empty)
-##	request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.do");	
-## #end		
-
+##	request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.do");
+## #end	
 #set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
 #if($field.table && !$possuiTable)
@@ -202,9 +197,8 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 ##else
 				request.setAttribute(Constantes.PARAMETRO_PAGINA, Integer.valueOf(request.getParameter(Constantes.PARAMETRO_PAGINA)));
 ##end
-				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameterConstantes.PARAMETRO_TABLE));
+				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameter(Constantes.PARAMETRO_TABLE));
 			}
-
 #end
 #end
 
