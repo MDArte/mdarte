@@ -786,7 +786,7 @@ public class StrutsParameterLogicImpl
                                 if ((hyperlink && action.isHyperlink()) ||
                                     (formPost && action.isFormPost()) ||
                                     (tableAction && action.isTableAction())||
-                                    (lookupGrid && action.isLookupGrid()))
+                                    (lookupGrid && (action.isLookupGrid() || action.isPopup())))
                                 {
                                     tableActions.add(action);
                                 }
