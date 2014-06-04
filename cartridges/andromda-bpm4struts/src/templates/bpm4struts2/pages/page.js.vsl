@@ -35,12 +35,14 @@ function getPath() {
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set ($hints = $hints.equalsIgnoreCase("true"))
 #set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page	
-function setaLocation(nomeAcao){
+function setaLocation(nomeAcao, parameters){
 	var action;
+	parameters = typeof parameters !== 'undefined' ? parameters : '';
+	
 	if (nomeAcao.indexOf("/") == 0) {
-		action=getPath() + nomeAcao + '.action';
+		action=getPath() + nomeAcao + '.action' + parameters;
 	}else{
-		action=getPath() + '/' + nomeAcao + '.action';
+		action=getPath() + '/' + nomeAcao + '.action' + parameters;
 	}
 #set($temLookupGrid="false")
 #foreach ($_action in $jsp.actions)
@@ -51,7 +53,7 @@ function setaLocation(nomeAcao){
 #if($temLookupGrid=="true")
 		window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
 #else
-		window.open(action, '', 'width=700,height=500,top=50,left=100');
+		window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
 #end
 }
 
@@ -697,7 +699,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.pupUp)
+#elseif($_action.popup)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
@@ -714,7 +716,7 @@ $(document).ready(function(){
 
 #end
 #end
-#elseif (($action.formPost || $action.hyperlink))
+#elseif ($action.formPost || $action.hyperlink || $action.popup)
 #if ($action.actionParameters.empty)
 #foreach($_action in $jsp.actions)
 #set ($messageKey = $_action.messageKey)
@@ -767,7 +769,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.popUp)
+#elseif($_action.popup)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
@@ -840,7 +842,7 @@ $(document).ready(function(){
 #if ($_action.resettable)
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
-#elseif($_action.popUp)
+#elseif($_action.popup)
 	#if($hints)
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseover(function(){hints.show('${trigger.name}'); }); 
 	$("#lookupGrid${_action.actionName.replace(' ','')}").mouseout(function(){hints.hide(); });
