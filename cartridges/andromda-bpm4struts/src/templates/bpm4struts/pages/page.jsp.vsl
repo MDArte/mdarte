@@ -1,7 +1,7 @@
 #if($jsp.oldStruts)
 <%
-	#set($useCaseName = $jsp.useCase.name)
-	#set($jspName = $jsp.name)
+#set($useCaseName = $jsp.useCase.name)
+#set($jspName = $jsp.name)
 	Object form = ${servletPackage}.PageSessionObjectUtil.getPageForm(request, "${useCaseName}.${jspName}");
 	request.getSession().setAttribute("$jsp.useCase.formKey", form);
 	request.setAttribute("$jsp.useCase.formKey", form);
@@ -90,7 +90,7 @@ function atualizaElementos(){
 ##
 ##  SETS THE BODY OF THIS PAGE
 ##
-    	
+
     <tiles:put name="body" type="string">
 
 <div id="pathway">
@@ -156,8 +156,6 @@ function atualizaElementos(){
 #end
 #end
 #end
-
-
 
 #if($jsp.oldStruts)
 #foreach ($variable in $jsp.pageVariables)

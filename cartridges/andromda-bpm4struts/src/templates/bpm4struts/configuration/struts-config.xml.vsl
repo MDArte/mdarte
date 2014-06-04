@@ -44,14 +44,14 @@
     <form-beans>
         <!-- form-beans merge-point -->
 ##Forms oAuth
-		#if($oAuthServer == "true")
-			<form-bean
+#if($oAuthServer == "true")
+		<form-bean
             name="loginOAuthUCLoginOAuthUCForm"
             type="${controleAcessoDir}.LoginOAuthUCFormImpl" />
         <form-bean
             name="loginOAuthUCPaginaDeLoginLoginForm"
             type="${controleAcessoDir}.PaginaDeLoginLoginFormImpl" />
-		#end
+#end
 #foreach ($useCase in $useCases)
 
 #foreach ($action in $useCase.actions)

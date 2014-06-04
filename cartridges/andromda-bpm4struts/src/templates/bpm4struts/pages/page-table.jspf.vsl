@@ -20,8 +20,6 @@
    }
 %>
 
-
-
 ## Fim
 <% 
   String nomeProjeto${table.name} = request.getContextPath(); 

@@ -299,7 +299,7 @@ ${indent}   </security:containsPermission>
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))						  
+#set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 ###if ($securityEnabled && !${action.useCase.openAccess})
 ##${indent}<logic:present role="$roles">
 ###end
@@ -380,7 +380,6 @@ ${indent}<fmt:formatDate var="value" value="${${propertyValue}}" pattern="$field
 ##<fmt:formatNumber var="value" value="${${propertyValue}}" minFractionDigits="2" type="number"/>  
 #else
 ${indent}<c:set var="__value" value="${${propertyValue}}"/>
-
 
 #end
 ##
