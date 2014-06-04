@@ -41,7 +41,7 @@
 		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data">
 			<%@ include file="${jsp.fullPath}-actions.jsp" %>
 		</s:form>
-#elseif (($action.formPost || $action.hyperlink))
+#elseif ($action.formPost || $action.hyperlink || $action.popup)
 #if ($action.actionParameters.empty)
 		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post">

@@ -65,7 +65,7 @@
 #end
 #end
 </div>
-#elseif (($action.formPost || $action.hyperlink))
+#elseif ($action.formPost || $action.hyperlink || $action.popup)
 #if ($action.actionParameters.empty)
 ## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
@@ -103,9 +103,9 @@
 #end
 #elseif($_action.lookupGrid)
 #renderLookupGrid2($_action)
-#end
 #elseif($_action.popup)
 #renderLookupGrid2($_action)
+#end
 #end
 #end
 </div>
