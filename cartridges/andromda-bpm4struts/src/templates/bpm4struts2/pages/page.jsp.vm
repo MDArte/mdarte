@@ -225,13 +225,22 @@ ${indent}	</security:containsPermission>
 ${indent}</security:containsOperationMode>
 #end
 #end
+##
+##
 #macro (renderTableLookupGrid2 $action $indent $rowIndex)
-#set($linkParameters="")
-###set($useCaseName = $action.useCase.name)
+##
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set($beanName="row")
-#set($delim = " ")
+#set($uriQuery='')
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#if ($action.popup)
+#set($delim = "?")
+#foreach ($parameter in $action.actionParameters)
+#set($paramValue="${beanName}.${parameter.name}")#set($uriQuery="${uriQuery}${delim}${parameter.name}=${${paramValue}}")#set($delim='&')
+#end
+#else
+#set($linkParameters="")
+#set($delim = " ")
 #set($fieldLinkValue = $action.findTaggedValue("$fieldLink"))
 #set($i = 0)
 #foreach ($parameter in $action.actionParameters)
@@ -240,6 +249,7 @@ ${indent}</security:containsOperationMode>
 #set($teste = "var param${i} = window.parent.opener.document.getElementsByName('$param');if(param${i}[0] != null){param${i}[0].value = '${linkParameters}'}")
 #set($delim = "${delim}${teste}")
 #set($i = $i + 1)
+#end
 #end
 ## properly add a suffix when that last entry was an updateable field so the javascript does not have
 ## an unclosed literal
@@ -253,8 +263,13 @@ ${indent}<security:containsOperationMode value="$valueOperationMode" useCase="${
 #if ($securityEnabled && !${action.useCase.openAccess}) 
 ${indent}	<security:containsPermission name="$action.imageMessageKey">
 #end
-${indent}		<nobr><a href="" class="buttonLink btn-close" onclick="${delim};window.close()"><s:property value="%{getText('$action.messageKey')}" /></a></nobr>
-##<html:link href="" styleClass="buttonLink" onclick="var param = window.parent.opener.document.getElementsByName('nome');if(param[0] != null){param[0].value = '${row.nome}'};window.close()"><bean:message key="lookup.grid.uc.resultado.consulta.nome.voltar"/></html:link>
+
+#if ($action.popup)
+${indent}		<nobr><a href="javascript:setaLocation('${action.actionPath}','${uriQuery}');window.close()" class="buttonLink btn-close"><s:property value="%{getText('$action.messageKey')}" /></a></nobr>
+#else
+${indent}		<nobr><a href="javascript:${delim};window.close()" class="buttonLink btn-close"><s:property value="%{getText('$action.messageKey')}" /></a></nobr>
+#end
+
 #if ($securityEnabled && !${action.useCase.openAccess}) 
 ${indent}	</security:containsPermission>
 #end
