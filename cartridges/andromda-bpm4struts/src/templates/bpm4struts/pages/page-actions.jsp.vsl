@@ -22,7 +22,6 @@
 #end
 ## fim do codigo
 
-
 ##set ($action = $jsp.actions.get(0))
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 ##
@@ -132,9 +131,6 @@
 	}
 </script>
 
-
-
-
 <script type="text/javascript">
      <!--Operacao de Habilitar-->
      function verificaHabilitados() {
@@ -234,17 +230,13 @@
     }
 </script>
 
-
-
-
 #if ($xhtml == "true")
 		<html:xhtml/>
 #end
 
-
 <div id="ConteudoDiv">
-	#set ($messageKey = $action.messageKey)
-	#set ($actionTrigger = $action.actionTrigger)
+#set ($messageKey = $action.messageKey)
+#set ($actionTrigger = $action.actionTrigger)
 	<div id="$action.styleId" class="action">
     	<div class="trigger">
 ##if ($action.hyperlink)
@@ -279,13 +271,13 @@
 #end
 				</div>
         	</html:form>
-#elseif (($action.formPost || $action.hyperlink))
+#elseif (($action.formPost || $action.hyperlink ||  $action.popup))
 #if ($action.actionParameters.empty)
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
-		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
         		<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<div class="FormLinhaBotoes">
@@ -294,9 +286,9 @@
 #if($_action.formPost )
 					#renderFormButtonsCustomizado($_action "                           ")
 #elseif ($_action.hyperlink)
-#set($fieldLinkValue = "")				
+#set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-#if($fieldLinkValue.equals(""))				
+#if($fieldLinkValue.equals(""))
 					#renderHyperlink($_action "        ")
 #end
 #elseif($_action.lookupGrid)
@@ -371,7 +363,7 @@
 #elseif($_action.lookupGrid)
 					#renderLookupGrid($_action)
 #elseif($_action.popup)
-					#renderLookupGrid($_action)				
+					#renderLookupGrid($_action)
 #end
 #end
 #end
@@ -382,6 +374,7 @@
 				</form>
 #end
 #end
+    	</div>
     </div>
 
 </div>
