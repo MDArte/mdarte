@@ -667,7 +667,7 @@ $field.getDocumentation("     * ")
 ##        this.$field.valueListName = new java.lang.Object[0];
 ##        this.$field.labelListName = new java.lang.Object[0];
 ##        this.${field.labelListName}Hints = new java.lang.Object[0];        
-##end
+#end
 #end
 #if ($field.strutsAction.tableAction)
         this.${field.name}RowSelection = null;
