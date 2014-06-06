@@ -172,33 +172,6 @@ public class EntrarLoginValidarFormImpl
         return errors;
     }
 
-    public final static class LabelValue
-    {
-        private Object label = null;
-        private Object value = null;
-
-        public LabelValue(Object label, Object value)
-        {
-            this.label = label;
-            this.value = value;
-        }
-
-        public Object getLabel()
-        {
-            return this.label;
-        }
-
-        public Object getValue()
-        {
-            return this.value;
-        }
-
-        public String toString()
-        {
-            return label + "=" + value;
-        }
-    }
-    
     public boolean isFieldVisibleInOperationMode(String field, java.util.Collection modosOperacao) {
     	return true;
     }
