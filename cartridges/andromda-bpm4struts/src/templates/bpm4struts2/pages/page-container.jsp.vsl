@@ -4,7 +4,6 @@
 #set($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 <%@ include file="/taglib-imports.jspf"%>
 <%@ include file="/layout-configuration.jsp"%>
-
 ## Codigo acrescentado para pegar action que contï¿½m parametros ##
 #if ($jsp.actions.size() > 0)
 #set ($action = $jsp.actions.get(0))

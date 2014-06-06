@@ -35,8 +35,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     /**
      * @see ${controllerPackageName}.${controllerClassName}#${operation.name}($operation.interfaceType)
      */
-    $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception
-    {
+    $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception {
     	/*Caso seja necessario usar paginacao		
     		Integer paginacao = ((Double)container.getAttribute(Constantes.PARAMETRO_PAGINA)).intValue();
     	*/##acredito que essa parte talvez seja encapsulada num aspecto.
@@ -91,15 +90,34 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #set ($returnType = false)
 
 #end
-#foreach($page in $useCase.getPages())
+#foreach($page in $controller.useCase.getPages())
 #foreach($parameter in $page.allUniqueActionParameters)
 #if($parameter.autocomplete)
 #set($pageName="")
 #foreach($palavra in $page.name.split(" "))
 #set($pageName = $palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #end
-	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container)
-	{
+	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container) throws Exception {
+		return null;
+	}
+#end
+#end
+#foreach($parameter in $page.getPageVariables())
+#if($parameter.tableType.equals("jtable"))
+#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)))
+#set($actionAjax = "")
+#set($palavras = ${parameter.getJsp().getName().split(" ")} )
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionAjax = $actionAjax.concat("$aux"))
+#end
+#set($actionAjax=$actionAjax.concat($tableName))
+#set($actions = $page.getActions())
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
+		return null;
+	}
+	
+	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
 		return null;
 	}
 #end

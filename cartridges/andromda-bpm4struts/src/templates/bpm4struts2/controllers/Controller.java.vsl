@@ -22,6 +22,7 @@ import ${servletPackage}.ViewContainer;
 import ${servletPackage}.ControllerAbstract;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import java.util.Collection;
 
 /**
 $controller.getDocumentation(" * ")
@@ -148,12 +149,12 @@ $operation.getDocumentation("     * ")
 
 #end
 ##Codigo que gera automaticamente os métodos para fazer o autocomplete dos campos
-#set($actions = $controller.getUseCase().getActions())
-#foreach($action in $actions)
-#foreach($parametro in $action.getActionParameters())
+#set($pages = $controller.getUseCase().getPages())
+#foreach($page in $pages)
+#foreach($parametro in $page.allUniqueActionParameters)
 #if($parametro.autocomplete)
 #set($pageName = $parametro.name) 
-#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($palavras = $parametro.getJsp().getName().split(" "))
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
@@ -186,6 +187,108 @@ $operation.getDocumentation("     * ")
 		container.setContentType("application/json;charset=UTF-8");
     	container.getWriter().write(jsonArray.toString());
     	
+	}
+#end
+#end
+#foreach($parametro in $page.getPageVariables())
+#if($parametro.tableType.equals("jtable") && $parametro.table)
+#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($actionName = "")
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionName = $actionName.concat("$aux"))
+#end
+#set($actionName=$actionName.concat($tableName))
+#set($actions = $page.getActions())
+	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
+
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
+	
+	protected void load${actionName}Table(ViewContainer container) throws Exception {
+		
+		Integer linhas = (container.getParameter("jtPageSize") != null) ? Integer.valueOf(container.getParameter("jtPageSize")) : 10;
+		
+		Integer paginacao = (container.getParameter("jtStartIndex") != null) ? Integer.valueOf(container.getParameter("jtStartIndex")) / linhas : 0;
+		
+		String propriedade = container.getParameter("jtSorting") != null ? container.getParameter("jtSorting").split(" ")[0] : "";
+	
+		Boolean desc = new Boolean(false);
+		
+		if(container.getParameter("jtSorting") != null)
+		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+
+#foreach($action in $page.getActions())
+#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
+#foreach($param in $action.getActionParameters())
+#if($param.type.name.equalsIgnoreCase("Integer")) 
+		$param.type.name $param.name = null;
+
+		try {
+			$param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null : Integer.valueOf(container.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Double"))
+		$param.type.name $param.name = null;
+
+		try {
+			 $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null ? Double.valueOf(container.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Boolean"))
+	
+		$param.type.name $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("") ? null : Boolean.valueOf(container.getParameter("${param.name}").toString())); 
+		
+#else 
+		String $param.name = this.extractParameterFromViewContainer(container, "${param.name}");
+		
+#end
+#end
+#end
+#end
+		
+		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
+		
+		String [] columns = {
+#set($i=0)
+#set($limit=$parametro.tableColumns.size() - 1)
+#foreach($column in $parametro.tableColumns)
+#if($i != $limit)
+#if($column.name)
+					"$column.name",
+#else
+					"$column",
+#end
+#else
+#if($column.name) 
+					"$column.name"
+#else
+					"$column"
+#end
+#end
+#set($i=$i+1)
+#end
+			};
+		
+		JSONArray array = new JSONArray();
+		
+		if(rows != null)
+			array = this.parseCollectionToJSON(rows,columns);
+        
+        JSONObject obj = new JSONObject();
+        
+        obj.put("Result","OK");
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container));
+        obj.put("Records",array);
+        
+        container.setContentType("application/json;charset=UTF-8");
+        
+        container.getWriter().write(obj.toString());
+
 	}
 #end
 #end

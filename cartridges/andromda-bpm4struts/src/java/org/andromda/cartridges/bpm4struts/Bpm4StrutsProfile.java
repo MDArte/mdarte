@@ -33,6 +33,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_ACTION_TABLELINK = profile.get("ACTION_TABLELINK");
     public static final String TAGGEDVALUE_ACTION_COPY_PARAMETERS = profile.get("ACTION_COPY_PARAMETERS");
     public static final String TAGGEDVALUE_ACTION_TOGGLE_PAGE_CONTROL = profile.get("ACTION_TOGGLE_PAGE_CONTROL");
+    public static final String TAGGEDVALUE_ACTION_ASYNC_TABLE = profile.get("ASYNC_TABLE");
     public static final String TAGGEDVALUE_INPUT_COLUMN_COUNT = profile.get("INPUT_COLUMN_COUNT");
     public static final String TAGGEDVALUE_INPUT_ROW_COUNT = profile.get("INPUT_ROW_COUNT");
     public static final String TAGGEDVALUE_INPUT_REQUIRED = profile.get("INPUT_REQUIRED");
@@ -50,6 +51,7 @@ public class Bpm4StrutsProfile
     public static final String TAGGEDVALUE_TABLE_EXPORT = profile.get("TABLE_EXPORT");
     public static final String TAGGEDVALUE_TABLE_SORTABLE = profile.get("TABLE_SORTABLE");
     public static final String TAGGEDVALUE_TABLE_DECORATOR = profile.get("TABLE_DECORATOR");
+    public static final String TAGGEDVALUE_TABLE_TYPE = profile.get("TABLE_TYPE");
     public static final String TAGGEDVALUE_EXCEPTION_TYPE = profile.get("EXCEPTION_TYPE");
     public static final String TAGGEDVALUE_ACTION_REDIRECT = profile.get("ACTION_REDIRECT");
     public static final String TAGGEDVALUE_HABILITADO_POR = profile.get("HABILITADO_POR");
@@ -117,6 +119,8 @@ public class Bpm4StrutsProfile
     public static final int TAGGEDVALUE_TABLE_MAXROWS_DEFAULT_COUNT = 15;
     public static final boolean TAGGEDVALUE_TABLE_SORTABLE_DEFAULT_VALUE = false;
     public static final boolean TAGGEDVALUE_TABLE_EXPORTABLE_DEFAULT_VALUE = true;
+    public static final String TAGGEDVALUE_TABLE_TYPE_DEFAULT = "default";
+    public static final String TAGGEDVALUE_TABLE_TYPE_JTABLE = "jtable";
     public static final String TAGGEDVALUE_REPORT_NAME = profile.get("REPORT_NAME");
     public static final String TAGGEDVALUE_REPORT_TYPE = profile.get("REPORT_TYPE");
     public static final String TAGGEDVALUE_REPORT_TYPE_PDF = "pdf";

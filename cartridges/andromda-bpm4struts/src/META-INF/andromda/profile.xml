@@ -112,6 +112,13 @@
                 <value>@andromda.presentation.web.action.tablelink</value>
                 <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
             </element>
+            <element name="ASYNC_TABLE">
+                <documentation>
+                    Denotes this transition represents an ajax action targeting the specified table.
+                </documentation>
+                <value>@andromda.presentation.web.action.async.table</value>
+                <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+            </element>
             <element name="ACTION_COPY_PARAMETERS">
                 <documentation>
                     Defines if the parameters from the previous should be copied. 
@@ -609,6 +616,17 @@
                 <allowedValues>
                     <value default="false">true</value>
                     <value>true</value>
+                </allowedValues>
+            </element>
+            <element name="TABLE_TYPE">
+                <documentation>
+                    Indicates the type of table to be displayed.
+                </documentation>
+                <value>@andromda.presentation.web.view.field.table.type</value>
+                <appliedOnElement>Parameter coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+                <allowedValues>
+                    <value default="true">default</value>
+                    <value>jtable</value>
                 </allowedValues>
             </element>
             <element name="TABLE_DECORATOR">
