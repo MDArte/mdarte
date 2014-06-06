@@ -622,7 +622,7 @@
                 <documentation>
                     Indicates the type of table to be displayed.
                 </documentation>
-                <value>@andromda.presentation.web.view.table.type</value>
+                <value>@andromda.presentation.web.view.field.table.type</value>
                 <appliedOnElement>Parameter coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
                 <allowedValues>
                     <value default="true">default</value>
