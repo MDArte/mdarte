@@ -19,10 +19,15 @@
 #set ($hasTable = true)
 #end
 #end
-
+#if(!$hasTable)
+#foreach ($variable in $jsp.allUniqueActionParameters)
+#if ($variable.table)
+#set ($hasTable = true)
+#end
+#end
+#end
 #if ($xhtml == "true")
 <html:xhtml/>
-
 #end
 #set ($webLayoutName = ${jsp.useCase.webLayoutName})
 #if ($stringUtils.isNotBlank($webLayoutName))
@@ -38,7 +43,6 @@
 #end
 #end
 #end
-
 ##
 ##  SETS THE TITLE
 ##
@@ -111,7 +115,7 @@
 </tiles:put>
 
 <tiles:put name="tables" type="string">
-#if($jsp.temTabela)
+#if($hasTable)
 	<%@ include file="${jsp.fullPath}-tabelas.jsp"%>
 #end
 </tiles:put>

@@ -66,6 +66,16 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
 #end
     }
 #end
+	
+#if ($operation.exceptionsPresent)
+    protected $return handle${stringUtils.capitalize(${operation.name})} ($parameters, Integer paginacao, Integer linhas) throws ${customTypesPackage}.${modelPackageName}.DAOException, $operation.exceptionList{
+#else
+    protected $return handle${stringUtils.capitalize(${operation.name})} ($parameters, Integer paginacao, Integer linhas) throws ${customTypesPackage}.${modelPackageName}.DAOException {
+#end
+#if ($operation.returnTypePresent)
+        return $operation.returnType.javaNullString;    
+#end
+    }
 #end
 
     protected Object handleFilter(DataObject vo) throws $customTypesPackage.${modelPackageName}.DAOException {

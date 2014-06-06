@@ -51,8 +51,7 @@
 #end
 <div id="fields">
 #foreach ($field in $actionParameters)
-
-#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
+#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden") && !$field.table)
 ## for now multibox field can only be displayed in tables
 #if($field.visivelPor)
 #set ($visivel = 'style="display:none"')

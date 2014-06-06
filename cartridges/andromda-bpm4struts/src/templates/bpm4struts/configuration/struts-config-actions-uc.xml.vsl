@@ -143,6 +143,32 @@
 	       	path="/ForwardAction.do"
 	       	redirect="false" /> 
 	 </action>
+#elseif($parameter.tableType.equals("jtable"))	 
+#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($actionAjax= "")
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionAjax = $actionAjax.concat("$aux"))
+#end
+#set($actionAjax=$actionAjax.concat($tableName))
+	<action path="/${useCase.getName()}/${actionAjax}Ajax"
+	 	type="${useCase.getPackagePath().replace('/','.')}.${actionAjax}Ajax"
+	 	scope="request"
+	 	input="${page.fullPath}.jsp"
+	 	unknown="false"
+	 	validate="true" >
+	 	<exception
+           handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+           type="java.lang.Throwable"
+           key="error.exception.message"
+           path="${page.fullPath}.jsp"
+           scope="request" />
+	    <forward
+	     	name="main"
+	       	path="/ForwardAction.do"
+	       	redirect="false" /> 
+	 </action>
 #end
 #end
 #end

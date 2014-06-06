@@ -29,6 +29,15 @@ public class CoppetecStrutsActionLogicImpl
     {
         super (metaObject, context);
     }
+	
+	public String handleGetAjaxTable() 
+	{
+	    
+	    Object value =  this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_ASYNC_TABLE);
+	  
+	    return value == null ? "": value.toString();
+	  
+	}
 
     protected String handleGetOnlineHelpValue()
     {

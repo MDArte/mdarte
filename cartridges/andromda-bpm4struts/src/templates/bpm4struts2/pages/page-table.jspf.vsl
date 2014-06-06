@@ -1,16 +1,16 @@
-#if(!${table.jsp.oldStruts})
+#if(!$param.jsp.oldStruts)
 #parse("templates/bpm4struts2/pages/page.jsp.vm")
+#set($table=$param)
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
-#set ($targetColumns = $table.targettedTableColumnNames)
 #set ($sortable = $table.tableSortable)
 #set ($exportable = $table.tableExportable)
-#set($gerarJSP = true)
-#if($table.oldStruts)
-#set($gerarJSP = false)	
-#end
 #set($indent="	")
-#if($gerarJSP)
+#if($table.tableType.equals("jtable"))
+<div id="${table.name}">
+</div>
+#else
+#set($targetColumns = $table.targettedTableColumnNames)
 <%@ include file="/taglib-imports.jspf" %>
 ## [MOISES-COPPETEC]
 ## Ação a ser utilizada no link "NEXT" na paginação.
@@ -35,7 +35,7 @@
 #if ($table.tableDecoratorRequired)
 			decorator="${table.tableDecoratorFullyQualifiedName}"
 #end
-			export="$exportable" pagesize="$maxRows" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
+			export="$exportable" pagesize="${table.tableMaxRows}" sort="list" #if(!$table.tableSortable)defaultsort="0"#end>
 #if ($exportable)
 #set ($exportFileName = "${jsp.name}-${table.name}")
 #set ($exportFileName = "$bpmUtils.toWebFileName($exportFileName)")
@@ -169,6 +169,5 @@ ${indent}${indent}</security:containsOperationMode>
 	</form>
 #end
 </div>
-
 #end
 #end

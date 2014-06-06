@@ -34,7 +34,6 @@
 #end
 #end
 #end
-##
 #macro (renderReturnWS $operation $return)
 #set($classe = $operation.returnType.fullyQualifiedName)
 #set($classe = $stringUtils.replace("${classe}", "$modelPackageName", "$wsdPackageName"))
@@ -44,7 +43,6 @@
 #set($return = ${classe})
 #end
 #end
-##
 #macro (renderParametersWS $operation $listaAtributos $nome)
 #foreach($parametro in $operation.parameters)
 #if(!$parametro.return)
@@ -68,9 +66,6 @@
 #end
 #end
 #end
-##fim foreach $parametro
-#end
-##
 #macro (renderParametersPaginacao $operation $listaAtributos $nome)
 #foreach($parametro in $operation.parameters)
 #if(!$parametro.return)
@@ -102,7 +97,6 @@
 #end
 #end
 #end
-##
 #macro (renderParameters $operation $listaAtributos $nome)
 #foreach($parametro in $operation.parameters)
 #if(!$parametro.return)

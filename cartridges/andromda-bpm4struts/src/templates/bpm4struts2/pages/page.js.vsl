@@ -197,8 +197,8 @@ function verifica() {
 }
 
 $(document).ready(function(){			
-	$('textarea').elastic();
-	$('textarea').trigger('update');
+	//$('textarea').elastic();
+	//$('textarea').trigger('update');
 });
 
 #foreach ($field in $actionParameters)
@@ -215,11 +215,92 @@ $(function() {
 
 function atualizaElementos(){
 #foreach ($variable in $jsp.pageVariables)
-#if ($variable.table)
+#if ($variable.table.tableType.equals("default"))
 		$("#${variable.name}").displayTagAjax();
 #end
 #end 
 }
+
+#foreach ($variable in $jsp.pageVariables)
+#if($variable.table && $variable.tableType.equals("jtable"))
+function createJTable${variable.name}() {
+	//Javascript da tabela $variable.name
+#set($palavras = $jsp.name.split(" "))
+#set($jspName = "")
+#foreach($palavra in $palavras)
+#set($aux = $palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($jspName = $jspName.concat($aux))
+#end
+#set($tableName = $variable.name.subSequence(0,1).toUpperCase().concat($variable.name.substring(1)))
+	$("div#${variable.name}").jtable({
+    	paging: true,
+    	pageSize: ${variable.tableMaxRows},
+    	sorting: ${variable.tableSortable},
+    	multiSorting: true,
+    	defaultSorting: '',
+    	actions: {
+#if($jsp.useCase.package.isWebModulePrincipal())
+			listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#else
+			listAction: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#end    
+		},
+    	fields: {
+#set($i = 0)
+#set($limit = $variable.tableColumns.size() - 1)
+#foreach($column in $variable.tableColumns)
+#if(${column.name})
+#set($columnName=${column.name})
+#else
+#set($columnName=${column})
+#end
+			"$columnName": {
+#set($title = $columnName.subSequence(0,1).toUpperCase().concat($columnName.substring(1)))
+#foreach($tableAction in $variable.getTableColumnActions($columnName))
+#if($tableAction.hyperlink)
+#set($uriQuery="")
+#set($delim='?')
+#set($prefixoLink = ${tableAction.useCase.package.contexto})
+				display: function(data) {
+#foreach ($parameter in $tableAction.actionParameters)
+					var $parameter.name = data.record.${parameter.name};
+#end
+#set($first=true)
+					return "<a class='' href='"+ "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>"+data.record.${columnName}+"</a>";
+				},
+#end
+#end
+				title: "${title}"
+#if($i < $limit)
+			},
+#else
+			}
+#end
+#set($i=$i+1)
+#end
+#foreach($tableAction in $variable.getTableFormActions())
+#if (!$tableAction.tableLinkColumnName)
+#set($first=true)
+#set($prefixoLink = ${tableAction.useCase.package.contexto})
+			, "${tableAction.name}" : {
+				display: function(data) {
+#foreach ($parameter in $tableAction.actionParameters)
+					var $parameter.name = data.record.${parameter.name};
+#end
+					return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='" + "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first) + "&" #end + "$param.name="+ $param.name  + #set($first=false)#end"'>" + #if(!$tableAction.imageLink)HINTS_ITEMS["${tableAction.name}"] #else #set($link = "")#foreach($palavra in $tableAction.imagePath.split('/') )#set($link=$palavra)#end"<div class='imageHyperlink' id='imageHyperlink${tableAction.name.replace(' ','')}'></div>"#end + "</a>";
+				},
+				title: HINTS_ITEMS["${tableAction.name}_column_action_name"]
+			}
+#end
+#end   	            
+    	}
+	});
+	
+	$("div#${variable.name}").jtable("load");
+	
+}
+#end
+#end
 
 #foreach($table in $jsp.getTables())
 function setaParametros${table.name}(param1, param2) {
@@ -465,10 +546,16 @@ $(document).ready(function(){
 	//Botao Close
 	$(".close-btn").click(function(){close() });
 
-#set($tables = $jsp.getTables())
-#foreach($table in $tables)
-//Javascript da tabela $table.name	
+#foreach($variable in $jsp.getPageVariables())	
+#if($variable.table)
+#set($table = $variable)
+#if($table.tableType.equals("jtable"))
+
+	createJTable${variable.name}();
 	
+#else
+//Javascript da tabela $table.name
+	//$table.tableType 	
 	//Table Global Actions tabela $table.name
 	
 #foreach ($_action in $table.tableGlobalActions)
@@ -537,7 +624,7 @@ $(document).ready(function(){
 #if($column.name)#set($columnName=$column.name)#else#set($columnName=$column)#end
 #set ($tableColumnActions = $table.getTableColumnActions($columnName))
 #if($column.actionParameter)
-	##
+##
 #elseif (!$tableColumnActions.empty)
 #foreach ($tableColumnAction in $tableColumnActions)
 #if($hints)
@@ -548,8 +635,9 @@ $(document).ready(function(){
 #end
 #end
 	//Fim Table Column Actions tabela $table.name
-	
+#end
 //Fim do Javascript da tabela $table.name
+#end
 #end
 
 //Javascript dos fields
@@ -795,7 +883,6 @@ $(document).ready(function(){
 #set ($roles = $_action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #set ($valueConfirmMessage = $_action.findTaggedValue("$confirmMessage"))
-
 #if(!$_action.tableLink)
 #if($_action.formPost )
 #if($hints)
@@ -807,7 +894,14 @@ $(document).ready(function(){
 #else 
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
+#if($_action.ajaxTable.equals(""))
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+#else
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function() {
+#set($i=0)
+		$("div#${_action.ajaxTable}").jtable("load", { #foreach($param in $_action.getActionParameters()) $param.name : #if($param.checkbox) document.getElementById("${param.name}${jsp.useCase.name}").checked #else$("#${param.name}${jsp.useCase.name}").val() #end#set($i=$i+1)#if($i != $_action.getActionParameters().size()), #end#end});
+	});
+#end
 #else 
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 

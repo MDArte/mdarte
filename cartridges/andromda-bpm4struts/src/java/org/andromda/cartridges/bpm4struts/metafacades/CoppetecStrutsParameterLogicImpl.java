@@ -618,6 +618,17 @@ extends CoppetecStrutsParameterLogic
 		return false;
 	}
 	
+	protected String handleGetTableType() {
+	    Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE);
+	    if(value == null)
+	        return null;
+	    if(value.toString().equals(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE)) {
+	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE;
+	    } else {
+	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_DEFAULT;
+	    }
+	}
+	
 	protected boolean handleIsEditor(){
 		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equals(this.getWidgetType());
 	}

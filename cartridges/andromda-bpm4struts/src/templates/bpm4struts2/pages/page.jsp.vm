@@ -56,7 +56,6 @@ ${indent}	</security:containsPermission>
 ${indent}</security:containsOperationMode>
 #end
 #end
-
 #macro ( renderFieldHyperlink2 $action $field $indent )
 #set ($trigger = $action.actionTrigger)
 #set ($triggerKey = $trigger.triggerKey)
@@ -262,7 +261,6 @@ ${indent}	</security:containsPermission>
 ${indent}</security:containsOperationMode>
 #end
 #end
-
 #macro (renderLookupGrid2 $action)
 #set ($messageKey = $action.messageKey)
 #set ($trigger = $action.actionTrigger)
@@ -599,6 +597,5 @@ ${indent}			}
 ${indent}		</script>
 ${indent}
 ${indent}		<input id="clean${action.useCase.name}" class="btn btn-mini btn-clean" type="button" value="clean"><!--Clean()-->
-
 #end
 #end

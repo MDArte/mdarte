@@ -68,6 +68,7 @@
 #foreach ($action in $jsp.actions)
 #set ($trigger = $action.actionTrigger)
 				'${trigger.name}':'<formatting:escape language="javascript"><bean:message key="$trigger.titleKey"/></formatting:escape>',
+				'${trigger.name}_column_action_name':'<formatting:escape language="javascript"><bean:message key="$trigger.triggerKey"/></formatting:escape>',
 				'${trigger.name}_no':'<formatting:escape language="javascript"><bean:message key="$trigger.notAllowedTitleKey"/></formatting:escape>',
 				'${trigger.name}_reset':'<formatting:escape language="javascript"><bean:message key="$trigger.resetTitleKey"/></formatting:escape>',
 				'${trigger.name}_noreset':'<formatting:escape language="javascript"><bean:message key="$trigger.resetNotAllowedTitleKey"/></formatting:escape>',
