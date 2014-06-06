@@ -20,15 +20,15 @@ public class LoginFormImpl
         , VerificarLoginForm
 {
 
-    private java.lang.String parametrosLogin;
-    private java.lang.String novaSenha;
-    private java.lang.String usuario;
-    private java.lang.String senha;
-    private java.lang.String login;
-    private java.lang.String confirmacao;
-	private java.lang.String nextPath;
+    protected java.lang.String parametrosLogin;
+    protected java.lang.String novaSenha;
+    protected java.lang.String usuario;
+    protected java.lang.String senha;
+    protected java.lang.String login;
+    protected java.lang.String confirmacao;
+	protected java.lang.String nextPath;
 #if($enableCaptcha=="true")
-	private java.lang.String kaptcha;
+	protected java.lang.String kaptcha;
 #end
 
     public LoginFormImpl()

@@ -11,123 +11,10 @@ package $controleAcessoDir;
 
 public class EntrarLoginValidarFormImpl
     extends LoginFormImpl
-    implements java.io.Serializable
-        , VerificarLoginForm
 {
-    private java.lang.String novaSenha;
-    private java.lang.String usuario;
-    private java.lang.String senha;
-    private java.lang.String login;
-    private java.lang.String confirmacao;
-    private java.lang.String nextPath;
 
     public EntrarLoginValidarFormImpl()
     {
-    }
-
-    /**
-     * Resets the given <code>novaSenha</code>.
-     */
-    public void resetNovaSenha()
-    {
-        this.novaSenha = null;
-    }
-    
-    public void setNovaSenha(java.lang.String novaSenha)
-    {
-        this.novaSenha = novaSenha;
-    }
-
-    /**
-     * 
-     */
-    public java.lang.String getNovaSenha()
-    {
-        return this.novaSenha;
-    }
-
-    /**
-     * Resets the given <code>usuario</code>.
-     */
-    public void resetUsuario()
-    {
-        this.usuario = null;
-    }
-    
-    public void setUsuario(java.lang.String usuario)
-    {
-        this.usuario = usuario;
-    }
-
-    /**
-     * 
-     */
-    public java.lang.String getUsuario()
-    {
-        return this.usuario;
-    }
-
-    /**
-     * Resets the given <code>confirmacao</code>.
-     */
-    public void resetConfirmacao()
-    {
-        this.confirmacao = null;
-    }
-    
-    public void setConfirmacao(java.lang.String confirmacao)
-    {
-        this.confirmacao = confirmacao;
-    }
-
-    /**
-     * 
-     */
-    public java.lang.String getConfirmacao()
-    {
-        return this.confirmacao;
-    }
-
-    /**
-     * Resets the given <code>senha</code>.
-     */
-    public void resetSenha()
-    {
-        this.senha = null;
-    }
-    
-    public void setSenha(java.lang.String senha)
-    {
-        this.senha = senha;
-    }
-
-    /**
-     * 
-     */
-    public java.lang.String getSenha()
-    {
-        return this.senha;
-    }
-
-    /**
-     * Resets the given <code>login</code>.
-     */
-    public void resetLogin()
-    {
-        this.login = null;
-    }
-    
-    public void setLogin(java.lang.String login)
-    {
-        this.login = login;
-    }
-
-    /**
-     * 
-     */
-    public java.lang.String getLogin()
-    {
-        return this.login;
     }
 
     /**
@@ -180,21 +67,4 @@ public class EntrarLoginValidarFormImpl
         return "";
     }
 
-    /**
-     * Resets the given <code>nextPath</code>.
-     */
-    public void resetNextPath()
-    {
-        this.nextPath = null;
-    }
-
-    public void setNextPath(java.lang.String nextPath)
-    {
-        this.nextPath = nextPath;
-    }
-
-    public java.lang.String getNextPath()
-    {
-        return this.nextPath;
-    }
 }

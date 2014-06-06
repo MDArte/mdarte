@@ -1270,13 +1270,8 @@
         path="templates/bpm4struts/forms/MainFormImpl.java.vsl"
         outputPattern="main/MainFormImpl.java"
         outlet="shared-actions"
-        overwrite="true"/>          
-        
-    <template
-        path="templates/bpm4struts/forms/controleAcesso/NovaConexaoForm.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="controleAcesso"
-        overwrite="true"/>                      
+        overwrite="true"/>
+
     <template
         path="templates/bpm4struts/actions/controleAcesso/TrocaDeSenhaObrigatoriaProcessar.java.vsl"
         outputPattern="$generatedFile"

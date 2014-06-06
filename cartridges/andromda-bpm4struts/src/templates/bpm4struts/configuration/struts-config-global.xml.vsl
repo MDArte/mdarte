@@ -101,19 +101,14 @@
         
         <form-bean
             name="loginTrocaDeSenhaObrigatoriaProcessarForm"
-            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessarFormImpl" />  
+            type="${controleAcessoDir}.TrocaDeSenhaObrigatoriaProcessarFormImpl" />
         <form-bean
             name="loginLoginForm"
             type="${controleAcessoDir}.LoginFormImpl" />
         <form-bean
             name="loginEntrarLoginValidarForm"
-            type="${controleAcessoDir}.EntrarLoginValidarFormImpl" />          
-        <form-bean
-            name="novaConexaoForm"
-            type="${controleAcessoDir}.NovaConexaoForm" /> 
-        <form-bean
-            name="saidaSistemaForm"
-            type="${controleAcessoDir}.SaidaSistemaForm" />    
+            type="${controleAcessoDir}.EntrarLoginValidarFormImpl" />
+
 ## Fim
 #end
     </form-beans>
