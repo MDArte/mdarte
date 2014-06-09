@@ -16,14 +16,45 @@ html,body {
 	margin-botton: 25px;
 }
 
-.tt-query, col-xs-4 input.form-control {
-	width:370px;
-}
-
 .control-label {
 	margin-top: 6px;
+	min-width: 60px;
+	float:left;
+	text-align: left;
+	margin-right: 20px;	
 }
 
+div.form-group div.col-xs-4 input {
+	padding-left: 0px;
+	margin-left: 0px;
+	float: left;
+}
+
+div.form-group div.col-xs-4 {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+div.form-group .control-label {
+	text-align: left;
+}
+
+div.form-group div.col-xs-4 input[type="password"],input[type="text"],input[type="url"],
+input[type="tel"],input[type="email"],select
+{
+	min-width: 100px;
+	width: 100%;
+	margin-left: 0px;
+}
+
+span.twitter-typeahead{
+	width:100%;
+}
+input.tt-query.form-control {
+	width: 100%;
+	padding-right: 0px;
+	margin-right: 0px;
+}
 div.exibir .control-label {
 	margin-top: 0px;
 }
