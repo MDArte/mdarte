@@ -907,18 +907,19 @@ $operation.getDocumentation("     * ")
 		} 
     }
 
+##CHECAR DEPOIS BUG
 ##Operação comum
 #if ($stringUtils.isBlank($listaAtributos))
 #set ($parameters = "org.hibernate.Session session")
 #else
 #set ($parameters = "org.hibernate.Session session, ${listaAtributos}")
 #end
-#if ($operation.exceptionsPresent)
+#*if ($operation.exceptionsPresent)
     protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters)
-        throws DAOException, $operation.exceptionList;
+        throws DAOException, $operation.exceptionList;*/
 #else
     protected abstract $return handle${stringUtils.capitalize(${operation.name})} ($parameters) throws DAOException;
-#end
+#end*#
 
     /**
 $operation.getDocumentation("     * ")
