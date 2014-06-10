@@ -216,7 +216,7 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		
 		java.lang.reflect.Method[] methods = object.getClass().getDeclaredMethods();
 		
-		if(object instanceof ${customTypesPackage}.${modelPackageName}.AbstractEntity)
+		if(object instanceof br.mdarte.exemplo.academico.cd.AbstractEntity)
 			methods = object.getClass().getSuperclass().getDeclaredMethods();
 				
 		JSONObject obj = new JSONObject();
@@ -224,22 +224,46 @@ public abstract class ControllerAbstract implements java.io.Serializable
         for(int i = 0; i < attributes.length; i++) {
                 
         	for(int j = 0; j < methods.length; j++) {
-            
-            	String methodName = "get".concat(attributes[i].subSequence(0,1).toString().toUpperCase().concat(attributes[i].substring(1)));
-                        
-                if(methods[j].getName().equals(methodName)) {
-            
-                    obj.put(attributes[i], String.valueOf(methods[j].invoke(object)));
+        	    
+        	    if(attributes[i].contains(".")) {
+        	    
+					String methodName = "get".concat(attributes[i].subSequence(0,attributes[i].indexOf("."))
+						.toString().subSequence(0,1).toString().toUpperCase().concat(attributes[i]
+						.subSequence(0,attributes[i].indexOf(".")).toString().substring(1)));
+        	        
+        	        String[] attrAux = new String[1];
+        	        
+        	        attrAux[0] = attributes[i].substring(attributes[i].indexOf(".")+1);
+        	        
+        	        if(methods[j].getName().equals(methodName)) {
+		        	    System.out.println("attr = "+attrAux[0]);
+		        	    
+        	            obj.put(attributes[i].subSequence(0,attributes[i].indexOf("."))
+							.toString(), parseObjectToJSON(methods[j].invoke(object), attrAux));
+        	            break;
+        	        }
+        	    
+        	    } else {
+        	    
+                	String methodName = "get".concat(attributes[i].subSequence(0,1).toString().toUpperCase().concat(attributes[i].substring(1)));
                             
-                	break;
-                            
-                }
+                    if(methods[j].getName().equals(methodName)) {
+                    
+	        	    	System.out.println("attr = "+attributes[i]);
+                
+                        obj.put(attributes[i], String.valueOf(methods[j].invoke(object)));
+                                
+                    	break;
+                                
+                    }
+        	    }
             
         	}
     	}
         
 		return obj;	
 	}
+
 	
 	protected JSONArray parseArrayToJSON(Object[] objects, String[] attributes ) throws Exception {
 		
