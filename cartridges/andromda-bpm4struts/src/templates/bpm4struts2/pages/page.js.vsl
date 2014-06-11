@@ -135,7 +135,12 @@ function verificaDesabilitados() {
 	){
 		document.getElementById('$field.styleId').disabled = true;
 		if(document.getElementById('$field.styleId').value != '') {
-			document.getElementById('$field.styleId').value = '';
+			document.getElementB#if($columnName.contains("."))
+				display: function(data) {
+					return data.record.${columnName};
+				},
+
+			yId('$field.styleId').value = '';
 			verificaDesabilitados();
 		}
 	} else {
@@ -260,6 +265,7 @@ function createJTable${variable.name}() {
 #if($tableAction.hyperlink)
 #set($uriQuery="")
 #set($delim='?')
+#set($first=false)
 #set($prefixoLink = ${tableAction.useCase.package.contexto})
 				display: function(data) {
 #foreach ($parameter in $tableAction.actionParameters)
@@ -270,11 +276,18 @@ function createJTable${variable.name}() {
 				},
 #end
 #end
+#if($columnName.contains(".") && !$first)
+				display: function(data) {
+					return data.record.${columnName};
+				},
+
+#end
 				title: "${title}"
 #if($i < $limit)
 			},
 #else
 			}
+#end
 #end
 #set($i=$i+1)
 #end

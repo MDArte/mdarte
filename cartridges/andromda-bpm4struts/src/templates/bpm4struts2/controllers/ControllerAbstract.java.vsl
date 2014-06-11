@@ -229,14 +229,14 @@ public abstract class ControllerAbstract implements java.io.Serializable
         	    
 					String methodName = "get".concat(attributes[i].subSequence(0,attributes[i].indexOf("."))
 						.toString().subSequence(0,1).toString().toUpperCase().concat(attributes[i]
-						.subSequence(0,attributes[i].indexOf(".")).toString().substring(1)));
+							.subSequence(0,attributes[i].indexOf(".")).toString().substring(1)));
         	        
         	        String[] attrAux = new String[1];
         	        
         	        attrAux[0] = attributes[i].substring(attributes[i].indexOf(".")+1);
         	        
         	        if(methods[j].getName().equals(methodName)) {
-		        	    System.out.println("attr = "+attrAux[0]);
+		        	    System.out.println("method = "+methodName+" in class "+ object.getClass().getName());
 		        	    
         	            obj.put(attributes[i].subSequence(0,attributes[i].indexOf("."))
 							.toString(), parseObjectToJSON(methods[j].invoke(object), attrAux));
@@ -249,7 +249,7 @@ public abstract class ControllerAbstract implements java.io.Serializable
                             
                     if(methods[j].getName().equals(methodName)) {
                     
-	        	    	System.out.println("attr = "+attributes[i]);
+	        	    	System.out.println("method = "+methodName+" in class "+ object.getClass().getName());
                 
                         obj.put(attributes[i], String.valueOf(methods[j].invoke(object)));
                                 
