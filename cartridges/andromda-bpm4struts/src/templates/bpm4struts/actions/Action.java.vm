@@ -198,7 +198,7 @@ ${indent}request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 ${indent}java.util.HashMap map = new java.util.HashMap();
 ${indent}if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null)
 ${indent}	map = (java.util.HashMap)request.getSession().getAttribute(Constantes.MODO_OPERACAO);
-	##map.remove("${useCaseName}");
+##map.remove("${useCaseName}");
 ${indent}map.remove("${finalUseCaseName}");
 ${indent}request.getSession().setAttribute(Constantes.MODO_OPERACAO, map);
 
