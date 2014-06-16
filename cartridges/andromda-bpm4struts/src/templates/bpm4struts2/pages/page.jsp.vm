@@ -403,19 +403,24 @@ ${indent}	<div id="div${field.name}${action.useCase.name}" class="radiobutton fo
 ${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 #if ($field.optionKeys.empty)
 ${indent}		<div class="col-xs-4">
-${indent}			<label class="radio-inline">
-${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="${propertyValue}ComboList"  title="" />
-${indent}			</label>
+${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="${propertyValue}ComboList" #if($field.type.enumeration) listValue="%{getText(value)}" #end value="__value" title="" />
 ${indent}		</div>
 ${indent}	</div>
 #else
+#set ($radioList = "#{")
+#set ($comma = "")
 ${indent}		<div class="col-xs-4">
 #foreach ($optionKey in $field.optionKeys)
 #set ($optionIndex = $velocityCount - 1)
-${indent}			<label class="radio-inline">
-${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="#{${optionIndex} : getText('${optionKey}')}"  title="" />
-${indent}			</label>
+#if($optionIndex > 0)#set($comma = ",")#end
+#if($field.type.isStringType())
+#set ($radioList = "${radioList}${comma}'${optionIndex}' : getText('${optionKey}')")
+#else
+#set ($radioList = "${radioList}${comma}${optionIndex} : getText('${optionKey}')")
 #end
+#end
+#set ($radioList = "${radioList}}")
+${indent}				<s:radio id="${field.name}${action.useCase.name}" $requiredStyle cssClass="radio-inline" label="$field.name" name="$field.name" list="$radioList"  value="__value" title="" />
 ${indent}		</div>
 ${indent}	</div>
 #end

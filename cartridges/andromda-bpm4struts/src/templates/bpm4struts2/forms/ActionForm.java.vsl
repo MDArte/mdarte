@@ -4,6 +4,7 @@
 ##  CONSTANTS
 ##
 #set ($hash = "#")
+#set($Q = '"')
 #set ($labels = false)
 #set ($fields = $action.actionFormFields)
 #set ($actionParameters = $action.actionParameters)
@@ -61,6 +62,16 @@ public class ${formBeanClassName}
     private java.util.Map $field.name = new java.util.LinkedHashMap();
 #elseif($field.widgetType=="money")
     private java.lang.String $field.name;
+#elseif($field.radioButton && !$field.type.enumeration)
+#if($field.findTaggedValue("$radioSelected"))
+#if($field.type.isStringType())
+    private $field.type.fullyQualifiedName $field.name = new ${field.type.fullyQualifiedName}(${Q}${field.findTaggedValue("$radioSelected")}${Q});
+#else
+	private $field.type.fullyQualifiedName $field.name = new ${field.type.fullyQualifiedName}(${field.findTaggedValue("$radioSelected")});
+#end
+#else
+	private $field.type.fullyQualifiedName $field.name;
+#end
 #elseif($field.type.enumeration)
 #set($enumeration = $field.type)
 #if (${field.widgetType}=="multibox")
@@ -189,7 +200,11 @@ public class ${formBeanClassName}
 #foreach($field in $fields)
 #if($field.radioButton)
 #if($field.findTaggedValue("$radioSelected"))
-    	${field.setterName}(${field.findTaggedValue("$radioSelected")});
+#if($field.type.isStringType())
+    	${field.setterName}(${Q}${field.findTaggedValue("$radioSelected")}${Q});
+#else
+		${field.setterName}(${field.findTaggedValue("$radioSelected")});
+#end
 #end
 #end
 #end
@@ -233,10 +248,14 @@ public class ${formBeanClassName}
      */
     public void ${field.resetName}()
     {
-	this.$fieldName = $field.nullValue;
+		this.$fieldName = $field.nullValue;
 #if($field.radioButton)
 #if($field.findTaggedValue("$radioSelected"))
-    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+#if($field.type.isStringType())
+    	${field.setterName}(${Q}${field.findTaggedValue("$radioSelected")}${Q});
+#else
+		${field.setterName}(${field.findTaggedValue("$radioSelected")});
+#end
 #end
 #end
     }

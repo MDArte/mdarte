@@ -937,7 +937,7 @@ $operation.getDocumentation("     * ")
 		return this.${operation.name}(${parameterList},paginacao,${maxRows},${maxPages});
 #end
     }
-	     
+
 ##fim da operação comum
 #end
 #end
