@@ -137,7 +137,12 @@ function verificaDesabilitados() {
 	){
 		document.getElementById('$field.styleId').disabled = true;
 		if(document.getElementById('$field.styleId').value != '') {
-			document.getElementById('$field.styleId').value = '';
+			document.getElementB#if($columnName.contains("."))
+				display: function(data) {
+					return data.record.${columnName};
+				},
+
+			yId('$field.styleId').value = '';
 			verificaDesabilitados();
 		}
 	} else {
@@ -235,19 +240,19 @@ function createJTable${variable.name}() {
 #end
 #set($tableName = $variable.name.subSequence(0,1).toUpperCase().concat($variable.name.substring(1)))
 	$("div#${variable.name}").jtable({
-    	paging: true,
-    	pageSize: ${variable.tableMaxRows},
-    	sorting: ${variable.tableSortable},
-    	multiSorting: true,
-    	defaultSorting: '',
-    	actions: {
+    	"paging" : true,
+    	"pageSize": ${variable.tableMaxRows},
+    	"sorting" : ${variable.tableSortable},
+    	"multiSorting" : true,
+    	"defaultSorting" : '',
+    	"actions" : {
 #if($jsp.useCase.package.isWebModulePrincipal())
-			listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+			listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action"
 #else
-			listAction: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+			listAction: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action"
 #end    
 		},
-    	fields: {
+    	"fields" : {
 #set($i = 0)
 #set($limit = $variable.tableColumns.size() - 1)
 #foreach($column in $variable.tableColumns)
@@ -262,8 +267,9 @@ function createJTable${variable.name}() {
 #if($tableAction.hyperlink)
 #set($uriQuery="")
 #set($delim='?')
+#set($first=false)
 #set($prefixoLink = ${tableAction.useCase.package.contexto})
-				display: function(data) {
+				"display" : function(data) {
 #foreach ($parameter in $tableAction.actionParameters)
 					var $parameter.name = data.record.${parameter.name};
 #end
@@ -272,7 +278,13 @@ function createJTable${variable.name}() {
 				},
 #end
 #end
-				title: "${title}"
+#if($columnName.contains(".") && !$first)
+				"display": function(data) {
+					return data.record.${columnName};
+				},
+
+#end
+				"title" : "${title}"
 #if($i < $limit)
 			},
 #else
@@ -280,18 +292,19 @@ function createJTable${variable.name}() {
 #end
 #set($i=$i+1)
 #end
+#end
 #foreach($tableAction in $variable.getTableFormActions())
 #if (!$tableAction.tableLinkColumnName)
 #set($first=true)
 #set($prefixoLink = ${tableAction.useCase.package.contexto})
 			, "${tableAction.name}" : {
-				display: function(data) {
+				"display" : function(data) {
 #foreach ($parameter in $tableAction.actionParameters)
 					var $parameter.name = data.record.${parameter.name};
 #end
 					return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='" + "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first) + "&" #end + "$param.name="+ $param.name  + #set($first=false)#end"'>" + #if(!$tableAction.imageLink)HINTS_ITEMS["${tableAction.name}"] #else #set($link = "")#foreach($palavra in $tableAction.imagePath.split('/') )#set($link=$palavra)#end"<div class='imageHyperlink' id='imageHyperlink${tableAction.name.replace(' ','')}'></div>"#end + "</a>";
 				},
-				title: HINTS_ITEMS["${tableAction.name}_column_action_name"]
+				"title": HINTS_ITEMS["${tableAction.name}_column_action_name"]
 			}
 #end
 #end   	            
