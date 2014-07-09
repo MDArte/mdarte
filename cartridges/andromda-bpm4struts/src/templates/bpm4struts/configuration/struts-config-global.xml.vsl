@@ -61,7 +61,7 @@
 
     <form-beans>
 		<!-- form-beans merge-point -->
-		##Forms oAuth
+##Forms oAuth
 #if($oAuthServer == "true")
 			<form-bean
             name="loginOAuthUCLoginOAuthUCForm"

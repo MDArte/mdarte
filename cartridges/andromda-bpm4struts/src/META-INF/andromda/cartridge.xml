@@ -353,7 +353,7 @@
             </modelElement>
         </modelElements>
     </template>
-  
+
     <template
         path="templates/bpm4struts/forms/ActionFormInterface.java.vsl"
         outputPattern="$generatedFile"

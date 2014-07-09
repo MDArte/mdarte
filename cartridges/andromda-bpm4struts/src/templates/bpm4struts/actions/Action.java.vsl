@@ -97,15 +97,15 @@ public final class $action.actionClassName extends org.apache.struts.action.Acti
 
     	org.apache.struts.action.ActionForward forward = null;
     	boolean copyParameters = true;
-    	
-    	if (request.getSession().getAttribute(Constantes.COPY_PARAMETERS) != null) {
-    		copyParameters = (Boolean) request.getSession().getAttribute(Constantes.COPY_PARAMETERS);
-    		request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
-    	}
+
+		if (request.getSession().getAttribute(Constantes.COPY_PARAMETERS) != null) {
+			copyParameters = (Boolean) request.getSession().getAttribute(Constantes.COPY_PARAMETERS);
+			request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
+		}
 
 #if (!${action.copyParameters})
 		request.getSession().setAttribute(Constantes.COPY_PARAMETERS, Boolean.FALSE);
-		
+
 #end
 #if ($action.useCaseStart)
 
@@ -173,7 +173,8 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 ## carregue dados para uma tabela e assim possibilitar a paginação.
 ## #if(!$action.actionFormFields.empty)
 ##	request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.do");
-## #end	
+## #end
+##
 #set($possuiTable = false)
 #foreach($field in $action.actionFormFields)
 #if($field.table && !$possuiTable)
@@ -233,7 +234,7 @@ java.util.List listaCasosUso = new java.util.ArrayList();
 
 #else
 	
-	###processOperationMode($action ${action.useCase.name})
+###processOperationMode($action ${action.useCase.name})
 #processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "		")
 #processTableNameList($action "		")
 #processTransition($action "		")
@@ -384,7 +385,7 @@ $decisionTransition.getDocumentation("     * ")
 		if (value.equals("$outcome.guardName"))
 		{
 #saveMessages($outcome "            ")
-			###processOperationMode($outcome ${action.useCase.name})
+###processOperationMode($outcome ${action.useCase.name})
 #processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.do" "			")
 #processTableNameList($outcome "			")
 #processTransition($outcome "			")

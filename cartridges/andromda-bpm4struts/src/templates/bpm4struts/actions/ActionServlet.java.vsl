@@ -24,7 +24,7 @@ public class ActionServlet
 
 			if(ports.getProperty("https.port") == null || ports.getProperty("http.port") == null)
 				throw new RuntimeException("error.port.configuration");
-				
+
 		}catch(java.io.IOException e){
 			throw new RuntimeException("port.file.not.found");
 		}

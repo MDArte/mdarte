@@ -256,7 +256,7 @@ $field.getDocumentation("     * ")
 $field.getDocumentation("     * ")
      */
     public java.io.File ${field.getterName}();
-	
+
 	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType);
 
     /**

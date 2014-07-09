@@ -27,7 +27,7 @@ ${indent}Object[] objetos = null;
 #end
 #else
 #set($type = ${parameter.type.fullyQualifiedName})
-#end	
+#end
 #set ($asType = "")
 #if ($parameter.date)
 #set ($asType = "AsDate")
@@ -49,7 +49,7 @@ ${indent}		specificForm.${parameter.setterName}${asType}RowSelection((${type}) o
 ${indent}	Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
 
 ${indent}	if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
-${indent}		specificForm.${parameter.setterName}${asType}(((${type}) obj));	
+${indent}		specificForm.${parameter.setterName}${asType}(((${type}) obj));
 #end
 ${indent}}catch(NoSuchMethodException e){
 ${indent}	//Nao faz nada, simplesmente nao copia o parametro
