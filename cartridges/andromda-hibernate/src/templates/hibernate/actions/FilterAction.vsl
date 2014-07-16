@@ -3,12 +3,14 @@
 package $customTypesPackage.${actionPackageName};
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.ValueObject;
+import ${customTypesPackage}.${util}.Constantes;
 
 public class FilterAction extends Action {
 
@@ -30,8 +32,8 @@ public class FilterAction extends Action {
 	public FilterAction(DataObject vo, Integer paginacao){
 		this.vo = vo;
 		this.paginacao = paginacao;
-		this.paginas = 10;
-		this.linhas = 20;
+		this.paginas = Constantes.TABLE_PAGES;
+		this.linhas = Constantes.TABLE_LINES;
 		this.defaultValues = true;
 	}
 	
