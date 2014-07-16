@@ -25,4 +25,6 @@ public class Constantes {
 	static public final String BUTTON_TROCA_SENHA = "button";
 	static public final String MODO_OPERACAO = "modoOperacao";
 	static public final String COPY_PARAMETERS = "copyParameters";
+	static public final Integer TABLE_LINES = 20;
+	static public final Integer TABLE_PAGES = 10;
 }
