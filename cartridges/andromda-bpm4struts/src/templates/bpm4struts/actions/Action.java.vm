@@ -127,9 +127,10 @@ ${indent}}
 #end
 #set($Q = '"')
 #if(!$transition.actionParameters.isEmpty())
+#set($size=$transition.actionParameters.size())
+#if($size>0)
 #set($parameters="${Q}?")
 #set($count=0)
-#set($size=$transition.actionParameters.size())
 #foreach($param in $transition.actionParameters)
 #set($count=$count+1)
 #set($parameters="${parameters}${param.name}=${Q} + specificForm.${param.getterName}()")
@@ -137,8 +138,9 @@ ${indent}}
 #set($parameters="${parameters} + ${Q}&")
 #end
 #end
+#end
 #else
-#set($parameters="")
+##
 #end
 ${indent}if (request.getAttribute("$forwardKey") != null) {
 ${indent}	forward = new org.apache.struts.action.ActionForward((String)request.getAttribute("$forwardKey"), true);
@@ -154,7 +156,7 @@ ${indent}	}
 ${indent}	org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, mapAtributos, this.getServlet().getServletContext().getContext("$servletContext"));
 
 ${indent}	String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
-${indent}	forward = new org.apache.struts.action.ActionForward(uriForward + "$transition.forwardPath" + ${parameters}, true);
+${indent}	forward = new org.apache.struts.action.ActionForward(uriForward + "$transition.forwardPath"#if($parameters) + ${parameters}#end, true);
 ${indent}}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
