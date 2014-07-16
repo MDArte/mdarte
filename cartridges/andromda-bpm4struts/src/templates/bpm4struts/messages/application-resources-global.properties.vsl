@@ -17,7 +17,7 @@ error.exception.title=Application error
 error.exception.message=The application encountered an unexpected exception, please contact your system administrator and notify him/her of this problem.
 error.copia.parametros=Erro na passagem de parametros entre casos de uso, tipos incompativeis para o parametro {0}
 
-error.stack.trace=StackTrace
+error.stack.trace=Um erro ocorreu. Clique aqui para ver o StackTrace
 
 select.deselect.all=Select/Deselect All
 select.deselect.this.row=Select/Deselect this row

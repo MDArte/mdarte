@@ -61,11 +61,8 @@ window.close();
 				breadCrumbIt = breadCrumbCollection.iterator();
 				 
 				while (breadCrumbIt.hasNext()) {
-				
-	
+
 					out.print(breadCrumbIt.next().toString());
-	
-	
 				} 
 			}
 		
