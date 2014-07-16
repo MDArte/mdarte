@@ -12,10 +12,14 @@
 			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
 
 			#if ($operation.returnTypePresent)return #end
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (paginacao);
+			handle${stringUtils.capitalize(${operation.name})} (paginacao,linhas,paginas);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao, linhas, paginas);
+#end
+#else
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
 #end
 		} finally {
 			if(responsibleSession)
@@ -32,9 +36,9 @@
 #set($paginacao = "")
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
+			handle${stringUtils.capitalize(${operation.name})} (null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -64,13 +68,11 @@
 		try {
 			responsibleSession = $customTypesPackage.${modelPackageName}.AbstractDAO.getSession();
 			#if ($operation.returnTypePresent)return #end
-#set($paginacao = "")
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-#set($paginacao = "null")
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} ($paginacao,linhas,paginas);
+			handle${stringUtils.capitalize(${operation.name})} (null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao, linhas, paginas);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -103,10 +105,14 @@
 		try {
 			responsibleSession = $customTypesPackage.${modelPackageName}.AbstractDAO.getSession();
 			#if ($operation.returnTypePresent)return #end
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (paginacao);
+			handle${stringUtils.capitalize(${operation.name})} (paginacao,linhas,paginas);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao, linhas, paginas);
+#end
+#else
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
 #end
 		} finally {
 			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);
