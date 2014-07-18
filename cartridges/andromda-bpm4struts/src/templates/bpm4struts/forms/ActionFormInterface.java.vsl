@@ -297,9 +297,9 @@ $field.getDocumentation("     * ")
     public void ${field.resetName}();
 
 ###if ($field.selectable)
-#if (${field.widgetType}=="select" || $field.doubleSelect || $field.radio || ${field.widgetType}=="multibox")
+##if (${field.widgetType}=="select" || $field.doubleSelect || $field.radio || ${field.widgetType}=="multibox")
 #processListsInterface ($field ${operation.controller.useCase.useCaseOldStruts})
-#end
+##end
 
 ###end
 #end

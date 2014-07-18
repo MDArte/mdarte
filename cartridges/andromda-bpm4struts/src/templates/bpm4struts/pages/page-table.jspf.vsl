@@ -9,22 +9,7 @@
 #set($gerarJSP = true)	
 #end
 #if($gerarJSP)
-<<<<<<< HEAD
 
-=======
-## [MOISES-COPPETEC]
-## Acaoo a ser utilizada no link "NEXT" na paginacao.
-#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
-<% String acao_${table.name};
-   if (session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
-	acao_${table.name} = request.getContextPath() + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
-   }else{
-	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
-   }
-%>
-
-## Fim
->>>>>>> refs/remotes/origin/develop
 <% 
   String nomeProjeto${table.name} = request.getContextPath(); 
   out.println("<script>");
@@ -36,12 +21,11 @@
 	function setaParametros${table.name}(param1, param2) {
 		document.${table.name}.action = "";
 		document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-<<<<<<< HEAD
 		document.${table.name}.name=param1;						   
 		document.${table.name}.submit(); 
 		return true;                
 	}
-	
+
 	function selecionaDeseleciona(){
 		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
 		var setChecked;
@@ -56,25 +40,6 @@
 ## Acao a ser utilizada nos links na paginacao.
 <c:set var="acao" value='${pageContext.request.contextPath}${form.actionPath}'/>
 		   
-=======
-			document.${table.name}.name=param1;						   
-			document.${table.name}.submit(); 
-		return true;                
-	}
-
-	function selecionaDeseleciona(){
-		var boxes=document.getElementsByName('${table.tableGlobalActionParameter.name}RowSelectionAsArray');
-		var setChecked;
-		if(boxes.length==0){
-			boxes.checked=!boxes.checked;
-		}else{
-			setChecked = !boxes[0].checked;
-		}
-		for(var i=0;i<boxes.length;i++) boxes[i].checked=setChecked;
-	}
-</script>
-
->>>>>>> refs/remotes/origin/develop
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
     <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
@@ -190,21 +155,13 @@
 #if ($securityEnabled) 
 ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> refs/remotes/origin/develop
 #if($valueConfirmMessage !="")
             <html:button  #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" onclick="confirm ('$valueConfirmMessage')? setaParametros${table.name}('$action.formBeanName', '$action.actionPath') : false" property="$action.formBeanName">
 	           <bean:message key="$action.actionTrigger.triggerKey"/>
             </html:button>  
 #else
-<<<<<<< HEAD
-				
-=======
 
->>>>>>> refs/remotes/origin/develop
 #if($action.findTaggedValue("@andromda.presentation.web.action.tablelink")!= "")
 			<html:button 
 				onclick="setaAcaoForm('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', this.form )"
@@ -213,11 +170,7 @@ ${indent}   <security:containsPermission name="$action.actionTrigger.triggerKey"
 				<bean:message key="$action.actionTrigger.triggerKey"/>
 			</html:button>
 #else
-<<<<<<< HEAD
-					<html:button 
-=======
 			<html:button 
->>>>>>> refs/remotes/origin/develop
 				onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}')"
 #if($hints=="true")onmouseover="hints.show('${action.actionTrigger.name}')" onmouseout="hints.hide()"#end
                 property="${action.actionName}"> 

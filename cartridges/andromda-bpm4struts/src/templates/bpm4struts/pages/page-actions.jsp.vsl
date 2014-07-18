@@ -39,10 +39,10 @@
 <script>
 	function setaAcao(nomeAcao, fcValidacao, valida , nomeForm, formato){
 		document.forms[0].action = "";
-		##if(getPath() == "" || getPath() == null)
-			##  document.forms[0].action = '<%=request.getScheme() + "://" + request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")%>' + document.forms[0].action;			
+##if(getPath() == "" || getPath() == null)
+##  document.forms[0].action = '<%=request.getScheme() + "://" + request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")%>' + document.forms[0].action;			
 		
-		##document.forms[0].action = document.forms[0].action + getPath() + '/' + nomeAcao + '.do';
+##document.forms[0].action = document.forms[0].action + getPath() + '/' + nomeAcao + '.do';
 		if (nomeAcao.indexOf("/") == 0) {
 			document.forms[0].action = getPath() + nomeAcao + formato;
 		}else{
@@ -66,17 +66,17 @@
 		}else{
 			action=getPath() + '/' + nomeAcao + '.do';
 		}
-	#set($temLookupGrid="false")
-	#foreach ($_action in $jsp.actions)
-		#if($_action.lookupGrid)
-			#set($temLookupGrid="true")
-		#end
-	#end
-	#if($temLookupGrid=="true")
+#set($temLookupGrid="false")
+#foreach ($_action in $jsp.actions)
+#if($_action.lookupGrid)
+#set($temLookupGrid="true")
+#end
+#end
+#if($temLookupGrid=="true")
 		window.open(action, '', 'width=700,height=500,top=50,left=100,scrollbars=yes');
-	#else
+#else
 		window.open(action, '', 'width=700,height=500,top=50,left=100');
-	#end
+#end
 	}
 	function apaga() {
                document.forms[0].reset();
@@ -111,7 +111,7 @@
 
 <script>
 	function keySubmit(e){
-		#if($defaultAction)
+#if($defaultAction)
 		var keycode;
 		if (window.event) 
 			keycode = window.event.keyCode;
@@ -127,7 +127,7 @@
    		}
 		else
   			return true;
-  		#end
+#end
 	}
 </script>
 
@@ -135,12 +135,12 @@
      <!--Operacao de Habilitar-->
      function verificaHabilitados() {
           
-          #foreach ($field in $actionParameters)
-          #if($field.habilitadoPor)
+#foreach ($field in $actionParameters)
+#if($field.habilitadoPor)
           if(
-          #foreach($habilitador in $field.habilitadoPor)
+#foreach($habilitador in $field.habilitadoPor)
           #if($velocityCount != 1)&&#end document.getElementById('$habilitador.styleId').value != ''
-          #end
+#end
           ){
      	  	document.getElementById('$field.styleId').disabled = false;
 	  }else {
@@ -150,18 +150,18 @@
 			verificaHabilitados();
 		}
 	 }
-	 #end
-	 #end
+#end
+#end
     }
     <!--Operacao de Desabilitar-->
     function verificaDesabilitados() {
           
-          #foreach ($field in $actionParameters)
-          #if($field.desabilitadoPor)
+#foreach ($field in $actionParameters)
+#if($field.desabilitadoPor)
           if(
-          #foreach($desabilitador in $field.desabilitadoPor)
+#foreach($desabilitador in $field.desabilitadoPor)
           #if($velocityCount != 1)||#end document.getElementById('$desabilitador.styleId').value != ''
-          #end
+#end
           ){
           	document.getElementById('$field.styleId').disabled = true;
           	if(document.getElementById('$field.styleId').value != ''){
@@ -172,19 +172,19 @@
 	  }else {
             	document.getElementById('$field.styleId').disabled = false;
 	  }
-	 #end
-	 #end
+#end
+#end
     }
     
     <!--Operacao de tornar visivel-->    
     function verificaVisiveis() {
           
-          #foreach ($field in $actionParameters)
-          #if($field.visivelPor)
+#foreach ($field in $actionParameters)
+#if($field.visivelPor)
           if(
-          #foreach($visivelPor in $field.visivelPor)
+#foreach($visivelPor in $field.visivelPor)
           #if($velocityCount != 1)&&#end document.getElementById('$visivelPor.styleId').value != ''
-          #end
+#end
           ){
           	document.getElementById('tr-$field.styleId').style.display ='';
      	  }else {
@@ -195,19 +195,19 @@
 		}
             	
 	 }
-	 #end
-	 #end
+#end
+#end
     }
     
     <!--Operacao de Esconder-->    
     function verificaEscondidos() {
           
-          #foreach ($field in $actionParameters)
-          #if($field.escondidoPor)
+#foreach ($field in $actionParameters)
+#if($field.escondidoPor)
           if(
-          #foreach($escondidoPor in $field.escondidoPor)
+#foreach($escondidoPor in $field.escondidoPor)
           #if($velocityCount != 1)||#end document.getElementById('$escondidoPor.styleId').value != ''
-          #end
+#end
           ){
           	document.getElementById('tr-$field.styleId').style.display ='none';
           	if(document.getElementById('tr-$field.styleId').value != ''){
@@ -218,8 +218,8 @@
 	  }else {
             	document.getElementById('tr-$field.styleId').style.display ='';
 	 }
-	 #end
-	 #end
+#end
+#end
     }
     
     function verifica() {
@@ -281,17 +281,12 @@
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
-<<<<<<< HEAD
-		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 #if(!$jsp.temTabela)
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
 #else
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get">
 #end
-=======
-## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
-        		<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
->>>>>>> refs/remotes/origin/develop
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<div class="FormLinhaBotoes">
 #foreach ($_action in $jsp.actions)
@@ -320,29 +315,18 @@
 #end
 #if(!$jsp.temTabela)
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
-<<<<<<< HEAD
 #else
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get" enctype="multipart/form-data" >
 #end
-        					<%@ include file="${jsp.fullPath}-control-params.jspf" %>
-			#foreach($acao in $jsp.actions)
-			#if (!$acao.hiddenActionParameters.empty)
-            			<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
-			#end
-			#end
-                    	            <table>
-                <tbody>
-=======
         			<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 #foreach($acao in $jsp.actions)
 #if (!$acao.hiddenActionParameters.empty)
             		<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
 #end
->>>>>>> refs/remotes/origin/develop
 
-                    <table>
-						<tbody>
+                    	            <table>
+                <tbody>
 #foreach ($field in $actionParameters)
 
 #if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
