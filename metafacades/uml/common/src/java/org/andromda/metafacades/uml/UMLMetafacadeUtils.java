@@ -71,4 +71,15 @@ public class UMLMetafacadeUtils
         Matcher matcher = pattern.matcher(StringUtils.trimToEmpty(expression));
         return matcher.matches();
     }
+    
+    /**
+     * Convenient method to detect whether or not a String instance represents a boolean <code>true</code> value.
+     */
+    public static boolean isTrue(String string)
+    {
+        return "yes".equalsIgnoreCase(string) ||
+            "true".equalsIgnoreCase(string) ||
+            "on".equalsIgnoreCase(string) ||
+            "1".equalsIgnoreCase(string);
+    }
 }

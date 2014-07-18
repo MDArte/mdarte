@@ -284,6 +284,6 @@ function setaAcaoStruts2(nomeAcao , nomeForm, formato) {
         document.forms[0].action = getPath() + '/' + nomeAcao + formato;
     }
     document.forms[0].name = nomeForm;
+
     document.forms[0].submit();
 }
-

@@ -3,37 +3,69 @@
 package $customTypesPackage.${actionPackageName};
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.ValueObject;
+import ${customTypesPackage}.${util}.Constantes;
 
 public class FilterAction extends Action {
 
 	private DataObject vo;
 	private Integer paginacao;
+	private Integer linhas;
+	private Integer paginas;
+	private Boolean defaultValues;
+	
 	
 	public FilterAction(){
-		vo = null;
-		paginacao = null;
+		this.vo = null;
+		this.paginacao = null;
+		this.paginas = null;
+		this.linhas = null;
+		this.defaultValues = true;
 	}
 	
 	public FilterAction(DataObject vo, Integer paginacao){
 		this.vo = vo;
 		this.paginacao = paginacao;
+		this.paginas = Constantes.TABLE_PAGES;
+		this.linhas = Constantes.TABLE_LINES;
+		this.defaultValues = true;
+	}
+	
+	public FilterAction(DataObject vo, Integer paginacao, Integer linhas, Integer paginas) {
+		this.vo = vo;
+		this.paginacao = paginacao;
+		this.linhas = linhas;
+		this.paginas = paginas;
+		this.defaultValues = false;
 	}
 	
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		return dao.filter(vo, paginacao);
+		return this.defaultValues ? dao.filter(vo, paginacao) : dao.filter(vo,paginacao,linhas,paginas);
 	}
 		
 	public DataObject getVo(){
-		return vo;
+		return this.vo;
 	}
 	
 	public Integer getPaginacao(){
-		return paginacao;
+		return this.paginacao;
+	}
+	
+	public Integer getLinhas() {
+		return this.linhas;
+	}
+	
+	public Integer getPaginas() {
+		return this.paginas;
+	}
+	
+	public Boolean defaultValues() {
+		return this.defaultValues;
 	}
 }

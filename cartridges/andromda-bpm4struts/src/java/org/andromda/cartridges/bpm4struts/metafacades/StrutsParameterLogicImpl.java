@@ -710,17 +710,17 @@ public class StrutsParameterLogicImpl
 
     protected List handleGetTableFormActions()
     {
-        return this.internalGetTableActions(false, true, false, false);
+        return this.internalGetTableActions(false, true, false, false, true);
     }
 
     protected List handleGetTableHyperlinkActions()
     {
-        return this.internalGetTableActions(true, false, false, false);
+        return this.internalGetTableActions(true, false, false, false,false);
     }
 
     protected Collection handleGetTableGlobalActions()
     {
-        return this.internalGetTableActions(false, false, true, false);
+        return this.internalGetTableActions(false, false, true, false,false);
     }
 
     protected Object handleGetTableGlobalActionParameter()
@@ -753,7 +753,8 @@ public class StrutsParameterLogicImpl
     private List internalGetTableActions(boolean hyperlink,
                                          boolean formPost,
                                          boolean tableAction,
-                                         boolean lookupGrid)
+                                         boolean lookupGrid,
+                                         boolean image)
     {
         final String name = StringUtils.trimToNull(getName());
         if (name == null || !isTable())
@@ -786,7 +787,8 @@ public class StrutsParameterLogicImpl
                                 if ((hyperlink && action.isHyperlink()) ||
                                     (formPost && action.isFormPost()) ||
                                     (tableAction && action.isTableAction())||
-                                    (lookupGrid && action.isLookupGrid()))
+                                    (image && action.isImageLink())||
+                                    (lookupGrid && (action.isLookupGrid() || action.isPopup())))
                                 {
                                     tableActions.add(action);
                                 }
@@ -1142,7 +1144,7 @@ public class StrutsParameterLogicImpl
         ClassifierFacade type = getType();
         if (type != null)
         {
-            multiple = type.isCollectionType() || type.isArrayType();
+            multiple = type.isCollectionType() || type.isArrayType() || type.isEnumeration();
         }
         return multiple;
     }
@@ -1272,7 +1274,8 @@ public class StrutsParameterLogicImpl
     protected boolean handleIsReadOnly()
     {
         final Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_READONLY);
-        return Bpm4StrutsUtils.isTrue(value == null ? null : String.valueOf(value));
+   
+        return String.valueOf(value).equals("true");
     }
 
     /**
@@ -1379,7 +1382,7 @@ public class StrutsParameterLogicImpl
     protected boolean handleIsValidationRequired()
     {
         final String disableValidationForHiddenFormFields = (String)getConfiguredProperty(Bpm4StrutsGlobals.DISABLE_VALIDATION_FOR_HIDDEN_FORM_FIELDS);
-        return !("true".equals(disableValidationForHiddenFormFields) && "hidden".equals(getWidgetType())) &&
+        return !("true".equals(disableValidationForHiddenFormFields) && "hidden".equals(getWidgetType())) && !("plaintext".equals(getWidgetType()))  &&
             !getValidatorTypes().isEmpty();
     }
 
@@ -1545,6 +1548,10 @@ public class StrutsParameterLogicImpl
                             Arrays.asList(new Object[]{"maxlength", this.getMaxLengthValue(additionalFormat)}));
                         else if (isPatternFormat(additionalFormat)) vars
                             .put("mask", Arrays.asList(new Object[]{"mask", this.getPatternValue(additionalFormat)}));
+                        else if (isEmailFormat(additionalFormat)) vars
+                        	.put("email", Arrays.asList(new Object[]{"email"}));
+                        else if (isCreditCardFormat(additionalFormat)) vars
+                    		.put("creditcard", Arrays.asList(new Object[]{"creditcard"}));
                     }
                 }
             }
@@ -1637,9 +1644,9 @@ public class StrutsParameterLogicImpl
         if (taggedValueObject == null)
         {
             // we resort to the default values
-            optionValues.add("0");
-            optionValues.add("1");
-            optionValues.add("2");
+            //optionValues.add("0");
+            //optionValues.add("1");
+            //optionValues.add("2");
         }
         else
         {
@@ -1811,6 +1818,14 @@ public class StrutsParameterLogicImpl
     {
         return UMLMetafacadeUtils.isType(this.getType(), Bpm4StrutsProfile.DOUBLE_TYPE_NAME);
     }
+    
+    /**
+     * @return <code>true</code> if the type of this field is a double precision floating point, <code>false</code> otherwise
+     */
+    protected boolean isValidatorNumeric()
+    {
+        return isValidatorDouble() || isValidatorFloat() || isValidatorShort() || isValidatorInteger() || isValidatorLong();
+    }
 
     /**
      * @return <code>true</code> if the type of this field is a date, <code>false</code> otherwise
@@ -1865,13 +1880,7 @@ public class StrutsParameterLogicImpl
      */
     protected boolean isRangeFormat(String format)
     {
-        return "range".equalsIgnoreCase(getToken(format, 0, 2)) &&
-            (isValidatorInteger() ||
-                isValidatorLong() ||
-                isValidatorShort() ||
-                isValidatorFloat() ||
-                isValidatorDouble());
-
+        return "range".equalsIgnoreCase(getToken(format, 0, 2)) && (isValidatorNumeric());
     }
 
     /**
@@ -1909,7 +1918,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the lower limit for this field's value's range
      */
-    private String getRangeStart(String format)
+    protected String getRangeStart(String format)
     {
         return getToken(format, 1, 3);
     }
@@ -1917,7 +1926,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the upper limit for this field's value's range
      */
-    private String getRangeEnd(String format)
+    protected String getRangeEnd(String format)
     {
         return getToken(format, 2, 3);
     }
@@ -1925,7 +1934,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return this field's date format
      */
-    private String getDateFormat(String format)
+    protected String getDateFormat(String format)
     {
         return (isStrictDateFormat(format)) ? getToken(format, 1, 2) : getToken(format, 0, 1);
     }
@@ -1933,7 +1942,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the minimum number of characters this field's value must consist of
      */
-    private String getMinLengthValue(String format)
+    protected String getMinLengthValue(String format)
     {
         return getToken(format, 1, 2);
     }
@@ -1941,7 +1950,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the maximum number of characters this field's value must consist of
      */
-    private String getMaxLengthValue(String format)
+    protected String getMaxLengthValue(String format)
     {
         return getToken(format, 1, 2);
     }
@@ -1949,7 +1958,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the pattern this field's value must respect
      */
-    private String getPatternValue(String format)
+    protected String getPatternValue(String format)
     {
         return '^' + getToken(format, 1, 2) + '$';
     }
@@ -1957,7 +1966,7 @@ public class StrutsParameterLogicImpl
     /**
      * @return the i-th space delimited token read from the argument String, where i does not exceed the specified limit
      */
-    private String getToken(String string,
+    protected String getToken(String string,
                             int index,
                             int limit)
     {
@@ -2061,6 +2070,6 @@ public class StrutsParameterLogicImpl
 
 	
 	protected Collection handleGetTableLookupGridActions() {
-		 return this.internalGetTableActions(false, false, false, true);
+		 return this.internalGetTableActions(false, false, false, true, false);
 	}
 }

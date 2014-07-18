@@ -118,7 +118,7 @@ public abstract class AbstractDAO {
 		return BD_USUARIO;
 	}
 
-	#if($stringUtils.isNotBlank($procedureName))
+#if($stringUtils.isNotBlank($procedureName))
 	public void executarProcedure(String proc)throws Exception{
 	Session session = currentSession();
     
@@ -143,7 +143,7 @@ public abstract class AbstractDAO {
   }  
 	
 	}
-	#end
+#end
 	public abstract java.util.List<AbstractEntity> select(long id) throws DAOException;
 	
 	public abstract java.util.List<AbstractEntity> insert(AbstractEntity objTO) throws DAOException;
@@ -156,9 +156,15 @@ public abstract class AbstractDAO {
 	
 	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException;
 	
+	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc, Integer linhas, Integer paginas) throws DAOException;
+	
 	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
 	
+	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
+	
 	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao) throws DAOException;
+	
+	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
 	
 	public abstract org.hibernate.Criteria xmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws DAOException;
 	

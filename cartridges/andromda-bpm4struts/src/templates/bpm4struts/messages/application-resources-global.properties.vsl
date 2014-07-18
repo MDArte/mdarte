@@ -17,7 +17,7 @@ error.exception.title=Application error
 error.exception.message=The application encountered an unexpected exception, please contact your system administrator and notify him/her of this problem.
 error.copia.parametros=Erro na passagem de parametros entre casos de uso, tipos incompativeis para o parametro {0}
 
-error.stack.trace=StackTrace
+error.stack.trace=Um erro ocorreu. Clique aqui para ver o StackTrace
 
 select.deselect.all=Select/Deselect All
 select.deselect.this.row=Select/Deselect this row
@@ -176,12 +176,33 @@ acesso.negado=O usuario não possui permissão para acessar este serviço.
 subject.null=O usuario não está logado no sistema.
 
 #
+#   Messages for the client validator
+#
+
+validate.required=Campo é obrigatório.
+validate.minlength=O tamanho não pode ser menor que {0} caracteres.
+validate.maxlength=O tamanho não pode ser maior que {0} caracteres.
+
+validate.digits=O campo só pode ter caracteres numéricos.
+validate.integer=Não é um número inteiro.
+validate.number=Não é um número decimal.
+
+validate.date=Não é uma data válida.
+validate.range=O valor deve estar entre {0} e {1}.
+validate.creditcard=Número de cartão de crédito inválido.
+validate.email=Endereço de e-mail inválido.
+validate.url=URL inválido.
+validate.pattern=Texto inválido.
+
+#
 #   Messages for the validator plugin
 #
 errors.required={0} is required.
+errors.requiredstring={0} cannot be an empty string.
 errors.minlength={0} can not be less than {1} characters.
 errors.maxlength={0} can not be greater than {1} characters.
 errors.invalid={0} is invalid.
+errors.numeric={0} must be a number.
 
 errors.byte={0} must be a byte.
 errors.short={0} must be a short.
@@ -193,9 +214,11 @@ errors.double={0} must be a double.
 errors.date={0} is not a valid date or does not respect the '{1}' format.
 errors.time={0} is not a valid time or does not respect the '{1}' format.
 errors.range={0} is not in the range {1} through {2}.
+errors.daterange={0} must be within {1} and {2}.
 errors.creditcard={0} is an invalid credit card number.
 errors.email={0} is an invalid e-mail address.
 errors.url={0} is an invalid URL.
+errors.pattern={0} does not respect the established format.
 
 pagina.expirou=A página expirou
 

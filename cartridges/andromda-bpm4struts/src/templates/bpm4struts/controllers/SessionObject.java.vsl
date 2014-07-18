@@ -17,10 +17,10 @@ public class $sessionObject.name implements Serializable
     private final Integer iterations;
     
     public ${sessionObject.name}(){
-    	#set($iterations = "null")
-    	#if($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals(""))
-    	#set($iterations = $sessionObject.findTaggedValue("$sessionObjectCounter"))
-    	#end
+#set($iterations = "null")
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals(""))
+#set($iterations = $sessionObject.findTaggedValue("$sessionObjectCounter"))
+#end
     	this.iterations = ${iterations};
     }
 
@@ -44,5 +44,5 @@ $attribute.getDocumentation("     * ")
 #end
    public Integer getIterations(){
    	return iterations;
-   }	
+   }
 }

@@ -53,7 +53,7 @@
 
 #if ($securityEnabled)
 	<!-- Configuration of secure operations-->
-#set($path = "")                
+#set($path = "")
 #if(!$applicationUseCases.empty)
 #set($applicationUseCase=$applicationUseCases.iterator().next())
 #set($path = "${applicationUseCase.actionPath}")

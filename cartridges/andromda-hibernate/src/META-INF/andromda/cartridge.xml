@@ -40,6 +40,7 @@
     <property reference="password"/>
     <property reference="connectionUrl"/>
     <property reference="dataSource"/>
+	<property reference="utilDir"/>
     <property reference="hibernateDefaultCascade"/>
     <property reference="hibernatePoolSize"/>
     <property reference="hibernateTransactionFactoryClass"/>

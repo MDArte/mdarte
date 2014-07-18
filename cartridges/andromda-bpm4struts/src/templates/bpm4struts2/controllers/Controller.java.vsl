@@ -14,22 +14,21 @@
 #if($gerar)
 // license-header java merge-point
 package $controller.packageName;
-
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set ($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import ${servletPackage}.ViewContainer;
+import ${servletPackage}.ControllerAbstract;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import java.util.Collection;
 
 /**
 $controller.getDocumentation(" * ")
  */
-public abstract class ${controller.name} implements java.io.Serializable
+public abstract class ${controller.name} extends ControllerAbstract
 {
-
-
 
 #foreach ($operation in $operations)
 #set ($parameters = $operation.arguments)
@@ -38,27 +37,27 @@ public abstract class ${controller.name} implements java.io.Serializable
 #if (!$returnType)
 #set ($returnType = "void")
 #end
-    /**
+	/**
 $operation.getDocumentation("     * ")
 #if ($operation.callingBackEnd)
-     *
-     * This operation delegates to
-     * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
+	 *
+	 * This operation delegates to
+	 * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
 #end
-     */
+	 */
 #if ($operation.callingBackEnd) ## remocao dos parametros actionmapping, request e response
-    $visibility $returnType ${operation.name}($operation.interfaceType form) throws java.lang.Exception
-    {
-        ${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
+	$visibility $returnType ${operation.name}($operation.interfaceType form) throws java.lang.Exception
+	{
+		${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
 #set ($comma = "")
 #foreach ($argument in $operation.backEndServiceOperation.arguments)
-            ${comma}form.${argument.getterName}()
+		${comma}form.${argument.getterName}()
 #set ($comma = ", ")
 #end
-        );
-    }
+		);
+	}
 #else
-    $visibility abstract $returnType ${operation.name}($operation.interfaceType form,  ViewContainer container) throws java.lang.Exception;
+	$visibility abstract $returnType ${operation.name}($operation.interfaceType form,  ViewContainer container) throws java.lang.Exception;
 #end
 
 #set ($returnType = false)
@@ -74,41 +73,34 @@ $operation.getDocumentation("     * ")
      * If there is no session, it will be created; if the session would not contain a session-object
      * the object will be instantiated and subsequently stored in the session.
      */
-    protected final $sessionObject.fullyQualifiedName get${accessorSuffix}(ViewContainer container)
-    {
-        $sessionObject.fullyQualifiedName object = null;
+	protected final $sessionObject.fullyQualifiedName get${accessorSuffix}(ViewContainer container)
+	{
+		$sessionObject.fullyQualifiedName object = null;
+		Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
 
-        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        
-       	#set($keep = "false")
-	#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	#set($keep = "true")
-	#end
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			object = ($sessionObject.fullyQualifiedName)attribute;
+#if($keep.equals("false") && $counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.resetSessionObjetCounter(container, object.SESSION_KEY, object.getIterations());
+#end
+		}
+		else if (attribute == null)
+		{
+			object = new $sessionObject.fullyQualifiedName ();
+			set${accessorSuffix}(object, container);
+		}
 
-	
-       #set($counterSO = false)
-       #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-       #set($counterSO = true)
-       #end
-	    
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-            object = ($sessionObject.fullyQualifiedName)attribute;
-            #if($keep.equals("false") && $counterSO)
-            ${servletPackage}.SessionObjectUtilStruts2.resetSessionObjetCounter(container, object.SESSION_KEY, object.getIterations());
-			
-            #end
-        }
-        else if (attribute == null)
-        {
-            object = new $sessionObject.fullyQualifiedName ();
-            set${accessorSuffix}(object, container);
-        }
-
-        return object;
-    }
-
-
+		return object;
+	}
 
     /**
      * Set the argument $sessionObject.name object in the session corresponding with the argument request.
@@ -117,28 +109,25 @@ $operation.getDocumentation("     * ")
      * @param createSession denotes whether or not the session should be created automatically in case it
      * would not yet exist
      */
-    protected final void set${accessorSuffix}($sessionObject.fullyQualifiedName object, ViewContainer container)
-    {
-        
-        if (container != null)
-        { 
-	    #set($keep = "false")
-	    #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
-	    #set($keep = "true")
-	    #end
-	
-	    #set($counterSO = false)
-	    #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
-	    #set($counterSO = true)
-	    #end
-	    
-	    #if($keep.equals("true") || !$counterSO)
-	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
-	    #elseif($keep.equals("false") && $counterSO)
-	    ${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
-	    #end	                
-        }
-    }
+	protected final void set${accessorSuffix}($sessionObject.fullyQualifiedName object, ViewContainer container)
+	{
+		if (container != null)
+		{
+#set($keep = "false")
+#if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
+#set($keep = "true")
+#end
+#set($counterSO = false)
+#if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
+#set($counterSO = true)
+#end
+#if($keep.equals("true") || !$counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
+ #elseif($keep.equals("false") && $counterSO)
+			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
+#end
+		}
+	}
 
     /**
      * Removes the argument $sessionObject.name object from the session corresponding with the argument request.
@@ -149,129 +138,23 @@ $operation.getDocumentation("     * ")
      *   <li>The object is not of the correct type</li>
      * </ul>
      */
-    protected final void remove${accessorSuffix}(ViewContainer container)
-    {
-        Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-        	${servletPackage}.SessionObjectUtilStruts2.removeSessionObject(container, ${sessionObject.fullyQualifiedName}.SESSION_KEY);
-        }
-    }
-
-#end
-	
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @param arguments any arguments used within the message
-     */
-    protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container)
-    {
-        
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-## EM struts 2 ha s:actionmessenger e s:errormenseger como tags e addActionMenssage,addErrorMenssage		
-    }
-
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveWarningMessage(String message, ViewContainer container)
-    {
-        this.saveWarningMessage(message, null, container);
-    }
-
-    /**
-     * Stores a success message in the session, if any other success messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     */
-    protected final void saveSuccessMessage(String message, String[] arguments, ViewContainer container)
-    {
-        
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-	protected final void saveSuccessMessage(String message, ViewContainer container)
+	protected final void remove${accessorSuffix}(ViewContainer container)
 	{
-		this.saveSuccessMessage(message,null,container);
+		Object attribute = container.getFromSession(${sessionObject.fullyQualifiedName}.SESSION_KEY);
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			${servletPackage}.SessionObjectUtilStruts2.removeSessionObject(container, ${sessionObject.fullyQualifiedName}.SESSION_KEY);
+		}
 	}
 
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(String message, String[] arguments, ViewContainer container)
-    {
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(java.lang.String message,ViewContainer container)
-    {
-        this.saveErrorMessage(message, null,container);
-    }
-
+#end
 ##Codigo que gera automaticamente os métodos para fazer o autocomplete dos campos
-#set($actions = $controller.getUseCase().getActions())
-#foreach($action in $actions)
-#foreach($parametro in $action.getActionParameters())
+#set($pages = $controller.getUseCase().getPages())
+#foreach($page in $pages)
+#foreach($parametro in $page.allUniqueActionParameters)
 #if($parametro.autocomplete)
 #set($pageName = $parametro.name) 
-#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($palavras = $parametro.getJsp().getName().split(" "))
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
@@ -280,7 +163,6 @@ $operation.getDocumentation("     * ")
 
 	protected abstract String[] ${pageName}AutoComplete(String query, ViewContainer container) throws Exception;
 	
-
 	public void ${pageName}AutoComplete(ViewContainer container) throws Exception
 	{	
 		String [] result;
@@ -308,35 +190,116 @@ $operation.getDocumentation("     * ")
 	}
 #end
 #end
+#foreach($parametro in $page.getPageVariables())
+#if($parametro.tableType.equals("jtable") && $parametro.table)
+#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($actionName = "")
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionName = $actionName.concat("$aux"))
 #end
+#set($actionName=$actionName.concat($tableName))
+#set($actions = $page.getActions())
+	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
+
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
 	
-	/**
-	 * Método a ser utilizado na recuperação de serviços.
-	 */
-	protected <T> T getService(Class<T> clazz) throws Exception	{
-		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
+	protected void load${actionName}Table(ViewContainer container) throws Exception {
+		
+		Integer linhas = (container.getParameter("jtPageSize") != null) ? Integer.valueOf(container.getParameter("jtPageSize")) : 10;
+		
+		Integer paginacao = (container.getParameter("jtStartIndex") != null) ? Integer.valueOf(container.getParameter("jtStartIndex")) / linhas : 0;
+		
+		String propriedade = container.getParameter("jtSorting") != null ? container.getParameter("jtSorting").split(" ")[0] : "";
+	
+		Boolean desc = new Boolean(false);
+		
+		if(container.getParameter("jtSorting") != null)
+		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+
+#foreach($action in $page.getActions())
+#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
+#foreach($param in $action.getActionParameters())
+#if($param.type.name.equalsIgnoreCase("Integer")) 
+		$param.type.name $param.name = null;
+
+		try {
+			$param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null : Integer.valueOf(container.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Double"))
+		$param.type.name $param.name = null;
+
+		try {
+			 $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null ? Double.valueOf(container.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Boolean"))
+	
+		$param.type.name $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("") ? null : Boolean.valueOf(container.getParameter("${param.name}").toString())); 
+		
+#else 
+		String $param.name = this.extractParameterFromViewContainer(container, "${param.name}");
+		
+#end
+#end
+#end
+#end
+		
+		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
+		
+		String [] columns = {
+#set($i=0)
+#set($limit=$parametro.tableColumns.size() - 1)
+#foreach($column in $parametro.tableColumns)
+#if($i != $limit)
+#if($column.name)
+					"$column.name",
+#else
+					"$column",
+#end
+#else
+#if($column.name) 
+					"$column.name"
+#else
+					"$column"
+#end
+#end
+#set($i=$i+1)
+#end
+			};
+		
+		JSONArray array = new JSONArray();
+		
+		if(rows != null)
+			array = this.parseCollectionToJSON(rows,columns);
+        
+        JSONObject obj = new JSONObject();
+        
+        obj.put("Result","OK");
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container));
+        obj.put("Records",array);
+        
+        container.setContentType("application/json;charset=UTF-8");
+        
+        container.getWriter().write(obj.toString());
+
 	}
+#end
+#end
+#end
 
 	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {
-		return getModoOperacao("${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.do",container);
+		return getModoOperacao(this.getNomeCasoUso(), container);
 	}
-
-	protected java.util.Collection<String> getModoOperacao(String nomeCasoDeUso, ViewContainer container) {
-		java.util.Collection<String> modoOperacao = new java.util.ArrayList();
-		if(container.getFromSession(Constantes.MODO_OPERACAO) != null){
-			java.util.Map map = (java.util.Map)container.getFromSession(Constantes.MODO_OPERACAO);
-			if(nomeCasoDeUso != null){
-				if(map.get(nomeCasoDeUso) != null){
-					String modoOperacaoStr = (String)map.get(nomeCasoDeUso);
-					java.util.StringTokenizer st = new java.util.StringTokenizer(modoOperacaoStr, ",");
-					while(st.hasMoreTokens()){
-						String next = st.nextToken();
-						modoOperacao.add(next);
-					}
-				}
-			}
-		}
-		return modoOperacao;
+	
+	protected String getNomeCasoUso() {
+		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
 	}
 }
 

@@ -12,7 +12,7 @@ package $controleAcessoDir;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -36,13 +36,13 @@ public final class TrocaDeSenhaObrigatoriaProcessar extends Login
     	
     		try{
         	if(request.getSession().getAttribute(Constantes.FORWARD) != null){
-	        	request.getSession().setAttribute("form", form);		        	
+	        	request.getSession().setAttribute("form", form);
         	}else{
         		request.getSession().setAttribute("form", request.getSession().getAttribute("form"));
         	}
 	    }catch(Exception e ){
-	            #populateCurrentFormOnError()
-	            throw e; 
+#populateCurrentFormOnError("	            ")
+	            throw e;
     	}   
     	} 	
         return forward;
@@ -63,7 +63,7 @@ public final class TrocaDeSenhaObrigatoriaProcessar extends Login
     {
 	ActionForward forward = mapping.findForward("troca.de.senha.obrigatoria");	
     LoginFormImpl formImpl = (LoginFormImpl)form;
-    Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);    
+    Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);
     String usuario = ControleAcessoImpl.getCallerPrincipal(subject).getName();
     formImpl.setUsuario(usuario);         	       		
 	request.getSession().removeAttribute(Constantes.MENU);

@@ -51,6 +51,7 @@
 	<property reference="dataSourceName"/>
 	<property reference="ejb3"/>
 	<property reference="controleAcessoDefault"/>
+	<property reference="sqlMappingsUri"/>
 
 	<!-- cartridge-resource merge-point -->    
     

@@ -13,33 +13,73 @@ import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 public class ListAction extends Action{
 
 	private String propriedade;
-	private Boolean desc;
 	private Integer paginacao;
+	private Integer linhas;
+	private Integer paginas;
+	private Boolean desc;
+	private Boolean defaultValues;
 	
 	public ListAction(){
-		propriedade = null;
-		desc = Boolean.FALSE;
+		this.propriedade = null;
+		this.paginacao = null;
+		this.linhas = null;
+		this.paginas = null;
+		this.desc = Boolean.FALSE;
+		this.defaultValues = Boolean.TRUE;
 	}
 	
 	public ListAction(String propriedade, Boolean desc){
 		this.propriedade = propriedade;
+		this.paginacao = null;
+		this.linhas = null;
+		this.paginas = null;
 		this.desc = desc;
+		this.defaultValues = Boolean.TRUE;
+	}
+	
+	public ListAction(String propriedade, Boolean desc, Integer paginacao) {
+		this.propriedade = propriedade;
+		this.paginacao = paginacao;
+		this.linhas = null;
+		this.paginas = null;
+		this.desc = desc;
+		this.defaultValues = Boolean.TRUE;
+	}
+	
+	public ListAction(String propriedade, Boolean desc, Integer paginacao, Integer linhas, Integer paginas) {
+		this.propriedade = propriedade;
+		this.paginacao = paginacao;
+		this.linhas = linhas;
+		this.paginas = paginas;
+		this.desc = desc;
+		this.defaultValues = Boolean.FALSE;
 	}
 
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		return dao.list(null, propriedade, desc);
+		return this.defaultValues ? dao.list(paginacao, propriedade, desc) : dao.list(paginacao, propriedade, desc, linhas, paginas);
 	}
 	
 	public String getPropriedade(){
-		return propriedade;
+		return this.propriedade;
 	}
 	
 	public Boolean getDesc(){
-		return desc;
+		return this.desc;
 	}
 		
 	public Integer getPaginacao(){
-		return paginacao;
+		return this.paginacao;
 	}
 	
+	public Integer getLinhas() {
+		return this.linhas;
+	}
+	
+	public Integer getPaginas() {
+		return this.paginas;
+	}
+	
+	public Boolean defaultValues() {
+		return this.defaultValues;
+	}
 }

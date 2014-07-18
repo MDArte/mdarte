@@ -13,7 +13,7 @@
         <webservice-description-name>${serviceName}Handler</webservice-description-name>
         <wsdl-file>META-INF/wsdl/${serviceName}Handler.wsdl</wsdl-file>
         <jaxrpc-mapping-file>META-INF/${serviceName}Handler-mapping.xml</jaxrpc-mapping-file>
-        #foreach($webService in $webServices)
+#foreach($webService in $webServices)
         <port-component>
             <port-component-name>${webService.name}Srv</port-component-name>
             <wsdl-port>${webService.name}SrvPort</wsdl-port>
@@ -28,7 +28,7 @@
             </handler>
 #end
         </port-component>
-        #end
+#end
     </webservice-description>
 </webservices>
 #end

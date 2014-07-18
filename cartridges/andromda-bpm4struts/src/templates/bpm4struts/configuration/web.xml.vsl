@@ -69,9 +69,9 @@
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
 
-    #if($pacote)
+#if($pacote)
     <!-- filter merge-${pacote.webModuleName}-point -->
-    #end
+#end
     
     <!-- filter merge-point -->
     
@@ -88,6 +88,10 @@
 	<filter-mapping>
 		<filter-name>struts2</filter-name>
 		<url-pattern>/struts/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
     
 #if ($generateWebXmlIds=="true")
@@ -132,11 +136,11 @@
     <servlet>
 #end
         <servlet-name>action</servlet-name>
-        #if ($stringUtils.isNotBlank($securityRealm))
+#if ($stringUtils.isNotBlank($securityRealm))
         <servlet-class>${servletPackage}.ActionServletImpl</servlet-class>
-        #else
+#else
         <servlet-class>${servletPackage}.ActionServlet</servlet-class>
-        #end
+#end
         <init-param>
             <param-name>config</param-name>
             <param-value>/WEB-INF/struts-config.xml</param-value>
@@ -165,30 +169,30 @@
     	<servlet-class>${servletPackage}.UtilServlet</servlet-class>
     </servlet>
 	
-	#if($stringUtils.isNotEmpty($customServlets)) 
-    #foreach($servlet in $stringUtils.split($customServlets,","))
+#if($stringUtils.isNotEmpty($customServlets)) 
+#foreach($servlet in $stringUtils.split($customServlets,","))
 	
 	<servlet>
     	<servlet-name>${servlet}</servlet-name>
     	<servlet-class>${servletPackage}.${servlet}</servlet-class>
     </servlet>
-		
-	#end
-	#end
-	
-	#if($enableCaptcha=="true")
+
+#end
+#end
+
+#if($enableCaptcha=="true")
 	<servlet>
 		<servlet-name>Kaptcha</servlet-name>
     	<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
 		<!-- captcha-param merge-point -->
 	</servlet>
-	#end
+#end
     <!-- precompilation merge-point -->
-    
-    #if($pacote)
+
+#if($pacote)
     <!-- servlet-mapping merge-${pacote.webModuleName}-point -->
-    #end
-    
+#end
+
     <!-- servlet-mapping merge-point -->
 #if ($generateWebXmlIds=="true")
     <servlet-mapping id="servlet_mapping_default">
@@ -204,39 +208,39 @@
         <url-pattern>*.action</url-pattern>
     </servlet-mapping>
 	
-	#foreach ($useCase in $useCases)
-	#if	($stringUtils.isNotEmpty($useCase.customLink))
+#foreach ($useCase in $useCases)
+#if	($stringUtils.isNotEmpty($useCase.customLink))
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
         <url-pattern>/$useCase.customLink</url-pattern>
     </servlet-mapping>	
-	#end
-	#end
+#end
+#end
     
     <servlet-mapping>
         <servlet-name>util</servlet-name>
         <url-pattern>/util-service/*</url-pattern>
     </servlet-mapping>
 	
-	#if($stringUtils.isNotEmpty($customServlets)) 
-    #foreach($servlet in $stringUtils.split($customServlets,","))
+#if($stringUtils.isNotEmpty($customServlets)) 
+#foreach($servlet in $stringUtils.split($customServlets,","))
 	
 	<servlet-mapping>
         <servlet-name>${servlet}</servlet-name>
         <url-pattern>/${servlet.toLowerCase()}/*</url-pattern>
     </servlet-mapping>	
-		
-	#end
-	#end
-	
-    #if($enableCaptcha=="true")
+
+#end
+#end
+
+#if($enableCaptcha=="true")
     <servlet-mapping>  
     	<servlet-name>Kaptcha</servlet-name>  
     	<url-pattern>/kaptcha.jpg</url-pattern>  
  	</servlet-mapping> 
- 	#end
+#end
     <!-- session-config merge-point -->
-    
+
     <!-- mime-type merge-point -->
 
 #if ($generateWebXmlIds=="true")
@@ -320,6 +324,6 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-#end    
+#end
 </web-app>
 #end

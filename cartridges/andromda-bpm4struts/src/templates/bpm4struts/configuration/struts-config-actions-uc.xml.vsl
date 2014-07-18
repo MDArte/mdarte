@@ -28,7 +28,7 @@
 #end
             scope="$action.actionScope"
             unknown="false"
-			#set ($validate = $action.validationRequired && $validationDesired)
+#set ($validate = $action.validationRequired && $validationDesired)
             validate="$validate">
             <exception
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
@@ -58,7 +58,7 @@
 #end
         </action>
 #end
-			
+
 #end
 ##set ($roles = $action.actionRoles)
 ###if ($stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) && $useCase.secured)
@@ -81,9 +81,11 @@
                 handler="${exceptionHandlerPackage}.ExceptionHandler"
                 type="java.lang.Throwable"
                 key="error.exception.message"
-                #if ($action.useCaseStart == false)
+#if ($action.useCaseStart == false)
                 path="${action.input.fullPath}.jsp"
-                #end
+#else
+                path="/error-page.jsp?code=exception"
+#end
                 scope="request" />
 		
 #foreach ($actionForward in $action.actionForwards)
@@ -126,6 +128,32 @@
 #end
 	 <action path="/${useCase.getName()}/${actionName}AutoComplete"
 	 	type="${useCase.getPackagePath().replace('/','.')}.${actionName}AutoComplete"
+	 	scope="request"
+	 	input="${page.fullPath}.jsp"
+	 	unknown="false"
+	 	validate="true" >
+	 	<exception
+           handler="org.andromda.presentation.bpm4struts.ExceptionHandler"
+           type="java.lang.Throwable"
+           key="error.exception.message"
+           path="${page.fullPath}.jsp"
+           scope="request" />
+	    <forward
+	     	name="main"
+	       	path="/ForwardAction.do"
+	       	redirect="false" /> 
+	 </action>
+#elseif($parameter.tableType.equals("jtable"))	 
+#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#set($actionAjax= "")
+#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionAjax = $actionAjax.concat("$aux"))
+#end
+#set($actionAjax=$actionAjax.concat($tableName))
+	<action path="/${useCase.getName()}/${actionAjax}Ajax"
+	 	type="${useCase.getPackagePath().replace('/','.')}.${actionAjax}Ajax"
 	 	scope="request"
 	 	input="${page.fullPath}.jsp"
 	 	unknown="false"

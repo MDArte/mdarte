@@ -97,11 +97,11 @@
 				<input type="submit" class="btn btn-large btn-primary" value="Sign in" name="commit" onclick="setaAcaoOAuth('/LoginOAuthUC/PaginaDeLoginLogin', 'validatePaginaDeLoginLoginForm', true , 'loginOAuthUCPaginaDeLoginLoginForm' )" property="loginOAuthUCPaginaDeLoginLoginForm"/>
 				<input type="reset" class="btn btn-large btn-primary" value="Clear"/>
     			
-    			#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
     			<img src="/${projectId}/kaptcha.jpg" align="middle" border="1"/>	
                 <html:text property="kaptcha" styleId="validarCaptcha"/>
     			<br />
-                #end
+#end
     	
     	<html:hidden property="parametrosLogin" styleId="parametrosLogin"/> 
     

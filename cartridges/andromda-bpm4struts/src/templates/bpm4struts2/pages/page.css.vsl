@@ -2,4 +2,18 @@
 #set ($generatedFile = "${jsp.fullPath}.css")
 /* Arquivo gerado dinamicamente, não o modifique manualmente, 
 	qualquer mudança feita será sobrescrita na prómixa geração */
+#foreach($variable in $jsp.getPageVariables())
+#if($variable.table)
+#foreach($action in $variable.getTableFormActions())
+#if($action.imageLink)
+div#imageHyperlink$action.name.replace(' ','') {
+	background: url("/${projectId}/layout/default/css/images/plus.png");
+	height: 25px;
+	width: 25px;
+	background-size: 30px 30px;
+}
+#end
+#end
+#end
+#end
 #end

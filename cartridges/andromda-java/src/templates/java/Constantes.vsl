@@ -1,7 +1,7 @@
 ##set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/Constantes.java")
-#set ($generatedFile = "${utilDir}/Constantes.java")
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/Constantes.java")
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
-package $package;
+package ${customTypesPackage}.${package};
 
 public class Constantes {
 	static public final String USER_SESSION = "UserSession";
@@ -19,9 +19,12 @@ public class Constantes {
 	static public final String ROLES = "Roles";
 	static public final String SENHA = "pwd";
 	static public final String LOGIN = "usr";
+	static public final String SISTEMA = "$projectId";
 	static public final String TENTATIVAS_LOGIN = "tentativasLogin";
 	static public final String TROCA_SENHA_OBRIGATORIA = "trocaSenhaObrigatoria";
 	static public final String BUTTON_TROCA_SENHA = "button";
 	static public final String MODO_OPERACAO = "modoOperacao";
 	static public final String COPY_PARAMETERS = "copyParameters";
+	static public final Integer TABLE_LINES = 20;
+	static public final Integer TABLE_PAGES = 10;
 }

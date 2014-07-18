@@ -2,11 +2,15 @@
 ##  CONSTANTS
 ##
 #set($gerar = true)
+##if($struts2 == "false")
 #if($applicationUseCases)
 #if($modulo == 'true')
 #set($gerar = false)
 #end
 #end
+##else
+##set($gerar = false)
+##end
 #if ($pacote)#set($applicationUseCases = $pacote.useCases)#end
 #if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
 #set ($useCases = $applicationUseCase.allUseCases)
@@ -53,7 +57,7 @@
                 <arg position="0" key="login.oauth.uc.pagina.de.login.login.param.login" />
             </field>
         </form>
-		#end
+#end
     </formset>
 
 </form-validation>

@@ -46,6 +46,24 @@
 #end
 #end
 #end
+#foreach($page in $useCase.getPages())
+#foreach($parameter in $page.getPageVariables())
+#if($parameter.tableType.equals("jtable"))
+#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat($parameter.name.substring(1)) )
+#set($actionAjax= "")
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionAjax = $actionAjax.concat("$aux"))
+#end
+#set($actionAjax=$actionAjax.concat($tableName))
+		<action name="${actionAjax}Ajax" class="${useCase.getPackagePath().replace('/','.')}.${actionAjax}Ajax" method="execute">
+			<result name="input">${parameter.getJsp().fullPath}.jsp</result>
+			<result name="handleException">${parameter.getJsp().fullPath}.jsp</result>
+		</action>
+#end
+#end
+#end
 ##fim do código
 #if($gerar)
 		<action name="$actionName" class="${action.actionType}" method="execute">
@@ -82,12 +100,13 @@
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end
 #if (!${action.input})
-			<result name="handleException">${actionForward.forwardPath}</result>
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
 #end
 #end
 #end
 #if (${action.input})
-			<result name="handleException">${action.input.fullPath}.jsp</result>		
+			<result name="input">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
@@ -132,11 +151,12 @@
 			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
 #end
 #if (!${action.input})
-			<result name="handleException">${actionForward.forwardPath}</result>
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
 #end
 #end
 #if (${action.input})
-			<result name="handleException">${action.input.fullPath}.jsp</result>
+			<result name="input">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
 #end
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>

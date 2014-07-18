@@ -1,4 +1,4 @@
-#if($jsp.oldStruts)
+#if($struts2 == "false")
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
 <% 
@@ -65,11 +65,11 @@
 
 			<br />
 			
-			#if($enableCaptcha=="true")
+#if($enableCaptcha=="true")
 			<img src="/${projectId}/kaptcha.jpg" align="middle" border="1"/>	
             <html:text property="kaptcha" styleId="validarCaptcha"/>
 			<br />
-            #end
+#end
 
 			<input type="submit" style="margin: -20px 0 0 275px;" class="button" name="commit" value="Log in" onclick="setaAcao('/${secureDir}/EntrarLoginValidar', 'validateEntrarLoginValidarFormImpl', true)" property="loginEntrarLoginValidarForm"/>
 			<input type="reset" style="margin: -30px 0 0 195px;" class="button" value="Limpar"/>

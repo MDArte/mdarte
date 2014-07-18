@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #if($oAuthServer == "true")
 // license-header java merge-point
 #set ($generatedFile = "PaginaDeLoginLogin.java")
@@ -19,7 +9,6 @@ package $controleAcessoDir;
 /**
  * 
  */
- 
 
 import java.io.IOException;
 
@@ -46,7 +35,7 @@ public final class PaginaDeLoginLogin extends Action
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-		
+
 		final PaginaDeLoginLoginFormImpl specificForm = (PaginaDeLoginLoginFormImpl)form;
 		
 		String login = specificForm.getLogin();
@@ -85,7 +74,6 @@ public final class PaginaDeLoginLogin extends Action
 		}
 		return null;
     }
-	
- 
+
 }
 #end

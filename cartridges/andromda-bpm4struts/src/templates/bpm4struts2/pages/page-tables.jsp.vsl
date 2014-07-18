@@ -1,5 +1,19 @@
 #set($generatedFile = "${jsp.fullPath}-tabelas.jsp")
-#if($jsp.temTabela)
+#if(!$jsp.oldStruts)
+#set($gerar = false)
+#foreach ($variable in $jsp.pageVariables)
+#if($variable.table)
+#set ($gerar = true)
+#end
+#end
+#if(!$gerar)
+#foreach ($variable in $jsp.allUniqueActionParameters)
+#if ($variable.table)
+#set ($gerar = true)
+#end
+#end
+#end
+#if($gerar)
 <%@ include file="/taglib-imports.jspf" %>
 
 #set($i=1)
@@ -7,25 +21,52 @@
 	<ul class="nav nav-tabs">
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
-    	<li><a href="#tab-${variable.name}" data-toggle="tab">$variable.name</a></li>
+#if($i==1)
+		<li class="active"><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
+#else
+		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
 #end
-#end 
+#set($i=$i+1)
+#end
+#end
+#foreach ($variable in $jsp.allUniqueActionParameters)
+#if ($variable.table)
+#if($i==1)
+		<li class="active"><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
+#else
+		<li><a href="#tab-${variable.name}" data-toggle="tab"><bean:message key="$variable.messageKey"/></a></li>
+#end
+#set($i=$i+1)
+#end
+#end
 	</ul>
-
+#set($i=1)
 	<div class="tab-content">
 #foreach ($variable in $jsp.pageVariables)
 #if ($variable.table)
 #if($i==1)
 		<div class="tab-pane active" id="tab-${variable.name}">
 #else
-		<div class="tab-pane" id="tab-${variable.name}" >
+		<div class="tab-pane" id="tab-${variable.name}">
 #end
 #set($i=$i+1)
-			<!--<tiles:insert page="${jsp.fullPath}-${variable.name}.jspf" flush="false"/>--> 
   			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
+#end 
   		</div>
 #end
+#foreach ($variable in $jsp.allUniqueActionParameters)
+#if ($variable.table)
+#if($i==1)
+		<div class="tab-pane active" id="tab-${variable.name}">
+#else
+		<div class="tab-pane" id="tab-${variable.name}">
+#end
+#set($i=$i+1)
+  			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
 #end 
+  		</div>
+#end
 	</div>
 </div>
+#end
 #end

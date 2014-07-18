@@ -14,8 +14,8 @@
 #set($var2 = "basedir}")
 
     <goal name="merge-message-resources">
-		#if($stringUtils.isNotEmpty($languages)) 
-    	#foreach($language in $stringUtils.split($languages,","))
+#if($stringUtils.isNotEmpty($languages)) 
+#foreach($language in $stringUtils.split($languages,","))
 		
 		<!-- $language -->
 		
@@ -34,8 +34,8 @@
 		<ant:concat destfile="$var1$var2/target/src/WEB-INF/classes/application-resources_${language}.csv" binary="true" append ="true">
 			<ant:fileset dir="$var1$var2/target/src/WEB-INF/classes" includes="application-resources-global_${language}.csv"/>
 		</ant:concat>
-    	#end
-		#end
+#end
+#end
 		
 		<!-- default -->
 		

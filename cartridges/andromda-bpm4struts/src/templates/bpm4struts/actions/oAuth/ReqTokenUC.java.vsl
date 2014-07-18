@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #if($oAuthServer == "true")
 // license-header java merge-point
 #set ($generatedFile = "ReqTokenUC.java")
@@ -19,7 +9,6 @@ package $controleAcessoDir;
 /**
  * 
  */
- 
 
 import java.io.OutputStream;
 import java.net.URL;
@@ -46,9 +35,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import ${controleAcessoDir}.OAuthImpl;
 
-
-
-
 public final class ReqTokenUC extends Action
 {
 	
@@ -57,7 +43,6 @@ public final class ReqTokenUC extends Action
 		OAuthImpl oImpl  =OAuthImpl.getInstance();
 		try{
 			OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
-			
 			
 			String consumerKey = requestMessage.getConsumerKey();
 			String consumerSecret = oImpl.getConsumerSecret(consumerKey);
@@ -71,10 +56,9 @@ public final class ReqTokenUC extends Action
 			
 			oImpl.gerarRequestToken(accessor);
 
-	        
 	        response.setContentType(OAuth.FORM_ENCODED);
 			response.setHeader("Cache-Control", "no-cache");
-			
+
 	        OutputStream out = response.getOutputStream();
 	        OAuth.formEncode(OAuth.newList(OAuth.OAUTH_TOKEN, accessor.requestToken,
 	        							   OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret,
@@ -87,6 +71,6 @@ public final class ReqTokenUC extends Action
 		}
 		return null;
     }
- 
+
 }
 #end

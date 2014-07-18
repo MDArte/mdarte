@@ -69,7 +69,7 @@ public class InitialService extends org.jboss.system.ServiceMBeanSupport impleme
 		}
 		catch (Exception e)
 		{
-			s_log.error("Nao foi possivel listar os servicos", new RuntimeException());
+			s_log.error("Nao foi possivel listar os servicos", new RuntimeException(e));
 		}
 #end
 	}

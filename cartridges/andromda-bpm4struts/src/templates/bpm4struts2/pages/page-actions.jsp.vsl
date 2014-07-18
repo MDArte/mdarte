@@ -16,7 +16,6 @@
 #end
 #end
 #end
-<!-- Using struts 1 $action.actionOldStruts -->
 ## fim do codigo
 ##set ($action = $jsp.actions.get(0))
 #if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
@@ -28,13 +27,7 @@
 #set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
-<% 
- String nomeProjeto = request.getContextPath(); 
- out.println("<script>");
- out.println("function getPath(){return \""+nomeProjeto+"\";}");
- out.println("</script>");
-%>
-<!-- Gerado utilizando o template bpm4struts2/pages/page-actions.jsp.vsl-->
+
 #set($achou = false)
 #foreach($jspAction in $jsp.actions)
 #if($jspAction.hasStereotype("$enterAction"))
@@ -56,15 +49,15 @@
 #foreach ($_action in $jsp.actions)
 #if(!$_action.tableLink)
 #if($_action.formPost )
-#renderFormButtonsCustomizado2($_action "                           ")					
+#renderFormButtonsCustomizado2($_action "")
 #elseif ($_action.hyperlink))
 #set($fieldLinkValue = "")
-#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))					
-#if($fieldLinkValue.equals(""))				
-#renderHyperlink2($_action "        ")
+#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+#if($fieldLinkValue.equals(""))
+#renderHyperlink2($_action "")
 #end
 #elseif($_action.lookupGrid)
-			##<script src="${jsp.fullPath}.js"></script>		
+##<script src="${jsp.fullPath}.js"></script>		
 #renderLookupGrid2($_action)
 #elseif($_action.popup)
 #renderLookupGrid2($_action)
@@ -72,20 +65,20 @@
 #end
 #end
 </div>
-#elseif (($action.formPost || $action.hyperlink))
+#elseif ($action.formPost || $action.hyperlink || $action.popup)
 #if ($action.actionParameters.empty)
-		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 <div class="FormLinhaBotoes">
 #foreach ($_action in $jsp.actions)
 #if(!$_action.tableLink)
 #if($_action.formPost )
-#renderFormButtonsCustomizado2($_action "                           ")
+#renderFormButtonsCustomizado2($_action "")
 #elseif ($_action.hyperlink)
-#set($fieldLinkValue = "")				
+#set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-#if($fieldLinkValue.equals(""))				
-#renderHyperlink2($_action "        ")
+#if($fieldLinkValue.equals(""))
+#renderHyperlink2($_action "	")
 #end
 #elseif($_action.lookupGrid)
 #renderLookupGrid2($_action)
@@ -95,31 +88,30 @@
 #end
 #end
 </div>
-#else         
+#else
 <div id="FormLinhaBotoes">
 #foreach ($_action in $jsp.actions)
 #if(!$_action.tableLink)
 #if($_action.formPost )
-#renderFormButtonsCustomizado2($_action "                           ")
-#cleanButton2($_action "                           ")
+#renderFormButtonsCustomizado2($_action "")
+#cleanButton2($_action "")
 #elseif ($_action.hyperlink)
 #set($fieldLinkValue = "")
 #set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-#if($fieldLinkValue.equals(""))					
-#renderHyperlink2($_action "        ")
+#if($fieldLinkValue.equals(""))
+#renderHyperlink2($_action "	")
 #end
 #elseif($_action.lookupGrid)
 #renderLookupGrid2($_action)
-#end
 #elseif($_action.popup)
-#renderLookupGrid2($_action)					
+#renderLookupGrid2($_action)
+#end
 #end
 #end
 </div>
-#end                        				
+#end
 #end
 <br class="clr"/>
 #end
 #end
 #end
-

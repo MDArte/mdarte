@@ -15,25 +15,24 @@
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
 #if (!$_action.tableLink && !$_action.useCaseStart && !$_action.actionParameters.empty)
-        #set($action = $_action)
-        #set($achou = "true")
+#set($action = $_action)
+#set($achou = "true")
 #end
 #end
 #end
 ## fim do codigo
 
-
 ##set ($action = $jsp.actions.get(0))
 #if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 ##
-	#set ($clientValidationDesired = ($clientValidation=='true'))
-	#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
-	#set ($formBeanName = $action.formBeanName)
-	###set ($actionParameters = $action.actionParameters)
-	## Considera os parametros de todas as acoes
-	#set ($actionParameters = $jsp.allUniqueActionParameters )
-	#set ($hints = $hints.equalsIgnoreCase("true"))
-	#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
+#set ($clientValidationDesired = ($clientValidation=='true'))
+#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
+#set ($formBeanName = $action.formBeanName)
+###set ($actionParameters = $action.actionParameters)
+## Considera os parametros de todas as acoes
+#set ($actionParameters = $jsp.allUniqueActionParameters )
+#set ($hints = $hints.equalsIgnoreCase("true"))
+#set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
 
@@ -131,9 +130,6 @@
   		#end
 	}
 </script>
-
-
-
 
 <script type="text/javascript">
      <!--Operacao de Habilitar-->
@@ -234,24 +230,19 @@
     }
 </script>
 
-
-
-
-	#if ($xhtml == "true")
+#if ($xhtml == "true")
 		<html:xhtml/>
-
-	#end
-
+#end
 
 <div id="ConteudoDiv">
-	#set ($messageKey = $action.messageKey)
-	#set ($actionTrigger = $action.actionTrigger)
+#set ($messageKey = $action.messageKey)
+#set ($actionTrigger = $action.actionTrigger)
 	<div id="$action.styleId" class="action">
     	<div class="trigger">
-	##if ($action.hyperlink)
-	##	#renderHyperlink($action "        ")
-	#if ($action.tableAction)## this means this action allows rows to be selected and sent
-	
+##if ($action.hyperlink)
+##	#renderHyperlink($action "        ")
+#if ($action.tableAction)## this means this action allows rows to be selected and sent
+
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
@@ -264,66 +255,72 @@
 				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<%@ include file="${action.input.fullPath}-${action.tableLinkParameter.name}.jspf" %>
 				<div class="FormLinhaBotoes">
-				#foreach ($_action in $jsp.actions)
-				#if(!$_action.tableLink)
-				#if($_action.formPost )
-					#renderFormButtonsCustomizado($_action "                           ")
+#foreach ($_action in $jsp.actions)
+#if(!$_action.tableLink)
+#if($_action.formPost )
+#renderFormButtonsCustomizado($_action "                           ")
 
-				#elseif ($_action.hyperlink))
-					#set($fieldLinkValue = "")
-					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-					#if($fieldLinkValue.equals(""))
+#elseif ($_action.hyperlink))
+#set($fieldLinkValue = "")
+#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+#if($fieldLinkValue.equals(""))
 					#renderHyperlink($_action "        ")
-					#end
-				#elseif($_action.lookupGrid)
+#end
+#elseif($_action.lookupGrid)
 					#renderLookupGrid($_action)
-				#elseif($_action.popup)
+#elseif($_action.popup)
 					#renderLookupGrid($_action)
-				#end
-				#end
-				#end
+#end
+#end
+#end
 				</div>
         	</html:form>
-	#elseif (($action.formPost || $action.hyperlink))
-		#if ($action.actionParameters.empty)
+#elseif (($action.formPost || $action.hyperlink ||  $action.popup))
+#if ($action.actionParameters.empty)
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
+<<<<<<< HEAD
 		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 #if(!$jsp.temTabela)
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
 #else
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get">
 #end
+=======
+## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
+        		<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
+>>>>>>> refs/remotes/origin/develop
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<div class="FormLinhaBotoes">
-				#foreach ($_action in $jsp.actions)
-				#if(!$_action.tableLink)
-				#if($_action.formPost )
+#foreach ($_action in $jsp.actions)
+#if(!$_action.tableLink)
+#if($_action.formPost )
 					#renderFormButtonsCustomizado($_action "                           ")
-				#elseif ($_action.hyperlink)
-					#set($fieldLinkValue = "")				
-					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-					#if($fieldLinkValue.equals(""))				
+#elseif ($_action.hyperlink)
+#set($fieldLinkValue = "")
+#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+#if($fieldLinkValue.equals(""))
 					#renderHyperlink($_action "        ")
-					#end
-				#elseif($_action.lookupGrid)
+#end
+#elseif($_action.lookupGrid)
 					#renderLookupGrid($_action)
-				#elseif($_action.popup)
+#elseif($_action.popup)
 					#renderLookupGrid($_action)
-				#end
-				#end
-				#end
+#end
+#end
+#end
 				</div>
         		</form>
-		#else
+#else
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
 #if(!$jsp.temTabela)
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
+<<<<<<< HEAD
 #else
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get" enctype="multipart/form-data" >
 #end
@@ -335,66 +332,77 @@
 			#end
                     	            <table>
                 <tbody>
+=======
+        			<%@ include file="${jsp.fullPath}-control-params.jspf" %>
+#foreach($acao in $jsp.actions)
+#if (!$acao.hiddenActionParameters.empty)
+            		<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
+#end
+#end
+>>>>>>> refs/remotes/origin/develop
 
+                    <table>
+						<tbody>
 #foreach ($field in $actionParameters)
 
 #if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
 ## for now multibox field can only be displayed in tables
-		    #if($field.visivelPor)
-		    #set ($visivel = 'style="display:none"')
-		    #else
-		    #set ($visivel = '')
-		    #end
-		    #set($valueFieldOperationMode = "")
+#if($field.visivelPor)
+#set ($visivel = 'style="display:none"')
+#else
+#set ($visivel = '')
+#end
+#set($valueFieldOperationMode = "")
 #set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
 #if( $valueFieldOperationMode != "" && !${action.useCase.openAccess})
-<security:containsOperationMode value="$valueFieldOperationMode" useCase="${action.useCase.package.webModuleName}${action.useCase.actionPath}.do">
-#end		    
-		    #if ($securityEnabled && !${action.useCase.openAccess}) 	
-	   <security:containsPermission name="$field.messageKey">
-	   #end			
-                    <tr class="$field.name" id="tr-$field.styleId" $visivel>
-                        <td class="label">#if ($requiredness && $field.required)<nobr><bean:message key="$field.messageKey"/> <div class="important">*</div></nobr>#else<bean:message key="$field.messageKey"/>#end</td>
-                        <td class="field">
-#renderFormField($action $field '' "                           ")
-                        </td>
-                    </tr>
-                    #if ($securityEnabled && !${action.useCase.openAccess}) 
-	   </security:containsPermission>      
-	   #end   
+							<security:containsOperationMode value="$valueFieldOperationMode" useCase="${action.useCase.package.webModuleName}${action.useCase.actionPath}.do">
+#end
+#if ($securityEnabled && !${action.useCase.openAccess})
+							<security:containsPermission name="$field.messageKey">
+#end
+							<tr class="$field.name" id="tr-$field.styleId" $visivel>
+								<td class="label">#if ($requiredness && $field.required)<nobr><bean:message key="$field.messageKey"/> <div class="important">*</div></nobr>#else<bean:message key="$field.messageKey"/>#end</td>
+								<td class="field">
+#renderFormField($action $field '' "								")
+								</td>
+							</tr>
+#if ($securityEnabled && !${action.useCase.openAccess}) 
+							</security:containsPermission>
+#end
 #if($valueFieldOperationMode != "" && !${action.useCase.openAccess})
-</security:containsOperationMode>
-#end	              
+							</security:containsOperationMode>
 #end
 #end
-                    <tr>
-                    <td>&nbsp;</td>
-                        				<td class="FormLinhaBotoes">
-				#foreach ($_action in $jsp.actions)
-				#if(!$_action.tableLink)
-				#if($_action.formPost )
-					#renderFormButtonsCustomizado($_action "                           ")
-					#cleanButton($_action "                           ")
-				#elseif ($_action.hyperlink)
-					#set($fieldLinkValue = "")
-					#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-					#if($fieldLinkValue.equals(""))					
+#end
+							<tr>
+								<td>&nbsp;</td>
+								<td class="FormLinhaBotoes">
+#foreach ($_action in $jsp.actions)
+#if(!$_action.tableLink)
+#if($_action.formPost )
+#renderFormButtonsCustomizado($_action "								")
+#cleanButton($_action "								")
+#elseif ($_action.hyperlink)
+#set($fieldLinkValue = "")
+#set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
+#if($fieldLinkValue.equals(""))					
 					#renderHyperlink($_action "        ")
-					#end
-				#elseif($_action.lookupGrid)
+#end
+#elseif($_action.lookupGrid)
 					#renderLookupGrid($_action)
-				#elseif($_action.popup)
-					#renderLookupGrid($_action)				
-				#end
-				#end
-				#end
-                        				</td>
-                    				</tr>
+#elseif($_action.popup)
+					#renderLookupGrid($_action)
+#end
+#end
+#end
+								</td>
+                    		</tr>
                 		</tbody>
             		</table>
-        	</form>
-		#end
-	#end
+				</form>
+#end
+#end
+    	</div>
     </div>
 
 </div>
@@ -403,5 +411,3 @@
 #end
 #end
 #end
-
-

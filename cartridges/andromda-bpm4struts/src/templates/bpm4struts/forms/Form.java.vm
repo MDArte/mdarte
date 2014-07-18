@@ -16,7 +16,7 @@
     }
 #end
 #end
-
+##
 #macro(processVOFieldsInterface $vo)
 #foreach ($field in $vo.type.attributes)
 	
@@ -26,118 +26,117 @@
 
 #end
 #end
-
+##
 #macro(processListsClasses)
-public final static class LabelValue
+    public final static class LabelValue
     {
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-        private java.lang.Object hint = null;        
-
-        public LabelValue(Object label, java.lang.Object value)
-        {
-            this.label = label;
-            this.value = value;
-        }
-
-        public LabelValue(Object label, java.lang.Object value, Object hint)
-        {
-            this.label = label;
-            this.value = value;
-            this.hint = hint;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-        
-	public java.lang.Object getHint()
-        {
-            return this.hint;
-        }        
-
-        public java.lang.String toString()
-        {
-            return label + "=" + value;
-        }
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
+    	private java.lang.Object hint = null;        
+    	
+    	public LabelValue(Object label, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.value = value;
+    	}
+    	
+    	public LabelValue(Object label, java.lang.Object value, Object hint)
+    	{
+    		this.label = label;
+    		this.value = value;
+    		this.hint = hint;
+    	}
+    	
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    	
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    	
+    	public java.lang.Object getHint()
+    	{
+    		return this.hint;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "=" + value;
+    	}
     }
     
     public final static class LabelValueDouble
     {
-        private java.lang.Object labelDouble = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDouble = labelDouble;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDouble()
-        {
-            return this.labelDouble;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDouble + "=" + value;
-        }
-    }
+    	private java.lang.Object labelDouble = null;
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
     
+    	public LabelValueDouble(Object label, Object labelDouble, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.labelDouble = labelDouble;
+    		this.value = value;
+    	}
+    
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    
+    	public java.lang.Object getLabelDouble()
+    	{
+    		return this.labelDouble;
+    	}
+    
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "," + labelDouble + "=" + value;
+    	}
+    }
     
     public final static class LabelValueDestination
     {
-        private java.lang.Object labelDestination = null;
-        private java.lang.Object label = null;
-        private java.lang.Object value = null;
-
-        public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
-        {
-            this.label = label;
-            this.labelDestination = labelDestination;
-            this.value = value;
-        }
-
-        public java.lang.Object getLabel()
-        {
-            return this.label;
-        }
-        
-        public java.lang.Object getLabelDestination()
-        {
-            return this.labelDestination;
-        }
-
-        public java.lang.Object getValue()
-        {
-            return this.value;
-        }
-
-        public java.lang.String toString()
-        {
-            return label + "," + labelDestination + "=" + value;
-        }
+    	private java.lang.Object labelDestination = null;
+    	private java.lang.Object label = null;
+    	private java.lang.Object value = null;
+    
+    	public LabelValueDestination(Object label, Object labelDestination, java.lang.Object value)
+    	{
+    		this.label = label;
+    		this.labelDestination = labelDestination;
+    		this.value = value;
+    	}
+    	
+    	public java.lang.Object getLabel()
+    	{
+    		return this.label;
+    	}
+    	
+    	public java.lang.Object getLabelDestination()
+    	{
+    		return this.labelDestination;
+    	}
+    
+    	public java.lang.Object getValue()
+    	{
+    		return this.value;
+    	}
+    
+    	public java.lang.String toString()
+    	{
+    		return label + "," + labelDestination + "=" + value;
+    	}
     }
 #end
-
+##
 #macro(processListsInterface $field $oldStruts)
 #set ($hash = "#")
 #set ($listType = "java.lang.Object[]")
@@ -516,30 +515,30 @@ public final static class LabelValue
     }
 
     public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
+		set${backingListMethod}(items, valueProperty, labelProperty);
+		MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+		for(int i = 0; i < this.${labelListName}.length; i++){
+			Object label = this.${labelListName}[i];
+			if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+		    		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+		}
     }	    
     
     public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
-	for(int i = 0; i < this.${labelListName}Hints.length; i++){
-		Object label = this.${labelListName}Hints[i];
-		if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
-        		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
-	}
+		set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
+		MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+		for(int i = 0; i < this.${labelListName}.length; i++){
+			Object label = this.${labelListName}[i];
+			if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+		    		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+		}
+		for(int i = 0; i < this.${labelListName}Hints.length; i++){
+			Object label = this.${labelListName}Hints[i];
+			if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
+		    		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
+		}
     }	    
     
     public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
@@ -611,7 +610,7 @@ public final static class LabelValue
         }
     }
 #end
-
+##
 #macro(processLists2 $field)
 #set ($listType = "java.lang.Object[]")
 #set ($backingListName = $field.backingListName)
@@ -656,7 +655,7 @@ public final static class LabelValue
     {
         $listType values = this.${valueListName};
         $listType labels = this.${labelListName};
-        $listType labelsDestination = this.${labelListName}Destination;        
+        $listType labelsDestination = this.${labelListName}Destination;
 
         if (values == null || values.length == 0)
         {
@@ -802,7 +801,9 @@ public final static class LabelValue
 #end
         }
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
         ${field.setterName}ComboList(${field.name}Combo);
+#end
 #end
     }
 
@@ -821,7 +822,9 @@ public final static class LabelValue
 #end
         }
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
         ${field.setterName}ComboList(${field.name}Combo);
+#end
 #end
 
         for(int i = 0; i < this.${labelListName}Hints.length; i++) {
@@ -902,4 +905,3 @@ public final static class LabelValue
     }
 
 #end
-

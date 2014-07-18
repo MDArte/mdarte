@@ -1,3 +1,4 @@
+#if($struts2 == "false")
 <%@ include file="/taglib-imports.jspf" %>
 
 #set ($login = "/")
@@ -50,9 +51,4 @@
 	         
    </tiles:put>
 </tiles:insert>
-
-
-
-
-
-    
+#end

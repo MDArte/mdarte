@@ -13,7 +13,6 @@ package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${tran
 import br.ufrj.coppetec.to.AbstractTOExample;
 import br.ufrj.coppetec.to.AbstractTO;
 
-
 /**
 $class.getDocumentation(" * ")
  */
@@ -21,12 +20,12 @@ public abstract class ${class.name}TO extends
 #if($class.generalization)
 #set ($generalizacao = ${class.generalization.fullyQualifiedName})
 #if ($generalizacao.indexOf(".${modelPackageName}.") > 0)
-   #set ($generalizacao = $generalizacao.concat("TOImpl"))
-   #set ($generalizacao = $stringUtils.replace($generalizacao, ".${modelPackageName}.", ".${transferPackageName}."))
-   ${generalizacao} implements  ${class.fullyQualifiedName}
+#set ($generalizacao = $generalizacao.concat("TOImpl"))
+#set ($generalizacao = $stringUtils.replace($generalizacao, ".${modelPackageName}.", ".${transferPackageName}."))
+	${generalizacao} implements  ${class.fullyQualifiedName}
 #end
 #else
-   AbstractTO implements java.io.Serializable, ${class.fullyQualifiedName}
+	AbstractTO implements java.io.Serializable, ${class.fullyQualifiedName}
 #end
 {
 
@@ -63,7 +62,7 @@ public abstract class ${class.name}TO extends
     }
     
     private void setUpdated(){
-	if(!isInitializing()) updated = true;
+		if(!isInitializing()) updated = true;
     }	
   
 #if(!$class.abstract)
@@ -80,8 +79,8 @@ public abstract class ${class.name}TO extends
     public Boolean isInitializing(){
     	return this.initializing;
     }
-#end    
-        private ${class.name}TOExample exemploTO;
+#end
+	private ${class.name}TOExample exemploTO;
     
 	public ${class.name}TOExample getExemploTO() {
 		return exemploTO;
@@ -89,20 +88,19 @@ public abstract class ${class.name}TO extends
 
 	public void setExemploTO(AbstractTOExample exemploTO) {
 		this.exemploTO = (${class.name}TOExample)exemploTO;
-		#if($class.generalization)
+#if($class.generalization)
 		super.setExemploTO(exemploTO);
-		#end		
-	}    
+#end
+	}
 
 
 #foreach ($attribute in $class.attributes)
 #set ($tipo = $attribute.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
-#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))	  
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
 
     private ${tipo}TO $attribute.name;
 
-    
     /**
 $attribute.getDocumentation("     * ")
      */
@@ -114,11 +112,11 @@ $attribute.getDocumentation("     * ")
     $attribute.visibility void ${attribute.setterName}($tipo $attribute.name)
     {
         this.${attribute.name} = $attribute.name;
-        #if(${attribute.identifier})
+#if(${attribute.identifier})
         if($attribute.name == null) setExemploTO(null);
-        #end
+#end
         setUpdated();
-    }    
+    }
 #else
     private $tipo $attribute.name;
 
@@ -133,9 +131,9 @@ $attribute.getDocumentation("     * ")
     $attribute.visibility void ${attribute.setterName}($tipo $attribute.name)
     {
         this.${attribute.name} = $attribute.name;
-        #if(${attribute.identifier})
+#if(${attribute.identifier})
         if($attribute.name == null) setExemploTO(null);
-        #end
+#end
         setUpdated();
     }
 #end
@@ -156,8 +154,7 @@ $attribute.getDocumentation("     * ")
     private $tipo $target.name = $target.collectionTypeImplementation;
 #else
     private $tipo $target.name;
-#end		
-
+#end
 
     /**
      * Get the $target.name
@@ -198,213 +195,200 @@ $target.getDocumentation("     * ")
         }else
         	throw new RuntimeException("atualizacao.nao.permitida");            
     }
-    
-    
-    #if ($associationEnd.navigable)
-    
-    #set ($rtipo = $target.getterSetterTypeName)
-	    #if ($rtipo.indexOf(".${modelPackageName}.") > 0)
-	    #set ($rtipo = $stringUtils.replace($rtipo, ".${modelPackageName}.", ".${transferPackageName}."))
-	    #set ($rtipo = $rtipo.concat("TO"))
-    
-    #else
-	    #set($rtipo = $target.getterSetterTypeName)   
-    #end	
-    
-    #set ($tipo = $target.type.fullyQualifiedName)
-	    #if ($tipo.indexOf(".${modelPackageName}.") > 0)
-	    #set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
-	    #set ($tipo = $tipo.concat("TO"))
-    
-    #else
-	    #set($tipo = $target.type.fullyQualifiedName)   
-    #end
-    
-    
 
-    #set($exception = "")
-    #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
-    #set($exception = "throws java.beans.PropertyVetoException")
-    #end 
+#if ($associationEnd.navigable)
+#set ($rtipo = $target.getterSetterTypeName)
+#if ($rtipo.indexOf(".${modelPackageName}.") > 0)
+#set ($rtipo = $stringUtils.replace($rtipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($rtipo = $rtipo.concat("TO"))
 
-    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception    
-    {  
+#else
+#set($rtipo = $target.getterSetterTypeName)
+#end
+
+#set ($tipo = $target.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($tipo = $tipo.concat("TO"))
+    
+#else
+#set($tipo = $target.type.fullyQualifiedName)
+#end
+
+#set($exception = "")
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
+#set($exception = "throws java.beans.PropertyVetoException")
+#end
+
+    public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception
+    {
     	$rtipo temp = ($rtipo)this.${target.name};
-	this.${target.name} = ($rtipo)$target.name;
+		this.${target.name} = ($rtipo)$target.name;
 
-	#if($associationEnd.many)	
-	#if($target.many)
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator(); it.hasNext();){
-			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-			if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+#if($associationEnd.many)
+#if($target.many)
+		if(temp != null){
+			for(java.util.Iterator it = temp.iterator(); it.hasNext();){
+				$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+				if(${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}() != null)
+					${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().remove(this);
+			}
 		}
-	}
 
-	if(${target.name} != null){
-	for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
-        $tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-        if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
-        ${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
-        }
-        }
-        #else
-
-	if(temp != null){
-		if(temp.${associationEnd.getterName}() != null)
-			temp.${associationEnd.getterName}().remove(this);
-	}
-
-        if(${target.name} != null){
-        
-        if(!${target.name}.${associationEnd.getterName}().contains(this))
-        ${target.name}.${associationEnd.getterName}().add(this);
-	}
-        #end
-	#else
-	#if($target.many)
-	
-	if(temp != null){
-		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
-			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+		if(${target.name} != null){
+			for(java.util.Iterator it = ${target.name}.iterator(); it.hasNext();){
+				$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+				if(!${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().contains(this))
+					${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.getterName}().add(this);
+			}
 		}
-	}
-	
-	if(${target.name} != null){
-	for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
-    	$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-    	${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
-    	}
-    	}
-	#else
-	if(temp != null)
-		temp.${associationEnd.setterName}(null);	
+#else
 
-	if(${target.name} != null)
-		${target.name}.${associationEnd.setterName}(this);
-	#end
-	#end
+    	if(temp != null){
+    		if(temp.${associationEnd.getterName}() != null)
+    			temp.${associationEnd.getterName}().remove(this);
+    	}
+
+    	if(${target.name} != null){
+            if(!${target.name}.${associationEnd.getterName}().contains(this))
+    			${target.name}.${associationEnd.getterName}().add(this);
+    	}
+#end
+#else
+#if($target.many)
 	
-	      
-    }  
-      
+    	if(temp != null){
+    		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
+    			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+    		}
+    	}
+    	
+    	if(${target.name} != null){
+    		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
+    			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
+        	}
+        }
+#else
+    	if(temp != null)
+    		temp.${associationEnd.setterName}(null);
     
-    #if($target.many )
-    
-     
-    #set($exception = "")
-    #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))	
-    #set($exception = "throws java.beans.PropertyVetoException")
-    #end
+    	if(${target.name} != null)
+    		${target.name}.${associationEnd.setterName}(this);
+#end
+#end
+	
+    }
+
+#if($target.many )
+#set($exception = "")
+#if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true"))
+#set($exception = "throws java.beans.PropertyVetoException")
+#end
 
     public void add${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception {
-	if(${target.name} == null)
-		${target.setterName}(${target.collectionTypeImplementation});	
-    	if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
-    		${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
-    	#if($associationEnd.navigable)	
-	#if($associationEnd.many)
-	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
-	
+		if(${target.name} == null)
+			${target.setterName}(${target.collectionTypeImplementation});
+		
+		if(!${target.name}.contains(${stringUtils.uncapitalize($target.type.name)}Temp))
+			${target.name}.add(${stringUtils.uncapitalize($target.type.name)}Temp);
+		
+#if($associationEnd.navigable)
+#if($associationEnd.many)
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();
 
-	if(!${associationEnd.name}.contains(this))
-		${associationEnd.name}.add(this);	
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
-	#else
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
-	#end
-    	#end
+		if(!${associationEnd.name}.contains(this))
+			${associationEnd.name}.add(this);
+
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+#else
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(this);
+#end
+#end
     	this.${target.setterName}(${target.name});
     }
-    
+
     public void remove${stringUtils.capitalize($target.name)}($target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Temp) $exception {
     	$rtipo ${target.name} = this.${target.getterName}();
-	if(${target.name} != null){
+		
+		if(${target.name} != null){
     		${target.name}.remove(${stringUtils.uncapitalize($target.type.name)}Temp);
-	}
-    	#if($associationEnd.navigable)
-	#if($associationEnd.many)
-	$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();  
-	if(${associationEnd.name} != null)
-		${associationEnd.name}.remove(this);	
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
-	#else
-	${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);
-	#end
-    	
-    	#end
+		}
+		
+#if($associationEnd.navigable)
+#if($associationEnd.many)
+		$associationEnd.getterSetterTypeName $associationEnd.name = ${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.getterName}();
+		
+		if(${associationEnd.name} != null)
+			${associationEnd.name}.remove(this);	
+
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}($associationEnd.name);
+#else
+		${stringUtils.uncapitalize($target.type.name)}Temp.${associationEnd.setterName}(null);
+#end
+
+#end
     	this.${target.setterName}(${target.name});
-    }    
-    #end
-    
-    ## fim    
-      
+    }
+#end
+## fim    
+
 #end
 
+#end
+#end
 
-    
-       
-#end
-#end
-	
 #if(!$class.abstract)
 	public String getEntityClassName(){
 		return "${class.fullyQualifiedName}Impl";
 	}
 #end	
 
-public br.ufrj.coppetec.Entity getInstance(){
-   #if(!$class.abstract)
-   	return new ${class.name}TOImpl();
-   #else
-   	return null;
-   #end	
-   }
-	
+	public br.ufrj.coppetec.Entity getInstance(){
+#if(!$class.abstract)
+		return new ${class.name}TOImpl();
+#else
+		return null;
+#end	
+	}
 #set ($identifiers = $class.getIdentifiers(false))
 
 #renderEqualsMethod($class "${class.name}TO" $identifiers)
 
-
-    public int hashCode()
-    {
+    public int hashCode(){
 #if ($identifiers.empty)
-        return super.hashCode();
+		return super.hashCode();
 #else
-	int hashCode = super.hashCode();
+		int hashCode = super.hashCode();
 #foreach ($attribute in $identifiers)
 #set ($attrType = $attribute.type)
 #if  ($attribute.getterSetterTypeName == "boolean")
-        hashCode = 29 * hashCode + (${attribute.name} ? 1 : 0);
+		hashCode = 29 * hashCode + (${attribute.name} ? 1 : 0);
 #elseif ($attrType.arrayType)
-        // arrays are not part of the hashCode calculation
+		// arrays are not part of the hashCode calculation
 #elseif ($attrType.primitive)
-        hashCode = 29 * hashCode + (int)${attribute.name};
+		hashCode = 29 * hashCode + (int)${attribute.name};
 #else
-        hashCode = 29 * hashCode + (${attribute.name} == null ? 0 : ${attribute.name}.hashCode());
+		hashCode = 29 * hashCode + (${attribute.name} == null ? 0 : ${attribute.name}.hashCode());
 #end## if
 #end## foreach
-	return hashCode;
+		return hashCode;
 #end## $attributeSet.empty
     }
-    
+
 #foreach($temp in $class.allGeneralizations)
 #set($pai = $temp)
 #end
-
 #if(!$pai)
 #set($pai = $class)
 #end
 
-   public boolean instanceOf(Class<?> otherClass) {
-	return otherClass.isAssignableFrom(get${pai.entityName}Class());
-   }
+	public boolean instanceOf(Class<?> otherClass) {
+		return otherClass.isAssignableFrom(get${pai.entityName}Class());
+	}
 
-	
-
-   public Class<?> get${pai.name}Class() {
-        return ${class.name}TOImpl.class;
-   }
+	public Class<?> get${pai.name}Class() {
+		return ${class.name}TOImpl.class;
+	}
 }

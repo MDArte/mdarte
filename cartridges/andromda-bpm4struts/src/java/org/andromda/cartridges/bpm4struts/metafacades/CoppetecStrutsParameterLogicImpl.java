@@ -1,8 +1,12 @@
 package org.andromda.cartridges.bpm4struts.metafacades;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsProfile;
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsUtils;
@@ -39,6 +43,21 @@ extends CoppetecStrutsParameterLogic
 	{
 		return "doubleselect".equals(this.getWidgetType());
 	}
+	
+	protected boolean handleIsEnumEmptyValue()
+	{
+		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
+		
+		if (value == null) return true;
+
+		return Bpm4StrutsUtils.isTrue(String.valueOf(value));
+	}
+	
+	protected String handleGetFieldFormat() {
+    	Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_FORMAT);
+        final String format = value == null ? null : String.valueOf(value);
+        return (format == null) ? null : format.trim();
+    }
 
 	protected String handleGetOnlineHelpValue()
 	{
@@ -290,6 +309,10 @@ extends CoppetecStrutsParameterLogic
 			{
 				widgetType = "text";
 			}
+			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equalsIgnoreCase(fieldType))
+			{
+				widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR;
+			}
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_MULTIBOX.equalsIgnoreCase(fieldType))
 			{
 				widgetType = "multibox";
@@ -373,6 +396,56 @@ extends CoppetecStrutsParameterLogic
 
 		return reportType;
 	}
+	
+	protected java.util.Collection handleGetValidatorsStruts2()
+    {
+    	final Map vars = new HashMap();
+
+        final ClassifierFacade type = getType();
+        if (type != null)
+        {
+            final String format = getValidatorFormat();
+            if (format != null && !format.isEmpty())
+            {
+            	
+            	final String[] formats = format.split(";");
+            	
+            	for (int i = 0; i < formats.length; i++) {
+            		if (formats[i].isEmpty()) continue;
+            		
+            		String[] args = formats[i].split("[\\s]+");
+            		
+            		int j = 0;
+            		
+            		while (args[j].isEmpty()) {
+            			j++;
+            		}
+            		
+            		if (isRangeFormat(args[j]))
+            			vars.put("range", Arrays.asList(new Object[]{"range", args[j+1], args[j+2]}));
+            		else if (isMinLengthFormat(args[j]))
+            			vars.put("minlength",Arrays.asList(new Object[]{"minlength", args[j+1]}));
+            		else if (isMaxLengthFormat(args[j]))
+            			vars.put("maxlength",Arrays.asList(new Object[]{"maxlength", args[j+1]}));
+            		else if (isValidatorString() && isPatternFormat(args[j]))
+            			vars.put("mask", Arrays.asList(new Object[]{"mask", args[j+1]}));
+            		else if (isValidatorString() && isEmailFormat(args[j]))
+            			vars.put("email", Arrays.asList(new Object[]{"email"}));
+            		else if (isValidatorString() && isUrlFormat(args[j]))
+            			vars.put("url", Arrays.asList(new Object[]{"url"}));
+            		else if (isDigitsFormat(args[j]))
+            			vars.put("digits", Arrays.asList(new Object[]{"digits"}));
+            		else if (isCreditCardFormat(args[j]))
+            			vars.put("creditcard", Arrays.asList(new Object[]{"creditcard"}));
+            		else if (isValidatorDate() && isDateRangeFormat(args[j]))
+            			vars.put("daterange", Arrays.asList(new Object[]{"daterange",args[j+1],args[j+2]}));
+            		
+            	}
+            }
+        }
+
+        return vars.values();
+    }
 
 
 	protected Object handleGetValueObject() {
@@ -397,7 +470,31 @@ extends CoppetecStrutsParameterLogic
 		}        
 		return valueObject;
 	}
+	
+    
+    /**
+     * @return <code>true</code> if this field is to be formatted as an digits only field, <code>false</code> otherwise
+     */
+    protected boolean isDigitsFormat(String format)
+    {
+        return "digits".equalsIgnoreCase(format);
+    }
+    
+    /**
+     * @return <code>true</code> if this field is to be formatted as an URL, <code>false</code> otherwise
+     */
+    protected boolean isUrlFormat(String format)
+    {
+        return "url".equalsIgnoreCase(format);
+    }
 
+    /**
+     * @return <code>true</code> if this field is to be formatted as an date range field, <code>false</code> otherwise
+     */
+    protected boolean isDateRangeFormat(String format)
+    {
+        return "daterange".equalsIgnoreCase(format);
+    }
 
 	protected boolean handleIsMoney() {
 		return "money".equals(this.getWidgetType());
@@ -472,66 +569,6 @@ extends CoppetecStrutsParameterLogic
 		return validatorTypesList;
 	}
 
-	/**
-     * @return <code>true</code> if the type of this field is a character, <code>false</code> otherwise
-     */
-    private boolean isValidatorChar()
-    {
-        return UMLMetafacadeUtils.isType(this.getType(), Bpm4StrutsProfile.CHARACTER_TYPE_NAME);
-    }
-
-    /**
-     * @return the lower limit for this field's value's range
-     */
-    private String getRangeStart(String format)
-    {
-        return getToken(format, 1, 3);
-    }
-
-    /**
-     * @return the upper limit for this field's value's range
-     */
-    private String getRangeEnd(String format)
-    {
-        return getToken(format, 2, 3);
-    }
-
-    /**
-	 * @return the minimum number of characters this field's value must consist of
-	 */
-	private String getMinLengthValue(String format)
-	{
-		return getToken(format, 1, 2);
-	}
-
-	/**
-	 * @return the maximum number of characters this field's value must consist of
-	 */
-	private String getMaxLengthValue(String format)
-	{
-		return getToken(format, 1, 2);
-	}
-
-	/**
-	 * @return the pattern this field's value must respect
-	 */
-	private String getPatternValue(String format)
-	{
-		return '^' + getToken(format, 1, 2) + '$';
-	}
-
-	/**
-	 * @return the i-th space delimited token read from the argument String, where i does not exceed the specified limit
-	 */
-	private String getToken(String string,
-			int index,
-			int limit)
-	{
-		if (string == null) return null;
-
-		final String[] tokens = string.split("[\\s]+", limit);
-		return (index >= tokens.length) ? null : tokens[index];
-	}
 	protected boolean handleIsOldStruts()
     {
 		
@@ -580,7 +617,21 @@ extends CoppetecStrutsParameterLogic
 		
 		return false;
 	}
-
+	
+	protected String handleGetTableType() {
+	    Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE);
+	    if(value == null)
+	        return null;
+	    if(value.toString().equals(Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE)) {
+	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_JTABLE;
+	    } else {
+	        return Bpm4StrutsProfile.TAGGEDVALUE_TABLE_TYPE_DEFAULT;
+	    }
+	}
+	
+	protected boolean handleIsEditor(){
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equals(this.getWidgetType());
+	}
 	protected String handleGetHintKey() {
 		 return getMessageKey() + ".hint.key";
 	}

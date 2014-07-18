@@ -4,9 +4,9 @@
 #set ($formKey = $jsp.useCase.formKey)
 #foreach ($variable in $jsp.pageVariables)
 #set ($formVariableName = "${formKey}.${variable.name}")
-    <c:catch>
-        <c:set var="$variable.name" value="${${formVariableName}}"/>
-    </c:catch>
+	<c:catch>
+		<c:set var="$variable.name" value="${${formVariableName}}"/>
+	</c:catch>
 #end
 </div>
 #end

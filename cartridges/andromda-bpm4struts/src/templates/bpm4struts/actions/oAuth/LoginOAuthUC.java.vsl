@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #if($oAuthServer  == "true")
 // license-header java merge-point
 #set ($generatedFile = "LoginOAuthUC.java")

@@ -112,6 +112,13 @@
                 <value>@andromda.presentation.web.action.tablelink</value>
                 <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
             </element>
+            <element name="ASYNC_TABLE">
+                <documentation>
+                    Denotes this transition represents an ajax action targeting the specified table.
+                </documentation>
+                <value>@andromda.presentation.web.action.async.table</value>
+                <appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+            </element>
             <element name="ACTION_COPY_PARAMETERS">
                 <documentation>
                     Defines if the parameters from the previous should be copied. 
@@ -420,6 +427,7 @@
                     <value>multibox</value>
                     <value>autocomplete</value>
                     <value>custom</value>
+                    <value>editor</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">
@@ -610,6 +618,17 @@
                     <value>true</value>
                 </allowedValues>
             </element>
+            <element name="TABLE_TYPE">
+                <documentation>
+                    Indicates the type of table to be displayed.
+                </documentation>
+                <value>@andromda.presentation.web.view.field.table.type</value>
+                <appliedOnElement>Parameter coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+                <allowedValues>
+                    <value default="true">default</value>
+                    <value>jtable</value>
+                </allowedValues>
+            </element>
             <element name="TABLE_DECORATOR">
                 <documentation>
                     Whether or not to generate a displaytag table decorator for this table. Can be used
@@ -745,6 +764,13 @@
                 </documentation>
                 <value>@andromda.presentation.web.layout.name</value>
                 <appliedOnElement>UseCase e Package</appliedOnElement>
+            </element>
+            <element name="ENUM_EMPTY_VALUE">
+                <documentation>
+                    Usuario define uma layout personalizada
+                </documentation>
+                <value>@andromda.presentation.web.view.field.enumeration.emptyValue</value>
+                <appliedOnElement>Parameter</appliedOnElement>
             </element>
         </elementGroup>
         <elementGroup name="Data Types">

@@ -7,7 +7,7 @@
 #if ($stringUtils.isNotBlank($dialetoExterno))
   <!DOCTYPE
     hibernate-configuration[
-    <!ENTITY % hibernate  PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd" >
+    <!ENTITY % hibernate  PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd" >
     	 %hibernate; 
     <!ENTITY % dialeto SYSTEM  "../server/default/conf/${dialetoExterno}" >
     	%dialeto;
@@ -16,7 +16,7 @@
     <!DOCTYPE
     hibernate-configuration
     PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-           "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+           "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 #end
 
 <hibernate-configuration>
@@ -105,17 +105,16 @@
 #end
         <!-- mapping files -->
 
-#set($entities = $hibernateUtils.getEntity())        
-        
+#set($entities = $hibernateUtils.getEntity())
 #foreach($entity in $entities)
-		#if($entity.requiresMapping)
+#if($entity.requiresMapping)
         <mapping resource="${entity.packagePath}/${entity.entityName}.hbm.xml"/>
-        #end
+#end
 #if($entity.auditoria)
-		#if($entity.requiresMapping)
-			<mapping resource="${entity.packagePath}/${entity.entityName}LogRec.hbm.xml"/>        
-		#end
-		#end
+#if($entity.requiresMapping)
+			<mapping resource="${entity.packagePath}/${entity.entityName}LogRec.hbm.xml"/>
+#end
+#end
 #end
     </session-factory>
 </hibernate-configuration>

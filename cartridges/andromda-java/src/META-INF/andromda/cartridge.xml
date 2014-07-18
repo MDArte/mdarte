@@ -140,12 +140,19 @@
         outlet="util"
         overwrite="true">
     </template>
+    
+    <template
+        path="templates/java/UtilAbstract.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
 
     <template
         path="templates/java/Util.vsl"
         outputPattern="$generatedFile"
-        outlet="util"
-        overwrite="true">
+        outlet="util-impl"
+        overwrite="false">
     </template>
 
     <!-- cartridge-template merge-point -->

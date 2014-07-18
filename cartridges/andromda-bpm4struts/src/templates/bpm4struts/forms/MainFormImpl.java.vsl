@@ -7,13 +7,12 @@ package $mainDir;
 ##
 #set ($sharp = "#")
 
-
 public class MainFormImpl
-    #if($stringUtils.isNotBlank($securityRealm))
+#if($stringUtils.isNotBlank($securityRealm))
     extends ${controleAcessoDir}.LoginFormImpl
-    #else
+#else
     extends org.apache.struts.validator.ValidatorForm
-    #end
+#end
     implements java.io.Serializable
 {
 

@@ -22,7 +22,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import java.util.Enumeration;
 
-#set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
+#set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -62,7 +62,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 	public String execute() throws Exception
 	{
 		loadUseCaseInfo();
-		
+
 		//org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
 
 		String forward = null;
@@ -83,7 +83,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		}
 		catch (java.lang.Exception exception)
 		{
-			#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 			throw exception;
 		}
 
@@ -120,7 +120,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		// invalida sessao https ao trocar para http (passa a ter somente uma sessao para ambos)
 //		if (request.getScheme().equals("https") && forward != null && forward.getPath().startsWith("http://"))
 //			request.getSession().invalidate();
-		
+
 		return forward;
 	}
 

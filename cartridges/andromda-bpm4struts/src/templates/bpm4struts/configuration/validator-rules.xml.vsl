@@ -14,8 +14,8 @@
 
       <validator name="required"
             classname="org.coppetec.validator.CoppetecFieldChecks"
-               method="cptValidateRequired"
-         methodParams="java.lang.Object,
+            method="cptValidateRequired"
+			methodParams="java.lang.Object,
                        org.apache.commons.validator.ValidatorAction,
                        org.apache.commons.validator.Field,
                        org.apache.struts.action.ActionMessages,

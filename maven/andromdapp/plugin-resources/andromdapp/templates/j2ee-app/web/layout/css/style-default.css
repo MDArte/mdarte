@@ -5,53 +5,27 @@ html,body {
 
 .container-narrow {
 	margin: 0 auto;
-	max-width: 960px;
+	max-width: 1024px;
 }
 
-input[type=text] {
-	height: 26px;
-	border-radius: 3px 3px 3px 3px;
-	border-style: solid;
-	border-width: 1px;
+.tt-dropdown-menu {
+	min-width: 200px;
 }
 
-input[type=radio],input[type=checkbox] {
-	display: block;
-	float: left;
+.form-group {
+	margin-botton: 25px;
 }
 
-div.multibox label.checkboxLabel {
-	display: block;
-	float: left;
+.tt-query, col-xs-4 input.form-control {
+	width:370px;
 }
 
-div.checkbox label.checkboxLabel {
-	float: left;
-	margin-right: 40px;
+.control-label {
+	margin-top: 6px;
 }
 
-.clear {
-	clear: both;
-}
-
-div.radio label {
-	float: left;
-	margin-right: 40px;
-}
-
-div.radio label.radioLabel {
-	display: block;
-	float: left;
-}
-
-div.multibox label.checkboxLabel {
-	margin-right: 25px;
-	margin-left: 10px;
-}
-
-div.radio div.checkbox {
-	margin-left: 0px;
-	padding-left: 0px;
+div.exibir .control-label {
+	margin-top: 0px;
 }
 
 .twitter-typeahead .tt-query,.twitter-typeahead .tt-hint {
@@ -132,4 +106,152 @@ div.radio div.checkbox {
 
 .tt-suggestion p {
 	margin: 0;
+}
+
+html,body {
+	min-width: 1024px;
+	min-height: 768px;
+}
+
+.container-narrow {
+	margin: 0 auto;
+	max-width: 1024px;
+}
+
+.tt-dropdown-menu {
+	min-width: 200px;
+}
+
+.form-group {
+	margin-botton: 25px;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+
+.twitter-typeahead .tt-query,.twitter-typeahead .tt-hint {
+	margin-bottom: 0;
+	border-radius: 3px 3px 3px 3px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.twitter-typeahead .tt-hint {
+	display: block;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+
+.twitter-typeahead .hint-small {
+	height: 30px;
+	padding: 5px 10px;
+	font-size: 12px;
+	border-radius: 3px;
+	line-height: 1.5;
+}
+
+.twitter-typeahead .hint-large {
+	height: 45px;
+	padding: 10px 16px;
+	font-size: 18px;
+	border-radius: 6px;
+	line-height: 1.33;
+}
+
+.tt-dropdown-menu {
+	min-width: 160px;
+	margin-top: 2px;
+	padding: 5px 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, .2);
+	*border-right-width: 2px;
+	*border-bottom-width: 2px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+}
+
+.tt-suggestion {
+	display: block;
+	padding: 3px 20px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+	color: #fff;
+	background-color: #0081c2;
+	background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc),
+		to(#0077b3));
+	background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+	background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+	background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc',
+		endColorstr='#ff0077b3', GradientType=0)
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+	color: #fff;
+}
+
+.tt-suggestion p {
+	margin: 0;
+}
+
+.control-label {
+	margin-top: 6px;
+	min-width: 60px;
+	float:left;
+	text-align: left;
+	margin-right: 20px;	
+}
+
+div.form-group div.col-xs-4 input {
+	padding-left: 0px;
+	margin-left: 0px;
+	float: left;
+}
+
+div.form-group div.col-xs-4 {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+div.form-group .control-label {
+	text-align: left;
+}
+
+div.form-group div.col-xs-4 input[type="password"],
+div.form-group div.col-xs-4 input[type="text"],
+div.form-group div.col-xs-4 input[type="url"],
+div.form-group div.col-xs-4 input[type="tel"],
+div.form-group div.col-xs-4 input[type="email"],
+div.form-group div.col-xs-4 select
+{
+	width: 100%;
+	margin-left: 0px;
+}
+.form-horizontal {
+	min-width: 400px;
+	
+}
+
+span.twitter-typeahead{
+	width:100%;
+}
+input.tt-query.form-control {
+	width: 100%;
+	padding-right: 0px;
+	margin-right: 0px;
 }

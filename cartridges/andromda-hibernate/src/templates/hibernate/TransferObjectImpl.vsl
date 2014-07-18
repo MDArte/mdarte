@@ -14,8 +14,6 @@
 package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${transferPackageName}")};
 #end
 
-
-
 /**
 $generatedFile
 $class.getDocumentation(" * ")
@@ -33,12 +31,12 @@ public #if($class.abstract) abstract #end class ${class.name}TOImpl extends ${cl
 ##    {
 ##	         super(otherBean);
 ##    }
-    
-    ##public ${class.name}TOImpl (${class.name} otherBean, ${class.name}TO exemploTO) throws Exception
-    ##{
-	##         super(otherBean, exemploTO);
-    ##}   
-    
+
+##public ${class.name}TOImpl (${class.name} otherBean, ${class.name}TO exemploTO) throws Exception
+##{
+##         super(otherBean, exemploTO);
+##}   
+
 ###foreach ($associationEnd in $class.associationEnds)
 ###set ($target = $associationEnd.otherEnd)
 ###if ($target.navigable)
@@ -53,5 +51,5 @@ public #if($class.abstract) abstract #end class ${class.name}TOImpl extends ${cl
 ###end
 ###end
 ###end    
-    
+
 }

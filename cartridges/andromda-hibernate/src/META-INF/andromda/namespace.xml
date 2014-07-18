@@ -399,6 +399,13 @@
             </property>  
             <property name="procedureName" required="false">
             </property>
+			
+			<property name="utilDir">
+                <default>util</default>
+                <documentation>
+                     Diretorio onde sao gerados os arquivos utilitarios
+                </documentation>
+            </property>
             
             <property name="loginDefault" required="false">
             </property>

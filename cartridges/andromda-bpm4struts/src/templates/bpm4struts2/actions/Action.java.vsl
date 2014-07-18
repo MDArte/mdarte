@@ -57,9 +57,12 @@ import org.apache.struts2.ServletActionContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Enumeration;
 import java.io.PrintWriter;
 import ${servletPackage}.ActionUtil;
 import ${servletPackage}.Struts2ViewContainer;
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${package}.Constantes;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -96,6 +99,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 ##
 #foreach ($field in $action.actionFormFields)
+
 #set ($fieldName = $field.name)
 #set ($fieldType = $field.type.fullyQualifiedName)
 #if ($field.file)
@@ -111,7 +115,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #elseif($field.widgetType=="money")
 	private java.lang.String $field.name;
 #elseif($field.widgetType=="multibox")
-	private ${field.type.fullyQualifiedName} $field.name;
+	private ${field.type.fullyQualifiedName}#if($field.type.enumeration)[]#end $field.name;
 #elseif ($field.doubleSelect)
 	private $field.type.fullyQualifiedName $field.name;
 	private $field.type.fullyQualifiedName ${field.name}__Double;
@@ -126,13 +130,6 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		this.${fieldName}__Double = ${fieldName}__Double;
 	}
 
-#elseif($field.type.enumeration)
-#set($enumeration = $field.type)
-#if ($enumeration.literalType.primitive)
-	private ${enumeration.literalType.wrapperName} $field.name;
-#else
-	private ${enumeration.literalType.fullyQualifiedName} $field.name;
-#end
 #else
 	private $field.type.fullyQualifiedName $field.name;
 #end
@@ -145,11 +142,34 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	}
 #end
 #if(!($field.file))
-
-	public #if($field.strutsAction.tableAction)java.util.List ${field.getterName}RowSelection #else ${field.type.fullyQualifiedName} ${field.getterName} #end()
+#if($field.strutsAction.tableAction)
+	public java.util.List ${field.getterName}RowSelection ()
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+#set($literalType = $enumeration.literalType.wrapperName)
+#else
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
+#end
+	public ${literalType}#if($field.widgetType == "multibox")[]#end ${field.getterName}() 
+#else 
+	public ${field.type.fullyQualifiedName} ${field.getterName}() 
+#end
 	{
 #if($field.strutsAction.tableAction)
 		return ${fieldName}RowSelection;
+#elseif($field.type.enumeration)
+#if($field.widgetType == "multibox")
+		${literalType}[] result = new ${literalType}[${fieldName}.length];
+	
+		for (int i = 0; i < this.${fieldName}.length; i++) {
+			result[i] = ${fieldName}[i].getValue();
+		}
+		
+		return result;
+#else
+		return ${fieldName}.getValue();
+#end
 #else
 		return ${fieldName};
 #end
@@ -180,6 +200,35 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	{
 		this.${fieldName}RowSelection = ${fieldName}RowSelection;
 	}
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#set($type = $enumeration.fullyQualifiedName)
+#if ($enumeration.literalType.primitive)
+#set($literalType = $enumeration.literalType.wrapperName)
+#else
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
+#end
+	public void ${field.setterName}($literalType#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+#if($field.widgetType == "multibox")
+		if ($fieldName != null) {
+			this.${fieldName} = new ${type}[${fieldName}.length];
+	
+    		for (int i = 0; i < ${fieldName}.length; i++) {
+    			this.${fieldName}[i] =  ${type}.${enumeration.fromOperationName}(${fieldName}[i]);
+    		}
+		}
+#else
+		if ($fieldName != null)
+			this.${fieldName} = ${type}.${enumeration.fromOperationName}($fieldName);
+#end
+    }
+	
+	public void ${field.setterName}($type#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+		if ($fieldName != null)
+			this.${fieldName} = $fieldName;
+    }
 #else
 #if(!$field.hiddenField)
 	public void ${field.setterName}($fieldType $fieldName)
@@ -207,44 +256,47 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end
 #else
-	 public void ${field.setterName}(java.io.File $fieldName)
-    {
-        this.$fieldName = $fieldName;
-    }
+	public void ${field.setterName}(java.io.File $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
 
-    /**
+	/**
 	$field.getDocumentation("     * ")
-     */
-    public java.io.File ${field.getterName}()
-    {
-        return this.$fieldName;
-    }
-	
-	 public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
-    {
-        this.${fieldName}ContentType = ${fieldName}ContentType;
-    }
+	*/
 
-    /**
-	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}ContentType()
-    {
-        return this.${fieldName}ContentType;
-    }
-	
-	 public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
-    {
-        this.${fieldName}FileName = ${fieldName}FileName;
-    }
+	public java.io.File ${field.getterName}()
+	{
+		return this.$fieldName;
+	}
 
-    /**
+	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
+	{
+		this.${fieldName}ContentType = ${fieldName}ContentType;
+	}
+
+	/**
 	$field.getDocumentation("     * ")
-     */
-    public java.lang.String ${field.getterName}FileName()
-    {
-        return this.${fieldName}FileName;
-    }
+	*/
+
+	public java.lang.String ${field.getterName}ContentType()
+	{
+		return this.${fieldName}ContentType;
+	}
+
+	public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
+	{
+		this.${fieldName}FileName = ${fieldName}FileName;
+	}
+
+	/**
+	$field.getDocumentation("     * ")
+	*/
+
+	public java.lang.String ${field.getterName}FileName()
+	{
+		return this.${fieldName}FileName;
+	}
 
 #end
 #end
@@ -262,9 +314,10 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	public void validate()
 	{
 		//Removendo mensagens antigas
-		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+		//request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
 
 		//Validando campos
+#**
 #foreach ($field in $action.actionParameters)
 #if(${field.required})
 #if(${field.type.name}=="String")
@@ -282,6 +335,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end
 #end
+*#
 	}
 
 #if ($securityEnabled && !${action.useCase.openAccess})
@@ -290,7 +344,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 	public String execute() throws Exception
 #end
 	{
-#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action)
+#processBreadCrumb($modulo $externalHyperlinkModulo $externalHyperlink $breadCrumbLabel $breadCrumbInput $action "		")
 #if(${action.moduloRedirect})
 		${servletPackage}.ActionUtil.copiaParametrosSessao(request,response, "${contextoPrincipal}");
 #end
@@ -298,6 +352,7 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #set($useCaseName = $action.useCase.name)
 #set($jspName = $action.input.name)
 		Boolean aplicacaoPermiteUsoBackBrowser = (Boolean) request.getSession().getServletContext().getAttribute("aplicacaoPermiteUsoBackBrowser");
+		
 		if (!aplicacaoPermiteUsoBackBrowser ^#if(${action.togglePageControl}) true#else false#end)
 		{
 			if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") != null && request.getParameter("invalidatePageControlCounter") != null && !(((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).equals(Integer.valueOf(request.getParameter("invalidatePageControlCounter")))))
@@ -322,6 +377,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		String forward = null;
 		String redirect = "";
+#if($action.enteringFinalState)
+		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+#end
 #if(!(${action.ajaxAction} &&  ${action.temParametroTabela}))
 #foreach ($actionForward in $actionForwards)
 		forward = "$actionForward.forwardName";
@@ -330,21 +388,19 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		boolean copyParameters = true;
 
-		if (request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS) != null) {
-			copyParameters = (Boolean) request.getSession().getAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
-			request.getSession().removeAttribute(${utilDir}.Constantes.COPY_PARAMETERS);
+		if (request.getSession().getAttribute(Constantes.COPY_PARAMETERS) != null) {
+			copyParameters = (Boolean) request.getSession().getAttribute(Constantes.COPY_PARAMETERS);
+			request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
 		}
 
 #if (!${action.copyParameters})
-		request.getSession().setAttribute(${utilDir}.Constantes.COPY_PARAMETERS, Boolean.FALSE);
-
+		request.getSession().setAttribute(Constantes.COPY_PARAMETERS, Boolean.FALSE);
 #end
-
 #if ($action.useCaseStart)
 ## [MOISES-COPPETEC]
 ##Codigo para retirar os sessionobjects da sessao que nao pertencem mais ao escopo, isto eh Session Object que
 ##esta na sessao e não pertence o caso de uso anterior. Para isto utiliza-se uma lista de cadastro. 
-		#processRemovePageSO()
+#processRemovePageSO("		")
 
 		java.util.List listaCasosUso = new java.util.ArrayList();
 
@@ -379,7 +435,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 		form.${field.setterName}(this.${field.name});
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
+#if(!$field.type.enumeration)
 		form.${field.setterName}ComboList(this.${field.name}ComboList);
+#end
 #end
 #end
 
@@ -399,13 +457,14 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 
 		if(previousFormObject != null)
 		{
-			#processUseCaseStartCopy2($action.actionFormFields)
+#processUseCaseStartCopy2($action.actionFormFields "			")
 		}
 #else
 #if($action.exitingPage && !$action.lookupGrid)
 #set($useCaseName = $action.useCase.name)
 #set($jspName = $action.input.name)
-		if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
+		if(getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}") == null) 
+			getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", 0);
 		getInvalidatePageControlCounter(request).put("${useCaseName}.${jspName}", ((Integer)getInvalidatePageControlCounter(request).get("${useCaseName}.${jspName}")).intValue() + 1);
 #end
 #end
@@ -425,18 +484,19 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #foreach($field in $action.actionFormFields)
 #if($field.table && !$possuiTable)
 #set($possuiTable = true)
-			request.getSession().setAttribute(${utilDir}.Constantes.ACAO_ATUAL, "${action.actionPath}.action");
-			if(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA) == null)
+			request.getSession().setAttribute(Constantes.ACAO_ATUAL, "${action.actionPath}.action");
+			
+			if(request.getParameter(Constantes.PARAMETRO_PAGINA) == null)
 			{
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO, 1);
+				request.setAttribute(Constantes.PARAMETRO_GRUPO, 1);
 				request.getSession().setAttribute("formPaginacao", form);
 			}
 			else
 			{
 				Object previusForm = (org.apache.struts.action.ActionForm)request.getSession().getAttribute("formPaginacao");
 				org.apache.commons.beanutils.PropertyUtils.copyProperties(form, previusForm);
-				request.setAttribute(${utilDir}.Constantes.PARAMETRO_GRUPO, Integer.parseInt(request.getParameter(${utilDir}.Constantes.PARAMETRO_PAGINA)));
-				request.setAttribute(${utilDir}.Constantes.ATTRIBUTE_TABLE, request.getParameter(${utilDir}.Constantes.PARAMETRO_TABLE));
+				request.setAttribute(Constantes.PARAMETRO_GRUPO, Integer.parseInt(request.getParameter(Constantes.PARAMETRO_PAGINA)));
+				request.setAttribute(Constantes.ATTRIBUTE_TABLE, request.getParameter(Constantes.PARAMETRO_TABLE));
 			}
 #end
 #end
@@ -447,13 +507,13 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #set($finalUseCaseName = "${transition.target.targetUseCase.package.webModuleName}$transition.target.fullPath")
 #end
 
-			#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-			#processTableNameList($action)
-			#processTransitionStruts2($action)
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "			")
+#processTableNameList($action "			")
+#processTransitionStruts2($action "			")
 		}//fim try
 		catch (java.lang.Exception exception)
 		{
-			#populateCurrentFormOnError()
+#populateCurrentFormOnError("			")
 			throw exception;
 		}
 #if($possuiTable)
@@ -467,9 +527,9 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #else
 		org.apache.struts.validator.ValidatorForm form = null;
-#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")	
-#processTableNameList($action)
-#processTransitionStruts2($action)		
+#processOperationMode($action "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($action "		")
+#processTransitionStruts2($action "		")
 #if ($action.formScopeRequest)
 		request.setAttribute("$action.useCase.formKey", null);
 #else
@@ -477,14 +537,16 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 #end ##if(!$action.actionFormFields.empty)
 		
-#processPageSO($action)
-#processRedirectStruts2($action)
+#processPageSO($action "		")
+#processRedirectStruts2($action "		")
 
 		if (redirect != "") {//troca de modules - to be tested
 			response.sendRedirect(redirect);
 		}
+		
 		request.removeAttribute("$forwardKey");
 		request.removeAttribute("$forwardKeyModule");
+		
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
 		return "recarregaTabelas";
 #else
@@ -500,6 +562,9 @@ $actionState.getDocumentation("	 * ")
 	{
 		String forward = null;
 		String redirect ="";
+#if	(!$action.useCaseStart && $action.getSource().hasStereotype("FrontEndView"))
+		request.getSession().setAttribute(org.apache.struts.Globals.MESSAGE_KEY, new org.apache.struts.action.ActionMessages());
+#end
 #set($parameterReport = "")
 #set ($reportName = "")
 #foreach ($parameter in $actionState.forward.trigger.parameters)
@@ -512,9 +577,9 @@ $actionState.getDocumentation("	 * ")
 #if ($controllerCalls.empty)
 #saveMessages($actionState.forward "		")
 		###processOperationMode($actionState.forward ${action.useCase.name})
-		#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($actionState.forward)
-		#processTransitionStruts2($actionState.forward)
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($actionState.forward "		")
+#processTransitionStruts2($actionState.forward "		")
 #else
 	
 #if (!$controllerClass.operations.isEmpty())
@@ -526,10 +591,10 @@ $actionState.getDocumentation("	 * ")
 #end
 #end
 #end
-		##processOperationMode($actionState.forward ${action.useCase.name})
-		#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($actionState.forward)
-		#processTransitionStruts2($actionState.forward)
+##processOperationMode($actionState.forward ${action.useCase.name})
+#processOperationMode($actionState.forward "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($actionState.forward "		")
+#processTransitionStruts2($actionState.forward "		")
 
 #saveMessages($actionState.forward "		")
 
@@ -587,7 +652,7 @@ $actionState.getDocumentation("	 * ")
 				length = in.read(dados); 
 			}
 
-		#processTransitionStruts2($actionState.forward)
+#processTransitionStruts2($actionState.forward "		")
 		}
 		catch (Exception e)
 		{
@@ -626,22 +691,21 @@ $decisionTransition.getDocumentation("	 * ")
 		if (value.equals("$outcome.guardName"))
 		{
 #saveMessages($outcome "			")
-			###processOperationMode($outcome ${action.useCase.name})
-			#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-			#processTableNameList($outcome)
-			#processTransitionStruts2($outcome)
+###processOperationMode($outcome ${action.useCase.name})
+#processOperationMode($outcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "			")
+#processTableNameList($outcome "			")
+#processTransitionStruts2($outcome "			")
 			return forward;
 		}
 #end
 
 		// we take the last action in case we have an invalid return value from the controller
 		## #processOperationMode($defaultOutcome)
-		#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
-		#processTableNameList($defaultOutcome)
-		#processTransitionStruts2($defaultOutcome)
+#processOperationMode($defaultOutcome  "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action" "		")
+#processTableNameList($defaultOutcome "		")
+#processTransitionStruts2($defaultOutcome "		")
 		return forward;
 	}
-
 #end
 
 	private java.util.Map getInvalidatePageControlCounter(javax.servlet.http.HttpServletRequest request)

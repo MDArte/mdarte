@@ -29,6 +29,15 @@ public class CoppetecStrutsActionLogicImpl
     {
         super (metaObject, context);
     }
+	
+	public String handleGetAjaxTable() 
+	{
+	    
+	    Object value =  this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_ASYNC_TABLE);
+	  
+	    return value == null ? "": value.toString();
+	  
+	}
 
     protected String handleGetOnlineHelpValue()
     {
@@ -56,6 +65,17 @@ public class CoppetecStrutsActionLogicImpl
 	protected boolean handleIsImage() {
         return Bpm4StrutsProfile.TAGGEDVALUE_ACTION_TYPE_IMAGE
         .equals(this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ACTION_TYPE));
+	}
+	
+	protected boolean handleIsClientValidation() {
+		for (Iterator iterator = getActionParameters().iterator(); iterator.hasNext();) {
+			CoppetecStrutsParameter parameter = (CoppetecStrutsParameter) iterator.next();
+			if (parameter.isValidationRequired())
+				return true;
+		}
+		
+		return false;
+		
 	}
 
 

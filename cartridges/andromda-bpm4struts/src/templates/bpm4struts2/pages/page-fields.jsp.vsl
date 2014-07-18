@@ -48,11 +48,10 @@
 #if (!$acao.hiddenActionParameters.empty)
 	<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
-#end                    	            
+#end
 <div id="fields">
 #foreach ($field in $actionParameters)
-
-#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
+#if (!$field.multiboxPropertyName && ($field.widgetType != "hidden") && !$field.table)
 ## for now multibox field can only be displayed in tables
 #if($field.visivelPor)
 #set ($visivel = 'style="display:none"')
@@ -63,21 +62,21 @@
 #set($valueFieldOperationMode = $field.findTaggedValue("$fieldOperationMode"))
 #if( $valueFieldOperationMode != "" && !${action.useCase.openAccess})
 	<security:containsOperationMode value="$valueFieldOperationMode" useCase="${action.useCase.package.webModuleName}${action.useCase.actionPath}.action">
-#end		    
+#end
 #if ($securityEnabled && !${action.useCase.openAccess}) 	
-   <security:containsPermission name="$field.messageKey">
-#end			                    
-#renderFormField2($action $field '' "                           ")       
-#if ($securityEnabled && !${action.useCase.openAccess}) 
-   </security:containsPermission>      
-#end   
+	<security:containsPermission name="$field.messageKey">
+#end
+#renderFormField2($action $field '' "		")
+#if ($securityEnabled && !${action.useCase.openAccess})
+	</security:containsPermission>
+#end
 #if( $valueFieldOperationMode != "" && !${action.useCase.openAccess})
 	</security:containsOperationMode>
-#end	              
+#end
 #end
 #end
 </div>
-#end              				
+#end
 #end
 #end
 #end

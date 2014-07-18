@@ -6,6 +6,10 @@
 #if ($stringUtils.isNotBlank($enumeration.packageName))
 package $enumeration.packageName;
 #end
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 ## avoiding parse errors
 #set ($sharp = "#")
 
@@ -24,45 +28,45 @@ public class $enumeration.name
 #end
 	
 	static{
-	#set($literalsLenght = $enumeration.literals.size())	
-	#set($literalsLenght = $literalsLenght + 1)
+#set($literalsLenght = $enumeration.literals.size())
+#set($literalsLenght = $literalsLenght + 1)
 	
 #foreach ($literal in $enumeration.literals)
-	#if ($enumeration.literalType.primitive)
+#if ($enumeration.literalType.primitive)
     	internationalizationKeys.put(new ${enumeration.literalType.wrapperName}($literal.enumerationValue), "enum.label.${enumeration.name}.${literal.name}");
-    	#else
+#else
     	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}(${literal.enumerationValue}), "enum.label.${enumeration.name}.${literal.name}");
-    	#end    	
+#end    	
 #end
-	#if(!$enumeration.generalization)
-	#if ($enumeration.literalType.primitive)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
+#if ($enumeration.literalType.primitive)
     	internationalizationKeys.put(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"), "");
-    	#else
+#else
     	internationalizationKeys.put(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"), "");
-	#end
-	#end  	
+#end
+#end
 	}
 	
-#if(!$enumeration.generalization)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
 #if ($enumeration.literalType.primitive)
-        public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"));
+	public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}("${enumeration.valorVazio}"));
 #else
-        public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"));
+	public static final $enumeration.name VAZIO = new ${enumeration.name}(new ${enumeration.literalType.fullyQualifiedName}("${enumeration.valorVazio}"));
 #end
 #end
-    
+
 #foreach ($literal in $enumeration.literals)
     /**
 $literal.getDocumentation("     * ")
      */
-    #if ($enumeration.literalType.primitive)
+#if ($enumeration.literalType.primitive)
     public static final $enumeration.name $literal.name = new ${enumeration.name}(new ${enumeration.literalType.wrapperName}($literal.enumerationValue));
-    #else
+#else
     public static final $enumeration.name $literal.name = new ${enumeration.name}(new ${enumeration.literalType.fullyQualifiedName}(${literal.enumerationValue}));
-    #end
+#end
 
 #end
-    
+
 #if(!$enumeration.generalization)
  
     protected $enumeration.literalType.fullyQualifiedName value;
@@ -216,6 +220,35 @@ $literal.getDocumentation("     * ")
     {
     	return internationalizationKeys;
     }
+	
+	public static java.util.Map enumMap()
+    {
+    	Map<${enumeration.literalType.name}, java.lang.String> map = new TreeMap<${enumeration.literalType.name}, java.lang.String>();
+				
+		for(${enumeration.name} i : (Collection<${enumeration.name}>) enumerations)
+		{
+			map.put(i.getValue(), i.getInternationalizationKey());
+		}
+		
+		return map;
+    }
+	
+	public static java.util.Map enumMapNoEmptyValue()
+    {
+#if($enumeration.defaultEmptyValue)
+    	Map<${enumeration.literalType.name}, java.lang.String> map = new TreeMap<${enumeration.literalType.name}, java.lang.String>();
+				
+		for(${enumeration.name} i : (Collection<${enumeration.name}>) enumerations.subList(1,enumerations.size()))
+		{
+			map.put(i.getValue(), i.getInternationalizationKey());
+		}
+		
+		return map;
+#else
+		return enumMap();
+#end
+    }
+
 #end
     /**
      * @see java.lang.Object${sharp}equals(java.lang.Object)
@@ -256,7 +289,7 @@ $literal.getDocumentation("     * ")
      */
     static
     {
-#if(!$enumeration.generalization)
+#if(!$enumeration.generalization && $enumeration.defaultEmptyValue)
 		values.put(VAZIO.value, VAZIO);
 		enumerations.add(0, VAZIO);
 
@@ -272,8 +305,8 @@ $literal.getDocumentation("     * ")
         enumerations.add($literal.name);
 
 #end
-		//literals = java.util.Collections.unmodifiableList(literals);
-		//names = java.util.Collections.unmodifiableList(names);
+		literals = java.util.Collections.unmodifiableList(literals);
+		names = java.util.Collections.unmodifiableList(names);
 
     }
 }
