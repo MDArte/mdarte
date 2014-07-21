@@ -1382,7 +1382,8 @@ public class StrutsParameterLogicImpl
     protected boolean handleIsValidationRequired()
     {
         final String disableValidationForHiddenFormFields = (String)getConfiguredProperty(Bpm4StrutsGlobals.DISABLE_VALIDATION_FOR_HIDDEN_FORM_FIELDS);
-        return !("true".equals(disableValidationForHiddenFormFields) && "hidden".equals(getWidgetType())) && !("plaintext".equals(getWidgetType()))  &&
+        //return !("true".equals(disableValidationForHiddenFormFields) && "hidden".equals(getWidgetType())) && !("plaintext".equals(getWidgetType()))  && !getValidatorTypes().isEmpty();
+        return !("true".equals(disableValidationForHiddenFormFields) && "hidden".equals(getWidgetType())) &&
             !getValidatorTypes().isEmpty();
     }
 

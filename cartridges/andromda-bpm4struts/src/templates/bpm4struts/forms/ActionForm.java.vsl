@@ -104,14 +104,14 @@ public class ${formBeanClassName}
 #set ($timeFormatter = "${field.name}TimeFormatter")
     private final static java.text.DateFormat $timeFormatter = new java.text.SimpleDateFormat("$field.timeFormat");
 #end
-##if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || $field.multibox)
+#if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || $field.multibox)
 	private java.lang.Object[] $field.valueListName;
 	private java.lang.Object[] $field.labelListName;
 	private java.lang.Object[] ${field.labelListName}Double;    
 	private java.lang.Object[] ${field.labelListName}Hints;
 	private java.lang.Object[] ${field.labelListName}Destination;
 
-##end
+#end
 #end
 
     public ${formBeanClassName}(){
@@ -542,10 +542,10 @@ $field.getDocumentation("     * ")
 #end
 #end
 
-##if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || ${field.widgetType}=="multibox")
+#if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || ${field.widgetType}=="multibox")
 #set ($labels = true)
 #processLists ($field)
-##end
+#end
 
 #end
     /**
@@ -560,13 +560,13 @@ $field.getDocumentation("     * ")
 #if ($field.doubleSelect)
         this.${field.name}__Double = null;
 #end        
-##if ($field.selectable && $field.multiple)
+#if ($field.selectable && $field.multiple)
 ## multi-select fields need to be reset to an empty array (http://struts.apache.org/userGuide/struts-html.html#select)
         this.$field.valueListName = new java.lang.Object[0];
         this.$field.labelListName = new java.lang.Object[0];
         this.${field.labelListName}Double = new java.lang.Object[0];
         this.${field.labelListName}Hints = new java.lang.Object[0];        
-##end
+#end
 #end
 #if ($field.strutsAction.tableAction)
         this.${field.name}RowSelection = null;
@@ -607,12 +607,12 @@ $field.getDocumentation("     * ")
 #if ($field.doubleSelect)
         this.${field.name}__Double = null;
 #end
-##if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || ${field.widgetType}=="multibox")
+#if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || ${field.widgetType}=="multibox")
         this.$field.valueListName = null;
         this.$field.labelListName = null;
         this.${field.labelListName}Double = null;        
         this.${field.labelListName}Hints = null;
-##end
+#end
 #end
 #end
     }
