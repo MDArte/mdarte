@@ -2,7 +2,7 @@
 package $servletPackage;
 
 ## (MDArte) module projects use the initial SAR to load the access control
-#if($modulo != 'true')
+##if($modulo != 'true')
 import java.util.HashMap;
 import java.util.Collection;
 import ${utilDir}.Constantes;
@@ -15,20 +15,20 @@ import ${controleAcessoDir}.ServicosSingleton;
 import ${controleAcessoDir}.ControleAcesso;
 import ${controleAcessoDir}.Perfil;
 
-#end
+##end
 ##
 /**
  * This servlet is designed to avoid Struts copying zeroes into those form
  * fields that take numerical values.
  */
-public final class ActionServletImpl extends ActionServlet {
-#if($modulo != 'true')
+public class ActionServletImpl extends ActionServlet {
+##if($modulo != 'true')
 
     /**
      * Log da Classe.
      */
     private static Log s_log = LogFactory.getLog(ActionServletImpl.class);
-#end
+##end
 
     /**
      * Call the parent initializer and configure the converter not to convert
@@ -37,7 +37,7 @@ public final class ActionServletImpl extends ActionServlet {
     public void init( javax.servlet.ServletConfig config ) throws javax.servlet.ServletException {
         super.init( config );
 
-#if($modulo != 'true')
+##if($modulo != 'true')
         try {
             ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
             HashMap<String, ControleAcesso> controles = ServicosSingleton.instance().getControles();
@@ -71,7 +71,7 @@ public final class ActionServletImpl extends ActionServlet {
         } catch( Exception e ) {
             s_log.error("Nao foi possivel listar os servicos", new ServletException());
         }
-#end
+##end
     }
 }
 

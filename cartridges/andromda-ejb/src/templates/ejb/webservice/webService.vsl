@@ -1,0 +1,41 @@
+#if ($stringUtils.isNotBlank($service.packageName))
+package $service.packageName;
+#end
+import javax.ejb.Stateless;
+import javax.jws.WebService;
+import org.jboss.ws.annotation.WebContext;
+import javax.ejb.Remote;
+
+/**
+  $service.getDocumentation(" * ")
+ */
+
+@WebService(endpointInterface = "${service.fullyQualifiedName}Srv", targetNamespace = "${service.targetNamespace}", serviceName = "${service.serviceName}")
+@WebContext(contextRoot="${service.context}", urlPattern="${service.urlPattern}")
+@Remote(${service.serviceName}RemoteInterface.class)
+@Stateless
+public class ${service.serviceName}{
+
+#foreach ($operation in $service.operations)
+	/**
+	  $operation.getDocumentation("    * ")
+	    */
+	  
+#set ($listaAtributos = '')
+#set ($return = '')
+#renderReturnWS($operation $return)
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#renderParametersWSPaginacao($operation $listaAtributos true)
+#else
+#renderParametersWS($operation $listaAtributos true)
+#end
+$operation.visibility $return ${operation.name} ($listaAtributos ){
+	try{
+	#if ($operation.returnTypePresent)return #end ${customTypesPackage}.ServiceLocator.instance().get${service.name}BI().${operation.name}(${operation.argumentNames});
+	}catch(Exception e){
+		throw new RuntimeException(e);
+	}
+}
+
+#end
+}

@@ -1,0 +1,112 @@
+## SOMENTE GERADO EM PROJETOS MODULARIZADOS
+#if($modulo == 'true')
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+#if (!$useCase.package.webModuleName.equals("principal"))
+##set ($webModuleName = "/$useCase.package.webModuleName")
+#set ($webModuleName = "")
+#else
+#set ($webModuleName = "")
+#end
+##
+##  START TEMPLATE
+##
+#foreach ($action in $useCase.actions)
+        <action
+            path="${webModuleName}$action.actionPath"
+            type="$action.actionType"
+#if (!$action.actionFormFields.empty)
+            name="$action.formBeanName"
+#end
+##set ($roles = $action.actionRoles)
+###if ($stringUtils.isNotBlank($securityRealm) && $stringUtils.isNotBlank($roles) && $useCase.secured)
+##            roles="$roles"
+###end
+            scope="$action.actionScope"
+#if ($action.useCaseStart == false)
+            input="${action.input.fullPath}.jsp"
+#end
+            unknown="false"
+#set ($validate = $action.validationRequired && $validationDesired)
+            validate="$validate">
+            <exception
+                handler="${exceptionHandlerPackage}.ExceptionHandler"
+                type="java.lang.Throwable"
+                key="error.exception.message"
+                #if ($action.useCaseStart == false)
+                path="${action.input.fullPath}.jsp"
+                #end
+                scope="request" />
+		
+#foreach ($actionForward in $action.actionForwards)
+            <forward
+                name="$actionForward.forwardName"
+##
+##  when direct page access is prevented we cannot redirect to pages,
+##  so we need to redirect to a page forward actioninstead
+##  (they are declared a bit further down the template)
+##
+#if ($preventDirectPageAccess == "true" && $actionForward.enteringPage)
+#set ($pageActionName = "$stringUtils.upperCamelCaseName($actionForward.target.name)")
+                path="${webModuleName}${useCase.actionPathRoot}/${pageActionName}PageForward.do"
+#else
+                path="$actionForward.forwardPath"
+#end
+				/>
+#end
+#if ($securityEnabled) 
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+            <forward
+                name="entrar.login"
+                path="${login}/entrar-login.jsp"
+                redirect="false" />    
+            <forward
+                name="troca.de.senha.obrigatoria"
+                path="${login}/troca-de-senha-obrigatoria.jsp"
+                redirect="false" /> 
+	        <forward
+	            name="main"
+	            path="/ForwardAction.do"
+	            redirect="false" /> 
+#end	                           
+
+        </action>
+#end
+#if ($onlineHelp == "true")
+        <action
+            path="${useCase.onlineHelpActionPath}"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${useCase.onlineHelpPagePath}.jsp"/>
+#foreach ($page in $useCase.pages)
+        <action
+            path="${page.onlineHelpActionPath}"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${page.onlineHelpPagePath}.jsp"/>
+#end
+#end
+#if ($preventDirectPageAccess == "true")
+##
+##  these actions merely forward to pages because the pages aren't to be accessed directly by the client
+##  (eg. via a redirect)
+##
+#foreach ($page in $useCase.pages)
+        <action
+#set ($pageActionName = "$stringUtils.upperCamelCaseName($page.name)")
+            path="${webModuleName}${useCase.actionPathRoot}/${pageActionName}PageForward"
+            type="org.apache.struts.actions.ForwardAction"
+            scope="request"
+            parameter="${page.fullPath}.jsp"/>
+#end
+#end
+#end

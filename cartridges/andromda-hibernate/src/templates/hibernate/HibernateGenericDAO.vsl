@@ -1,0 +1,825 @@
+#set ($generatedFile = "HibernateGenericDAO.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.util.List;
+import java.util.Map;
+
+import javax.security.auth.Subject;
+
+import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.MatchMode;
+
+import accessControl.ControleAcesso;
+import br.gov.mp.siconv.exception.SiconvErrorException;
+import br.ufrj.coppetec.DataObject;
+
+public abstract class HibernateGenericDAO<T extends AbstractEntity> extends AbstractDAO {
+	
+	private Class clazz;
+	
+	private static Logger log = Logger.getLogger(HibernateGenericDAO.class);
+
+	private MatchMode matchMode = MatchMode.ANYWHERE;
+	
+	protected Session session;	
+	
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+	private boolean enableCache = true;
+#else
+	private boolean enableCache = false;
+#end
+	
+	private Subject subject = null;
+	
+	protected HibernateGenericDAO() {
+		super();  
+		
+		Type type = getClass().getGenericSuperclass();
+		this.clazz = getClassFromType(type);
+		this.session = currentSession();
+		
+		AccessControlContext context = AccessController.getContext();
+		if(context != null) {			
+			this.subject = Subject.getSubject(context);	
+		}
+	}
+	
+	public HibernateGenericDAO(Subject subject) {
+		super();  
+		
+		Type type = getClass().getGenericSuperclass();
+		this.clazz = getClassFromType(type);
+		this.session = currentSession();
+		this.subject = subject;
+		
+		if(subject == null) {
+			throw new SiconvErrorException("Subject is null");
+		}		
+	}
+	
+	/*public HibernateGenericDAO(Class clazz) {		
+		super();  
+		this.clazz =clazz;	
+		this.session = currentSession();
+	}*/
+	
+	public Class getClazz() {
+		return clazz;
+	}
+	public void setClazz(Class clazz) {
+		this.clazz = clazz;
+	}	
+	
+	public void flush() {
+		session.flush();
+	}
+	
+	public boolean isEnableCache() {
+		return enableCache;
+	}
+
+	public void setEnableCache(boolean enableCache) {
+		this.enableCache = enableCache;
+	}	
+
+	/**
+	 * Return hibernate match mode.
+	 * 
+	 * @return hibernate match mode
+	 */
+	public MatchMode getMatchMode() {
+		return this.matchMode;
+	}
+
+	/**
+	 * Change type of Match Mode in findByExample method. MatchMode is LIKE type
+	 * of an search STRING field There are actual options: ANYWHERE (like
+	 * '%search%') END (like '%search') EXACT (like 'search') START (like
+	 * 'search%')
+	 * 
+	 * @param matchMode
+	 */
+	public void setMatchMode(MatchMode matchMode) {
+		this.matchMode = matchMode;
+	}
+
+	/**
+	 * find all elements that is similar to the pojo sample. 
+	 * 
+	 * @param pojo pojo sample
+	 * @return list of pojo
+	 */
+	public List<T> findByExample(T pojo) {
+		PagedList<T> results = findByExample(pojo, null);
+		List<T> result = (List<T>) results.getRecords();
+
+		return result;
+	}
+
+	/**
+	 * findByExample with paginated result
+	 * 
+	 * @param pojo pojo sample
+	 * @param page the pagination
+	 * @return list of pojo (paged)
+	 */
+	@SuppressWarnings("unchecked")
+	public PagedList<T> findByExample(T pojo, Page page) {
+		Integer totalResults = 0;
+		Class<?> persistentClass = getPersistentClass(pojo);
+		Criteria crit = session.createCriteria(persistentClass);
+		Example example = Example.create(pojo);
+		example.enableLike(this.matchMode);
+		crit.add(example);
+
+		if (page != null) {
+			totalResults = getTotalResults(crit);
+			crit.setFirstResult(page.getFirstResult());
+			crit.setMaxResults(page.getMaxResults());
+		}
+
+		List list = crit.list();
+		PagedList<T> result = new PagedList<T>(page, totalResults, list);
+
+		return result;
+	}
+
+	/**
+	 * Get the number of records affected with hibernate query object. Do not
+	 * load full records for get this information. Scroll method is used for
+	 * pointer records and move to the last record and get its number.
+	 * 
+	 * @param criteria
+	 * @return Total number of records
+	 */
+	public int getTotalResults(Criteria criteria) {
+		ScrollableResults results = criteria.scroll();
+		results.last();
+
+		int result = results.getRowNumber();
+		results.close();
+		result++;
+
+		log.debug("(" + result + ") rows in Criteria search paginated.");
+
+		return result;
+	}
+
+	/**
+	 * Get the number of records affected with hibernate query object. Do not
+	 * load full records for get this information. Scroll method is used for
+	 * pointer records and move to the last record and get its number.
+	 * 
+	 * @param query
+	 * @return Total number of records
+	 */
+	public int getTotalResults(Query query) {
+		ScrollableResults results = query.scroll();
+		results.last();
+
+		int result = results.getRowNumber();
+		result++;
+
+		log.debug("(" + result + ") rows in Query search paginated.");
+
+		return result;
+	}
+
+	/**
+	 * Get the class of generic type information.
+	 * 
+	 * @param pojo
+	 * @return Class of IPojo
+	 */
+	@SuppressWarnings("unchecked")
+	public Class<T> getPersistentClass(T pojo) {
+		Class<T> result = null;
+
+		if (this.getClass().equals(HibernateGenericDAO.class)) {
+			String strPersistentClass = getApplicationClassName(pojo);
+			try {
+				result = (Class<T>) Class.forName(strPersistentClass);
+			} catch (ClassNotFoundException e) {
+				result = null;
+			}
+		} else {
+			Class<? extends HibernateGenericDAO> actual = getClass();
+			Type type = actual.getGenericSuperclass();
+			
+			result = getClassFromType(type);
+		}
+
+		return result;
+	}
+
+	private Class<T> getClassFromType(Type type) {
+		
+		Class<T> result = null;
+		
+		if(type != null) {
+			
+			// No caso dos DAOImpl a getGenericSuperclass nï¿½o ï¿½ a HibernateGenericDAO
+			// Percorre atï¿½ chegar na HibernateGenericDAO				
+			while(!(type instanceof ParameterizedType)) {
+				
+				Type tmp = ((Class<? extends HibernateGenericDAO>) type).getGenericSuperclass();
+				
+				if(tmp == null) {
+					break;
+				}
+				
+				type = tmp;
+			}		
+			if(type != null) {								
+				try {
+					ParameterizedType paramType = (ParameterizedType) type;
+					Type[] types = paramType.getActualTypeArguments();
+					Type typeResult = types[0];
+					result = (Class<T>) typeResult;
+				}catch (Exception e) {
+					result = null;
+				}
+			}
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T findById(Serializable id) {
+		T obj = null;
+
+		if (id == null) {
+			throw new SiconvErrorException("Parameter id in findById is null.");
+		}
+
+		try {
+			obj = (T) session.load(clazz, id);
+			Hibernate.initialize(obj);
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Hibernate exception on findById", ex);
+		}
+
+		return obj;
+	}
+
+	/**
+	 * Return true if pojo is object persistent Pojo object not fixed on session
+	 * hibernate after this method executed.
+	 * 
+	 * @param pojo
+	 * @return true if pojo is object persistent
+	 */
+	public boolean exists(T pojo) {
+		boolean exist = false;
+		
+		try {
+			if (session != null) {
+				exist = session.contains(pojo);
+			}
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Error on search pojo "	+ pojo.getClass() + ": " + pojo.toString(), ex);
+		}
+		
+		return exist;
+	}
+
+	/**
+	 * This method is important when work if lazy fields with proxies. Proxies
+	 * not return the real name of objects.
+	 * 
+	 * @param pojo
+	 * @return String represent the full name of persistent class
+	 */
+	private String getApplicationClassName(T pojo) {
+		String className = pojo.getClass().getName();
+		
+		if (className.indexOf("$$") >= 0) {
+			className = pojo.getClass().getSuperclass().getName();
+		}
+		
+		return className;
+	}
+	
+	/**
+	 * Make the pojo persistent and insert on fisic repository. Fixed on
+	 * hibernate session.
+	 * 
+	 * @param pojo Pojo object to persist
+	 * @return Object The key of object after persist.
+	 */
+	public Object insertPojo(T pojo) {
+		
+		Object result = null;
+		
+		if(subject == null) {
+			throw new SiconvErrorException("Subject is null. You need to set the subject on the object DAO.");
+		}		
+		
+		updateAuditoriaEntity(pojo, this.subject);
+
+		if (pojo == null) {
+			throw new SiconvErrorException("Parameter pojo in insert is null.");
+		}
+		
+		try {
+			if (session != null) {
+				result = (Object) session.save(pojo);
+			}
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Error on insert pojo "	+ pojo.getClass() + ": " + pojo.toString(), ex);
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Make the pojo persistent and insert on fisic repository. Fixed on
+	 * hibernate session.
+	 * 
+	 * @param pojo Pojo object to persist
+	 * @return Object The key of object after persist.
+	 */
+	public void insertOrUpdatePojo(T pojo) {
+			
+		if(subject == null) {
+			throw new SiconvErrorException("Subject is null");
+		}		
+		updateAuditoriaEntity(pojo, this.subject);
+
+		if (pojo == null) {
+			throw new SiconvErrorException("Parameter pojo in insert is null.");
+		}
+		
+		try {
+			if (session != null) {
+				session.saveOrUpdate(pojo);
+			}
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Error on insert pojo "	+ pojo.getClass() + ": " + pojo.toString(), ex);
+		}
+	}	
+
+	/**
+	 * Make the pojo object transient and delete fisic from repository.
+	 * 
+	 * @param pojo Object pojo to transform in transient object
+	 */
+	public void deletePojo(T pojo) {
+		if (pojo == null) {
+			throw new SiconvErrorException("Parameter pojo in remove is null.");
+		}
+		
+		try {
+			session.delete(pojo);
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Error on remove pojo "	+ pojo.getClass() + ": " + pojo.toString(), ex);
+		}
+	}
+
+	/**
+	 * This method NOT remove the object from persistent repository. Only remove
+	 * the reference from hibernate session.
+	 * 
+	 * @param persistentObject Object to remove from hibernate session.
+	 */
+	protected void makeTransient(Object persistentObject) {
+		session.evict(persistentObject);
+	}
+
+	/**
+	 * Deletes physically from repository and removes the reference from
+	 * hibernate session.
+	 * 
+	 * @param pojo Object to remove from persistent repository.
+	 */
+	public void updatePojo(T pojo) {
+		if (pojo == null) {
+			throw new SiconvErrorException("Parameter update in insert is null.");
+		}
+		if(subject == null) {
+			throw new SiconvErrorException("Subject is null");
+		}		
+		try {
+			updateAuditoriaEntity(pojo, this.subject);
+			session.update(pojo);
+		} catch (HibernateException ex) {
+			throw new SiconvErrorException("Error on update pojo " + pojo.getClass() + ": " + pojo.toString(), ex);
+		}
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given HQL string.
+	 * 
+	 * @param hql an HQL query string
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> findHQL(String hql) {
+		Query query = createQueryHQL(hql);
+		List<T> list = query.list();
+
+		return list;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given HQL string with positional
+	 * parameters.
+	 * 
+	 * @param hql an HQL query string
+	 * @param params the query parameters
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> findHQL(String hql, Object... params) {
+		Query query = createQueryHQL(hql);
+		fillQueryPositionalParameters(query, params);
+		List<T> list = query.list();
+
+		return list;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given HQL string with named
+	 * parameters.
+	 * 
+	 * @param hql an HQL query string
+	 * @param params the query named parameters
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> findHQL(String hql, Map<String, ? extends Object> params) {
+		Query query = createQueryHQL(hql);
+		fillQueryNamedParameters(query, params);
+		List<T> list = query.list();
+
+		return list;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given HQL string.
+	 * 
+	 * @param hql HQL query
+	 * @param page the pagination
+	 * @return a paginated list of entities
+	 */
+	public PagedList<T> findHQL(String hql, Page page) {
+		Query query = createQueryHQL(hql);
+		PagedList<T> result = createPagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given HQL string
+	 * with positional parameters.
+	 * 
+	 * @param hql HQL query
+	 * @param page the pagination
+	 * @param params the query parameters
+	 * @return a paginated list of entities
+	 */
+	public PagedList<T> findHQL(String hql, Page page, Object... params) {
+		Query query = createQueryHQL(hql);
+		fillQueryPositionalParameters(query, params);
+		PagedList<T> result = createPagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given HQL string
+	 * with named parameters.
+	 * 
+	 * @param hql HQL query
+	 * @param page the pagination
+	 * @param params the query named parameters
+	 * @return a paginated list of entities
+	 */
+	public PagedList<T> findHQL(String hql, Page page, Map<String, ? extends Object> params) {
+		Query query = createQueryHQL(hql);
+		fillQueryNamedParameters(query, params);
+		PagedList<T> result = createPagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given native SQL string.
+	 * 
+	 * @param sql a SQL query string
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Serializable> find(String sql) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		List<Serializable> result = query.list();
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given native SQL string with
+	 * positional parameters.
+	 * 
+	 * @param sql a SQL query string
+	 * @param params the query parameters
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Serializable> find(String sql, Object... params) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		fillQueryPositionalParameters(query, params);
+		List<Serializable> list = query.list();
+
+		return list;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given native SQL string with
+	 * named parameters.
+	 * 
+	 * @param sql a SQL query string
+	 * @param params the query named parameters
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Serializable> find(String sql, Map<String, ? extends Object> params) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		fillQueryNamedParameters(query, params);
+		List<Serializable> list = query.list();
+
+		return list;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given native SQL
+	 * string.
+	 * 
+	 * @param sql a SQL query string
+	 * @param page the pagination
+	 * @return a paginated list of entities
+	 */
+	public PagedList<Serializable> find(String sql, Page page) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		PagedList<Serializable> result = createNativePagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given native SQL
+	 * string with positional parameters.
+	 * 
+	 * @param sql a SQL query string
+	 * @param page the pagination
+	 * @param params the query parameters
+	 * @return a paginated list of entities
+	 */
+	public PagedList<Serializable> find(String sql, Page page, Object... params) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		fillQueryPositionalParameters(query, params);
+		PagedList<Serializable> result = createNativePagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given native SQL
+	 * string with named parameters.
+	 * 
+	 * @param sql a SQL query string
+	 * @param page the pagination
+	 * @param params the query named parameters
+	 * @return a paginated list of entities
+	 */
+	public PagedList<Serializable> find(String sql, Page page, Map<String, ? extends Object> params) {
+		SQLQuery query = createQueryNativeSQL(sql);
+		fillQueryNamedParameters(query, params);
+		PagedList<Serializable> result = createNativePagedResult(query, page);
+
+		return result;
+	}
+
+	/**
+	 * Retrieves a list of entities based on a given criteria.
+	 * 
+	 * @param criteria Hibernate Criteria object
+	 * @return a list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> findCriteria(Criteria criteria) {
+		List<T> list = criteria.list();
+		return list;
+	}
+
+	/**
+	 * Retrieves a paginated collection of entities based on a given criteria.
+	 * 
+	 * @param criteria Hibernate Criteria object
+	 * @param page the pagination
+	 * @return a paginated list of entities
+	 */
+	@SuppressWarnings("unchecked")
+	public PagedList<T> findCriteria(Criteria criteria, Page page) {
+		Integer totalResults = 0;
+
+		if (page != null) {
+			totalResults = getTotalResults(criteria);
+			criteria.setFirstResult(page.getFirstResult());
+			criteria.setMaxResults(page.getMaxResults());
+		}
+
+		List<T> list = criteria.list();
+		PagedList<T> result = new PagedList<T>(page, totalResults, list);
+
+		return result;
+	}
+
+	/**
+	 * Sets the given query parameters with the specified values.
+	 * 
+	 * @param query the query
+	 * @param params the parameter values
+	 */
+	private void fillQueryPositionalParameters(Query query, Object... params) {
+		if (params != null && params.length > 0) {
+			for (int i = 0; i < params.length; i++) {
+				query.setParameter(i + 1, params[i]);
+			}
+		}
+	}
+
+	/**
+	 * Sets the given query parameters with the specified map values.
+	 * 
+	 * @param query the query
+	 * @param params the parameter values
+	 */
+	private void fillQueryNamedParameters(Query query, Map<String, ? extends Object> params) {
+		if (params != null && params.size() > 0) {
+			for (Map.Entry<String, ? extends Object> param : params.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+	}
+
+	/**
+	 * Creates an instance of {@link Query} using the specified HQL string.
+	 * 
+	 * @param hql the HQL query string
+	 * @return a Query
+	 */
+	private Query createQueryHQL(String hql) {
+		Query query = session.createQuery(hql);
+		return query;
+	}
+
+	/**
+	 * Creates an instance of {@link SQLQuery} using the specified native SQL
+	 * string.
+	 * 
+	 * @param hql the HQL query string
+	 * @return a SQLQuery
+	 */
+	private SQLQuery createQueryNativeSQL(String sql) {
+		SQLQuery query = session.createSQLQuery(sql);
+		return query;
+	}
+
+	/**
+	 * Creates a paged result for the given query and pagination.
+	 * 
+	 * @param query a prepared Query
+	 * @param page the pagination
+	 * @return a paginated result
+	 */
+	@SuppressWarnings("unchecked")
+	private PagedList<T> createPagedResult(Query query, Page page) {
+		Integer totalResults = 0;
+
+		if (page != null) {
+			totalResults = new Integer(getTotalResults(query));
+			query.setFirstResult(page.getFirstResult());
+			query.setMaxResults(page.getMaxResults());
+		}
+
+		List<T> list = query.list();
+		PagedList<T> result = new PagedList<T>(page, totalResults, list);
+
+		return result;
+	}
+
+	/**
+	 * Creates a paged result for the given native query and pagination.
+	 * 
+	 * @param query a prepared Query
+	 * @param page the pagination
+	 * @return a paginated result
+	 */
+	@SuppressWarnings("unchecked")
+	private PagedList<Serializable> createNativePagedResult(Query query, Page page) {
+		Integer totalResults = new Integer(0);
+
+		if (page != null) {
+			totalResults = new Integer(getTotalResults(query));
+			query.setFirstResult(page.getFirstResult());
+			query.setMaxResults(page.getMaxResults());
+		}
+
+		List<Serializable> list = query.list();
+		PagedList<Serializable> result = new PagedList<Serializable>(page, totalResults, list);
+
+		return result;
+	}
+	
+	public List<T> filterByPojo(DataObject filter) { 
+		return filterByPojo(filter, null);
+	}
+	
+	public List<T> filterByPojo(DataObject filter, Integer paginacao) { 
+		try {
+    		Object obj = handleFilter(filter);
+    
+    		if(obj instanceof org.hibernate.Query) {
+				org.hibernate.Query res = (org.hibernate.Query)obj;
+    			if (paginacao != null){
+    				res.setFirstResult((paginacao - 1)*20*10);
+					res.setMaxResults(20*10);
+				}
+				return res.list();
+    		}
+    		else if(obj instanceof org.hibernate.Criteria) {
+    			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+    			if (paginacao != null) {
+    				res.setFirstResult((paginacao - 1)*20*10);
+					res.setMaxResults(20*10);
+				}
+				return res.list();
+	    	}
+			else {
+            	return null;
+			}
+
+		} catch (Exception h) {
+			throw new SiconvErrorException(h);
+		} 
+	}
+	
+	public void refresh(T obj) {
+		session.refresh(obj);
+	}
+	
+	// ------------------------------
+	//-------------------------------
+	//-------------------------------
+	// LEGADO
+	// ------------------------------
+	//-------------------------------
+	//-------------------------------
+	
+	protected abstract Object handleFilter (DataObject vo) throws DAOException;
+	
+	private static void updateAuditoriaEntity(AbstractEntity obj, Subject subject) {
+		String login = getLogin(subject);
+		String operacao = obj.getId() == null ? "INSERCAO" : "ATUALIZACAO";
+		java.util.Date dataOperacao = new java.util.Date();
+
+		((AuditoriaEntity) obj).setAuditoriaDataHora(dataOperacao);
+		((AuditoriaEntity) obj).setAuditoriaLogin(login);
+		((AuditoriaEntity) obj).setAuditoriaOperacao(operacao);
+	}
+
+	private static String getLogin(Subject subject) {
+		String login;
+		try {
+			login = ControleAcesso.getCallerPrincipal(subject).getName();
+		} catch (Exception e) {
+		    login = "NA";
+		}
+		return login;
+	}
+	    
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}	
+}

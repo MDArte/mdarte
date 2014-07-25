@@ -1,0 +1,48 @@
+#set ($generatedFile = "UpdateVO.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import java.util.Date;
+
+class UpdateVO {
+	private AbstractEntity entity = null;
+	
+	private Date date = null;
+	
+	private String login = null;
+	
+	public UpdateVO(AbstractEntity entity, Date date, String login) {
+		super();
+		this.entity = entity;
+		this.date = date;
+		this.login = login;
+	}
+
+	public AbstractEntity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(AbstractEntity entity) {
+		this.entity = entity;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	
+}
