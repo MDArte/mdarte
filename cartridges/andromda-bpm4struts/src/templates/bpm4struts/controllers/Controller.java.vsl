@@ -377,8 +377,8 @@ $operation.getDocumentation("     * ")
 	 * @return The service returned.
 	 * @throws Exception
 	 */
-	protected <T> T getService(Class<T> clazz) {
-		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
+	protected Object getService(Class clazz) {
+		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(null, clazz.getName(), clazz);
 	}
 
 	/**
@@ -386,7 +386,7 @@ $operation.getDocumentation("     * ")
 	 * Em novas aplicações, utilizar o método getService(Class<T>).
 	 */
 	@Deprecated
-	protected <T> T getService(Class<T> clazz, javax.servlet.http.HttpServletRequest request) throws Exception {
+	protected Object getService(Class clazz, javax.servlet.http.HttpServletRequest request) throws Exception {
 		return getService(clazz);
 	}
 

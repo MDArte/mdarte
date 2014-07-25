@@ -30,15 +30,25 @@
 #if (!$entity.identifiers.empty)
 #set ($identifier = $entity.identifiers.iterator().next())
 #end
+#if($auditoria || ($entity.hibernateGeneratorClass != "assigned"))
         <id name="$identifier.name" type="$identifier.type.fullyQualifiedName" unsaved-value="$identifier.type.javaNullString">
-            <column name="$identifier.columnName" sql-type="$identifier.sqlType"/>
+#else
+        <id name="$identifier.name" type="$identifier.type.fullyQualifiedName">
+#end        
+            <column name="$identifier.columnName" sql-type="$identifier.sqlType"/>           
+#if($auditoria || ($entity.hibernateGeneratorClass != "assigned"))            
+#if($auditoria)
+            <generator class="sequence">
+#else            
             <generator class="$entity.hibernateGeneratorClass">
-#if ($entity.sequenceHibernateGeneratorClass)
+#end            
+#if ($auditoria || $entity.sequenceHibernateGeneratorClass)
                 <param name="sequence">#if($sequenceIdentifierPrefix != "")${sequenceIdentifierPrefix}#end${entity.tableName}#if($auditoria)_LOG_REC#end#if($sequenceIdentifierSuffix != "")${sequenceIdentifierSuffix}#end</param>
 #elseif ($entity.foreignHibernateGeneratorClass)
-                <param name="property">$entity.parentEnd.name</param>
+                <param name="property">${entity.parentEnd.name}</param>
 #end
             </generator>
+#end            
         </id>
 #if (!$entity.specializations.empty && $entity.hibernateInheritanceClass)
         <discriminator column="$entity.hibernateDiscriminatorColumn" type="$entity.hibernateDiscriminatorType"/>

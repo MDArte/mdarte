@@ -12,7 +12,7 @@
     	<dependency>
 	      	<groupId>${pom.groupId}</groupId>
 	      	<artifactId>andromda-core</artifactId>
-	      	<version>${version}</version>
+	      	<version>3.1</version>
 	    </dependency>
         <dependency>
             <groupId>commons-collections</groupId>

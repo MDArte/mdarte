@@ -267,65 +267,65 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 #end 
 
 #macro(renderConstructorBody $semId)
-	#if($semId.equals("false") && $entity.attributes.size() > 0)
-	if(to.isUpdated()){
-	#end
-	#foreach ($attribute in $entity.attributes) 
-	bean.${attribute.setterName}(to.${attribute.getterName}());
-	#end
-	#if($semId.equals("false") && $entity.attributes.size() > 0)
-	}
-	#end
-	
-  
-	#foreach ($associationEnd in $entity.associationEnds)
-	#set ($target = $associationEnd.otherEnd)
-	#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorentity))
-    	#set ($tipo = $target.type.fullyQualifiedName)
-    	#if ($tipo.indexOf(".${modelPackageName}.") > 0)
-    	#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
-    	#end
-    	
-	#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
-     	#if($semId.equals("false"))
-	if(to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()){
-	#end
-	   if(to.${target.getterName}() == null) 
-	   	bean.${target.setterName}(null);
-	   else{     		
-     	   	${target.type.fullyQualifiedName} cdTemp = bean.${target.getterName}();
-     	   	if(map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode()) == null){     
-     	   		#set ($tipoTO = $stringUtils.replace(${target.type.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
-   			#set ($tipoTO = $tipoTO.concat("TO"))	  
-     			cdTemp = (${target.type.fullyQualifiedName})AbstractEntity.getEntityInstanceFromTO((${tipoTO})to.${target.getterName}(), map);
-	  	}else{	  
-			cdTemp = (${target.type.fullyQualifiedName})map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode());
-	  	}
-	  	
-	  	if(TOUtil.isEntityChanged(to, (AbstractEntity)bean.${target.getterName}())) bean.${target.setterName}(cdTemp);
-	  }        		
-     	#if($semId.equals("false"))
-     	}
-     	#end
-    	
-	#elseif ($target.many)
-	#if($semId.equals("false"))
-	if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())){  
-	#end
-			bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));       		
-		#if($semId.equals("false"))
-		}        
-	#end
+#if($semId.equals("false") && $entity.attributes.size() > 0)
+					if(to.isUpdated()){
 #end
-	#end
-	#end	
+#foreach ($attribute in $entity.attributes) 
+						bean.${attribute.setterName}(to.${attribute.getterName}());
+#end
+#if($semId.equals("false") && $entity.attributes.size() > 0)
+					}
+#end
+##	
+  
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorentity))
+#set ($tipo = $target.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#end
+##    	
+#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+#if($semId.equals("false"))
+					if(to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()) {
+#end
+    					if(to.${target.getterName}() == null) 
+    						bean.${target.setterName}(null);
+    					else {     		
+    						${target.type.fullyQualifiedName} cdTemp = bean.${target.getterName}();
+    						if(map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode()) == null) {     
+#set ($tipoTO = $stringUtils.replace(${target.type.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($tipoTO = $tipoTO.concat("TO"))	  
+    							cdTemp = (${target.type.fullyQualifiedName})AbstractEntity.getEntityInstanceFromTO((${tipoTO})to.${target.getterName}(), map);
+    						} else {	  
+    							cdTemp = (${target.type.fullyQualifiedName})map.get(to.${target.getterName}().getClass().toString() + to.${target.getterName}().hashCode());
+    						}
+    	  	
+    						if(TOUtil.isEntityChanged(to, (AbstractEntity)bean.${target.getterName}())) bean.${target.setterName}(cdTemp);
+    					}        		
+#if($semId.equals("false"))
+    				}
+#end
+        	
+#elseif ($target.many)
+#if($semId.equals("false"))
+    				if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())) {  
+#end
+    					bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));       		
+#if($semId.equals("false"))
+    				}        
+#end
+#end
+#end
+#end	
 	
 		
-	#if($entity.generalization)
-	#set ($tipoTO = $stringUtils.replace(${entity.generalization.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
-   	#set ($tipoTO = $tipoTO.concat("TO"))
-	super.getEntityFromTO(($tipoTO)to, bean, map);
-	#end  
+#if($entity.generalization)
+#set ($tipoTO = $stringUtils.replace(${entity.generalization.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($tipoTO = $tipoTO.concat("TO"))
+				super.getEntityFromTO(($tipoTO)to, bean, map);
+#end  
 	
 #end
 

@@ -150,6 +150,10 @@ public class UMLProfile
      * Representa um modulo servico.
      */
     public static final String STEREOTYPE_MODULO_SERVICO = profile.get("MODULO_SERVICO");
+    
+    
+    public static final String STEREOTYPE_MODULO_WEB_SRV = profile.get("MODULO_WEB_SRV");
+    
 
     /**
      * Representa um modulo web principal.
@@ -209,6 +213,11 @@ public class UMLProfile
      * Represents a relational table column length
      */
     public static final String TAGGEDVALUE_PERSISTENCE_COLUMN_LENGTH = profile.get("PERSISTENCE_COLUMN_LENGTH");
+    
+    /**
+     * Represents a relational table column decimal digits
+     */
+    public static final String TAGGEDVALUE_PERSISTENCE_COLUMN_DECIMAL_DIGITS = profile.get("PERSISTENCE_COLUMN_DECIMAL_DIGITS");
 
     /**
      * Represents a relational table column index name.

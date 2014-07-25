@@ -35,6 +35,7 @@ paging.banner.all_items_found=<span class="pagebanner">{0} {1} encontrados, exib
 ## changing the banner and removing the link to support pagination
 paging.banner.some_items_found=<span class="pagebanner">Grupo {0}, exibindo página {1} até {2}.</span>
 
+paging.banner.header=<span class="pagelinks">Page {0}/{1} ({2} item(s))</span>
 paging.banner.full=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [<a href="{3}">Próximo</a>]</span>
 paging.banner.first=<span class="pagelinks">[Primeiro/Anterior] {0} [<a href="{3}">Próximo</a>]</span>
 paging.banner.last=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [Próximo]</span>

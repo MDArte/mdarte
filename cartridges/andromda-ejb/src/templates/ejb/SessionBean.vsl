@@ -1,5 +1,5 @@
 #parse("templates/ejb/SessionEJBGlobals.vm")
-
+#if(!$service.hasStereotype("$webSrv"))
 // license-header java merge-point
 //
 // Attention: Generated code! Do not modify by hand!
@@ -16,6 +16,7 @@ import ${serviceRef.targetElement.fullyQualifiedName}Home;
 /**
 $service.getDocumentation(" * ")
  */
+ @SuppressWarnings("rawtypes")
 public abstract class ${service.name}Bean
 #if ($service.generalization)
 	extends ${service.generalization.fullyQualifiedName}Impl
@@ -26,7 +27,8 @@ public abstract class ${service.name}Bean
 	implements javax.ejb.SessionBean, ${service.name}BI
 #end
 {
-
+	private static final long serialVersionUID = 1L;
+	
 #if ($service.ejbStateful)
 	// --------------- attributes ---------------------
 #foreach ( $attribute in $service.attributes )
@@ -53,7 +55,10 @@ $attribute.getDocumentation("	 * ")
 
 #set($webService = $service.hasStereotype("$webSrv"))
 ##
+#set($cont = 0)	
 #foreach ($operation in $service.operations)
+#set($contParameter = 0)
+#set($cont = $cont + 1)
 #set ($listaArgumentos = '')
 #set ($return = '')
 #if($webService)
@@ -71,15 +76,18 @@ $attribute.getDocumentation("	 * ")
 #if(!$operation.returnType.collectionType && !$operation.returnType.listType && !$operation.returnType.setType )
 	$operation.visibility abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
 #end
+#if($ejbSecurityEnabled && !$webService)
+#renderParametersSecurity($operation)
+#end
 
 	/**
 $operation.getDocumentation("	 * ")
 	 */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
 #if($ejbSecurityEnabled && !$webService && !${service.openAccess})
-#renderSecurityBody($operation)
+#renderSecurityBodyPagination($operation)
 #else
-#renderOperationBody($operation $service)
+#renderOperationBodyPagination($operation $service)
 #end
 	}
 
@@ -101,6 +109,10 @@ $operation.getDocumentation("	 * ")
 	#set($exception = "throws $operation.exceptionList")
 #end
 	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
+#if($ejbSecurityEnabled)	
+	Integer paginacao${cont} = null;
+	Integer numElementos${cont} = null;	
+#end
 
 	/**
 $operation.getDocumentation("	 * ")
@@ -119,8 +131,11 @@ $operation.getDocumentation("	 * ")
 #foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 #if($ejbSecurityEnabled)
+#set($cont = $cont + 1)
+#set($contParameter = $contParameter + 1)
 #renderSecurityManipula("delete" $dependencia ${service.openAccess})
 #renderSecurityManipula("filter" $dependencia ${service.openAccess})
+#renderSecurityManipulaPaginado("pagingFilter" $dependencia "filter")
 #renderSecurityManipula("insert" $dependencia ${service.openAccess})
 #renderSecurityManipula("insertOrUpdate" $dependencia ${service.openAccess})
 #renderSecurityManipula("list" $dependencia ${service.openAccess})
@@ -152,24 +167,67 @@ $operation.getDocumentation("	 * ")
 		
 #end
 
-	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> handleManipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> handleManipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException {
 		try { 
-			return action.execute((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name}));
+			if (action instanceof ${customTypesPackage}.${actionPackageName}.FilterAction)  {
+    			return ((${customTypesPackage}.${actionPackageName}.FilterAction) action).execute((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name}), ((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name})).getDaoImpl(), numeroElemPorPagina);
+    		}
+			return action.execute((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name}));   
 		} catch (${customTypesPackage}.${modelPackageName}.DAOException e) {
 			throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);
 		}
 	}
-
-	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+	
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {						 		
 		boolean responsibleSession = false;
 		try {
 			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
-			return handleManipula${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action);
-		} finally {
-			if(responsibleSession)
+			return handleManipula${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, null);	 
+		} finally {		 				 			
+			if(responsibleSession) {
 				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
+			}
+		}			
+	}
+	
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException {						 		
+		boolean responsibleSession = false;
+		try {
+			responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
+			return handleManipula${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, numeroElemPorPagina);	 
+		} finally {		 				 			
+			if(responsibleSession) {
+				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
+			}
 		}
 	}
+
+	public  ${customTypesPackage}.${modelPackageName}.PagingVO handleManipulaPaginado${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+    	try { 
+    		if (action instanceof ${customTypesPackage}.${actionPackageName}.FilterAction)  {
+    			return ((${customTypesPackage}.${actionPackageName}.FilterAction) action).pagingExecute((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name}), ((${dependencia.targetElement.fullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name})).getDaoImpl(), numeroElemPorPagina);
+    		}
+    				
+    		return null;
+		} catch (${customTypesPackage}.${modelPackageName}.DAOException e) {
+			throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);
+		}
+	}	  	
+	
+	public  ${customTypesPackage}.${modelPackageName}.PagingVO manipulaPaginado${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+		return handleManipulaPaginado${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, 20);
+	}
+	
+	public  ${customTypesPackage}.${modelPackageName}.PagingVO manipulaPaginado${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException {						 		
+		 boolean responsibleSession = false;
+		 try{
+		 responsibleSession = ${customTypesPackage}.${modelPackageName}.AbstractDAO.getSession();
+		 return handleManipulaPaginado${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, numeroElemPorPagina);	 
+		 } finally {		 				 			
+			if(responsibleSession)
+				${customTypesPackage}.${modelPackageName}.AbstractDAO.closeSession();
+		}			
+	 }
 #end
 #end
 
@@ -209,9 +267,16 @@ $operation.getDocumentation("	 * ")
 	 * @return The service returned.
 	 * @throws Exception
 	 */
-	protected <T> T getService(Class<T> clazz) {
-		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
+	protected Object getService(Class classe) throws Exception{
+		try {
+			javax.security.auth.Subject subject = javax.security.auth.Subject.getSubject(java.security.AccessController.getContext());
+    	    java.lang.reflect.Constructor c = classe.getConstructor(javax.security.auth.Subject.class);
+			return c.newInstance(subject);
+		} catch (Exception e) {
+			throw new Exception("erro.na.recuperacao.do.servico");			
+		}		
 	}
+	
 #if($ejb3 == 'false')
 
 	public void ejbRemove() {
@@ -224,3 +289,4 @@ $operation.getDocumentation("	 * ")
 	}
 #end
 }
+#end

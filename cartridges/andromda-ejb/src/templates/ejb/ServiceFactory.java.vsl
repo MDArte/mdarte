@@ -32,7 +32,8 @@ public class ${service.name}Factory
 #foreach ($dependencia in $bean.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
 		#if($useElse)else #else #set($useElse = true)#end if(entity instanceof $dependencia.targetElement.FullyQualifiedName)
-			return (${service.name}BI) br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(${service.packageName}.${bean.name}BI.class);
+			//return (${service.name}BI) br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(${service.packageName}.${bean.name}BI.class);
+			return ${customTypesPackage}.${serviceLocatorName}.instance().get${bean.name}BI();
 #end
 #end
 #end
@@ -50,7 +51,8 @@ public class ${service.name}Factory
 #foreach($bean in $beans)
 #if(${bean.findTaggedValue("$ServiceFactorySelectNodeName").length()} > 0)
 		#if($useElse)else#else #set($useElse = true)#end if("${bean.findTaggedValue("$ServiceFactorySelectNodeName")}".equals(instancia))
-			return (${service.name}BI) br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(${service.packageName}.${bean.name}BI.class);
+//			return (${service.name}BI) ${customTypesPackage}.ServiceLocator.instance().getServiceBI(${service.packageName}.${bean.name}BI.class);
+			return ${customTypesPackage}.${serviceLocatorName}.instance().get${bean.name}BI();
 #end
 #end
 #if($useElse)

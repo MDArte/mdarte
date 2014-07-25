@@ -1,7 +1,6 @@
 #if($oAuthServer == "true")
 // license-header java merge-point
 #set ($generatedFile = "LoginOAuthUCFormImpl.java")
-#set ($sharp = "#")
 #if($stringUtils.isNotEmpty($controleAcessoDir))
 package $controleAcessoDir;
 #set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
@@ -814,7 +813,7 @@ public class LoginOAuthUCFormImpl
     /**
      * Override to provide population of current form with request parameters when validation fails.
      *
-     * @see org.apache.struts.action.ActionForm${sharp}validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
+     * @see org.apache.struts.action.ActionForm#validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
      */
     public org.apache.struts.action.ActionErrors validate(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request)
     {

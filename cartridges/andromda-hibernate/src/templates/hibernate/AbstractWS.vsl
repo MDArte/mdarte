@@ -12,10 +12,12 @@ public abstract class AbstractWS implements java.io.Serializable{
 
 	// Isto garante que todos os WSDatas tenham o getId,
 	// contudo somente aqueles que realmente o implemetam terao
-	// valor valido.	
+	// valor valido.
+	/*	
 	public Long getId() {
 		return null;
 	}
+	*/
 ##
 #if($ejb3 == 'true')
 #set($webServiceDatas = ${hibernateUtils.getWebServiceData()})

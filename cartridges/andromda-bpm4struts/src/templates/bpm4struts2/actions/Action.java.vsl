@@ -321,7 +321,7 @@ public class ${action.actionClassName}Action2 extends ActionSupport implements S
 #if ($action.useCaseStart)
 ## [MOISES-COPPETEC]
 ##Codigo para retirar os sessionobjects da sessao que nao pertencem mais ao escopo, isto eh Session Object que
-##esta na sessao e n√£o pertence o caso de uso anterior. Para isto utiliza-se uma lista de cadastro. 
+##esta na sessao e n„o pertence o caso de uso anterior. Para isto utiliza-se uma lista de cadastro. 
 		#processRemovePageSO()
 
 		java.util.List listaCasosUso = new java.util.ArrayList();
@@ -596,7 +596,7 @@ $decisionTransition.getDocumentation("	 * ")
 #end
 
 #set ($defaultOutcome = false)## keeps track of the last transition
-#foreach ($outcome in $decisionTransition.target.outgoings)
+#foreach ($outcome in $decisionTransition.target.outgoing)
 #set ($defaultOutcome = $outcome)
 		if (value.equals("$outcome.guardName"))
 		{

@@ -1,16 +1,21 @@
 package org.andromda.core.engine;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.andromda.core.ANSI;
 import org.andromda.core.ModelValidationException;
 import org.andromda.core.cartridge.Cartridge;
 import org.andromda.core.common.AndroMDALogger;
@@ -237,12 +242,35 @@ public class ModelProcessor
                         for (int ctr = 0; ctr < models.length; ctr++)
                         {
                             this.factory.setModel(repositories.getImplementation(repositoryName).getModel());
-                            cartridge.processModelElements(factory);
+                            cartridge.setUnicWeb(this.getUnicWeb());
+                            cartridge.processModelElements(factory);                            
                             writer.writeHistory();
                         }
                         cartridge.shutdown();
                     }
                 }
+            }
+            
+            for (int ctr = 0; ctr < models.length; ctr++)
+            {
+                final Model model = models[ctr];
+
+                File file = new File(model.toString().substring(0, model.toString().lastIndexOf(".xml")) + ".tmp");
+				
+				OutputStream bos;
+				try{
+					bos = new FileOutputStream(file);
+					String resposta = new String("Modelo :"+model.toString()+"\nGerado em:"+(new Date(System.currentTimeMillis())));
+					bos.write(resposta.getBytes());
+					bos.close();
+				}catch (Exception e) {
+					AndroMDALogger.info("\nErro ao gravar arquivo de modelo gerado: "+model.toString()+"\n");
+				}
+				
+				AndroMDALogger.info("\nmodelo: "+model.toString()+" gerado\n");
+				AndroMDALogger.info("tempo gerando arquivos: "+Cartridge.tempoGerandoArquivos);
+				AndroMDALogger.info("tempo gerando arquivos existentes: "+Cartridge.tempoGerandoArquivosExistentes);
+				AndroMDALogger.info("tempo ignorando arquivos: "+Cartridge.tempoIgnorandoArquivos);
             }
         }
         catch (final ModelValidationException exception)
@@ -372,7 +400,7 @@ public class ModelProcessor
                     model.getConstraints()));
         }
         return validationMessages;
-    }
+    }          
 
     /**
      * Validates the entire model with each cartridge namespace,
@@ -399,10 +427,15 @@ public class ModelProcessor
             // - clear out the factory's caches (such as any previous validation messages, etc.)
             this.factory.clearCaches();
             this.factory.setModel(modelAccessFacade);
+
             for (final Iterator iterator = cartridges.iterator(); iterator.hasNext();)
             {
                 final Cartridge cartridge = (Cartridge)iterator.next();
                 final String cartridgeName = cartridge.getNamespace();
+                
+                System.out.print("\n");
+            	AndroMDALogger.info("Validando com cartucho " + cartridgeName + ".");
+                
                 if (this.shouldProcess(cartridgeName))
                 {
                     // - set the active namespace on the shared factory and profile instances
@@ -411,6 +444,7 @@ public class ModelProcessor
                     this.factory.validateAllMetafacades();
                 }
             }
+        	
             final List messages = this.factory.getValidationMessages();
             this.filterAndSortValidationMessages(
                 messages,
@@ -577,6 +611,8 @@ public class ModelProcessor
      * Whether or not model validation should be performed.
      */
     private boolean modelValidation = true;
+    
+    private boolean unicWeb = false;
 
     /**
      * Sets whether or not model validation should occur. This is useful for
@@ -813,7 +849,16 @@ public class ModelProcessor
         }
     }
 
-    /**
+    public void setUnicWeb(boolean unicWeb) {
+    	   	
+		this.unicWeb = unicWeb;
+	}
+
+	public boolean getUnicWeb() {
+		return unicWeb;
+	}
+
+	/**
      * Used to sort validation messages by <code>metafacadeClass</code>.
      */
     private final static class ValidationMessageTypeComparator

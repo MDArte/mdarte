@@ -56,6 +56,7 @@ public class SecurityProxyImpl implements SecurityProxy {
 
 	public void invoke(Method m, Object[] args, Object bean)
 		throws Exception {
+		/*
 		Subject subject = SecurityHolder.getSubject();
 		Servico servico = new Servico(toString(m, args));
 		boolean possuiPermissao = false;
@@ -106,6 +107,7 @@ public class SecurityProxyImpl implements SecurityProxy {
 				throw new AcessoNegadoException("acesso.negado  - " + servico.getNome());
 			}
 		}
+		*/
 	}
 
 	public String toString(Method m, Object[] args) {

@@ -311,6 +311,11 @@
            if (field == null || (typeof field == 'undefined')) {
                continue;
            }
+           
+           // if q testa se campo existe
+		   if (!jcv_isFieldPresent(field)) {
+			   continue;
+		   }    
 
            var value = field.value;
            var datePattern = oDate[x][2]("datePatternStrict");

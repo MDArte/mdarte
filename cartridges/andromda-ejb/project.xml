@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <extend>../project.xml</extend>
-    <artifactId>andromda-ejb-cartridge-coppetec</artifactId>
+    <artifactId>andromda-ejb-cartridge</artifactId>
     <name>AndroMDA EJB Cartridge</name>
     <shortDescription>EJB Cartridge</shortDescription>
     <description> Produces Entity and Session EJBs from a model. </description>
@@ -53,13 +53,13 @@
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>maven-andromda-plugin</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>plugin</type>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-core</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -77,19 +77,19 @@
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-meta-cartridge</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-ocl-validation-library</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-cartridge-plugin</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>plugin</type>
         </dependency>
         <dependency>
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-ocl-query-library</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>jar</type>
             <properties>
                 <cartridge.testDependency>true</cartridge.testDependency>

@@ -66,6 +66,12 @@
             <type>test</type>
             <properties/>
         </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.4</version>
+            <properties/>
+        </dependency>   
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>

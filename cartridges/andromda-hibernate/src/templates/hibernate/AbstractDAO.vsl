@@ -19,6 +19,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import accessControl.ControleAcesso;
 
@@ -40,6 +43,7 @@ public abstract class AbstractDAO {
 		try {
 			// Create the SessionFactory
 			Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
+			configuration.setListener("flush", new FlushEventListener());			
             sessionFactory = configuration.buildSessionFactory();
 			/*
 			 * Hashtable env = new Hashtable();
@@ -59,6 +63,8 @@ public abstract class AbstractDAO {
 		}
 	}
 
+	public static final ThreadLocal evictCascadeThread = new ThreadLocal();
+	
 	public static final ThreadLocal session = new ThreadLocal();
 
 	public static Session currentSession() throws HibernateException {
@@ -89,6 +95,14 @@ public abstract class AbstractDAO {
 			s.close();
 	}
 
+	public static void allowCascade() throws HibernateException {
+		evictCascadeThread.set(null);
+	}
+	
+	public static void evictCascade() throws HibernateException {
+		evictCascadeThread.set(true);
+	}
+	
 	public static String getDatabaseName() throws HibernateException {
 		if (BD_NOME == null) {
 			String url;
@@ -156,8 +170,10 @@ public abstract class AbstractDAO {
 	
 	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException;
 	
-	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
+	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao, Integer numeroElemPorPagina) throws DAOException;
 	
+	public abstract PagingVO pagingFilter(br.ufrj.coppetec.DataObject vo, Integer paginacao, Integer numeroElemPorPagina) throws DAOException;
+		
 	public abstract org.hibernate.Criteria xmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws DAOException;
 	
 	public abstract org.dom4j.Element xmlExportEntity(AbstractEntity entity) throws DAOException;
@@ -167,5 +183,7 @@ public abstract class AbstractDAO {
 
 	public abstract int xmlImportEntity(org.dom4j.Element raiz) throws DAOException;
 	
-	public abstract void logEvent(String msg , AbstractEntity entity) throws CallbackException; 
+	public abstract void logEvent(String msg , AbstractEntity entity) throws CallbackException;
+	
+	public abstract void logEvent(String msg , AbstractEntity entity , Date date , String login) throws CallbackException;	 
 }

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.andromda.core.ANSI;
 import org.andromda.core.common.AndroMDALogger;
 import org.andromda.core.common.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -227,10 +228,26 @@ public class MetafacadeFactory
      */
     public void validateAllMetafacades()
     {
+        int size = this.getAllMetafacades().size();
+        int count = 1;
+                
+        //Double old = new Double(-1D);
         for (final Iterator iterator = this.getAllMetafacades().iterator(); iterator.hasNext();)
         {
+        	/*Double p = new Double(count * 100 / size);
+        	if( !p.equals(old) ) {	        	
+	        	count++;
+	        	// Move o cursor para o inicio da linha (volta 200 caracteres)
+	        	ANSI.moveColumnBackward(200);
+	        	System.out.print(p + "% ");
+        	}*/
+        	
             ((MetafacadeBase)iterator.next()).validate(this.validationMessages);
         }
+        
+    	//ANSI.moveColumnBackward(200);
+    	//ANSI.erase();
+    	//System.out.println("DONE");        
     }
 
     /**

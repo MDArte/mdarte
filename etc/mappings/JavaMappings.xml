@@ -97,7 +97,7 @@
     </mapping>
     <mapping>
         <from>datatype::Decimal</from>
-        <to>java.lang.Double</to>
+        <to>java.math.BigDecimal</to>
     </mapping>
     <mapping>
         <from>datatype::Boolean</from>

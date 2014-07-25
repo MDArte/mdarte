@@ -38,6 +38,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import main.Main;
+import javax.net.ssl.HttpsURLConnection;
 
 public class NovaConexao extends Action {
 
@@ -143,6 +145,9 @@ public class NovaConexao extends Action {
 				else
 					modulo = sistemaModulo.modulo;
 
+				if (!(sistemaModulo.modulo.equals("prestacao") || sistemaModulo.modulo.equals("principal")) )
+					continue;
+				
 				forward = new ActionForward(uriForward + ("/" + sistemaModulo.sistema + "/" + modulo + "/secure/ApagaSessao.do").replace("//","/"), true);
 				sistemaModulosFechados.add(sistemaModulo);
 				request.getSession().setAttribute(NOME_ATRIBUTO_MODULOS_FECHADOS, sistemaModulosFechados);

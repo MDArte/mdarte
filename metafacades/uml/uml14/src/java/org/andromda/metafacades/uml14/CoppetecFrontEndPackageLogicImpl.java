@@ -1,55 +1,48 @@
 package org.andromda.metafacades.uml14;
 
-import java.util.Collection;
-
-import org.andromda.metafacades.uml.CoppetecFrontEndPackage;
 import org.andromda.metafacades.uml.CoppetecUMLMetafacadeProperties;
-import org.andromda.metafacades.uml.FrontEndUseCase;
-import org.andromda.metafacades.uml.UMLProfile;
 import org.andromda.metafacades.uml.ModelElementFacade;
-
+import org.andromda.metafacades.uml.UMLProfile;
 
 /**
  * MetafacadeLogic implementation for org.andromda.metafacades.uml.CoppetecFrontEndPackage.
  *
  * @see org.andromda.metafacades.uml.CoppetecFrontEndPackage
  */
-public class CoppetecFrontEndPackageLogicImpl
-    extends CoppetecFrontEndPackageLogic
-{
+public class CoppetecFrontEndPackageLogicImpl extends CoppetecFrontEndPackageLogic {
 
-    public CoppetecFrontEndPackageLogicImpl (Object metaObject, String context)
-    {
-        super (metaObject, context);
-    }
+	public CoppetecFrontEndPackageLogicImpl(Object metaObject, String context) {
+		super(metaObject, context);
+	}
 
-    /**
-     * @see org.andromda.metafacades.uml.CoppetecFrontEndPackage#getUrl()
-     */
-    
-    protected java.lang.String handleGetUrl()
-    {
-    	return null; //not used
-    }
-    
-    protected java.lang.String handleGetContexto()
-    {
-	boolean principal = false;
-	for(ModelElementFacade packageFacade = this; packageFacade != null; packageFacade = packageFacade.getPackage())
-		if (packageFacade.hasStereotype(UMLProfile.STEREOTYPE_MODULO_WEB_PRINCIPAL)){
-			principal = true;
-			break;
+	/**
+	 * @see org.andromda.metafacades.uml.CoppetecFrontEndPackage#getUrl()
+	 */
+
+	protected java.lang.String handleGetUrl() {
+		return null; // not used
+	}
+
+	protected java.lang.String handleGetContexto() {
+		boolean principal = false;
+		for (ModelElementFacade packageFacade = this; packageFacade != null; packageFacade = packageFacade.getPackage())
+			if (packageFacade.hasStereotype(UMLProfile.STEREOTYPE_MODULO_WEB_PRINCIPAL)) {
+				principal = true;
+				break;
+			}
+
+		if (principal)
+			return getConfiguredProperty(CoppetecUMLMetafacadeProperties.CONTEXTO_PRINCIPAL).toString();
+		else {
+			String contexto = getConfiguredProperty(CoppetecUMLMetafacadeProperties.CONTEXTO_PRINCIPAL).toString() + "/" + this.getWebModuleName();
+
+			return contexto.replaceAll("//", "/");
 		}
-			
 
-    	if (principal)
-    		return getConfiguredProperty(CoppetecUMLMetafacadeProperties.CONTEXTO_PRINCIPAL).toString();
-    	else{
-    		String contexto = getConfiguredProperty(CoppetecUMLMetafacadeProperties.CONTEXTO_PRINCIPAL).toString() + "/" +this.getWebModuleName();
-    		
-    		return contexto.replaceAll("//", "/");
-    	}
-    		
-    }
+	}
+
+	protected java.lang.String handleGetContextoPrincipal() {		
+		return getConfiguredProperty(CoppetecUMLMetafacadeProperties.CONTEXTO_PRINCIPAL).toString();
+	}
 
 }

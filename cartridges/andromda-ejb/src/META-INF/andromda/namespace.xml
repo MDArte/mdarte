@@ -82,7 +82,27 @@
                 <documentation>
                     The location to which Entity EJB implementation files are generated.
                 </documentation>
+            </property>                      
+            <property name="ws-beans">
+                <documentation>
+                    The directory to which Ws Bean files are generated.
+                </documentation>
             </property>
+            <property name="ws-beans-base">
+                <documentation>
+                    The base directory to which Ws Bean files are generated.
+                </documentation>
+            </property>            
+            <property name="ws-beans-impl">
+                <documentation>
+                    The directory to which Ws Bean implementation files are generated.
+                </documentation>
+            </property> 
+            <property name="ws-beans-configuration">
+                <documentation>
+                    The directory to which Ws Bean Configuration files are generated.
+                </documentation>
+            </property>                                 
             <property name="session-beans">
                 <documentation>
                     The directory to which Session Bean files are generated.
@@ -185,6 +205,11 @@
                     Nome do pacote de webService.
                 </documentation>
             </property>
+            <property name="defaultPackageName">
+                <documentation>
+                    Nome do pacote da aplicação.
+                </documentation>
+            </property>            
             <property name="customTypesPackage">
                 <default>org.andromda.persistence.hibernate</default>
                 <documentation>
@@ -282,7 +307,7 @@
                 </documentation>
             </property>   
             <property name="modulo">
-                <default>false</default>
+                <default>true</default>
             </property>  
             <property name="maxSizeClass">
                 <default>200</default>

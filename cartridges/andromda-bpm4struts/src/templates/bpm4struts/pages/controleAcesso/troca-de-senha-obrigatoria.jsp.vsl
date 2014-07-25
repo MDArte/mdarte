@@ -13,8 +13,9 @@
     </tiles:put>
 
     <tiles:put name="javascript" type="string">
-        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/form-validation.jsp"/>"></script>
+        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/form-validation.js"/>"></script>
         <html:javascript formName="loginTrocaDeSenhaObrigatoriaProcessarForm" method="validateTrocaDeSenhaObrigatoriaProcessarFormImpl" dynamicJavascript="true" staticJavascript="false" htmlComment="true" cdata="false"/>
+    	<script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/layout/scripts.js"/>"></script>
     	<script type="text/javascript" language="Javascript1.1">
         //<!--
             var HINTS_ITEMS = {

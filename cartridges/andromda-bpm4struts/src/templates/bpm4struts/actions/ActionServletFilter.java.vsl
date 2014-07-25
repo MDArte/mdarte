@@ -10,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.hibernate.HibernateException;
+
 import $customTypesPackage.${modelPackageName}.AbstractDAO;
 
 
@@ -22,7 +24,11 @@ public class ActionServletFilter implements Filter {
 		try {
 			chain.doFilter(request, response);
 		} finally {
-			AbstractDAO.closeSession();
+			try {
+				AbstractDAO.closeSession();
+			} catch (HibernateException e) {
+		        throw new ServletException(e.toString());
+			}
 		}
 	}
 

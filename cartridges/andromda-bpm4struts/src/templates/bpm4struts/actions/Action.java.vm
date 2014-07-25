@@ -43,14 +43,9 @@ Class[] classes = null;
 	#end
 	try{
 	#if ($parameter.strutsAction.tableAction)
-		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
-
-		if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
-			specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
+	    specificForm.${parameter.setterName}${asType}RowSelection((${type})previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos));
 	#else
-		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
-		if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
-			specificForm.${parameter.setterName}${asType}(((${type}) obj));	
+	    specificForm.${parameter.setterName}${asType}(((${type})previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos)));	
 	#end
 		}catch(NoSuchMethodException e){
 		//Nao faz nada, simplesmente nao copia o parametro
@@ -101,14 +96,9 @@ Class[] classes = null;
 	#end
 	try{
 	#if ($parameter.strutsAction.tableAction)
-		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos);
-
-		if (obj != null && specificForm.${parameter.getterName}${asType}RowSelection() == null)
-			specificForm.${parameter.setterName}${asType}RowSelection((${type}) obj);
+	    specificForm.${parameter.setterName}${asType}RowSelection((${type})previousFormObject.getClass().getMethod("${parameter.getterName}${asType}RowSelection", classes).invoke(previousFormObject, objetos));
 	#else
-		Object obj = previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos);
-		if (obj != null && specificForm.${parameter.getterName}${asType}() == null)
-			specificForm.${parameter.setterName}${asType}(((${type}) obj));	
+	    specificForm.${parameter.setterName}${asType}(((${type})previousFormObject.getClass().getMethod("${parameter.getterName}${asType}", classes).invoke(previousFormObject, objetos)));	
 	#end
 		}catch(NoSuchMethodException e){
 		//Nao faz nada, simplesmente nao copia o parametro
@@ -136,10 +126,33 @@ if (request.getAttribute("$forwardKey") != null) {
 			String strAtributo = (String)enumAtributos.nextElement();
 			mapAtributos.put(strAtributo, request.getSession().getAttribute(strAtributo));
 		}
-		org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, mapAtributos, this.getServlet().getServletContext().getContext("$servletContext"));
+##		org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, mapAtributos, this.getServlet().getServletContext().getContext("$servletContext"));
 	
 		String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
-		forward = new org.apache.struts.action.ActionForward(uriForward + "$transition.forwardPath", true);
+		String forwardPath = "$transition.forwardPath";
+	
+		String parameters = "";
+		if (request.getParameterMap() != null) {
+			java.util.Iterator ite = request.getParameterMap().keySet().iterator();  
+			
+			while (ite.hasNext()) {
+				String parameterName = (String) ite.next();
+				
+				if (parameterName != null && !"modulo".equalsIgnoreCase(parameterName) && !"path".equalsIgnoreCase(parameterName) && 
+							!"user".equalsIgnoreCase(parameterName) && !"usr".equalsIgnoreCase(parameterName) && !"pwd".equalsIgnoreCase(parameterName) && 
+							!"password".equalsIgnoreCase(parameterName) && !"login".equalsIgnoreCase(parameterName) && !"senha".equalsIgnoreCase(parameterName) &&
+							!"invalidatePageControlCounter".equalsIgnoreCase(parameterName)) {
+							
+					if (parameters.length()==0 && forwardPath.indexOf("?") < 0) {
+						parameters="?"+parameterName+"="+request.getParameter(parameterName);
+					} else {
+						parameters+="&"+parameterName+"="+request.getParameter(parameterName);
+					}
+				}
+			}
+		}
+	
+		forward = new org.apache.struts.action.ActionForward(uriForward + forwardPath + parameters, true);
 	}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
@@ -230,7 +243,7 @@ forward = ${transition.target.actionMethodName}(mapping, form, request, response
 			atributos.put(atributo, request.getSession().getAttribute(atributo));
 		}
 	
-		org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, atributos, this.getServlet().getServletContext().getContext("$servletContext"));
+##		org.andromda.presentation.bpm4struts.ShareSessionUtil.saveMapIntoContext(request, response, atributos, this.getServlet().getServletContext().getContext("$servletContext"));
 	
 	}
 #end

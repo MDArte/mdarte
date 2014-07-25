@@ -101,6 +101,8 @@ public class ${formBeanClassName}
     private java.lang.Object[] ${field.labelListName}Double;    
     private java.lang.Object[] ${field.labelListName}Hints;
     private java.lang.Object[] ${field.labelListName}Destination;
+    
+        private int ${field.backingListName}Count = 0;
 #end
 
     public ${formBeanClassName}(){
@@ -118,7 +120,8 @@ public class ${formBeanClassName}
 #if ($field.date)
 #set ($dateFormatter = "${field.name}DateFormatter")
 #set ($lenient = !$field.strictDateFormat)
-        ${dateFormatter}.setLenient($lenient);
+## COMENTADO        ${dateFormatter}.setLenient($lenient);
+        ${dateFormatter}.setLenient(false);
 #end
 #end
     }
@@ -165,7 +168,14 @@ public class ${formBeanClassName}
 #if ($field.type.collectionType)
     public void ${field.setterName}($fieldType $fieldName)
     {
+#if ($fieldType == "java.lang.String")
+    	if (${fieldName} != null)
+    		this.$fieldName = ${fieldName}.trim();
+    	else
+    		this.$fieldName = null;
+#else    
         this.$fieldName = $fieldName;
+#end   
     }
 
     /**
@@ -540,6 +550,15 @@ $field.getDocumentation("     * ")
 #set ($valueListMethod = $stringUtils.capitalize($valueListName))
 #set ($labelListName = $field.labelListName)
 #set ($labelListMethod = $stringUtils.capitalize($labelListName))
+
+	public int get${backingListMethod}Count() {
+		return ${field.backingListName}Count;	
+	}
+	
+	public void set${backingListMethod}Count(int value) {
+		${field.backingListName}Count = value;	
+	}
+	
     public $listType get${backingListMethod}()
     {
         $listType values = this.${valueListName};

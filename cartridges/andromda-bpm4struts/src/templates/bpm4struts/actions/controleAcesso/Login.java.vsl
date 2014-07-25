@@ -9,6 +9,10 @@ package $controleAcessoDir;
 #set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
 #end
 
+import java.security.Principal;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +20,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.jboss.security.SimpleGroup;
 #set ($packageUtil = "${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 import javax.security.auth.Subject;
@@ -30,6 +35,22 @@ public abstract class Login extends Action
     protected String __urlCasoDeUso = null;
     protected String __modulo = null;
     protected String __contexto = null;
+	private static PrincipalImpl getCallerPrincipal(Subject subject) {
+		PrincipalImpl principalImpl = null;
+		Set principals = subject.getPrincipals();
+		Iterator itPrincipals = principals.iterator();
+
+		while (itPrincipals.hasNext()) {
+			Principal principal = (Principal) itPrincipals.next();
+
+			if (principal.getName().equals("CallerPrincipal")) {
+				SimpleGroup simpleGroup = (SimpleGroup) principal;
+				principalImpl = (PrincipalImpl) simpleGroup.members().nextElement();
+			}
+		}
+
+		return principalImpl;
+	}
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
@@ -157,6 +178,7 @@ public abstract class Login extends Action
         {
 ##String uri = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "").replace("//", "/"));
 ##return new org.apache.struts.action.ActionForward(uri + ("/${contextoPrincipal}/"  + "${secureDir}/entrar-login.jsp").replace("//", "/"), true);
+            /*
             ActionForward forward = mapping.findForward("entrar.login");
             if (__urlCasoDeUso != null && __contexto != null)
             {
@@ -165,6 +187,8 @@ public abstract class Login extends Action
                 forward = redirect;
             }
             return forward;
+            */
+          	return new ActionForward("/secure/entrar-login.jsp");
         }
         if (value.equals("true"))
         {
@@ -229,7 +253,7 @@ public abstract class Login extends Action
         if (value.equals("false"))
         {
             request.getSession().removeAttribute(Constantes.FORWARD);
-
+			/*
             ActionForward forward = mapping.findForward("entrar.login");
             if (__urlCasoDeUso != null && __contexto != null)
             {
@@ -238,6 +262,8 @@ public abstract class Login extends Action
                 forward = redirect;
             }
             return forward;
+            */
+            return new ActionForward("/secure/entrar-login.jsp");
         }
         if (value.equals("true"))
         {
@@ -287,10 +313,19 @@ public abstract class Login extends Action
 
         if (value.equals("true"))
         {
+        	Subject subject = (Subject) request.getSession().getAttribute(Constantes.USER_SESSION);
+
+			PrincipalImpl principal = getCallerPrincipal(subject);
+
+			if (principal != null && "guest".equals(principal.getName())) {
+				request.setAttribute("usuarioGuest", true);
+			}
+        
         	return particularExecute(mapping, form, request, response);
         }
         else
         {
+        	/*
             ActionForward forward = mapping.findForward("entrar.login");
             if (__urlCasoDeUso != null && __contexto != null)
             {
@@ -299,6 +334,8 @@ public abstract class Login extends Action
                 forward = redirect;
             }
             return forward;
+            */
+            return new ActionForward("/secure/entrar-login.jsp");
         }
     }
 

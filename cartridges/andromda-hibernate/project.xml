@@ -2,7 +2,7 @@
 
 <project>
     <extend>../project.xml</extend>
-    <artifactId>andromda-hibernate-cartridge-coppetec</artifactId>
+    <artifactId>andromda-hibernate-cartridge</artifactId>
     <name>AndroMDA Hibernate Cartridge</name>
     <shortDescription>Hibernate Cartridge</shortDescription>
     <description>

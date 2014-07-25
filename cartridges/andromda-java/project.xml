@@ -2,7 +2,7 @@
 
 <project>
     <extend>../project.xml</extend>
-    <artifactId>andromda-java-cartridge-coppetec</artifactId>
+    <artifactId>andromda-java-cartridge</artifactId>
     <name>AndroMDA Java Cartridge</name>
     <shortDescription>Java Cartridge</shortDescription>
     <description>

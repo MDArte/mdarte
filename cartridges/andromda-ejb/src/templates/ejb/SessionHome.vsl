@@ -1,5 +1,6 @@
 #parse("templates/ejb/SessionEJBGlobals.vm")
 #set ($generatedFile = "${service.fullyQualifiedNamePath}Home.java")
+#if(!$service.hasStereotype("$webSrv"))
 #if($service.findTaggedValue("@andromda.services.shared"))
 #set ($generatedFile = "../../../../../core/cs/shared/target/src/${service.fullyQualifiedNamePath}Home.java")
 #end
@@ -45,4 +46,5 @@ public interface ${service.name}Home
 #end
 
 }
+#end
 #end

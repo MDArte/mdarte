@@ -57,7 +57,7 @@
         path="templates/ejb/modulo/maven.xml.vsl"
         outputPattern="$generatedFile"
         outlet="project-configuration"
-        overwrite="true">
+        overwrite="true" generateEmptyFiles="false">
         <modelElements variable="package">
             <modelElement>
                 <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
@@ -69,7 +69,7 @@
         path="templates/ejb/modulo/project.xml.vsl"
         outputPattern="$generatedFile"
         outlet="project-configuration"
-        overwrite="false">
+        overwrite="false" generateEmptyFiles="false">
         <modelElements variable="package">
             <modelElement>
                 <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
@@ -161,17 +161,15 @@
      (Matthias Bohlen)
 -->
 
-    <template
-        path="templates/ejb/webservice/webServiceInterface.vsl"
-        outputPattern="{0}/{1}Srv.java"
-        outlet="session-beans"
-        overwrite="true">
-        <modelElements>
-            <modelElement variable="service">
-            	<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
-            </modelElement>
-        </modelElements>
-    </template>
+	<template path="templates/ejb/webservice/webServiceInterface.vsl"
+		outputPattern="{0}/{1}Srv.java" outlet="ws-beans" overwrite="true">
+		<modelElements>
+			<modelElement variable="service">
+				<type
+					name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>
+		</modelElements>
+	</template>
 
     <template
         path="templates/ejb/mdb/MessageDrivenBean.vsl"
@@ -294,7 +292,7 @@
         path="templates/ejb/SessionBean.vsl"
         outputPattern="{0}/{1}Bean.java"
         outlet="session-beans"
-        overwrite="true">
+        overwrite="true" generateEmptyFiles="false">
         <modelElements variable="service">
             <modelElement>
                 <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
@@ -307,7 +305,7 @@
         path="templates/ejb/SessionLocal.vsl"
         outputPattern="$generatedFile"
         outlet="shared-session-beans"
-        overwrite="true">
+        overwrite="true" generateEmptyFiles="false">
         <modelElements variable="service">
             <modelElement>
                 <type name="org.andromda.metafacades.uml.Service"/>
@@ -334,7 +332,7 @@
         path="templates/ejb/SessionLocalHome.vsl"
         outputPattern="$generatedFile"
         outlet="shared-session-beans"
-        overwrite="true">
+        overwrite="true" generateEmptyFiles="false">
         <modelElements variable="service">
             <modelElement>
                 <type name="org.andromda.metafacades.uml.Service"/>
@@ -362,7 +360,7 @@
         path="templates/ejb/SessionBeanImpl.vsl"
         outputPattern="{0}/{1}BeanImpl.java"
         outlet="session-impls"
-        overwrite="false">
+        overwrite="false" generateEmptyFiles="false">
         <modelElements variable="service">
             <modelElement>
                 <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
@@ -376,7 +374,7 @@
         outlet="ejb-configuration"
         overwrite="true"
         outputToSingleFile="true"
-        outputOnEmptyElements="true">
+        outputOnEmptyElements="true" generateEmptyFiles="false">
         <modelElements>
            <modelElement variable="services">
                 <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
@@ -393,7 +391,7 @@
         outputPattern="META-INF/ejb-jar.xml"
         outlet="module-ejb-configuration"
         overwrite="true"
-        outputOnEmptyElements="false">
+        outputOnEmptyElements="false" generateEmptyFiles="false">
         <modelElements>
            <modelElement variable="pacote">
                 <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
@@ -406,7 +404,7 @@
         outputPattern="META-INF/jboss.xml"
         outlet="module-ejb-configuration"
         overwrite="true"
-        outputOnEmptyElements="true">
+        outputOnEmptyElements="true" generateEmptyFiles="false">
         <modelElements>
            <modelElement variable="pacote">
                 <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackage"/>
@@ -420,7 +418,7 @@
         outlet="ejb-configuration"
         overwrite="true"
         outputToSingleFile="true"
-        outputOnEmptyElements="false">
+        outputOnEmptyElements="false" generateEmptyFiles="false">
         <modelElements>
             <modelElement variable="services">
                 <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
@@ -431,6 +429,62 @@
         </modelElements>
     </template>
     
+	<template path="templates/ejb/webservice/handlers.xml.vsl"
+		outputPattern="handlers.xml" outlet="ws-beans-configuration"
+		overwrite="true" outputOnEmptyElements="false">
+		<modelElements>
+			<modelElement variable="pacote">
+				<type
+					name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/ejb/webservice/handlers.xml.vsl"
+		outputPattern="handlers.xml" outlet="ws-beans-configuration"
+		overwrite="true" outputOnEmptyElements="false">
+		<modelElements>
+			<modelElement variable="pacote">
+				<type
+					name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/ejb/webservice/WsBeanImpl.vsl"
+		outputPattern="{0}/{1}BeanImpl.java" outlet="ws-beans-impl" overwrite="false">
+
+		<modelElements>
+			<modelElement variable="service">
+				<type
+					name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>
+		</modelElements>
+
+	</template>
+	
+	<template path="templates/ejb/webservice/pom.xml.vsl"
+		outputPattern="pom.xml" outlet="ws-beans-base" overwrite="false">
+
+		<modelElements>
+			<modelElement variable="service">
+				<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>			
+		</modelElements>
+
+	</template>	
+	
+	<template path="templates/ejb/webservice/classpath.vsl"
+		outputPattern=".classpath" outlet="ws-beans-base" overwrite="false">
+
+		<modelElements>
+			<modelElement variable="package">
+				<type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade" />
+			</modelElement>	
+		</modelElements>
+
+	</template>	
+    <!--
     <template
         path="templates/ejb/webservice/config.xml.vsl"
         outputPattern="config.xml"
@@ -457,7 +511,7 @@
             </modelElement>
         </modelElements>
     </template>
-    
+    -->
     <template
         path="templates/ejb/webservice/config-client.xml.vsl"
         outputPattern="$generatedFile"
@@ -483,7 +537,7 @@
             </modelElement>
         </modelElements>
     </template>
-    
+    <!--
     <template
         path="templates/ejb/webservice/webservices.xml.vsl"
         outputPattern="META-INF/webservices.xml"
@@ -510,7 +564,7 @@
             </modelElement>
         </modelElements>
     </template>
-    
+    -->
     <template
         path="templates/ejb/SessionEJBLocator.vsl"
         outputPattern="$generatedFile"
@@ -529,7 +583,7 @@
         path="templates/ejb/SessionBI.vsl"
         outputPattern="$generatedFile"
         outlet="shared-session-beans"
-        overwrite="true">
+        overwrite="true" generateEmptyFiles="false">
         <modelElements variable="service">          
             <modelElement>
                 <type name="org.andromda.cartridges.ejb.metafacades.MDArteEJBSessionFacade"/>
@@ -751,31 +805,7 @@
         overwrite="true"
         outputToSingleFile="true">
      </template>
-
-    <template
-        path="templates/ejb/webservice/handlers.xml.vsl"
-        outputPattern="$generatedFile"
-        outlet="module-ejb-configuration"
-        overwrite="true"
-        outputOnEmptyElements="false">
-        <modelElements>
-            <modelElement variable="service">
-                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    <template
-        path="templates/ejb/webservice/handlers.xml.vsl"
-        outputPattern="$generatedFile"
-        outlet="ejb-configuration"
-        overwrite="true"
-        outputOnEmptyElements="false">
-        <modelElements>
-            <modelElement variable="service">
-                <type name="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacade"/>
-            </modelElement>
-        </modelElements>
-    </template>
+    
     <template path="templates/ejb/webservice/webServiceMessageHandler.java.vsl"
         outputPattern="{0}/{1}MessageHandler.java"
         outlet="session-beans"

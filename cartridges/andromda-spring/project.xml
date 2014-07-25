@@ -1,6 +1,7 @@
 <project>
     <extend>../project.xml</extend>
     <artifactId>andromda-spring-cartridge</artifactId>
+    <currentVersion>${cartridge.version}</currentVersion>
     <name>AndroMDA Spring Cartridge</name>
     <package>org.andromda.cartridges.spring</package>
     <description>
@@ -29,29 +30,29 @@
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>maven-andromda-plugin</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <type>plugin</type>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-core</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
             <properties/>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-metafacades-uml</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-meta-cartridge</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
             <artifactId>andromda-ocl-validation-library</artifactId>
-            <version>${pom.currentVersion}</version>
+            <version>${cartridge.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -82,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>andromda</groupId>
-            <artifactId>andromda-hibernate-cartridge-coppetec</artifactId>
+            <artifactId>andromda-hibernate-cartridge</artifactId>
             <version>${pom.currentVersion}</version>
             <properties>
                 <cartridge.howtoDependency/>

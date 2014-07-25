@@ -9,6 +9,7 @@ import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.ValueObject;
+import ${customTypesPackage}.${modelPackageName}.PagingVO;
 
 public class FilterAction extends Action {
 
@@ -26,7 +27,15 @@ public class FilterAction extends Action {
 	}
 	
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		return dao.filter(vo, paginacao);
+		return dao.filter(vo, paginacao, null);
+	}
+	
+	public java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao, Integer numeroElemPorPagina) throws DAOException {
+		return dao.filter(vo, paginacao, numeroElemPorPagina);
+	}
+	
+	public PagingVO pagingExecute(AbstractEntity to, AbstractDAO dao, Integer numeroElemPorPagina) throws DAOException {
+		return dao.pagingFilter(vo, paginacao, numeroElemPorPagina);
 	}
 		
 	public DataObject getVo(){

@@ -127,6 +127,12 @@ public interface $service.name
 #end
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
 
+	  public ${customTypesPackage}.${modelPackageName}.PagingVO manipulaPaginado${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
+	  
+  	  public ${customTypesPackage}.${modelPackageName}.PagingVO pagingFilter${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.FilterAction action, Integer numeroElemPorPagina) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;	  
+	  public ${customTypesPackage}.${modelPackageName}.PagingVO manipulaPaginado${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;	  
+
+	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action, Integer numeroElemPorPagina) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;	  
 #end
 #end 
 }

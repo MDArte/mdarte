@@ -17,7 +17,15 @@ public abstract class ${service.name} #if ($service.generalization)extends ${ser
 
 #set($webService = $service.hasStereotype("$webSrv"))
 
-#foreach($operation in $service.operations)
+#if($ejbSecurityEnabled)
+#set($cont = 0)	
+#set($contParameter = 0)
+#end
+#foreach ($operation in $service.operations)
+#if($ejbSecurityEnabled)
+#set($contParameter = 0)
+#set($cont = $cont + 1)
+#end
 
 ## Only expose public methods
 	/**
@@ -77,7 +85,10 @@ $operation.getDocumentation("	 * ")
 #set($exception = "throws $operation.exceptionList")
 #end
 	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
-
+ 	#if($ejbSecurityEnabled)	
+	Integer paginacao${cont} = null;
+	Integer numElementos${cont} = null;
+	#end
 	/**
 $operation.getDocumentation("	 * ")
 	 */

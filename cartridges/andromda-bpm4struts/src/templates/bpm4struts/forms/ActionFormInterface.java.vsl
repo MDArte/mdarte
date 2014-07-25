@@ -6,6 +6,7 @@
 #end
 #if($gerar)
 // license-header java merge-point
+// ActionFormInterface,java.vsl
 package $operation.interfacePackageName;
 ##
 #set ($sharp = "#")
@@ -320,6 +321,9 @@ $field.getDocumentation("     * ")
     public $listType get${backingListMethod}Double();
     public $listType get${backingListMethod}Destination();
 
+	public int get${backingListMethod}Count();
+	public void set${backingListMethod}Count(int value);
+	
     /**
      * Convenient method to quickly set the value and label backinglist for the
      * $field.name property. This method takes a collection of objects, as well as

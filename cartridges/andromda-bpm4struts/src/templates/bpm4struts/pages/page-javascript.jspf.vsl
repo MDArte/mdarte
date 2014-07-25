@@ -12,14 +12,16 @@
 ## only load the calendar javascript when actually needed
 #if ($jsp.calendarRequired)
 ## using page and .do instead of action to avoid Struts2 rewrite
-        <script type="text/javascript" src="<html:rewrite page="/calendar.do"/>"></script>
+##      <script type="text/javascript" src="<html:rewrite page="/calendar.do"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/calendar-js.jsp"/>"></script>
 #end
 ## only load the static javascript when it will actually be used
 #set ($validationDesired = ($clientValidation=='true'))
 
 #if ($jsp.validationRequired && $validationDesired)
 ## using page and .do instead of action to avoid Struts2 rewrite
-        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/formValidation.do"/>"></script>
+##      <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/formValidation.do"/>"></script>
+        <script type="text/javascript" language="Javascript1.1" src="<html:rewrite page="/form-validation.js"/>"></script>        
 #foreach ($action in $jsp.actions)
 #if ($action.validationRequired)
 

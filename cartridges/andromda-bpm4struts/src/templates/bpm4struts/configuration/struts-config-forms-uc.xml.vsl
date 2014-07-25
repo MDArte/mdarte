@@ -1,5 +1,5 @@
 ##set ($generatedFile = "$stringUtils.upperCamelCaseName($useCase.name)")
-#set ($generatedFile = "struts-config-forms-uc-${stringUtils.upperCamelCaseName(${useCase.name})}.xml")
+#set ($generatedFile = "struts-config-forms-uc-${useCase.name}.xml")
 ## SOMENTE GERADO EM PROJETOS MODULARIZADOS
 #if($modulo == 'true')
 #foreach ($action in $useCase.actions)

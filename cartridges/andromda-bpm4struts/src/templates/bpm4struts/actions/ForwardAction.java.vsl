@@ -39,10 +39,29 @@ public final class ForwardAction
 		if (!StringUtils.isEmpty(forwardForm.getApplicationName()))
 			applicationName = "/" + forwardForm.getApplicationName();
 
+		String parameters = "";
+		if (request.getParameterMap() != null) {
+			java.util.Iterator ite = request.getParameterMap().keySet().iterator();  
+			
+			while (ite.hasNext()) {
+				String parameterName = (String) ite.next();
+				
+				if (parameterName != null && !"modulo".equalsIgnoreCase(parameterName) && !"path".equalsIgnoreCase(parameterName) && 
+							!"user".equalsIgnoreCase(parameterName) && !"usr".equalsIgnoreCase(parameterName) && !"pwd".equalsIgnoreCase(parameterName) && 
+							!"password".equalsIgnoreCase(parameterName) && !"login".equalsIgnoreCase(parameterName) && !"senha".equalsIgnoreCase(parameterName)) {
+							
+					if (parameters.length()==0) {
+						parameters="?"+parameterName+"="+request.getParameter(parameterName);
+					} else {
+						parameters+="&"+parameterName+"="+request.getParameter(parameterName);
+					}
+				}
+			}
+		}
 		// redireciona para o modulo/acao (substitui @AND@ por & para permitir mais de um parametro)
 		String uri = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "").replace("//", "/"));
 		String path = (applicationName + "/" + forwardForm.getModulo() + forwardForm.getPath()).replaceAll("//", "/").replaceAll("@AND@", "&");
-		forward = new org.apache.struts.action.ActionForward(uri + path, true);
+		forward = new org.apache.struts.action.ActionForward(uri + path + parameters, true);
 
 		return forward;
 	}

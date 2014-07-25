@@ -24,6 +24,15 @@
                 <value>ModuloServico</value>
                 <appliedOnElement>package</appliedOnElement>
             </element>
+            
+            <element name="MODULO_WEB_SRV">
+                <documentation>
+                	Representa um modulo Web Service
+                </documentation>
+                <value>ModuloWebSrv</value>
+                <appliedOnElement>package</appliedOnElement>
+            </element>            
+                                 
             <element name="MODULO_WEB_PRINCIPAL">
                 <documentation>
                 	Representa um modulo Web principal
@@ -229,6 +238,10 @@
             <element name="PERSISTENCE_COLUMN_LENGTH">
                 <documentation></documentation>
                 <value>@andromda.persistence.column.length</value>
+            </element>
+            <element name="PERSISTENCE_COLUMN_DECIMAL_DIGITS">
+                <documentation></documentation>
+                <value>@andromda.persistence.column.decimal.digits</value>
             </element>
             <element name="PERSISTENCE_COLUMN_INDEX">
                 <documentation></documentation>

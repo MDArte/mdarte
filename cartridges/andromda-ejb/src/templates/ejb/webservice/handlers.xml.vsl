@@ -1,13 +1,9 @@
-#set ($generatedFile = "META-INF/$stringUtils.lowerCamelCaseName(${service.name})-handlers.xml")
-#if ($webServiceComAutenticacao.equalsIgnoreCase("true"))
-#if($ejb3 == 'true')
+<?xml version="1.0" encoding="UTF-8"?>
 <handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
-	<handler-chain>
-		<handler>
-			<handler-name>${service.name}MessageHandler</handler-name>
-			<handler-class>${service.fullyQualifiedName}MessageHandlerImpl</handler-class>
-		</handler>
-	</handler-chain>
+  <handler-chain>
+    <handler>
+      <handler-name>SiconvHandlerMessage</handler-name>
+      <handler-class>br.gov.mp.siconv.ws.SiconvHandlerMessage</handler-class>
+    </handler>
+  </handler-chain>
 </handler-chains>
-#end
-#end

@@ -17,7 +17,7 @@
     	<dependency>
 	      	<groupId>org.andromda</groupId>
 	      	<artifactId>andromda-core</artifactId>
-	      	<version>${version}</version>
+	      	<version>3.1</version>
 	    </dependency> 
     	<dependency> 
     		<groupId>commons-collections</groupId>
@@ -96,7 +96,7 @@
             <testResource>
                 <directory>src/test/java</directory>
                 <excludes>
-                    <excludes>**/*.java</excludes>
+                    <exclude>**/*.java</exclude>
                 </excludes>
             </testResource>
             <testResource>

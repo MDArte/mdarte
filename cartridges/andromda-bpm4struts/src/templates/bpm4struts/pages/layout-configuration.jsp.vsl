@@ -12,10 +12,10 @@
 	MBeanServer server = null;
 	for (Iterator i = MBeanServerFactory.findMBeanServer(null).iterator(); i.hasNext(); ) {
 		server = (MBeanServer) i.next();
-		if (server.getDefaultDomain().equals("jboss")) {
+		//if (server.getDefaultDomain().equals("jboss")) {
 			serverJbossEncontrado = true;
 			break;
-		}
+		//}
 	}
 	
 	if (!serverJbossEncontrado)

@@ -103,13 +103,15 @@
 #if ($stringUtils.isNotBlank($hibernateQueryCacheFactory))
         <property name="hibernate.cache.query_cache_factory">$hibernateQueryCacheFactory</property>
 #end
+		<property name="javax.persistence.validation.mode">none</property>
+		
         <!-- mapping files -->
 
 #set($entities = $hibernateUtils.getEntity())        
         
 #foreach($entity in $entities)
 		#if($entity.requiresMapping)
-        <mapping resource="${entity.packagePath}/${entity.entityName}.hbm.xml"/>
+        <mapping resource="${entity.packagePath}/${entity.entityName}.hbm.xml"/>        
         #end
 #if($entity.auditoria)
 		#if($entity.requiresMapping)

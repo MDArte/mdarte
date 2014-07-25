@@ -14,7 +14,7 @@
     <body>
     	<div id="error">
     		<div class="details">
-    			<code><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%> 
+    			<pre><%=(String)request.getSession().getServletContext().getContext("${contextoPrincipal}").getAttribute("stackTrace")%></pre> 
 			</div>
 		</div>
 	</body>

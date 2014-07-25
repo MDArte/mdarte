@@ -25,12 +25,11 @@ import org.apache.struts.action.ActionMapping;
 import ${packageUtil}.Constantes;
 import ${packageUtil}.CriptoUtils;
 import org.apache.commons.lang.StringUtils;
-import java.util.HashMap;
-import java.util.Collection;
 #if($oAuthServer == "true")
 import net.oauth.OAuth;
 #end
 
+import ${customTypesPackage}.ServiceLocator;
 import accessControl.ControleAcesso;
 import accessControl.LoginCallbackHandler;
 import accessControl.PrincipalImpl;
@@ -38,19 +37,22 @@ import accessControl.Servico;
 import accessControl.Operador;
 import accessControl.ServicosSingleton;
 import accessControl.exception.ControleAcessoException;
+import java.util.HashMap;
+import java.util.Collection;
 
 public abstract class LoginController implements java.io.Serializable
 {
 	private static final long serialVersionUID = 1L;
-	public static final String ATTR_LOGIN = "Usr",
-	 ATTR_SENHA = "Pwd";
+	public static final String ATTR_LOGIN = "Usr", ATTR_CAPTCHA = "captcha", ATTR_SENHA = "Pwd";
 
     public final boolean verificarLogin(ActionMapping mapping, VerificarLoginForm form, HttpServletRequest request, HttpServletResponse response, HttpServlet servlet) throws Exception
     {
     	EntrarLoginValidarFormImpl formLogin = null;
     	String login = null;
     	String senha = null;
+    	String captcha = null;
     	try{
+    		captcha = request.getParameter(ATTR_CAPTCHA);    	
     		formLogin = (EntrarLoginValidarFormImpl) form;
     		login = formLogin.getLogin();
     		senha = formLogin.getSenha();
@@ -59,8 +61,19 @@ public abstract class LoginController implements java.io.Serializable
     		login = request.getParameter(ATTR_LOGIN);   		
     	}
     	LoginContext loginCtx = null;
-    	ControleAcesso controleAcesso = new ControleAcessoImpl();
+    	ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
 		try{
+			if (request.getSession().getAttribute("PRECISA_CAPTCHA") != null) {
+				CaptchaUtil captchaUtil = new CaptchaUtil();
+
+				if (captchaUtil.isNotHuman(request, captcha)) {
+					saveErrorMessage(request, "erro.captcha.invalido");
+					throw new ControleAcessoException("erro.captcha.invalido");
+				}
+				
+				request.getSession().setAttribute("PRECISA_CAPTCHA", null);
+			}
+			
 			if (controleAcesso.usuarioBloqueado(login)) {
 				saveErrorMessage(request, "usuario.bloqueado");
 				return false;
@@ -76,6 +89,11 @@ public abstract class LoginController implements java.io.Serializable
 			String nome = principal.getOperador().getNomeIdentificadorMenu();
 			request.getSession().setAttribute("nomeIdentificadorMenu", nome);
 			posLogin(principal.getOperador(), request);
+			
+			//deveria estar no posLogin
+			if (!login.equals("guest"))
+				ServiceLocator.instance().getUtilitarioHandlerBI().invalidateMembroParticipanteCA(login);
+			
 			#if($enableCaptcha=="true")
 			String captchaExpected =(String)request.getSession().getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
 			String captchaReceived = form.getKaptcha();
@@ -90,6 +108,8 @@ public abstract class LoginController implements java.io.Serializable
 			return true;
 			#end
 		}catch (LoginException le){
+			request.getSession().setAttribute("PRECISA_CAPTCHA", true);
+			
 			if(le.getMessage().equals("Password Incorrect/Password Required")){
 				saveErrorMessage(request, "senha.incorreta");
 #if($stringUtils.isNotEmpty($maxTentativasLogin))
@@ -166,7 +186,7 @@ public abstract class LoginController implements java.io.Serializable
     	try{    	
 	    	Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);
 	    	boolean precisaTrocarSenha = false;
-	    	ControleAcesso controleAcesso = new ControleAcessoImpl();
+	    	ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
 	    	PrincipalImpl principalImpl = controleAcesso.getCallerPrincipal(subject);
 	    	if(controleAcesso.precisaTrocarSenha(principalImpl.getOperador())){
 	    		EntrarLoginValidarFormImpl entrarLoginValidarFormImpl = (EntrarLoginValidarFormImpl) form;
@@ -190,7 +210,7 @@ public abstract class LoginController implements java.io.Serializable
     	try{
     		boolean trocaEfetuadaComSucesso = false;
 	    	Subject subject = (Subject)request.getSession().getAttribute(Constantes.USER_SESSION);
-	    	ControleAcesso controleAcesso = new ControleAcessoImpl();
+	    	ControleAcessoImpl controleAcesso = new ControleAcessoImpl();
 	    	PrincipalImpl principalImpl = controleAcesso.getCallerPrincipal(subject);
 	    	TrocaDeSenhaObrigatoriaProcessarFormImpl formImpl = (TrocaDeSenhaObrigatoriaProcessarFormImpl)form;
 	    	String senhaAntiga = CriptoUtils.byteArrayToHexString(CriptoUtils.digest(formImpl.getSenha().getBytes()));

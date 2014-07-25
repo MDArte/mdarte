@@ -23,10 +23,18 @@
 #end
 #end
 #foreach ($validatorVar in $field.validatorVars)
-                <var>
+##Comentado pois if soh serah usado se necessario deixar o cdata quando nao for date
+##if (field.date)
+				<var>
                     <var-name>$validatorVar.get(0)</var-name>
-                    <var-value><![CDATA[$validatorVar.get(1)]]></var-value>
+                    <var-value>$validatorVar.get(1)</var-value>
                 </var>
+##else
+##                <var>
+##                    <var-name>$validatorVar.get(0)</var-name>
+##                    <var-value><![CDATA[$validatorVar.get(1)]]></var-value>
+##                </var>
+##end                
 #end
             </field>
 #end

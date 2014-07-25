@@ -43,7 +43,7 @@ public class $class.name
 #end
     public ${class.name}${parenthesis}
 #foreach ($property in $class.properties)
-	#set($tipo = $property.getterSetterTypeName )
+#set($tipo = $property.getterSetterTypeName )
 	$tipo ${property.name}#if($velocityCount != $class.properties.size()),#else)
 #end
 
@@ -70,7 +70,7 @@ public class $class.name
     }
 
 #foreach ($attribute in $class.attributes)
-	#set($tipo = $attribute.getterSetterTypeName )
+#set($tipo = $attribute.getterSetterTypeName )
 	    private $tipo $attribute.name#if ($attribute.defaultValuePresent) = $attribute.defaultValue#end;
 
     /**
@@ -85,14 +85,24 @@ $attribute.getDocumentation("     * ")
     {
         this.${attribute.name} = ($tipo)$attribute.name;
     }
+    
+    /**
+     * Fluent Interface.
+     */
+    public $class.name with$stringUtils.capitalize($attribute.name)($attribute.getterSetterTypeName $attribute.name)
+    {
+		${attribute.setterName}($attribute.name);
+        return this;
+    }    
 #end
 
 ## Generate the relation methods.
 #foreach ($associationEnd in $class.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable)
-	#set($tipo = $target.getterSetterTypeName )
-	    private $tipo $target.name;
+#set($tipo = $target.getterSetterTypeName )
+	
+	private $tipo $target.name;
 
     /**
      * Get the $target.name

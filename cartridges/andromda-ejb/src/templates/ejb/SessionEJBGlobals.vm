@@ -34,7 +34,7 @@
 			#if ($operation.returnTypePresent)return #end
 			#set($paginacao = "")
 			#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-			#set($paginacao = "null")
+			#set($paginacao = "null, null")
 			#if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
 			#else
@@ -49,21 +49,72 @@
 		}
 #end
 
+#macro (renderParametersSecurity $operation)	 
+#*	*##if($operation.returnTypePresent)
+#*		*##set($return = '')
+#*	*##set($webService = $operation.owner.hasStereotype("$webSrv"))
+#*	*##if($webService)
+#*		*##renderReturnWS($operation $return)
+#*	*##else
+#*		*##set($return = $operation.returnType.fullyQualifiedName)
+#*	*##end
+	$return  operacao${cont} = $operation.returnType.javaNullString;
+#end
+##
+#set($paramNames = "")
+#set($firstParam = true)
+##
+##
+#foreach ( $att in $operation.parameters )	          	
+#if($att.name != "" && !$att.return)
+#set($contParameter = $contParameter + 1)
+##
+#if($webService)
+#set($classe = $att.type.fullyQualifiedName)
+##
+#if(!($stringUtils.indexOf("$classe", "$wsdPackageName") > 0))
+#set($classe = $stringUtils.replace("${classe}", "$modelPackageName", "$wsdPackageName"))
+##
+#if($stringUtils.indexOf("$classe", "$wsdPackageName") > 0)
+#set($classe = "${classe}WS")
+#end
+##
+#end         
+		$classe param${cont}${contParameter} = $att.type.javaNullString;
+#else
+		$att.type.fullyQualifiedName param${cont}${contParameter} = $att.type.javaNullString;
+#end 
+#if($firstParam)	 
+#set($paramNames = $paramNames.concat("param${cont}${contParameter}") )
+#set($firstParam = false)	
+#else
+#set($paramNames = $paramNames.concat(",param${cont}${contParameter}") )	
+#end
+#end
+#end 
+	 #set($contParameter = 0)
+	 boolean responsibleSession${cont}= false;	 	
+#end
+
 #macro (renderSecurityBody $operation)
-		##renderParameters($operation $listaArgumentos false)
+		##renderParameters($operation $listaArgumentos false)		
 		#set($serviceName = ${stringUtils.strip("#renderServiceName($service $operation)")})
+		
+/*
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
+*/		
 		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
-
-		boolean gerente = false;
-		if (!principalImpl.isValido()) {
-			gerente = true;
-			principalImpl.setValido(true);
-		}
-
-		${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
-
+/*        	
+        	boolean gerente = false;
+        	if(!principalImpl.isValido()){
+        		gerente = true;
+*/        		
+        		principalImpl.setValido(true);
+/*        		
+        	}          	
+        	${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
+*/  		
 		boolean responsibleSession = false;
 
 		try {
@@ -71,7 +122,7 @@
 			#if ($operation.returnTypePresent)return #end
 			#set($paginacao = "")
 			#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
-			#set($paginacao = "null")
+			#set($paginacao = "null, null")
 			#if($stringUtils.isEmpty($operation.argumentNames))
 			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
 			#else
@@ -81,9 +132,11 @@
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
 			#end
 		} finally {
+/*		
 			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);
 			if(gerente)
 				principalImpl.setValido(false);
+*/				
 			if(responsibleSession)
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
@@ -91,32 +144,46 @@
 
 #macro (renderSecurityBodyPagination $operation)
 		#set($serviceName = ${stringUtils.strip("#renderServiceNamePagination($service $operation)")})
+/*		
 		java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
+*/		
 		javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 		accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
-
+/*
 		boolean gerente = false;
 		if (!principalImpl.isValido()) {
 			gerente = true;
+*/			
 			principalImpl.setValido(true);
+/*			
 		}
 
 		${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
-
+*/
 		boolean responsibleSession = false;
 
 		try {
 			responsibleSession = $customTypesPackage.${modelPackageName}.AbstractDAO.getSession();
 			#if ($operation.returnTypePresent)return #end
-			#if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (paginacao);
-			#else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
-			#end
+			
+#set($paginacao = "")
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
+#set($paginacao = "null, null")
+##		 
+#if($stringUtils.isEmpty($operation.argumentNames))
+			handle${stringUtils.capitalize(${operation.name})} ($paginacao);
+#else
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, $paginacao);
+#end	
+#else
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
+#end
 		} finally {
-			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);
+/*		
+			${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl, listaRestricaoServico);		
 			if (gerente)
 				principalImpl.setValido(false);
+*/				
 			if (responsibleSession)
 				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
 		}
@@ -124,34 +191,52 @@
 
 #macro (renderSecurityManipula $actionName $dependencia $isOpenAccess)
 	#if($actionName.equals("filter") || $actionName.equals("list") || $actionName.equals("export") || $actionName.equals("import"))
-	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
-		${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = action;
+#if($actionName.equals("filter"))
+	Integer numeroDeElemPorPagina${cont}= 20;
+	Integer numeroDeElemPorPagina_${cont}= 20;
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+		return ${actionName}${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, numeroDeElemPorPagina_${cont});
+	}
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+	${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = action;
+#else
+	public  java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException {
+	${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = action;
+#end
 	#else
 	public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) throws ${customTypesPackage}.${actionPackageName}.ActionException {
 		${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionName)}Action paramAction = null;
 	#end
+#if($actionName.equals("filter"))		
+		numeroDeElemPorPagina${cont} = numeroElemPorPagina;
+#end 
+
 		${dependencia.targetElement.FullyQualifiedName}Abstract paramEntity = (${dependencia.targetElement.FullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name});
 		java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> ${actionName}Return = null;
 
 		#set($serviceName = ${stringUtils.strip("#renderManipulaName($service $dependencia $actionName)")})
 		#if(!$isOpenAccess)
+/*		
 			java.util.HashMap<String,java.util.Collection<accessControl.Restricao>> listaRestricaoServico = ${controleAcessoDir}.ControleAcessoUtil.getRestricoesServico("$serviceName");
+*/			
 			javax.security.auth.Subject subject = accessControl.SecurityHolder.getSubject();
 			accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
-	
+/*	
 			boolean gerente = false;
 			if (!principalImpl.isValido()) {
 				gerente = true;
+*/				
 				principalImpl.setValido(true);
+/*				
 			}
 	
 			${controleAcessoDir}.ControleAcessoUtil.addRestricoes(principalImpl, listaRestricaoServico);
-		
+*/		
 		#end
 
 		try{
 			#if($actionName.equals("filter"))
-			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao());
+			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(), numeroDeElemPorPagina${cont});
 			#elseif($actionName.equals("list"))
 			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(), paramAction.getPropriedade(), paramAction.getDesc());
 			#elseif($actionName.equals("select"))
@@ -167,16 +252,66 @@
 			return ${actionName}Return;
 		} catch (Exception e) {
 			throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);
-		} finally {
+		}
+/*		
+		 finally {
 			#if(!$isOpenAccess)
 				${controleAcessoDir}.ControleAcessoUtil.removeRestricoes(principalImpl,listaRestricaoServico);
 				if(gerente)
 					principalImpl.setValido(false);
 			#end
 		}
+*/		
+	}
+#end
+
+#macro (renderSecurityManipulaPaginado $actionName $dependencia $actionClassName)
+	
+	${customTypesPackage}.${modelPackageName}.PagingVO ${actionName}Paging${cont}= null;
+	${dependencia.targetElement.FullyQualifiedName}Abstract paramEntity${actionName}Paging${cont} = null;
+	${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionClassName)}Action paramAction${actionName}Paging${cont} = null;
+	boolean responsibleSession${actionName}Paging${cont}= false;  
+	Integer numeroElemPorPagina${cont}= 20;
+	Integer numeroElemPorPagina_${cont}= 20;
+
+	public  ${customTypesPackage}.${modelPackageName}.PagingVO ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionClassName)}Action action) throws ${customTypesPackage}.${actionPackageName}.ActionException { 
+		return ${actionName}${dependencia.targetElement.name}($stringUtils.lowerCase(${dependencia.targetElement.name}), action, numeroElemPorPagina_${cont});
 	}
 
+#if($actionName.equals("pagingFilter"))
+	public  ${customTypesPackage}.${modelPackageName}.PagingVO ${actionName}${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.${stringUtils.capitalize($actionClassName)}Action action, Integer numeroElemPorPagina) throws ${customTypesPackage}.${actionPackageName}.ActionException { 
 #end
+		responsibleSession${actionName}Paging${cont}= false;
+		numeroElemPorPagina${cont} = numeroElemPorPagina; 
+		paramEntity${actionName}Paging${cont} = (${dependencia.targetElement.FullyQualifiedName}Abstract)$stringUtils.lowerCase(${dependencia.targetElement.name});
+#if($actionName.equals("pagingFilter"))
+		paramAction${actionName}Paging${cont} = action;
+#end
+#set($serviceName = ${stringUtils.strip("#renderManipulaName($service $dependencia $actionName)")})	
+    	javax.security.auth.Subject subject = javax.security.auth.Subject.getSubject(java.security.AccessController.getContext());
+    	accessControl.PrincipalImpl principalImpl = ${controleAcessoDir}.ControleAcessoImpl.getCallerPrincipal(subject);
+   		principalImpl.setValido(true);
+
+		try {	 
+			javax.security.auth.Subject.doAsPrivileged(subject, new java.security.PrivilegedExceptionAction() {
+				public Object run() throws Exception{	
+#if($actionName.equals("pagingFilter"))
+					${actionName}Paging${cont} = paramEntity${actionName}Paging${cont}.getDaoImpl().${actionName}(paramAction${actionName}Paging${cont}.getVo(), paramAction${actionName}Paging${cont}.getPaginacao(), numeroElemPorPagina${cont});					
+#end
+					return null;
+				}
+			}, java.security.AccessController.getContext());		   
+			return ${actionName}Paging${cont};
+		} catch (java.security.PrivilegedActionException e) {
+			throw new ${customTypesPackage}.${actionPackageName}.ActionException(e);	
+		} finally {			
+			if (responsibleSession${actionName}Paging${cont}) {
+				$customTypesPackage.${modelPackageName}.AbstractDAO.closeSession();
+			}
+		}
+	}
+#end
+
 
 #macro (renderServiceName $service $operation)#set($webService=$service.hasStereotype("$webSrv"))#set($listaArgumentos="")#if($webService)#renderParametersWS($operation $listaArgumentos false)#else#renderParameters($operation $listaArgumentos false)#end${service.fullyQualifiedName}BI.${operation.name}($listaArgumentos)#end
 

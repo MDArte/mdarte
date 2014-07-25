@@ -15,7 +15,9 @@
         <property name="use_outer_join">true</property>
         <property name="transaction.factory_class">net.sf.hibernate.transaction.JTATransactionFactory</property>
         <property name="jta.UserTransaction">UserTransaction</property>
-
+                
+		<property name="javax.persistence.validation.mode">none</property>
+		
     </session-factory>
 
 </hibernate-configuration>

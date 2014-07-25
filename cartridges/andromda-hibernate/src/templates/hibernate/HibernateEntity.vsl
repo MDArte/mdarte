@@ -58,222 +58,6 @@ public abstract class ${entity.entityName}Abstract
 #end
 {
 	private final String ENTITY_KEY = "$entity.packageName.${entity.entityName}Abstract";
-	
-	public Boolean needUpdate(AbstractTO abstractTO){
-		Boolean need = false;
-		need = abstractTO.isUpdated();
-		if(need) return true;
-		if(((${entity.name}TO)abstractTO).getExemploTO() == null) return false;
-		${entity.name}TO to = (${entity.name}TO)abstractTO;
-		#foreach ($associationEnd in $entity.associationEnds)
-		#set ($target = $associationEnd.otherEnd)
-		#if($target.navigable)
-		if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty()))
-		#if($target.many)
-		need = need || TOUtil.isCollectionChanged(to.${target.getterName}(), this.${target.getterName}());
-		#else
-		need = need || TOUtil.isEntityChanged((AbstractTO)to.${target.getterName}(), (AbstractEntity)this.${target.getterName}());
-		#end
-		#end
-		#end
-		#if($entity.generalization)if(need == false) return super.needUpdate(abstractTO);#end
-		return need;
-	}
-
-##Transforma TO num Bean
-   #set ($tipoTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
-   #set ($tipoTO = $tipoTO.concat("TO"))
-    
-
-    public static ${entity.name}Abstract getEntityFromTO($tipoTO to) throws Exception{
-    	AbstractDAO.currentSession().setFlushMode(FlushMode.NEVER);
-    	${entity.name}Abstract entity = (${entity.name}Abstract)AbstractEntity.getEntityInstanceFromTO(to,  new java.util.HashMap());
-    	AbstractDAO.currentSession().setFlushMode(FlushMode.AUTO);
-    	return entity;
-    	
-    }
- 	
-#if(!$entity.abstract)       
-    protected ${customTypesPackage}.${modelPackageName}.AbstractEntity getEntityFromTO(AbstractTO to, java.util.HashMap map) throws Exception{
-    	if(map == null) map = new java.util.HashMap();
-    	${entity.name}Impl bean = new ${entity.name}Impl();
-    	return getEntityFromTO((${tipoTO})to, bean, map);
-    }	
-#end
-   
-    protected ${entity.name}Abstract getEntityFromTO (${tipoTO} to, ${entity.name} bean, java.util.HashMap map) throws Exception 
-    {
-	if(to == null) return null;
-	map.put(to.getClass().toString() + to.hashCode(), bean);	
-
-
-        if (to != null)
-        {
-        if(to.getId() == null){                
-        #renderConstructorBody("true")
-	}else{               	
-	#if(!$entity.abstract)
-	${entity.name}DAOImpl dao = new ${entity.name}DAOImpl(); 
-	if(bean.getId() == null) bean = (${entity.name}Impl)dao.select(to.getId()).iterator().next();
-	map.put(to.getClass().toString() + to.hashCode(), bean);
-	#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
-	#set ($versionProperty = $entity.hibernateVersionProperty)
-	#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
-	if(bean.get$versionPropertyCapitalized() != to.get$versionPropertyCapitalized()){
-		throw new Exception("hibernate.version.is.different");	
-	}
-	#end
-	#end
-	#renderConstructorBody("false")
-        }
-		return (${entity.name}Abstract)bean;
-	}
-	return null;
-}
-
-#foreach ($associationEnd in $entity.associationEnds)
-#set ($target = $associationEnd.otherEnd)
-#if ($target.navigable)
-#if ($target.many)
-#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
-    private $target.getterSetterTypeName construct$stringUtils.capitalize(${target.name})($target.getterSetterTypeName ${target.name}TO, $target.getterSetterTypeName ${target.name}Entity, java.util.HashMap map) throws Exception
-   {
-   	boolean changed = TOUtil.isCollectionChanged(${target.name}TO,${target.name}Entity);
-   	java.util.Collection list;
-	if(changed)
-		list = new java.util.ArrayList();
-	else
-		list = ${target.name}Entity;
-	if(${target.name}TO != null){    
-		java.util.Iterator it = ${target.name}TO.iterator();
-		while(it.hasNext()){    
-			${typeTargetTO}TO to = (${typeTargetTO}TO) it.next();
-			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)TOUtil.getEntityFromCollection(to, ${target.name}Entity);
-			if(map.get(to.getClass().toString() + to.hashCode()) == null){     	  
-				cd = (${target.type.fullyQualifiedName}Abstract)AbstractEntity.getEntityInstanceFromTO(to, map);
-			}else{
-				cd = (${target.type.fullyQualifiedName}Abstract)map.get(to.getClass().toString() + to.hashCode());
-			}
-			
-			if(changed) list.add(cd);
-		}
-	} 	
-	return list;
- }
-#end
-#end
-#end
-## fim da transforacao
-
-## Inicio da construcao do TO
-
-  
-    public ${entity.name}TOImpl buildTO(${entity.name}TOExample exemploTO) throws Exception{
-    	return (${entity.name}TOImpl)this.buildTO(exemploTO,  new java.util.HashMap());
-    }
-
-    #if(!$entity.abstract)
-    public AbstractTO buildTO(AbstractTOExample exemploTO, java.util.HashMap map) throws Exception{
-    	if(map == null) map = new java.util.HashMap();
-    	${entity.name}TOImpl to = new ${entity.name}TOImpl();
-    	to.beginInitialization();
-    	mapEntityAttributes2TO(to);
-    	mapEntityRelations2TO(to,TOUtil.getExample(exemploTO, this.getTOExample()), map);
-    	to.finishInitialization();
-    	if(to.getId() == null) to.setExemploTO(null);
-    	return to;
-    }
-    #end
-
-    protected void mapEntityAttributes2TO(${entity.name}TO to){
-	#foreach ($attribute in $entity.attributes)
-	#set ($nome = $stringUtils.capitalize(${attribute.name}))
-	to.set${nome}(this.${attribute.getterName}());
-	#end
-
-	#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
-	#set ($versionProperty = $entity.hibernateVersionProperty)
-	#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
-	to.set$versionPropertyCapitalized(this.get${versionPropertyCapitalized}());
-	#end
-		
-	#if($entity.generalization)
-	super.mapEntityAttributes2TO(to);
-	#end
-    }
-
-    protected void mapEntityRelations2TO(${entity.name}TO to, AbstractTOExample abstractExemploTO, java.util.HashMap map) throws Exception{
-	map.put(this.getEntityKey() + this.hashCode(), to);	
-	${entity.name}TOExample exemploTO = (${entity.name}TOExample)abstractExemploTO;
-	if(abstractExemploTO != null){
-		to.setExemploTO(exemploTO);
-		#foreach ($associationEnd in $entity.associationEnds)
-		#set ($target = $associationEnd.otherEnd)
-	  	#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
-    		#set ($tipo = $target.type.fullyQualifiedName)
-    		#if ($tipo.indexOf(".${modelPackageName}.") > 0)
-    		#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
-    		#end
-    		#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
-     		if(exemploTO.${target.getterName}()!= null && !exemploTO.${target.getterName}().isEmpty() && this.${target.getterName}() != null){
-	  		if(map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()) == null){
-	  			${tipo}TO toTemp = (${tipo}TO)this.${target.name}.buildTO(TOUtil.getExample(exemploTO.${target.getterName}(), this.${target.name}.getTOExample()) , map);
-	  			to.${target.setterName}(toTemp);   	
-	  		}else{
-	  			to.${target.setterName}((${tipo}TO)map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()));
-	  		}     
-     		}
-    		#elseif ($target.many)
-		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
-			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));        		
-		}        
-    		#end
-  		#end
-		#end
-
-	}
-        #if($entity.generalization)
-	super.mapEntityRelations2TO(to,exemploTO, map);
-	#end
-        
-    }
-
-    
-#foreach ($associationEnd in $entity.associationEnds)
-#set ($target = $associationEnd.otherEnd)
-#if ($target.navigable)
-#if ($target.many)
-
-    private $target.getterSetterTypeName build$stringUtils.capitalize(${target.name})(java.util.Collection templates, ${target.getterSetterTypeName} ${target.name}, java.util.HashMap map) throws Exception
-    {
-    	java.util.ArrayList list = new java.util.ArrayList();
-    	if(${target.name} != null)
-  	{    
-  		java.util.Iterator it = ${target.name}.iterator();
-  		while(it.hasNext()){  
-  			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)it.next();
-  			if(cd != null){
-  				if(map.get(cd.getEntityKey() + cd.hashCode()) == null){	  
-  					#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
-  					${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map); 	  
-  					list.add(toTemp);    	
-  
-  				}else{	  
-  					${typeTargetTO}TO toTemp = (${typeTargetTO}TO)map.get(cd.getEntityKey() + cd.hashCode());
-  					list.add(toTemp);
-  				}
-  			}  	  	  
-  		}
-  	}
-  	return list;       
- } 	
-#end
-#end
-#end
-
-
-
-##Fim da construcao do TO
     
     /**
      * The serial version UID of this class. Needed for serialization.
@@ -323,8 +107,11 @@ public abstract class ${entity.entityName}Abstract
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
 
-
+#if($!{attribute.defaultValue} && !$stringUtils.equals('null',${attribute.defaultValue}) && $stringUtils.equals('java.lang.Boolean',$typeName))
+	private $typeName $attribute.name = new $typeName("${attribute.defaultValue}");
+#else
     private $typeName $attribute.name;
+#end
 
     /**
 $attribute.getDocumentation("     * ")
@@ -345,6 +132,15 @@ $attribute.getDocumentation("     * ")
 	this.${attribute.name} = $attribute.name;
     }    
     #end
+    
+    /**
+	 * Seta o valor de $attribute.name e retorna o pr�prio objeto.
+	 * Pattern Fluent Interface.
+	 */
+	$attribute.visibility ${entity.entityName}Abstract with$stringUtils.capitalize($attribute.name)(${typeName} $attribute.name) {
+		this.${attribute.name} = $attribute.name;
+		return this;
+	}
 
 #end
 
@@ -541,10 +337,10 @@ $target.getDocumentation("     * ")
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($target.many)
 
-    public $target.getterSetterTypeName ${target.getterName}(Integer paginacao)
+    public $target.getterSetterTypeName ${target.getterName}(Integer paginacao, Integer numElementos)
     {
     	try {
-             	#set($parameters = "this.getId(), paginacao")
+             	#set($parameters = "this.getId(), paginacao, numElementos")
                 return ${entity.name}DAOImpl.${target.getterName}By${entity.name}($parameters);
         } catch(DAOException daoe) {
               daoe.printStackTrace();
@@ -916,5 +712,221 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
       this.auditoriaDataHora = auditoriaDataHora;
    }
 #end
+
+	//
+	// 
+	//
+	
+	public Boolean needUpdate(AbstractTO abstractTO) {
+		Boolean need = false;
+		need = abstractTO.isUpdated();
+		if(need) return true;
+		if(((${entity.name}TO)abstractTO).getExemploTO() == null) return false;
+		${entity.name}TO to = (${entity.name}TO)abstractTO;
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if($target.navigable)
+		if((to.getExemploTO() != null && to.getExemploTO().${target.getterName}() != null && !to.getExemploTO().${target.getterName}().isEmpty())) {
+#if($target.many)
+    		need = need || TOUtil.isCollectionChanged(to.${target.getterName}(), this.${target.getterName}());
+#else
+    		need = need || TOUtil.isEntityChanged((AbstractTO)to.${target.getterName}(), (AbstractEntity)this.${target.getterName}());
+#end
+		}
+#end
+#end
+#if($entity.generalization)
+		if(need == false) { 
+			return super.needUpdate(abstractTO);
+		}
+#end
+		return need;
+	}
+##
+##Transforma TO num Bean
+#set ($tipoTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
+#set ($tipoTO = $tipoTO.concat("TO"))
+
+	public static ${entity.name}Abstract getEntityFromTO($tipoTO to) throws Exception{
+    	AbstractDAO.currentSession().setFlushMode(FlushMode.NEVER);
+    	${entity.name}Abstract entity = (${entity.name}Abstract)AbstractEntity.getEntityInstanceFromTO(to,  new java.util.HashMap());
+    	AbstractDAO.currentSession().setFlushMode(FlushMode.AUTO);
+    	return entity;    	
+    }
+ 	
+#if(!$entity.abstract)       
+    protected ${customTypesPackage}.${modelPackageName}.AbstractEntity getEntityFromTO(AbstractTO to, java.util.HashMap map) throws Exception{
+    	if(map == null) map = new java.util.HashMap();
+    	${entity.name}Impl bean = new ${entity.name}Impl();
+    	return getEntityFromTO((${tipoTO})to, bean, map);
+    }	
+#end
+   
+    protected ${entity.name}Abstract getEntityFromTO (${tipoTO} to, ${entity.name} bean, java.util.HashMap map) throws Exception 
+    {
+		if(to == null) {
+			return null;
+		}
+		map.put(to.getClass().toString() + to.hashCode(), bean);	
+
+        if (to != null) {
+			if(to.getId() == null) {
+#renderConstructorBody("true")
+	        } else {               	
+#if(!$entity.abstract)
+			    ${entity.name}DAOImpl dao = new ${entity.name}DAOImpl(); 
+				if(bean.getId() == null) bean = (${entity.name}Impl)dao.select(to.getId()).iterator().next();
+				map.put(to.getClass().toString() + to.hashCode(), bean);
+#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
+#set ($versionProperty = $entity.hibernateVersionProperty)
+#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
+            	if(bean.get$versionPropertyCapitalized() != to.get$versionPropertyCapitalized()) {
+            		throw new Exception("hibernate.version.is.different");	
+            	}
+#end
+#end
+#renderConstructorBody("false")
+            }
+    		return (${entity.name}Abstract)bean;
+    	}
+    	return null;
+    }
+
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+#if ($target.many)
+#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
+    private $target.getterSetterTypeName construct$stringUtils.capitalize(${target.name})($target.getterSetterTypeName ${target.name}TO, $target.getterSetterTypeName ${target.name}Entity, java.util.HashMap map) throws Exception {
+       	boolean changed = TOUtil.isCollectionChanged(${target.name}TO,${target.name}Entity);
+       	java.util.Collection list;
+    	if(changed) {
+    		list = new java.util.ArrayList();
+    	}
+    	else {
+    		list = ${target.name}Entity;
+    	}
+    	if(${target.name}TO != null) {    
+    		java.util.Iterator it = ${target.name}TO.iterator();
+    		while(it.hasNext()) {    
+    			${typeTargetTO}TO to = (${typeTargetTO}TO) it.next();
+    			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)TOUtil.getEntityFromCollection(to, ${target.name}Entity);
+    			if(map.get(to.getClass().toString() + to.hashCode()) == null){     	  
+    				cd = (${target.type.fullyQualifiedName}Abstract)AbstractEntity.getEntityInstanceFromTO(to, map);
+    			}else{
+    				cd = (${target.type.fullyQualifiedName}Abstract)map.get(to.getClass().toString() + to.hashCode());
+    			}
+    			
+    			if(changed) list.add(cd);
+    		}      
+    	} 	
+    	return list;    
+	}
+#end
+#end
+#end
+## fim da transforação
+##
+## Inicio da construção do TO
+##
+  
+    public ${entity.name}TOImpl buildTO(${entity.name}TOExample exemploTO) throws Exception{
+    	return (${entity.name}TOImpl)this.buildTO(exemploTO,  new java.util.HashMap());
+    }
+        
+#if(!$entity.abstract)       
+    public AbstractTO buildTO(AbstractTOExample exemploTO, java.util.HashMap map) throws Exception{
+    	if(map == null) map = new java.util.HashMap();
+    	${entity.name}TOImpl to = new ${entity.name}TOImpl();
+    	to.beginInitialization();
+    	mapEntityAttributes2TO(to);
+    	mapEntityRelations2TO(to,TOUtil.getExample(exemploTO, this.getTOExample()), map);
+    	to.finishInitialization();
+    	if(to.getId() == null) to.setExemploTO(null);
+    	return to;
+    }	
+#end	
+
+    protected void mapEntityAttributes2TO(${entity.name}TO to){
+#foreach ($attribute in $entity.attributes)
+#set ($nome = $stringUtils.capitalize(${attribute.name}))
+	to.set${nome}(this.${attribute.getterName}());
+#end
+
+#if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
+#set ($versionProperty = $entity.hibernateVersionProperty)
+#set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
+	to.set$versionPropertyCapitalized(this.get${versionPropertyCapitalized}());
+#end
+		
+#if($entity.generalization)
+	super.mapEntityAttributes2TO(to);
+#end
+    }
+
+    protected void mapEntityRelations2TO(${entity.name}TO to, AbstractTOExample abstractExemploTO, java.util.HashMap map) throws Exception {
+		map.put(this.getEntityKey() + this.hashCode(), to);	
+		${entity.name}TOExample exemploTO = (${entity.name}TOExample)abstractExemploTO;
+		if(abstractExemploTO != null){
+			to.setExemploTO(exemploTO);
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
+#set ($tipo = $target.type.fullyQualifiedName)
+#if ($tipo.indexOf(".${modelPackageName}.") > 0)
+#set ($tipo = $stringUtils.replace($tipo, ".${modelPackageName}.", ".${transferPackageName}."))
+#end
+#if ($target.getterSetterTypeName.indexOf(".${modelPackageName}.") > 0)     
+     		if(exemploTO.${target.getterName}()!= null && !exemploTO.${target.getterName}().isEmpty() && this.${target.getterName}() != null) {
+				if(map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()) == null){
+					${tipo}TO toTemp = (${tipo}TO)this.${target.name}.buildTO(TOUtil.getExample(exemploTO.${target.getterName}(), this.${target.name}.getTOExample()) , map);
+					to.${target.setterName}(toTemp);   	
+				} else {
+					to.${target.setterName}((${tipo}TO)map.get(((AbstractEntity)this.${target.getterName}()).getEntityKey() + this.${target.getterName}().hashCode()));
+				}     
+     		}
+#elseif ($target.many)
+    		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
+    			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));        		
+    		}        
+#end
+#end
+#end
+		}
+#if($entity.generalization)
+	super.mapEntityRelations2TO(to,exemploTO, map);
+#end      
+    }
     
+#foreach ($associationEnd in $entity.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+#if ($target.many)
+    private $target.getterSetterTypeName build$stringUtils.capitalize(${target.name})(java.util.Collection templates, ${target.getterSetterTypeName} ${target.name}, java.util.HashMap map) throws Exception {
+    	java.util.ArrayList list = new java.util.ArrayList();
+    	if(${target.name} != null) {    
+      		java.util.Iterator it = ${target.name}.iterator();
+      		while(it.hasNext()){  
+      			${target.type.fullyQualifiedName}Abstract cd = (${target.type.fullyQualifiedName}Abstract)it.next();
+      			if(cd != null){
+      				if(map.get(cd.getEntityKey() + cd.hashCode()) == null){	  
+#set ($typeTargetTO = $stringUtils.replace($target.type.fullyQualifiedName, ".${modelPackageName}.", ".${transferPackageName}."))   
+      					${typeTargetTO}TO toTemp =  (${typeTargetTO}TO)cd.buildTO(TOUtil.getExample(templates, cd.getTOExample()), map); 	  
+      					list.add(toTemp);    	
+      
+      				}else{	  
+      					${typeTargetTO}TO toTemp = (${typeTargetTO}TO)map.get(cd.getEntityKey() + cd.hashCode());
+      					list.add(toTemp);
+      				}
+      			}  	  	  
+      		}
+      	}
+      	return list;       
+     } 	
+#end
+#end
+#end
+##
+##Fim da construção do TO    
+##    
 }

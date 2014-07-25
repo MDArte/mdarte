@@ -1,10 +1,12 @@
 #parse("templates/ejb/Globals.vm")
+#if(!$pacote.hasStereotype("ModuloWebService"))
 <?xml version="1.0" encoding="$xmlEncoding"?>
 #if($ejb3 == 'false')
 <!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN"
                          "http://java.sun.com/dtd/ejb-jar_2_0.dtd">
 #end
 #macro (renderManipula $actionName $service $dependencia)
+<!--
         <method-permission>
             <description><![CDATA[]]></description>
             <unchecked/>
@@ -25,6 +27,7 @@
                 </method-params>
             </method>
         </method-permission>
+-->        
 #end
 #if($pacote)
 #set($services = $pacote.sessions)
@@ -57,7 +60,7 @@
             <business-remote>${service.fullyQualifiedName}</business-remote>
 #else
             <home>${service.fullyQualifiedName}Home</home>
-            <remote>${service.fullyQualifiedName}</remote>
+<!--             <remote>${service.fullyQualifiedName}</remote> -->
             <local-home>${service.fullyQualifiedName}LocalHome</local-home>
             <local>${service.fullyQualifiedName}Local</local>
 #end
@@ -81,7 +84,7 @@
                 <home>${serviceRef.fullyQualifiedName}Home</home>
                 <local-home>${serviceRef.fullyQualifiedName}LocalHome</local-home>
                 <local>${service.fullyQualifiedName}Local</local>
-                <remote>$service.fullyQualifiedName</remote>
+<!--                <remote>$service.fullyQualifiedName</remote> -->
                 <ejb-link>$serviceRef.name</ejb-link>
             </$ejbRefTag>
 
@@ -97,7 +100,7 @@
             <home>${customTypesPackage}.UtilServiceHandlerHome</home>
             <local-home>${customTypesPackage}.UtilServiceHandlerLocalHome</local-home>
             <local>${customTypesPackage}.UtilServiceHandlerLocal</local>
-            <remote>${customTypesPackage}.UtilServiceHandler</remote>
+<! --           <remote>${customTypesPackage}.UtilServiceHandler</remote> -->
             <ejb-class>${customTypesPackage}.UtilServiceHandlerBeanImpl</ejb-class>
             <session-type>Stateless</session-type>
             <transaction-type>Container</transaction-type>
@@ -137,6 +140,7 @@
 #set($var = $operations.addAll($generalization.operations))
 #end
 #foreach ($operation in $operations)
+<!--
         <method-permission>
             <description><![CDATA[$operation.signature security constraint]]></description>
 ##if (!$ejbSecurityEnabled || $operation.roles.empty)
@@ -170,7 +174,9 @@
 #end
             </method>
         </method-permission>
+-->           
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+<!--
         <method-permission>
             <description><![CDATA[$operation.signature security constraint]]></description>
             <unchecked/>
@@ -199,12 +205,13 @@
 #end
             </method>
         </method-permission>
+-->           
 #end
 
 #end
 #foreach ($dependencia in $service.sourceDependencies)
 #if($dependencia.targetElement.FullyQualifiedName.indexOf(".${modelPackageName}.") > 0)
-
+<!--
 <method-permission>
             <description><![CDATA[]]></description>
             <unchecked/>
@@ -223,6 +230,7 @@
                 </method-params>
             </method>
         </method-permission>
+-->
 
 #if($ejbSecurityEnabled)
 #renderManipula("delete" $service $dependencia)
@@ -296,4 +304,4 @@
 #end
     </assembly-descriptor>
 </ejb-jar>
-
+#end

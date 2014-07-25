@@ -222,6 +222,9 @@ $literal.getDocumentation("     * ")
      */
     public boolean equals(Object object)
     {
+    	if (object == null) 
+    		return false;
+    
 #if ($enumeration.literalType.primitive)
         return (this == object)
             || (object instanceof $enumeration.name

@@ -85,7 +85,8 @@ public final class $manageable.formBeanClassName
 #if ($member.type.dateType)
     private static final java.text.DateFormat ${member.name}Formatter = new java.text.SimpleDateFormat("$member.dateFormat");
 #set ($lenient = !$member.strictDateFormat)
-    static { ${member.name}Formatter.setLenient($lenient); }
+## COMENTADO    static { ${member.name}Formatter.setLenient($lenient); }
+    static { ${member.name}Formatter.setLenient(false); }
 
     $member.visibility java.lang.String ${member.getterName}AsString()
     {
