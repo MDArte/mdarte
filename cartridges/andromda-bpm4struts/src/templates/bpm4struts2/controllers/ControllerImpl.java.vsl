@@ -93,11 +93,14 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #foreach($page in $controller.useCase.getPages())
 #foreach($parameter in $page.allUniqueActionParameters)
 #if($parameter.autocomplete)
-#set($pageName="")
-#foreach($palavra in $page.name.split(" "))
-#set($pageName = $palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $parameter.name) 
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
 #end
-	public final String[] ${parameter.name}${pageName}AutoComplete(java.lang.String query,org.andromda.presentation.bpm4struts.ViewContainer container) throws Exception {
+
+	public final String[] ${pageName}AutoComplete(String query, ViewContainer container) throws Exception {
 		return null;
 	}
 #end
