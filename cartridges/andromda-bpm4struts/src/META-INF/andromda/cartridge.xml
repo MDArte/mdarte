@@ -353,7 +353,7 @@
             </modelElement>
         </modelElements>
     </template>
-  
+
     <template
         path="templates/bpm4struts/forms/ActionFormInterface.java.vsl"
         outputPattern="$generatedFile"
@@ -1355,7 +1355,7 @@
         path="templates/bpm4struts/controllers/controleAcesso/LoginControllerImpl.java.vsl"
         outputPattern="$generatedFile"
         outlet="controleAcessoImplJava"
-        overwrite="false"/>  
+        overwrite="false"/>
         
     <template
         path="templates/bpm4struts/pages/controleAcesso/entrar-login.css.vsl"

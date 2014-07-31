@@ -16,7 +16,7 @@
     }
 #end
 #end
-
+##
 #macro(processVOFieldsInterface $vo)
 #foreach ($field in $vo.type.attributes)
 	
@@ -26,7 +26,7 @@
 
 #end
 #end
-
+##
 #macro(processListsClasses)
     public final static class LabelValue
     {
@@ -136,7 +136,7 @@
     	}
     }
 #end
-
+##
 #macro(processListsInterface $field $oldStruts)
 #set ($hash = "#")
 #set ($listType = "java.lang.Object[]")
@@ -515,30 +515,30 @@
     }
 
     public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
+		set${backingListMethod}(items, valueProperty, labelProperty);
+		MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+		for(int i = 0; i < this.${labelListName}.length; i++){
+			Object label = this.${labelListName}[i];
+			if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+		    		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+		}
     }	    
     
     public void set${backingListMethod}Internationalized(javax.servlet.http.HttpServletRequest request, java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty, java.lang.String labelHintProperty){
-	set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
-	MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-	java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
-	for(int i = 0; i < this.${labelListName}.length; i++){
-		Object label = this.${labelListName}[i];
-		if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
-        		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
-	}
-	for(int i = 0; i < this.${labelListName}Hints.length; i++){
-		Object label = this.${labelListName}Hints[i];
-		if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
-        		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
-	}
+		set${backingListMethod}(items, valueProperty, labelProperty, labelHintProperty);
+		MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+		for(int i = 0; i < this.${labelListName}.length; i++){
+			Object label = this.${labelListName}[i];
+			if(messageResources.isPresent(locale, this.${labelListName}[i].toString()))
+		    		this.${labelListName}[i] = messageResources.getMessage(locale, this.${labelListName}[i].toString());
+		}
+		for(int i = 0; i < this.${labelListName}Hints.length; i++){
+			Object label = this.${labelListName}Hints[i];
+			if(messageResources.isPresent(locale, this.${labelListName}Hints[i].toString()))
+		    		this.${labelListName}Hints[i] = messageResources.getMessage(locale, this.${labelListName}Hints[i].toString());
+		}
     }	    
     
     public void set${backingListMethod}(java.util.Collection items, java.lang.String valueProperty, java.lang.String labelProperty)
@@ -610,7 +610,7 @@
         }
     }
 #end
-
+##
 #macro(processLists2 $field)
 #set ($listType = "java.lang.Object[]")
 #set ($backingListName = $field.backingListName)
@@ -905,4 +905,3 @@
     }
 
 #end
-

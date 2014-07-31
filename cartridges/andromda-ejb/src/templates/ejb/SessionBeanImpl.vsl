@@ -52,6 +52,7 @@ public class ${service.name}BeanImpl
 #renderParametersPaginacao($operation $listaArgumentos true)
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
+#set ($listaArgumentos = '${listaArgumentos}, java.lang.Integer linhas, java.lang.Integer paginas')
 #end
 
 ## Fim

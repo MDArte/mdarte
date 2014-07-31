@@ -11,6 +11,16 @@ package $service.packageName;
 #foreach ($serviceRef in $service.serviceReferences)
 import ${serviceRef.targetElement.fullyQualifiedName}Home;
 #end
+#set ($colOperation = false)
+#foreach ($operation in $service.operations)
+#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#set ($colOperation = true)
+#end
+#end
+#if ($colOperation == true)
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${util}.Constantes;
+#end
 
 /**
 $service.getDocumentation(" * ")
@@ -100,12 +110,15 @@ $operation.getDocumentation("	 * ")
 #set($exception = "throws $operation.exceptionList")
 #end
 	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception;
-	
-	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
 
 	/**
 $operation.getDocumentation("	 * ")
 	 */
+	
+	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
+		return ${operation.name}(#if(${operation.argumentNames} && !${operation.argumentNames.isEmpty()})$operation.argumentNames, #end paginacao, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+	}
+	
 	$operation.visibility  $return ${operation.name} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception {
 #if($ejbSecurityEnabled && !${service.openAccess})
 #renderSecurityBodyPagination($operation)

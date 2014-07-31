@@ -829,7 +829,7 @@ $(document).ready(function(){
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','' ); });
 #end 
 #else 
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}', ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}' ); });
 #end  
 #end
 #if ($_action.resettable)

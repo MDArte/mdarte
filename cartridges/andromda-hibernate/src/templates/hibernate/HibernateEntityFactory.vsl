@@ -14,16 +14,10 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.Criteria;
 import org.hibernate.CallbackException;
 import org.hibernate.CacheMode;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 #set ($modelPackage = ".${modelPackageName}")
@@ -31,6 +25,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 #if ($stringUtils.isNotBlank($entity.packageName))
 import ${stringUtils.replace($entity.packageName,".${modelPackageName}",".${transferPackageName}")}.${entity.name}TOImpl;
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
@@ -38,6 +33,7 @@ import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 import br.ufrj.coppetec.ValueObject;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.to.AbstractTO;
+import ${customTypesPackage}.${util}.Constantes;
 
 #if ($entity.auditoria)
 import ${customTypesPackage}.${modelPackageName}.AuditoriaEntity;
@@ -270,7 +266,7 @@ public abstract class ${entity.name}DAO
 	 */
 ## (MDArte) Adicao do parametro de paginacao e adicao de codigo para retorno de subconjunto na consulta.
 	public List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException { 
-		return list(paginacao,propriedade,desc,$maxRows,$maxPages);
+		return list(paginacao,propriedade,desc,Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 	}
 	
 ## Fim
@@ -297,9 +293,9 @@ public abstract class ${entity.name}DAO
 			
 			if (paginacao != null){
 				int extra = 0;
-				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				qry.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				qry.setMaxResults(linhas*paginas);
+				qry.setMaxResults(linhas*paginas + 1);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
@@ -327,12 +323,11 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(h);
 		} 
 	}	
-		
-	
+
 	protected abstract Object handleFilter (DataObject vo) throws DAOException;
 	
 	public List<AbstractEntity> defaultFilter(AbstractTO to, Integer paginacao) throws DAOException {
-		return defaultFilter(to,paginacao,$maxRows,$maxPages);
+		return defaultFilter(to,paginacao,Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 		
 	}
 	
@@ -360,10 +355,9 @@ public abstract class ${entity.name}DAO
             		org.hibernate.Query res = (org.hibernate.Query)criterios;
             		if (paginacao != null){
 						int extra = 0;
-						//if (paginacao % paginas == 0 && paginacao != 0)  
-							//extra = 1;
+						if (paginacao % paginas == 0 && paginacao != 0) extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -374,9 +368,9 @@ public abstract class ${entity.name}DAO
         			org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
         			if (paginacao != null){
 						int extra = 0;
-						//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -392,7 +386,7 @@ public abstract class ${entity.name}DAO
 	
 	
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
-		return filter(vo,paginacao,$maxRows,$maxPages );
+		return filter(vo,paginacao,Constantes.TABLE_LINES, Constantes.TABLE_PAGES );
 	}
 	
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException { 
@@ -403,10 +397,9 @@ public abstract class ${entity.name}DAO
             		org.hibernate.Query res = (org.hibernate.Query)obj;
             		if (paginacao != null){
 						int extra = 0;
-						//if (paginacao % paginas == 0 && paginacao != 0)  
-						//	extra = 1;
+						if (paginacao % paginas == 0 && paginacao != 0) extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         			res.setCacheable(true);
@@ -417,9 +410,9 @@ public abstract class ${entity.name}DAO
         			org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
         			if (paginacao != null){
 						int extra = 0;
-						//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas);
+						res.setMaxResults(linhas*paginas + 1);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
         		res.setCacheable(true);
@@ -490,7 +483,7 @@ public abstract class ${entity.name}DAO
 			entidade = new ${entity.entityImplementationName}();
 		else
 			entidade = (${entity.entityImplementationName}) listaRes.get(0);
-			
+
 ## Atribui atributos da entidade
 #macro( macroImportaAtributos $entrada )
 #foreach ( $attribute in $entrada.attributes )
@@ -675,7 +668,7 @@ public abstract class ${entity.name}DAO
 				} catch (Exception e) { 
 					e.printStackTrace(); 
 				}
-#else				
+#else
 				Element assAtt$association_attribute.name = ass${target.name}.addElement("$association_attribute.name");
 				assAtt${association_attribute.name}.addText(assEntity${target.name}.${association_attribute.getterName}().toString());
 #end			
@@ -768,9 +761,9 @@ $target.getDocumentation("     * ")
 #if ($target.many)
 			if (paginacao != null){
 				int extra = 0;
-				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				qry.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				qry.setMaxResults(linhas*paginas);
+				qry.setMaxResults(linhas*paginas + 1);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			qry.setCacheable(true);
@@ -797,7 +790,7 @@ $target.getDocumentation("     * ")
 
 #if($target.many)
 	public static $target.getterSetterTypeName ${target.getterName}By${entity.name}(long id, Integer paginacao) throws DAOException {
-		return ${target.getterName}By${entity.name}(id, paginacao, ${maxRows}, ${maxPages}); 
+		return ${target.getterName}By${entity.name}(id, paginacao, Constantes.TABLE_LINES, Constantes.TABLE_PAGES); 
 	} 
 #end
 #end
@@ -816,7 +809,7 @@ $target.getDocumentation("     * ")
 ## transparente para implementador, tirando-o a responsabilidade de retornar um subconjunto de uma consulta    
 #if($returnType.collectionType)
 #set($return = "Object")
-#set($parameters="${parameters}, Integer paginacao, Integer linhas")
+#set($parameters="${parameters}, Integer paginacao, Integer linhas, Integer paginas")
 #else
 #set($return = $returnType.fullyQualifiedName)
 #end
@@ -865,38 +858,38 @@ $operation.getDocumentation("     * ")
 #if ($operation.returnTypePresent && !$operation.returnType.collectionType)
 			return handle${stringUtils.capitalize($operation.name)}($parameters);
 #elseif($operation.returnTypePresent && $operation.returnType.collectionType)
-            Object obj = handle${stringUtils.capitalize($operation.name)}($parameters,linhas,paginas);
-            
-            if(obj instanceof org.hibernate.Query){
-            	org.hibernate.Query res = (org.hibernate.Query)obj;
-            	if (paginacao != null){
-					int extra = 0;
-					//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
-					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-					res.setMaxResults(linhas*paginas);
-				}
+            Object obj = handle${stringUtils.capitalize($operation.name)}($parameters, paginacao, linhas, paginas);
+
+			if(obj instanceof org.hibernate.Query){
+                org.hibernate.Query res = (org.hibernate.Query)obj;
+                if (paginacao != null){
+    				int extra = 0;
+    				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+    				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+    				res.setMaxResults(linhas*paginas + 1);
+    			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
 #end		
 				return res.list();
         	}
-         	else if(obj instanceof org.hibernate.Criteria){
-            	org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
-            	if (paginacao != null){
-					int extra = 0;
-					//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
-					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-					res.setMaxResults(linhas*paginas);
-				}
+			else if(obj instanceof org.hibernate.Criteria){
+                org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+                if (paginacao != null){
+    				int extra = 0;
+    				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+    				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+    				res.setMaxResults(linhas*paginas + 1);
+    			}
 
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
 #end		
 				return res.list();
-	    	}
-            else
-            	return null;
-            	
+			}
+			else
+				return null;
+
 #else
             handle${stringUtils.capitalize($operation.name)}($parameters);
             session.flush();
@@ -932,9 +925,9 @@ $operation.getDocumentation("     * ")
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($argumentList) throws DAOException {
 #end
 #if ($stringUtils.isBlank($parameterList))
-		return this.${operation.name}(paginacao,${maxRows},${maxPages});
+		return this.${operation.name}(paginacao, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #else
-		return this.${operation.name}(${parameterList},paginacao,${maxRows},${maxPages});
+		return this.${operation.name}(${parameterList},paginacao,Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
 #end
     }
 
@@ -989,9 +982,9 @@ $finder.getDocumentation("     * ")
 #else
 			if (paginacao != null){
 				int extra = 0;
-				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
 				query.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-				query.setMaxResults(linhas*paginas);
+				query.setMaxResults(linhas*paginas+ 1);
 			}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 			query.setCacheable(true);
@@ -1000,13 +993,13 @@ $finder.getDocumentation("     * ")
 #end
 		} catch (HibernateException h) {
 			throw new DAOException(h);
-		} 
+		}
     }
 
 $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumentList)
         throws  DAOException
     {
-    	return this.${finder.name}(${finder.arguments},${maxRows},${maxPages});
+    	return this.${finder.name}(${finder.arguments},Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
     }
 
 #end##foreach operation
@@ -1116,5 +1109,6 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 #else
 	public void logEvent(String msg , AbstractEntity entity) throws CallbackException {
 	}
+
 #end
 }

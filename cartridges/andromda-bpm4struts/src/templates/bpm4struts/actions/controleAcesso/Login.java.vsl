@@ -210,7 +210,7 @@ public abstract class Login extends Action
 
         // we take the last action in case we have an invalid return value from the controller
         return mapping.findForward("troca.de.senha.obrigatoria");
-    }   
+    }
 
     /**
      * 
