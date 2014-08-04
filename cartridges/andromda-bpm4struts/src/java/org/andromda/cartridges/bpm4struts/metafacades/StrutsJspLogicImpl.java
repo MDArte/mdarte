@@ -10,13 +10,13 @@ import java.util.TreeMap;
 
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsGlobals;
 import org.andromda.cartridges.bpm4struts.Bpm4StrutsUtils;
+import org.andromda.utils.StringUtilsHelper;
 import org.andromda.metafacades.uml.ActivityGraphFacade;
 import org.andromda.metafacades.uml.CoppetecPackageFacade;
 import org.andromda.metafacades.uml.StateMachineFacade;
 import org.andromda.metafacades.uml.StateVertexFacade;
 import org.andromda.metafacades.uml.TransitionFacade;
 import org.andromda.metafacades.uml.UseCaseFacade;
-import org.andromda.utils.StringUtilsHelper;
 import org.apache.commons.lang.StringUtils;
 
 

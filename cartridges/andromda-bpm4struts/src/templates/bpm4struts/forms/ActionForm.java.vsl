@@ -127,7 +127,8 @@ public class ${formBeanClassName}
 #if ($field.date)
 #set ($dateFormatter = "${field.name}DateFormatter")
 #set ($lenient = !$field.strictDateFormat)
-        ${dateFormatter}.setLenient($lenient);
+## COMENTADO        ${dateFormatter}.setLenient($lenient);
+        ${dateFormatter}.setLenient(false);
 #end
 #end
     }
@@ -174,7 +175,14 @@ public class ${formBeanClassName}
 #if ($field.type.collectionType)
     public void ${field.setterName}($fieldType $fieldName)
     {
+#if ($fieldType == "java.lang.String")
+    	if (${fieldName} != null)
+    		this.$fieldName = ${fieldName}.trim();
+    	else
+    		this.$fieldName = null;
+#else    
         this.$fieldName = $fieldName;
+#end   
     }
 
     /**

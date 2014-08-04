@@ -290,12 +290,14 @@ public class EntityMetafacadeUtils
      */
     public static String constructSqlTypeName(
         final String typeName,
-        final String columnLength)
+        final String columnLength, 
+        final String columnDecimalDigits)
     {
         String value = typeName;
         if (StringUtils.isNotEmpty(typeName))
         {
             char beginChar = '(';
+            char commaChar = ',';
             char endChar = ')';
             int beginIndex = value.indexOf(beginChar);
             int endIndex = value.indexOf(endChar);
@@ -304,10 +306,18 @@ public class EntityMetafacadeUtils
                 String replacement = value.substring(
                         beginIndex,
                         endIndex) + endChar;
-                value = StringUtils.replace(
-                        value,
-                        replacement,
-                        beginChar + columnLength + endChar);
+                
+                if (StringUtils.isNotEmpty(columnDecimalDigits)) {
+                	value = StringUtils.replace(
+	                        value,
+	                        replacement,
+	                        beginChar + columnLength + commaChar+ columnDecimalDigits + endChar);
+                } else {
+	                value = StringUtils.replace(
+	                        value,
+	                        replacement,
+	                        beginChar + columnLength + endChar);
+                }
             }
             else
             {
@@ -315,5 +325,12 @@ public class EntityMetafacadeUtils
             }
         }
         return value;
+    }
+    
+    public static String constructSqlTypeName(
+            final String typeName,
+            final String columnLength)
+    {
+    	return constructSqlTypeName(typeName, columnLength, null);
     }
 }

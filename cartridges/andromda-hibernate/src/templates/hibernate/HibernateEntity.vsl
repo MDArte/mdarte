@@ -309,7 +309,11 @@ public abstract class ${entity.entityName}Abstract
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
 
+#if($!{attribute.defaultValue} && !$stringUtils.equals('null',${attribute.defaultValue}) && $stringUtils.equals('java.lang.Boolean',$typeName))
+	private $typeName $attribute.name = new $typeName("${attribute.defaultValue}");
+#else
     private $typeName $attribute.name;
+#end
 
     /**
 $attribute.getDocumentation("     * ")
@@ -330,6 +334,15 @@ $attribute.getDocumentation("     * ")
 	this.${attribute.name} = $attribute.name;
     }
 #end
+    
+    /**
+	 * Seta o valor de $attribute.name e retorna o próprio objeto.
+	 * Pattern Fluent Interface.
+	 */
+	$attribute.visibility ${entity.entityName}Abstract with$stringUtils.capitalize($attribute.name)(${typeName} $attribute.name) {
+		this.${attribute.name} = $attribute.name;
+		return this;
+	}
 
 #end
 
@@ -384,15 +397,15 @@ $target.getDocumentation("     * ")
 #set ($rtipo = $rtipo.concat("Abstract"))
 
 #else
-#set($rtipo = $target.getterSetterTypeName)   
-#end	
+#set($rtipo = $target.getterSetterTypeName)
+#end
 
 #set ($tipo = $target.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $tipo.concat("Abstract"))
 
 #else
-#set($tipo = $target.type.fullyQualifiedName)   
+#set($tipo = $target.type.fullyQualifiedName)
 #end
 
     public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception
@@ -427,21 +440,21 @@ $target.getDocumentation("     * ")
     	}
 
         if(${target.name} != null){
-            Hibernate.initialize(${target.name}.${associationEnd.getterName}());
+			Hibernate.initialize(${target.name}.${associationEnd.getterName}());
 
-            if(!${target.name}.${associationEnd.getterName}().contains(this))
-            ${target.name}.${associationEnd.getterName}().add(this);
+			if(!${target.name}.${associationEnd.getterName}().contains(this))
+			${target.name}.${associationEnd.getterName}().add(this);
 		}
 #end
 #else
 #if($target.many)
-	
-    	if(temp != null){
-    		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
-    			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
-    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
-    		}
-    	}
+
+	if(temp != null){
+		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
+			$target.type.fullyQualifiedName ${stringUtils.uncapitalize($target.type.name)}Next = ($target.type.fullyQualifiedName)it.next();
+			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+		}
+	}
 	
     	if(${target.name} != null){
     		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
@@ -530,10 +543,10 @@ $target.getDocumentation("     * ")
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($target.many)
 
-    public $target.getterSetterTypeName ${target.getterName}(Integer paginacao)
+    public $target.getterSetterTypeName ${target.getterName}(Integer paginacao, Integer numElementos)
     {
-		try {
-#set($parameters = "this.getId(), paginacao")
+			try {
+#set($parameters = "this.getId(), paginacao, numElementos")
 			return ${entity.name}DAOImpl.${target.getterName}By${entity.name}($parameters);
         } catch(DAOException daoe) {
 			daoe.printStackTrace();
@@ -710,7 +723,7 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 	super.getWebServiceObj(webServiceData, map);
 #end
 	}else
-	   webServiceData = (${wsdPackage}.${entity.entityName}WS)map.get(${wsdPackage}.${entity.entityName}WS.class.toString() + this.getId().toString());
+	   webServiceData = (${wsdPackage}.${entity.entityName}WS)map.get(${wsdPackage}.${entity.entityName}WS.class.toString() + this.getId().toString());		
 	
 	return webServiceData;	
 }
@@ -879,7 +892,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 	public String getAuditoriaLogin() {
 		return this.auditoriaLogin;
 	}
-	
+
 	public void setAuditoriaLogin(String auditoriaLogin) {
 		this.auditoriaLogin = auditoriaLogin;
 	}
@@ -889,7 +902,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 	public String getAuditoriaOperacao() {
 		return this.auditoriaOperacao;
 	}
-	
+
 	public void setAuditoriaOperacao(String auditoriaOperacao) {
 		this.auditoriaOperacao = auditoriaOperacao;
 	}

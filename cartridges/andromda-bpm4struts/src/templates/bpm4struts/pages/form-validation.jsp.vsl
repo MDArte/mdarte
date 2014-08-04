@@ -5,6 +5,12 @@
 #set ($generatedFile = "form-validation.jsp")
 <%@ page contentType="application/x-javascript" %>
 <%@ include file="/taglib-imports.jspf" %>
+<%
+response.setHeader("Cache-Control","content=public"); //HTTP 1.1
+response.setHeader("Cache-Control","max-age=2592000"); //HTTP 1.1
+response.setDateHeader ("Expires", 2592000); //prevents caching at the proxy server
+%>
+
 
 #if ($xhtml == "true")
 <html:xhtml/>

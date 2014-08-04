@@ -67,7 +67,7 @@
     <mapping>
         <from>datatype::Decimal</from>
         <from>datatype::decimal</from>
-        <to>NUMERIC</to>
+        <to>NUMERIC(15,2)</to>
     </mapping>
     <mapping>
         <from>datatype::Blob</from>

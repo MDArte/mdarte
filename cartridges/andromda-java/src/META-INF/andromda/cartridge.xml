@@ -50,21 +50,21 @@
         </modelElements>
     </template>
     
-    <!-- 
+     
     <template
         path="templates/java/AbstractValueObject.vsl"
         outputPattern="$generatedFile"
         outlet="value-objects"
         overwrite="true">
-    </template> -->
+    </template> 
     
-    <!-- 
+     
     <template
         path="templates/java/DataObject.vsl"
         outputPattern="$generatedFile"
         outlet="value-objects"
         overwrite="true">
-    </template> -->  
+    </template>   
     
     <template
         path="templates/java/ProjectLogger.vsl"

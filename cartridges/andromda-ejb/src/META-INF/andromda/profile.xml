@@ -53,6 +53,10 @@
                 <value>WebSrv</value>
                 <appliedOnElement>class</appliedOnElement>
             </element>
+            <element name="MODULO_WEB_SRV">
+                <value>ModuloWebService</value>
+                <appliedOnElement>package</appliedOnElement>
+            </element>            
             <element name="WEB_SERVICE_CLIENT">
                 <value>WebServiceClient</value>
                 <appliedOnElement>class</appliedOnElement>
@@ -192,6 +196,13 @@
                     Represents the column length for entity persistence.
                 </documentation>
                 <value>@andromda.persistence.column.length</value>
+                <appliedOnElement>Entity attribute</appliedOnElement>
+            </element>
+            <element name="COLUMN_DECIMAL_DIGITS">
+                <documentation>
+                    Represents the column decimal digits for entity persistence.
+                </documentation>
+                <value>@andromda.persistence.column.decimal.digits</value>
                 <appliedOnElement>Entity attribute</appliedOnElement>
             </element>
         </elementGroup>

@@ -31,6 +31,7 @@ import java.util.Collection;
 import net.oauth.OAuth;
 #end
 
+import ${customTypesPackage}.ServiceLocator;
 import accessControl.ControleAcesso;
 import accessControl.LoginCallbackHandler;
 import accessControl.PrincipalImpl;
@@ -42,15 +43,16 @@ import accessControl.exception.ControleAcessoException;
 public abstract class LoginController implements java.io.Serializable
 {
 	private static final long serialVersionUID = 1L;
-	public static final String ATTR_LOGIN = "Usr",
-	 ATTR_SENHA = "Pwd";
+	public static final String ATTR_LOGIN = "Usr", ATTR_CAPTCHA = "captcha", ATTR_SENHA = "Pwd";
 
     public final boolean verificarLogin(ActionMapping mapping, VerificarLoginForm form, HttpServletRequest request, HttpServletResponse response, HttpServlet servlet) throws Exception
     {
     	EntrarLoginValidarFormImpl formLogin = null;
     	String login = null;
     	String senha = null;
+    	String captcha = null;
     	try{
+    		captcha = request.getParameter(ATTR_CAPTCHA);    	
     		formLogin = (EntrarLoginValidarFormImpl) form;
     		login = formLogin.getLogin();
     		senha = formLogin.getSenha();
@@ -61,6 +63,17 @@ public abstract class LoginController implements java.io.Serializable
     	LoginContext loginCtx = null;
     	ControleAcesso controleAcesso = new ControleAcessoImpl();
 		try{
+			if (request.getSession().getAttribute("PRECISA_CAPTCHA") != null) {
+				CaptchaUtil captchaUtil = new CaptchaUtil();
+
+				if (captchaUtil.isNotHuman(request, captcha)) {
+					saveErrorMessage(request, "erro.captcha.invalido");
+					throw new ControleAcessoException("erro.captcha.invalido");
+				}
+				
+				request.getSession().setAttribute("PRECISA_CAPTCHA", null);
+			}
+			
 			if (controleAcesso.usuarioBloqueado(login)) {
 				saveErrorMessage(request, "usuario.bloqueado");
 				return false;
@@ -76,7 +89,12 @@ public abstract class LoginController implements java.io.Serializable
 			String nome = principal.getOperador().getNomeIdentificadorMenu();
 			request.getSession().setAttribute("nomeIdentificadorMenu", nome);
 			posLogin(principal.getOperador(), request);
-#if($enableCaptcha=="true")
+			
+			//deveria estar no posLogin
+			if (!login.equals("guest"))
+				ServiceLocator.instance().getUtilitarioHandlerBI().invalidateMembroParticipanteCA(login);
+			
+			#if($enableCaptcha=="true")
 			String captchaExpected =(String)request.getSession().getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
 			String captchaReceived = form.getKaptcha();
 			if(captchaReceived!= null && captchaReceived.equals(captchaExpected)){
@@ -90,6 +108,8 @@ public abstract class LoginController implements java.io.Serializable
 			return true;
 #end
 		}catch (LoginException le){
+			request.getSession().setAttribute("PRECISA_CAPTCHA", true);
+			
 			if(le.getMessage().equals("Password Incorrect/Password Required")){
 				saveErrorMessage(request, "senha.incorreta");
 #if($stringUtils.isNotEmpty($maxTentativasLogin))

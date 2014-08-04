@@ -27,13 +27,10 @@ import org.andromda.utils.StringUtilsHelper;
  *
  * @see org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsParameter
  */
-public class CoppetecStrutsParameterLogicImpl
-extends CoppetecStrutsParameterLogic
-{
+public class CoppetecStrutsParameterLogicImpl extends CoppetecStrutsParameterLogic {
 
-	public CoppetecStrutsParameterLogicImpl (Object metaObject, String context)
-	{
-		super (metaObject, context);
+	public CoppetecStrutsParameterLogicImpl(Object metaObject, String context) {
+		super(metaObject, context);
 	}
 
 	/**
@@ -43,7 +40,7 @@ extends CoppetecStrutsParameterLogic
 	{
 		return "doubleselect".equals(this.getWidgetType());
 	}
-	
+
 	protected boolean handleIsEnumEmptyValue()
 	{
 		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_ENUM_EMPTY_VALUE);
@@ -75,8 +72,7 @@ extends CoppetecStrutsParameterLogic
 		buffer.append(isRequired() ? "Este campo é obrigatório." : "Este campo é opcional.");
 		buffer.append(crlf);
 
-		if ("password".equals(getWidgetType()))
-		{
+		if ("password".equals(getWidgetType())) {
 			buffer.append("Este é um campo de senha, ele não exibirá os dados digitados, ")
 			.append("cada caractere será mascarado usando um asterisco.");
 			buffer.append(crlf);
@@ -276,7 +272,7 @@ extends CoppetecStrutsParameterLogic
 			else if ("money".equalsIgnoreCase(fieldType))
 			{
 				widgetType = "money";
-			}            
+			}
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_SELECT.equalsIgnoreCase(fieldType))
 			{
 				widgetType = "select";
@@ -317,18 +313,18 @@ extends CoppetecStrutsParameterLogic
 			{
 				widgetType = "multibox";
 				/*
-                if (getMultiboxPropertyName() != null)
-                {
-                    widgetType = "multibox";
-                }
+				if (getMultiboxPropertyName() != null)
+				{
+				    widgetType = "multibox";
+				}
 				 */
 			}
 			else if (Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_LINK.equalsIgnoreCase(fieldType))
 			{
 				final StrutsAction action = getStrutsAction();
 				/* if (action != null)
-                {
-                    if (action.isTableLink())*/
+				{
+				    if (action.isTableLink())*/
 
 				widgetType = "link";
 
@@ -354,11 +350,9 @@ extends CoppetecStrutsParameterLogic
 	{
 		return true;
 	}
-	
-	
-	protected boolean handleIsCustom() {
 
-		  return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM.equals(this.getWidgetType());
+	protected boolean handleIsCustom() {
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM.equals(this.getWidgetType());
 	}
 
 	protected boolean handleIsSelectable()
@@ -383,7 +377,6 @@ extends CoppetecStrutsParameterLogic
 		return isReport;
 	}
 
-
 	protected java.lang.String handleGetReportName()
 	{
 		return this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_REPORT_NAME).toString();
@@ -396,7 +389,7 @@ extends CoppetecStrutsParameterLogic
 
 		return reportType;
 	}
-	
+
 	protected java.util.Collection handleGetValidatorsStruts2()
     {
     	final Map vars = new HashMap();
@@ -464,14 +457,13 @@ extends CoppetecStrutsParameterLogic
 					DependencyFacade dependency = (DependencyFacade) it.next();
 					if(dependency.getTargetElement().hasStereotype(Bpm4StrutsProfile.STEREOTYPE_VALUE_OBJECT)){                		
 						valueObject = dependency.getTargetElement();
-					}                	
+					}
 				}
 			}
-		}        
+		}
 		return valueObject;
 	}
-	
-    
+
     /**
      * @return <code>true</code> if this field is to be formatted as an digits only field, <code>false</code> otherwise
      */
@@ -496,7 +488,8 @@ extends CoppetecStrutsParameterLogic
         return "daterange".equalsIgnoreCase(format);
     }
 
-	protected boolean handleIsMoney() {
+	protected boolean handleIsMoney()
+	{
 		return "money".equals(this.getWidgetType());
 	}
 
@@ -570,30 +563,31 @@ extends CoppetecStrutsParameterLogic
 	}
 
 	protected boolean handleIsOldStruts()
-    {
-		
+	{
+
 		CoppetecStrutsAction actionObject = null;
 
-        final EventFacade event = getEvent();
-        if (event != null)
-        {
-            final TransitionFacade transition = event.getTransition();
-            if (transition instanceof CoppetecStrutsAction)
-            {
-                actionObject = (CoppetecStrutsAction)transition;
-            }else if(transition instanceof CoppetecStrutsForward){
-            	actionObject = (CoppetecStrutsAction)((CoppetecStrutsForward)transition).getActions().get(0);
-            }
-        }
-        if(actionObject!=null){
-        	return actionObject.isActionOldStruts();
-        }
-        return true;
-    }
+		final EventFacade event = getEvent();
+		if (event != null)
+		{
+			final TransitionFacade transition = event.getTransition();
+			if (transition instanceof CoppetecStrutsAction)
+			{
+				actionObject = (CoppetecStrutsAction) transition;
+			}else if (transition instanceof CoppetecStrutsForward){
+				actionObject = (CoppetecStrutsAction) ((CoppetecStrutsForward) transition).getActions().get(0);
+			}
+		}
+		if (actionObject != null){
+			return actionObject.isActionOldStruts();
+		}
+		return true;
+	}
+
 	protected boolean handleIsOnlineHelp() {
 		if (getWidgetType().equals(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_HIDDEN))
 			return false;
-		
+
 		final String value = StringUtilsHelper.toResourceMessage(this.getDocumentation("", 64, false));
 		return value != null;
 	}
@@ -601,20 +595,20 @@ extends CoppetecStrutsParameterLogic
 	protected boolean handleIsMoneyDolar() {
 		Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_MONEY);
 		final String moneyType = value == null ? null : value.toString();
-		
+
 		if (moneyType != null && moneyType.equals("dolar"))
 			return true;
-		
+
 		return false;
 	}
 
 	protected boolean handleIsMoneyReal() {
 		Object value = findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_MONEY);
 		final String moneyType = value == null ? null : value.toString();
-		
+
 		if (moneyType == null || moneyType.equals("real"))
 			return true;
-		
+
 		return false;
 	}
 	
@@ -632,17 +626,18 @@ extends CoppetecStrutsParameterLogic
 	protected boolean handleIsEditor(){
 		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_EDITOR.equals(this.getWidgetType());
 	}
+
 	protected String handleGetHintKey() {
-		 return getMessageKey() + ".hint.key";
+		return getMessageKey() + ".hint.key";
 	}
 
 	protected String handleGetHintValue() {
-		
+
 		final StringBuffer buffer = new StringBuffer();
 
 		final String value = StringUtilsHelper.toResourceMessage(this.getDocumentation("", 64, false));
 		buffer.append((value == null) ? "" : value);
-		
+
 		return StringUtilsHelper.toResourceMessage(buffer.toString());
 	}
 }

@@ -103,6 +103,8 @@
 #if ($stringUtils.isNotBlank($hibernateQueryCacheFactory))
         <property name="hibernate.cache.query_cache_factory">$hibernateQueryCacheFactory</property>
 #end
+		<property name="javax.persistence.validation.mode">none</property>
+		
         <!-- mapping files -->
 
 #set($entities = $hibernateUtils.getEntity())

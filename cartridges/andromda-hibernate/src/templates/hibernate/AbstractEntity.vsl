@@ -27,6 +27,7 @@ public abstract class AbstractEntity implements br.ufrj.coppetec.Entity{
 			AbstractEntity entity = (AbstractEntity)clazz.newInstance();
 			return entity.getEntityFromTO(to, map);
 		}catch (Exception e) {
+			e.printStackTrace();
 			throw new br.ufrj.coppetec.to.TOException("Erro ao transformar de entidade para um TO");
 		}
 	}	

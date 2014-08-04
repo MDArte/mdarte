@@ -35,12 +35,12 @@ public class ActionServlet
         throws javax.servlet.ServletException
     {
         super.init(config);
-		
+
 		String aplicacaoPermiteUsoBackBrowser = ports.getProperty("aplicacao.permite.uso.back.browser");
 		
 		if (aplicacaoPermiteUsoBackBrowser == null || aplicacaoPermiteUsoBackBrowser.equals("false"))
 			this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.FALSE);
-        else
+		else
 			this.getServletContext().setAttribute("aplicacaoPermiteUsoBackBrowser", Boolean.TRUE);
 
 #if($stringUtils.isNotBlank($securityRealm))

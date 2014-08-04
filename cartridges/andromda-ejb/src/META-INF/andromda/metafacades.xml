@@ -44,6 +44,12 @@
         </mapping>
     </metafacade>
 
+    <metafacade class="org.andromda.cartridges.ejb.metafacades.CoppetecEJBPackageLogicImpl">
+        <mapping class="org.omg.uml.modelmanagement.UmlPackage$Impl">
+             <stereotype>MODULO_WEB_SRV</stereotype>
+        </mapping>
+    </metafacade>    
+    
     <metafacade class="org.andromda.cartridges.ejb.metafacades.EJBPrimaryKeyFacadeLogicImpl">
         <mapping class="org.omg.uml.foundation.core.Attribute$Impl">
             <stereotype>IDENTIFIER</stereotype>

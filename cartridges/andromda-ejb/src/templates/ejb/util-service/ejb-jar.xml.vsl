@@ -7,7 +7,7 @@
         <session>
             <ejb-name>UtilServiceHandler</ejb-name>
             <home>${customTypesPackage}.UtilServiceHandlerHome</home>
-			<remote>${customTypesPackage}.UtilServiceHandler</remote>
+<!--			<remote>${customTypesPackage}.UtilServiceHandler</remote>  -->
             <local-home>${customTypesPackage}.UtilServiceHandlerLocalHome</local-home>
             <local>${customTypesPackage}.UtilServiceHandlerLocal</local>
             <ejb-class>${customTypesPackage}.UtilServiceHandlerBeanImpl</ejb-class>

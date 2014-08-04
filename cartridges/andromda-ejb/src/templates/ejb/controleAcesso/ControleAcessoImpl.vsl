@@ -146,7 +146,8 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public boolean trocaSenha(accessControl.Operador operador, String senhaAtual, String novaSenha) throws ControleAcessoException{
-		
+		return false;
+		/*
 		UsuarioDAOImpl usrDAO = new UsuarioDAOImpl();
 		UsuarioImpl usrRetrieved;
 		UsuarioImpl usr = (UsuarioImpl) operador;
@@ -167,7 +168,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 			return false;
 		}
 
-		return true;
+		return true; */
 	}	
 
 	/**
@@ -191,13 +192,14 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 	 */
 	@Override
 	public boolean senhaFraca(String senha) {
+		return false;
 		
 		/* IMPLEMENTACAO SUGERIDA
 		 *
 		 * (a senha deve possuir pelo menos 8 caracteres,
 		 * incluindo numerais, letras maiúsculas,
 		 * letras minúsculas e símbolos)
-		 */
+		 *
 		 
 		if (senha == null) {
 			return true;
@@ -226,6 +228,7 @@ public  class ControleAcessoImpl extends accessControl.ControleAcesso {
 		
 		return !achouNumeral || !achouMaiuscula || !achouMinuscula || !achouSimbolo;
 		
+		*/
 	}
 	
 	/**

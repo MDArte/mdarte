@@ -51,6 +51,14 @@ public class EntityAttributeLogicImpl
     {
         return (String)this.findTaggedValue(UMLProfile.TAGGEDVALUE_PERSISTENCE_COLUMN_LENGTH);
     }
+    
+    /**
+     * @see org.andromda.metafacades.uml.EntityAttribute#getColumnDecimalDigits()
+     */
+    protected String handleGetColumnDecimalDigits()
+    {
+        return (String)this.findTaggedValue(UMLProfile.TAGGEDVALUE_PERSISTENCE_COLUMN_DECIMAL_DIGITS);
+    }    
 
     /**
      * @see org.andromda.metafacades.uml.EntityAttribute#isIdentifier()
@@ -100,9 +108,10 @@ public class EntityAttributeLogicImpl
                 }
                 value = this.getSqlMappings().getTo(typeName);
                 final String columnLength = this.getColumnLength();
+                final String columnDecimalDigits = this.getColumnDecimalDigits();
                 if (StringUtils.isNotEmpty(columnLength))
                 {
-                    value = EntityMetafacadeUtils.constructSqlTypeName(value, columnLength);
+                    value = EntityMetafacadeUtils.constructSqlTypeName(value, columnLength, columnDecimalDigits);
                 }
             }
         }

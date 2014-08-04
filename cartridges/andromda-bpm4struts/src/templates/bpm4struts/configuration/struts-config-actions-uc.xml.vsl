@@ -20,7 +20,7 @@
 	
 #if ($action.useCaseStart == true && $stringUtils.isNotEmpty($useCase.customLink))
 
- 		<action
+		<action
             path="/$useCase.customLink"
             type="$action.actionType"
 #if (!$action.actionFormFields.empty)

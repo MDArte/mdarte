@@ -1,8 +1,8 @@
-#if($struts2 == "false")
 #set ($generatedFile = "error-page.jsp")
 <%@ page session="true" isErrorPage="true" %>
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
+
 #if ($xhtml == "true")
 #*
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -18,6 +18,7 @@
 
 #end
 <html:html lang="true">
+
     <head>
         <title><bean:message key="error.${param.code}.title"/></title>
         <html:base/>
@@ -30,80 +31,72 @@
         <link rel="shortcut icon" href="my-custom-image.ico"></link>
         <link rel="icon" type="image/gif" href="my-custom-image.gif"></link>
 --%>
-        <c:import url="${localLayoutPath}/conf/include-stylesheets.jsp"/>
-        <c:import url="${localLayoutPath}/conf/include-javascripts.jsp"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="${strURL}${contextoPrincipal}/layout/${layout}/default-application.css"></link>
+        <link rel="stylesheet" type="text/css" media="screen" href="${strURL}${contextoPrincipal}/layout/${layout}/default/style-default.css"></link>
     </head>
-    
+
     <body>
-        <div id="wrap">
-            <!-- Begin page content -->
-            <div class="container">
-				<% 
-					java.util.HashMap paramsPrincipal = new java.util.HashMap();
-					paramsPrincipal.put("modulo", "");
-					paramsPrincipal.put("path","");
-					pageContext.setAttribute("paramsPrincipal", paramsPrincipal);
-				%>
-				
-				<html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title">
-					<bean:message key="error.link.text"/>
-				</html:link>
-				
-                <div class="page-header">
-                    <div id="title"><h1><bean:message key="error.${param.code}.title"/></h1></div>
-                </div>
-				
-				<%  Exception e = (Exception)request.getSession().getAttribute(org.apache.struts.Globals.EXCEPTION_KEY); 
-					request.getSession().removeAttribute(org.apache.struts.Globals.EXCEPTION_KEY);
-					if(e != null) {
-						java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-						java.io.PrintStream ps = new java.io.PrintStream(baos);
-						e.printStackTrace(ps);
-						String stackTrace = baos.toString();
-						request.getSession().getServletContext().getContext("/$projectId").setAttribute("stackTrace", stackTrace);
-					}
-				%>
-				
-                <div id="message">
-					<logic:messagesPresent message="true" property="org.andromda.bpm4struts.errormessages">
-						<div class="errors">
-							<html:messages id="error" message="true" property="org.andromda.bpm4struts.errormessages">
-								<div class="error"><p class="lead">${error}</p></div>
-							</html:messages>
-						</div>
-					</logic:messagesPresent>
-					<logic:messagesPresent message="true" property="org.andromda.bpm4struts.warningmessages">
-						<div class="warnings">
-							<html:messages id="warning" message="true" property="org.andromda.bpm4struts.warningmessages">
-								<div class="warning"><p class="lead">${warning}</p></div>
-							</html:messages>
-						</div>
-					</logic:messagesPresent>
-					
-					<% if(e != null) { %>
-                    <p class="lead">
-                        Error : <%=e.toString()%>
-                    </p>
-                </div>
-
-				<p class="lead">
-					Stacktrace:
-					<div class="error">
-						<pre><%=(String)request.getSession().getServletContext().getContext("/$projectId").getAttribute("stackTrace")%></pre>
-					</div>
-                </p>
-				<% } %>
-            </div>
-
-            <div id="push"></div>
+    <div id="messages">
+    <logic:messagesPresent message="true" property="$errorMessagesKey">
+        <div class="errors">
+            <html:messages id="error" message="true" property="$errorMessagesKey">
+                <div class="error">${error}</div>
+            </html:messages>
         </div>
-
-        <div id="footer">
-            <div class="container">
-                <div id="link"><html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
-                <p class="muted credit">&copy; MDArte</a>.</p>
-            </div>
+    </logic:messagesPresent>
+    ## prints warning messages stored by the controllers
+    <logic:messagesPresent message="true" property="$warningMessagesKey">
+        <div class="warnings">
+            <html:messages id="warning" message="true" property="$warningMessagesKey">
+                <div class="warning">${warning}</div>
+            </html:messages>
         </div>
+    </logic:messagesPresent>
+    </div>
+    
+        <div id="error">
+            <div id="title"><bean:message key="error.${param.code}.title"/></div>
+            <div id="message"><bean:message key="error.${param.code}.message"/></div>
+            <div id="link"><html:link page="/$welcomeFileName" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
+#set ($quote = '"')
+#set ($requestScopePrefix = "requestScope[${quote}")
+#set ($requestScopeSuffix = "${quote}]")
+#set ($requestUri = "${requestScopePrefix}javax.servlet.error.request_uri${requestScopeSuffix}")
+#set ($exception = "${requestScopePrefix}javax.servlet.error.exception${requestScopeSuffix}")
+            <c:if test="${param.exception}">
+                <div class="details">
+                    <code>${${exception}}</code>
+                </div>
+            </c:if>
+            <c:if test="${param.resource}">
+                <div class="details">
+                    ${${requestUri}}
+                </div>
+            </c:if>
+        </div>
+        
+<!--        <%Exception e = 
+                    	(Exception)request.getAttribute("javax.servlet.error.exception");
+    			          if(e != null){
+    			          	       java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+    			          	       java.io.PrintStream ps = new java.io.PrintStream(baos);
+    			          	       e.printStackTrace(ps);
+    			          	       String stackTrace = baos.toString();
+    			          	       request.getSession().getServletContext().getContext("${contextoPrincipal}").setAttribute("stackTrace", stackTrace);
+					 		           %> 
+							            <script> 
+    					            function stackTrace(){ 
+    				                   	window.open('${contextoPrincipal}/stackTrace.jsp','StackTrace','width=800,height=600,scrollbars=yes');
+    				            	    }	
+    				        </script>
+    				             <div style="text-align:left;">
+    				<a href="javascript:stackTrace();void(0);"\>
+    				             <bean:message key="error.stack.trace"/></a>
+   			</div> 
+    				-->         
+            
+    			<%}%>
+        
     </body>
+
 </html:html>
-#end

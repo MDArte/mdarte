@@ -37,6 +37,8 @@
 <%@ include file="/layout-configuration.jsp" %>
 
 <script>
+	var isFormSubmetido = false;
+	
 	function setaAcao(nomeAcao, fcValidacao, valida , nomeForm, formato){
 		document.forms[0].action = "";
 		##if(getPath() == "" || getPath() == null)
@@ -51,10 +53,20 @@
 		document.forms[0].name = nomeForm;
 		if($clientValidationDesired && valida){
 			if(eval(fcValidacao + '(document.forms[0])')){
-				document.forms[0].submit();
+				if(isFormSubmetido) {
+					alert('H\u00e1 uma requisi\u00e7\u00e3o sendo processada. Aguarde o seu t\u00e9rmino.');
+				} else {
+					isFormSubmetido = true;
+					document.forms[0].submit();
+				}
 			}
 		}else{
-			document.forms[0].submit();
+			if(isFormSubmetido) {
+				alert('H\u00e1 uma requisi\u00e7\u00e3o sendo processada. Aguarde o seu t\u00e9rmino.');
+			} else {
+				isFormSubmetido = true;
+				document.forms[0].submit();
+			}
 		}
 	}
 	

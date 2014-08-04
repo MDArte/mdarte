@@ -18,7 +18,7 @@ package $entity.packageName;
  */
     
 public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityName}LogRec #else $entity.entityImplementationName #end
-    #if(!$auditoria)extends ${entity.fullyQualifiedEntityName}Abstract #else #if($entity.generalization) extends ${entity.generalization.fullyQualifiedName}LogRec #end #end #if($auditoria) implements ${customTypesPackage}.${modelPackageName}.Auditable#end
+	#if(!$auditoria)extends ${entity.fullyQualifiedEntityName}Abstract #else #if($entity.generalization) extends ${entity.generalization.fullyQualifiedName}LogRec #end #end #if($auditoria) implements ${customTypesPackage}.${modelPackageName}.Auditable#end
 {
     /** 
      * The serial version UID of this class. Needed for serialization. 
@@ -36,7 +36,7 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
        super();
     }
 
-    #renderConstructorImplMethod($entity $entity.entityName $identifiers)
+	#renderConstructorImplMethod($entity $entity.entityName $identifiers)
 #end
 
 #if($auditoria)
@@ -90,7 +90,7 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
-	
+
 	public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList{
 	
 	}
@@ -110,14 +110,14 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 #else
 	protected $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos){
 #end
-	
+
 #if ($operation.returnTypePresent)
 		return $operation.returnType.javaNullString;
 #end
 	}
 
 #end
-#end  
+#end
 #if($auditoria)
 	private int hibernate_version;
 		
@@ -175,7 +175,7 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
     }
 
 	private String auditoriaLogin;
-	
+
 	public String getAuditoriaLogin() {
 		return this.auditoriaLogin;
 	}

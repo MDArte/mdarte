@@ -87,6 +87,11 @@
                     The location to which shared Struts actions are generated.
                 </documentation>
             </property>
+			<property name="web-common">
+                <documentation>
+                    The location to which shared Struts actions are generated.
+                </documentation>
+            </property>
             <property name="shared-actions-impl">
                 <documentation>
                     The location to which shared Struts actions are generated.
@@ -432,7 +437,7 @@
                 </documentation>
             </property>
             <property name="disableValidationForHiddenFormFields">
-                <default>true</default>
+                <default>false</default>
                 <documentation>
                     This property only makes sense when using the
                     <a href="#clientValidation">clientValidation</a> and/or
@@ -686,7 +691,7 @@
                 </documentation>
             </property>            
             <property name="modulo">
-                <default>false</default>
+                <default>true</default>
             </property> 
             <property name="cadastroSessionObjectName">
                 <default>ListaSessionsObject</default>

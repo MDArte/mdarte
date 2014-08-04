@@ -257,15 +257,15 @@ $target.getDocumentation("     * ")
 #else
 #if($target.many)
 	
-    	if(temp != null){
-    		for(java.util.Iterator it = temp.iterator();it.hasNext();){	
-    			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
-    			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
-    		}
-    	}
-    	
-    	if(${target.name} != null){
-    		for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
+		if(temp != null){
+			for(java.util.Iterator it = temp.iterator();it.hasNext();){	
+				$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
+				${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(null);
+			}
+		}
+
+		if(${target.name} != null){
+			for(java.util.Iterator it = ${target.name}.iterator();it.hasNext();){
     			$tipo ${stringUtils.uncapitalize($target.type.name)}Next = ($tipo)it.next();
     			${stringUtils.uncapitalize($target.type.name)}Next.${associationEnd.setterName}(this);
         	}
@@ -332,7 +332,7 @@ $target.getDocumentation("     * ")
     	this.${target.setterName}(${target.name});
     }
 #end
-## fim    
+## fim
 
 #end
 

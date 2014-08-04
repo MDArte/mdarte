@@ -6,9 +6,24 @@
 #if ($entity.packageName)
 package $entity.packageName;
 #end
+#macro (copiaAtributosGenerizacao $entity)
+#if($entity.generalization)
+#copiaAtributosGenerizacao($entity.generalization)
+#end
+##	
+#foreach($attributeGen in ${entity.generalization.attributes})
+##
+#if(!($attributeGen.name.equals("id")))
+			record.${attributeGen.setterName}(ent.${attributeGen.getterName}());
+#end
+##	
+#end
+#end
+
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
+import java.lang.reflect.Field;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.Criteria;
@@ -30,6 +45,12 @@ import ${stringUtils.replace($entity.packageName,".${modelPackageName}",".${tran
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import ${customTypesPackage}.${modelPackageName}.PagingVO;
+#if(!$entity.generalization)
+import br.gov.mp.siconv.cd.HibernateGenericDAO;
+#else
+import javax.security.auth.Subject;
+#end
 import br.ufrj.coppetec.ValueObject;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.to.AbstractTO;
@@ -148,7 +169,7 @@ public abstract class ${entity.name}DAO
 			
 #end
 			Session session = currentSession();
-			session.setCacheMode(CacheMode.GET);
+			session.setCacheMode(CacheMode.IGNORE);
 			session.save(obj);
 			session.flush();
 			lista.add(obj);
@@ -157,7 +178,7 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(e);
 		} 
 	}
-
+	
 	public List<AbstractEntity> insertOrUpdate(AbstractEntity obj) throws DAOException {
 
 		List<AbstractEntity> lista = new ArrayList<AbstractEntity>();
@@ -249,7 +270,10 @@ public abstract class ${entity.name}DAO
 	public List<AbstractEntity> delete(AbstractEntity obj) throws DAOException {
 		try{
 			Session session = currentSession();
-			removeRelations(obj);
+			
+			if (AbstractDAO.evictCascadeThread.get() == null)
+				removeRelations(obj);
+				
 			session.delete(obj);
 			session.flush();
 			return null;
@@ -350,41 +374,40 @@ public abstract class ${entity.name}DAO
 			return null;
 		}
 
-	    try {
+		try {
 			if(criterios instanceof org.hibernate.Query){
-            		org.hibernate.Query res = (org.hibernate.Query)criterios;
-            		if (paginacao != null){
-						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0) extra = 1;
+				org.hibernate.Query res = (org.hibernate.Query)criterios;
+				if (paginacao != null){
+					int extra = 0;
+					if (paginacao % paginas == 0 && paginacao != 0) extra = 1;
 						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
 						res.setMaxResults(linhas*paginas + 1);
-					}
+				}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
-        			res.setCacheable(true);
+				res.setCacheable(true);
 #end		
-        			return res.list();
-        		}
-        		else if(criterios instanceof org.hibernate.Criteria){
-        			org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
-        			if (paginacao != null){
-						int extra = 0;
-						if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
-						res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
-						res.setMaxResults(linhas*paginas + 1);
-					}
+				return res.list();
+			}
+			else if(criterios instanceof org.hibernate.Criteria){
+				org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
+				if (paginacao != null){
+					int extra = 0;
+					if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+					res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+					res.setMaxResults(linhas*paginas + 1);
+				}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
-        			res.setCacheable(true);
+				res.setCacheable(true);
 #end		
-        			return res.list();
+				return res.list();
 			} else {
-        			return null;
+				return null;
 			}
 		} catch (HibernateException h) {
 			throw new DAOException(h);
 		}
 	}
-	
-	
+
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
 		return filter(vo,paginacao,Constantes.TABLE_LINES, Constantes.TABLE_PAGES );
 	}
@@ -415,7 +438,7 @@ public abstract class ${entity.name}DAO
 						res.setMaxResults(linhas*paginas + 1);
 					}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
-        		res.setCacheable(true);
+				res.setCacheable(true);
 #end		
         		return res.list();
 			} else {
@@ -512,6 +535,9 @@ public abstract class ${entity.name}DAO
 			entidade.${attribute.setterName}(valor${attribute.name});
 #elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name").charAt(0));		
+			entidade.${attribute.setterName}(valor${attribute.name});
+#elseif($attribute.type.fullyQualifiedName == "java.math.BigDecimal")
+			$attribute.type.fullyQualifiedName valor$attribute.name = new ${attribute.type.fullyQualifiedName}(raiz.valueOf("./$attribute.name"));		
 			entidade.${attribute.setterName}(valor${attribute.name});
 #else
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name"));		
@@ -829,9 +855,9 @@ $operation.getDocumentation("     * ")
 ###if ($stringUtils.contains($returnType.fullyQualifiedName, "Collection"))
 #if($returnType.collectionType || $returnType.listType || $returnType.setType )
 #if(!$stringUtils.isEmpty($operation.typedArgumentList))
-#set($argumentList = "$operation.typedArgumentList , java.lang.Integer paginacao")
+#set($argumentList = "$operation.typedArgumentList , java.lang.Integer paginacao, java.lang.Integer numElementos")
 #else
-#set($argumentList = "java.lang.Integer paginacao")
+#set($argumentList = "java.lang.Integer paginacao, java.lang.Integer numElementos")
 #end
 #set($argumentListExtended = "${argumentList} , java.lang.Integer linhas, java.lang.Integer paginas")
 #else
@@ -861,26 +887,26 @@ $operation.getDocumentation("     * ")
             Object obj = handle${stringUtils.capitalize($operation.name)}($parameters, paginacao, linhas, paginas);
 
 			if(obj instanceof org.hibernate.Query){
-                org.hibernate.Query res = (org.hibernate.Query)obj;
-                if (paginacao != null){
+				org.hibernate.Query res = (org.hibernate.Query)obj;
+				if (paginacao != null){
     				int extra = 0;
     				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
     				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
     				res.setMaxResults(linhas*paginas + 1);
-    			}
+				}
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
 #end		
 				return res.list();
         	}
 			else if(obj instanceof org.hibernate.Criteria){
-                org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
-                if (paginacao != null){
+				org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+				if (paginacao != null){
     				int extra = 0;
     				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
     				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
     				res.setMaxResults(linhas*paginas + 1);
-    			}
+				}
 
 #if($hibernateEnableCache.equalsIgnoreCase("true"))
 				res.setCacheable(true);
@@ -978,7 +1004,7 @@ $finder.getDocumentation("     * ")
 #if ($finder.returnType.primitive)
         	return (($finder.returnType.wrapperName)query.uniqueResult()).${returnType.fullyQualifiedName}Value();
 #elseif (!$finder.returnType.collectionType)
-        	return ($returnType.fullyQualifiedName)query.uniqueResult();
+			return ($returnType.fullyQualifiedName)query.uniqueResult();
 #else
 			if (paginacao != null){
 				int extra = 0;
@@ -1104,7 +1130,7 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 		} catch (Exception ex) {
 			throw new CallbackException(ex);
 		}
-	} 
+	}
 	
 #else
 	public void logEvent(String msg , AbstractEntity entity) throws CallbackException {

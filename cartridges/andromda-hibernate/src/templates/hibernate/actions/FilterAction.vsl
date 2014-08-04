@@ -11,6 +11,7 @@ import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
 import br.ufrj.coppetec.DataObject;
 import br.ufrj.coppetec.ValueObject;
 import ${customTypesPackage}.${util}.Constantes;
+import ${customTypesPackage}.${modelPackageName}.PagingVO;
 
 public class FilterAction extends Action {
 
@@ -52,7 +53,7 @@ public class FilterAction extends Action {
 	public DataObject getVo(){
 		return this.vo;
 	}
-	
+
 	public Integer getPaginacao(){
 		return this.paginacao;
 	}
@@ -60,7 +61,16 @@ public class FilterAction extends Action {
 	public Integer getLinhas() {
 		return this.linhas;
 	}
+
+	public java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao, Integer numeroElemPorPagina) throws DAOException {
+		return dao.filter(vo, paginacao, numeroElemPorPagina);
+	}
 	
+	public PagingVO pagingExecute(AbstractEntity to, AbstractDAO dao, Integer numeroElemPorPagina) throws DAOException {
+		return dao.pagingFilter(vo, paginacao, numeroElemPorPagina);
+	}
+	
+
 	public Integer getPaginas() {
 		return this.paginas;
 	}

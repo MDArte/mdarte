@@ -146,6 +146,15 @@
         </mapping>
     </metafacade>
 
+	<metafacade class="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntityLogicImpl"
+                contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>ENTITY</stereotype>
+            <stereotype>MANAGEABLE</stereotype>
+        </mapping>
+        <property reference="defaultTableExportTypes"/>
+    </metafacade>
+
     <metafacade class="org.andromda.cartridges.bpm4struts.metafacades.MDArteManageableModelsLogicImpl"
                 contextRoot="true">
         <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">

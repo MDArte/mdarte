@@ -54,7 +54,8 @@
     <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
 #end
 #set ($displayTableName = "form.${table.name}")
-    <display:table name="${${displayTableName}}" id="row"
+#set ($recordCountName = "form.${table.name}BackingListCount")
+    <display:table name="${${displayTableName}}" recordcount="${${recordCountName}}" id="row"
         ##requestURIAction -> acao a ser utilizada no link "NEXT" na paginacao
         requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
 #if ($table.tableDecoratorRequired)

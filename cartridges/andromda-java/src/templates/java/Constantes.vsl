@@ -13,6 +13,8 @@ public class Constantes {
 	static public final String PARAMETRO_GRUPO = "group";
 	static public final String ATTRIBUTE_TABLE = "tableName";
 	static public final String PARAMETRO_TABLE = "d-16544-t";
+	static public final String PARAMETRO_EXPORT = "d-16544-e";
+	static public final String PARAMETRO_ELEM = "d-16544-elem";
 	static public final String TABELA_PAGINACAO = "tabela";
 	static public final String SERVICOS = "servicos";
 	static public final String CALLER_PRINCIPAL = "CallerPrincipal";

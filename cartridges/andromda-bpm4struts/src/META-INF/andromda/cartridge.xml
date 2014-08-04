@@ -180,6 +180,13 @@
     </template>
     
     <template
+        path="templates/bpm4struts/actions/web-common/ForwardAction.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-actions"
+        overwrite="true">
+    </template>    
+    
+    <template
         path="templates/bpm4struts/actions/ForwardForm.java.vsl"
         outputPattern="$generatedFile"
         outlet="shared-actions"
@@ -205,7 +212,19 @@
             </modelElement>
         </modelElements>
     </template>
-    
+
+	<template
+        path="templates/bpm4struts/actions/web-common/Action.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="actions"
+        overwrite="true">
+        <modelElements variable="action">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsAction"/>
+			</modelElement>
+		</modelElements>
+	</template>
+
    <template
         path="templates/bpm4struts2/actions/AutoCompleteAction.java.vsl"
         outputPattern="$generatedFile"
@@ -273,6 +292,18 @@
     </template>
     
     <template
+        path="templates/bpm4struts/configuration/web-common/jboss-web.xml.vsl"
+        outputPattern="jboss-web.xml"
+        outlet="shared-configuration"
+        overwrite="true">
+        <modelElements variable="package">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
+    
+    <template
         path="templates/bpm4struts/modulo/webMaven.xml.vsl"
         outputPattern="maven.xml"
         outlet="project-configuration"
@@ -338,7 +369,6 @@
             </modelElement>
         </modelElements>
     </template>
-    
     
     <template
         path="templates/bpm4struts/forms/ActionForm.java.vsl"
@@ -463,10 +493,10 @@
         <modelElements variable="jsp">
             <modelElement>
                 <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    
+			</modelElement>
+		</modelElements>
+	</template>
+
     <template
         path="templates/bpm4struts2/pages/page-javascript.jspf.vsl"
         outputPattern="$generatedFile"
@@ -536,6 +566,22 @@
 
     <template
         path="templates/bpm4struts/pages/form-validation.jsp.vsl"
+        outputPattern="$generatedFile"
+        outlet="shared-pages"
+        overwrite="true"
+        generateEmptyFiles="false"
+        outputToSingleFile="true">
+        <modelElements variable="applicationUseCases">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                    <property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    
+    <template
+        path="templates/bpm4struts/pages/form-validation.js.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages"
         overwrite="true"
@@ -750,12 +796,11 @@
         outlet="shared-actions-impl"
         overwrite="false"/>
         
-    <!-- 
     <template
         path="templates/bpm4struts/forms/FormSessionObject.java.vsl"
         outputPattern="$generatedFile"
         outlet="session-objects"
-        overwrite="true"/> -->
+        overwrite="true"/>
         
     <template
         path="templates/bpm4struts/util/PageSessionObjectUtil.java.vsl"
@@ -800,13 +845,13 @@
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"/>
-        
+
 	<template
         path="templates/bpm4struts/pages/simple-layout.jsp.vsl"
         outputPattern="$generatedFile"
         outlet="shared-pages-impl"
         overwrite="false"/>
-	
+
 	<template
         path="templates/bpm4struts2/pages/menu.jsp.vsl"
         outputPattern="$generatedFile"
@@ -867,6 +912,27 @@
         </modelElements>
     </template>
     
+    <template
+        path="templates/bpm4struts/configuration/web-common/struts-config.xml.vsl"
+        outputPattern="struts-config.xml"
+        outlet="shared-configuration"
+        overwrite="true"
+        outputToSingleFile="true"
+        outputOnEmptyElements="false">        
+        <modelElements>
+            <modelElement variable="applicationUseCases">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase">
+                	<property name="applicationUseCase"/>
+                </type>
+            </modelElement>
+            <modelElement variable="manageables">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsManageableEntity">
+                    <property name="manageable"/>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>    
+    
      <template
         path="templates/bpm4struts/configuration/struts-config-actions-uc.xml.vsl"
         outputPattern="$generatedFile"
@@ -878,6 +944,18 @@
             </modelElement>
         </modelElements>
     </template>
+    
+     <template
+        path="templates/bpm4struts/configuration/web-common/struts-config-actions-uc.xml.vsl"
+        outputPattern="struts-config-actions-uc-${useCase.name}.xml"
+		outlet="configuration"		
+        overwrite="true">
+        <modelElements variable="useCase">
+           <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsUseCase"/>
+            </modelElement>
+        </modelElements>
+    </template>    
 
      <template
         path="templates/bpm4struts/configuration/struts-config-forms-uc.xml.vsl"
@@ -903,6 +981,19 @@
             </modelElement>
         </modelElements>
     </template>
+    
+     <template
+        path="templates/bpm4struts/configuration/web-common/struts-config-modulo.xml.vsl"
+        outputPattern="$generatedFile"
+		outlet="configuration"		
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements>
+           <modelElement variable="pacote">
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsPackage"/>
+            </modelElement>
+        </modelElements>
+    </template>    
 
     <template
         path="templates/bpm4struts/configuration/validation.xml.vsl"
@@ -1235,7 +1326,13 @@
         outputPattern="$generatedFile"
         outlet="controleAcesso"
         overwrite="true"/>
-
+        
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/web-common/Login.java.vsl"
+        outputPattern="$controleAcessoDir/Login.java"
+        outlet="controleAcesso"
+        overwrite="true"/> 
+                
     <template
         path="templates/bpm4struts/actions/Main.java.vsl"
         outputPattern="main/Main.java"
@@ -1250,6 +1347,18 @@
         </modelElements>
     </template>
 
+   <template
+        path="templates/bpm4struts/actions/web-common/Main.java.vsl"
+        outputPattern="main/Main.java"
+        outlet="shared-actions"
+        overwrite="true"/> 
+        
+    <template
+        path="templates/bpm4struts/actions/controleAcesso/web-common/NovaConexao.java.vsl"
+        outputPattern="$controleAcessoDir/NovaConexao.java"
+        outlet="controleAcesso"
+        overwrite="true"/>                
+        
     <template
         path="templates/bpm4struts/actions/controleAcesso/NovaConexao.java.vsl"
         outputPattern="$generatedFile"
@@ -1350,12 +1459,26 @@
         outputPattern="$generatedFile"
         outlet="controleAcesso"
         overwrite="true"/>         
-        
+
+<!--        
     <template
         path="templates/bpm4struts/controllers/controleAcesso/LoginControllerImpl.java.vsl"
         outputPattern="$generatedFile"
         outlet="controleAcessoImplJava"
         overwrite="false"/>
+-->
+
+    <template
+        path="templates/bpm4struts/controllers/controleAcesso/LoginControllerImpl.java.vsl"
+        outputPattern="$controleAcessoDir/LoginControllerImpl.java"
+        outlet="controleAcesso"
+        overwrite="true"/>  
+            
+    <template
+        path="templates/bpm4struts/controllers/controleAcesso/CaptchaUtil.java.vsl"
+        outputPattern="$controleAcessoDir/CaptchaUtil.java"
+        outlet="controleAcesso"
+        overwrite="true"/>    
         
     <template
         path="templates/bpm4struts/pages/controleAcesso/entrar-login.css.vsl"
@@ -1670,7 +1793,7 @@
             </modelElement>
         </modelElements>
     </template>
-    
+
     <template
         path="templates/bpm4struts2/configuration/validation.xml.vsl"
         outputPattern="$generatedFile"

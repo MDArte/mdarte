@@ -9,6 +9,10 @@
         <to>datatype::Decimal</to>
     </mapping>
     <mapping>
+        <from>NUMERIC</from>
+        <to>datatype::Decimal</to>
+    </mapping>    
+    <mapping>
         <from>VARCHAR</from>
         <to>datatype::String</to>
     </mapping>

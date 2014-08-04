@@ -11,12 +11,16 @@ package $customTypesPackage;
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${generatedFile}")
 #end
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
 /**
  * Locates and provides all available application services.
  */
 public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 {
 	private static ServiceLocator instance = null;
+
 	private ServiceLocator()
 	{
 		// shouldn't be instantiated

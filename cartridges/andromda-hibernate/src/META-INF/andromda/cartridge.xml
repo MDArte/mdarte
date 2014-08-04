@@ -136,13 +136,36 @@
     </template> 
     
     <template
+        path="templates/hibernate/PagingVO.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true"/>    
+    <template
         path="templates/hibernate/AbstractDAO.vsl"
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="true">
     </template>
+    <template
+        path="templates/hibernate/FlushEventListener.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>
+    <template
+        path="templates/hibernate/HibernateGenericDAO.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template>    
 	<template
         path="templates/hibernate/LogInterceptor.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true">
+    </template> 
+    	<template
+        path="templates/hibernate/UpdateVO.vsl"
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="true">

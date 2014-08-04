@@ -5,7 +5,6 @@
 #set($loggerName = "${loggerPackage}.${stringUtils.capitalize($loggerName)}Logger")
 ${indent}Class[] classes = null;
 ${indent}Object[] objetos = null;
-
 #foreach($parameter in $parameters)
 #set($getValue = "")
 #set($literalType = "")
@@ -235,7 +234,6 @@ ${indent}	}
 
 ${indent}	request.getSession().removeAttribute("tableNameList");
 ${indent}}
-
 #end
 #end
 #end
@@ -335,7 +333,6 @@ ${indent}	}
 
 ${indent}}
 #if($action.findTaggedValue("$breadCrumbLabel"))
-
 ${indent}if(adicionaBreadCrumb){
 #if($action.target.findTaggedValue("$externalHyperlinkModulo"))
 	${indent}modulo = "$action.target.findTaggedValue("$externalHyperlinkModulo")";
@@ -462,7 +459,6 @@ ${indent}}
 #elseif ($transition.enteringFinalState || $transition.enteringPage)
 #if(!$transition.lookupGrid)
 #processInvalidatePageControlCounter($transition $indent)
-
 #end
 #processPageSO($transition $indent)
 
@@ -481,12 +477,11 @@ ${indent}forward = ${transition.target.actionMethodName}(form);
 #if(${transition.ajaxAction} && ! ${transition.temParametroTabela})
 ${indent}response.setContentType("application/xml");
 ${indent}response.setHeader("Cache-Control", "no-cache");
-
 ${indent}try{
 ${indent}	PrintWriter out = response.getWriter();
+
 ${indent}	out.print("<?xml version='1.0' encoding='UTF-8'?>");
 ${indent}	out.print("<raiz>");
-
 #foreach ($field in $transition.actionFormFields)
 #if ($field.file)
 ##
