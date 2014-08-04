@@ -81,13 +81,27 @@ import org.dom4j.Element;
  * </p>
  * @see $entity.fullyQualifiedName
  */
-public abstract class ${entity.name}DAO
-#if($entity.generalization)
-    extends ${entity.generalization.fullyQualifiedName}DAOImpl
-#else
-    extends AbstractDAO 
+public abstract class ${entity.name}DAO #*
+*##if($entity.generalization) extends ${entity.generalization.fullyQualifiedName}DAOImpl {
+
+    public ${entity.name}DAO() {
+		super();
+		setClazz(${entity.name}Impl.class);
+	}   
+	
+	public ${entity.name}DAO(Subject subject) {
+		super();
+		setSubject(subject);
+		setClazz(${entity.name}Impl.class); 
+	}
+#*
+*##else extends HibernateGenericDAO<${entity.name}Impl> {
+	
+    public ${entity.name}DAO() {
+		super();
+	}	
 #end
-{
+
 
 	protected void removeRelations(AbstractEntity obj)throws DAOException{
 #set($vetoException = "java.beans.PropertyVetoException")
@@ -411,6 +425,52 @@ public abstract class ${entity.name}DAO
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao) throws DAOException { 
 		return filter(vo,paginacao,Constantes.TABLE_LINES, Constantes.TABLE_PAGES );
 	}
+
+	public List<AbstractEntity> filter(DataObject vo, Integer paginacao, Integer numeroElemPorPagina) throws DAOException {
+		if (numeroElemPorPagina == null)
+	 		numeroElemPorPagina = $maxRows;
+	 		
+		try {
+    		Object criterios = handleFilter(vo);
+    
+			if(criterios instanceof org.hibernate.Query){
+				org.hibernate.Query res = (org.hibernate.Query)criterios;
+				if (paginacao != null){
+    				if (numeroElemPorPagina == 1000) {
+    					res.setFirstResult((paginacao - 1)*numeroElemPorPagina);
+						res.setMaxResults(numeroElemPorPagina);
+    				} else {
+    					res.setFirstResult((paginacao - 1)*numeroElemPorPagina*$maxPages);
+						res.setMaxResults(numeroElemPorPagina*$maxPages);
+					}
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+				res.setCacheable(true);
+#end		
+				return res.list();
+			}
+			else if(criterios instanceof org.hibernate.Criteria){
+				org.hibernate.Criteria res = (org.hibernate.Criteria)criterios;
+				if (paginacao != null){
+    				if (numeroElemPorPagina == 1000) {
+    					res.setFirstResult((paginacao - 1)*numeroElemPorPagina);
+						res.setMaxResults(numeroElemPorPagina);
+					} else {
+						res.setFirstResult((paginacao - 1)*numeroElemPorPagina*$maxPages);
+						res.setMaxResults(numeroElemPorPagina*$maxPages);
+					}
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+				res.setCacheable(true);
+#end		
+				return res.list();
+			} else {
+				return null;
+			}
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		}
+	}
 	
 	public List<AbstractEntity> filter(DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException { 
 		try {
@@ -449,7 +509,147 @@ public abstract class ${entity.name}DAO
 			throw new DAOException(h);
 		}
 	}
-	
+
+	public PagingVO pagingFilter(DataObject vo, Integer paginacao, Integer numeroElemPorPagina) throws DAOException {
+		if (numeroElemPorPagina == null)
+	 		numeroElemPorPagina = $maxRows;
+	 		 
+		try {
+        	Object obj = handleFilter(vo);
+        	Object objCount = handleFilter(vo);
+
+        	if(obj instanceof org.hibernate.Query){
+        		org.hibernate.Query res = (org.hibernate.Query)obj;
+        		
+        		if (paginacao != null){
+        			res.setFirstResult((paginacao - 1)*numeroElemPorPagina);
+					res.setMaxResults(numeroElemPorPagina);
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))					
+				res.setCacheable(true);
+#end									
+				org.hibernate.Query resCount = (org.hibernate.Query)objCount;
+					
+					
+				try {
+            		Field fieldQueryString = resCount.getClass().getSuperclass().getDeclaredField("queryString");
+            		fieldQueryString.setAccessible(true);
+            		String queryString = (String) fieldQueryString.get(resCount);
+            		
+            		if (queryString.indexOf("order") > 0) {
+            			queryString = queryString.substring(0, queryString.indexOf("order"));
+            		}
+            			            		
+            		if (queryString.indexOf("select") >=0) {
+            			String subFinal = queryString.substring(queryString.indexOf("from"));
+            			
+            			String subInicial = queryString.substring(0, queryString.indexOf("from"));
+            			subInicial = subInicial.replaceAll("select", "").trim();
+            			subInicial = " count ("+subInicial+") ";
+            			
+            			queryString = "select " + subInicial + subFinal;
+            			
+            		} else {
+            			int indexSubFinal = 0;
+            			
+            			if (queryString.indexOf("where") >=0) {
+            				if (queryString.indexOf("inner") >= 0){  
+            					if (queryString.indexOf("where") < queryString.indexOf("inner"))
+            						indexSubFinal = queryString.indexOf("where");
+            					else 
+            						indexSubFinal = queryString.indexOf("inner");
+            				} else {
+            					indexSubFinal = queryString.indexOf("where");
+            				}
+            			} else if (queryString.indexOf("inner") >=0) {
+            				indexSubFinal = queryString.indexOf("inner");
+            			} else {
+            				indexSubFinal = queryString.length();
+            			}
+            			
+            			String subFinal = queryString.substring(indexSubFinal);
+            			String subInicial = queryString.substring(0, indexSubFinal);
+            			
+            			
+            			subInicial = subInicial.replaceAll("from", "").replaceAll("as", "").trim();
+            			
+            			
+            			String aux = subInicial.substring(0, subInicial.indexOf("Impl")+4);
+            			String aux2 = subInicial.substring(subInicial.indexOf("Impl")+4);
+            				
+            			if (aux2.length() > 0) {
+            				queryString = "select count ("+ aux2+") from "+ aux + " " + aux2 +" " + subFinal;
+            			} else {
+            				queryString = "select count ("+ aux+") from "+ aux + " " + subFinal;	
+            			}
+            			
+            		}
+            		
+            		fieldQueryString.set(resCount, queryString);
+            		// set(resCount, new ArrayList());
+        		} catch (Exception e) {
+        			throw new DAOException(e);
+        		}
+
+				int count = ((java.lang.Long) resCount.uniqueResult()).intValue();
+        		
+				
+				return new PagingVO(count, res.list());
+        	}
+        	else if (obj instanceof org.hibernate.Criteria) {
+        		org.hibernate.Criteria res = (org.hibernate.Criteria)obj;
+        		
+        		if (paginacao != null){
+        			res.setFirstResult((paginacao - 1)*numeroElemPorPagina);
+					res.setMaxResults(numeroElemPorPagina);
+				}
+#if($hibernateEnableCache.equalsIgnoreCase("true"))
+				res.setCacheable(true);
+#end
+				List records = res.list();
+								
+				org.hibernate.Criteria resCount = (org.hibernate.Criteria)objCount;
+				
+				try {
+            		Field fieldOrder = resCount.getClass().getDeclaredField("orderEntries");
+            		fieldOrder.setAccessible(true);
+            		fieldOrder.set(resCount, new ArrayList());
+        		} catch (Exception e) {
+        			throw new DAOException(e);
+        		}
+				
+				boolean hasDistinct = false;
+				try {
+					Field fieldOrder = resCount.getClass().getDeclaredField("resultTransformer");
+					fieldOrder.setAccessible(true);
+					Object o = fieldOrder.get(resCount);
+
+					if (o != null && o.toString().toLowerCase().indexOf("org.hibernate.transform.DistinctRootEntityResultTransformer".toLowerCase()) >= 0) {
+						hasDistinct = true;
+					}
+				} catch (Exception e) {
+					throw new DAOException(e);
+				}
+				
+				if (hasDistinct) {
+					resCount.setProjection(org.hibernate.criterion.Projections.countDistinct("id"));
+				} else {
+        			resCount.setProjection(org.hibernate.criterion.Projections.rowCount());
+        		}
+        								
+				int count = ((Long) resCount.uniqueResult()).intValue();	
+        		
+
+        		return new PagingVO(count, records);
+			} else {
+        		return null;
+			}
+
+		} catch (HibernateException h) {
+			throw new DAOException(h);
+		}
+	}
+
 	protected abstract org.hibernate.Criteria handleXmlExport (ValueObject vo, org.hibernate.Session session) throws DAOException;
 	
 	public org.hibernate.Criteria xmlExport(ValueObject vo, org.hibernate.Session session) throws DAOException {
@@ -1031,7 +1231,17 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 #end##foreach operation
 #if(${entity.auditoria} && (!$entity.abstract) && (!$entity.view))
 	public void logEvent(String msg , AbstractEntity entity) throws CallbackException {
-		
+		String login;
+		try {
+			login = ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
+		} catch (Exception e)	 {
+			login = "NA";
+		}
+			
+		logEvent(msg, entity, new Date(), login);
+	}
+	
+	public void logEvent(String msg , AbstractEntity entity , Date data , String login) throws CallbackException {		
 		Session tempSession=AbstractDAO.currentSession();
 		
 		try {
@@ -1045,9 +1255,7 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 			record.setVersion(new Long(ent.getHibernate_version()));
 			hash += (new Integer(ent.getHibernate_version())).toString();
 			record.setAuditoriaOperacao(msg);
-			hash += msg;
-			record.setAuditoriaDataHora(new Date());
-			String login;
+			record.setAuditoriaDataHora(data);
 			
 			try {
 				login = ControleAcesso.getCallerPrincipal(accessControl.SecurityHolder.getSubject()).getName();
@@ -1063,12 +1271,9 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 			hash +=  ent.${attribute.getterName}();
 #end
 #end
-#foreach($attributeGen in ${entity.getInheritedAttributes()})
-#if(!($attributeGen.name.equals("id")))
-			record.${attributeGen.setterName}(ent.${attributeGen.getterName}());
-			hash +=  ent.${attributeGen.getterName}();
-#end
-#end
+##			
+#copiaAtributosGenerizacao($entity)
+		
 			if (!msg.equals("delete")) {
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
@@ -1084,30 +1289,25 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 				
 				if(${target.name}Log != null){
 					if(!(${target.name}Log.isEmpty())){
-						for(Iterator<AbstractEntity>it=${target.name}Log.iterator();it.hasNext() ; ){
-							
+						for(Iterator<AbstractEntity>it=${target.name}Log.iterator(); it.hasNext() ; ){
 							Long tempId = it.next().getId();
 							record.add${stringUtils.capitalize($target.name)}Log(tempId.toString());
-							hash+=record.${target.getterName}Log();
-							
-							while(record.${target.getterName}Log().length()>${tamanhoAssociacao}){
-								String temp = record.${target.getterName}Log().substring(0,record.${target.getterName}Log().lastIndexOf(','));
-								String temp2 = record.${target.getterName}Log().substring(record.${target.getterName}Log().lastIndexOf(','));
-								record.${target.setterName}Log(temp);
-								${entity.packageName}.${entity.name}LogRec newrecord = new ${entity.packageName}.${entity.name}LogRec();
-								PropertyUtils.copyProperties(newrecord,record);
-			
-								hashBytes = CriptoUtils.digest(hash.getBytes());
-#if ($auditoriaUsaAssinaturaDigital.equalsIgnoreCase("true"))
-								hashBytes = CriptoUtils.createSignature(hashBytes);
-#end
-								record.setHash(CriptoUtils.byteArrayToHexString(hashBytes));
-			
-								tempSession.save(record);
-##		tempSession.flush();
-								record = newrecord;
-								record.${target.setterName}Log(temp2);
+							if(record.${target.getterName}Log().length()>${tamanhoAssociacao}){
+						
+								int lastComma = record.${target.getterName}Log().lastIndexOf(',');
+								if (lastComma > 0 && (lastComma + 3 <= ${tamanhoAssociacao})) {
+									record.${target.setterName}Log(record.${target.getterName}Log().substring(0, lastComma)+"...");
+								} else {
+									record.${target.setterName}Log(record.${target.getterName}Log().substring(0, (${tamanhoAssociacao} -3))+"...");
+								}
+								
+								break; 
 							}
+							
+							if(record.${target.getterName}Log().length() == ${tamanhoAssociacao}) {
+								break;
+							} 
+							
 							if(it.hasNext()){
 								record.add${stringUtils.capitalize($target.name)}Log(",");
 							}
@@ -1119,12 +1319,6 @@ $finder.visibility static $returnType.fullyQualifiedName ${finder.name}($argumen
 #end
 			}
 
-			hashBytes = CriptoUtils.digest(hash.getBytes());
-#if ($auditoriaUsaAssinaturaDigital.equalsIgnoreCase("true"))
-			hashBytes = CriptoUtils.createSignature(hashBytes);
-#end
-			record.setHash(CriptoUtils.byteArrayToHexString(hashBytes));
-			
 			tempSession.save(record);
 ##		        tempSession.flush();			
 		} catch (Exception ex) {

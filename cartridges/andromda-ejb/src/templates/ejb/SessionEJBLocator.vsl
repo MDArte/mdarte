@@ -19,64 +19,159 @@ import java.util.HashMap;
  */
 public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 {
-	private static ServiceLocator instance = null;
+    /**
+     * The shared instance of this ${serviceLocatorName}.
+     */
+    private static $serviceLocatorName instance;
+		    private HashMap <String,Object> map;
+    private $serviceLocatorName()
+    {
+        // shouldn't be instantiated
+        map = new HashMap();
+    }
 
-	private ServiceLocator()
-	{
-		// shouldn't be instantiated
+    /**
+     * Gets the shared instance of this Class
+     *
+     * @return the shared service locator instance.
+     */
+    public static final $serviceLocatorName instance()
+    {
+        if (instance == null)
+        {
+            instance = new $serviceLocatorName();
+        }
+        return instance;
+    }
+
+
+    private Object getService(java.util.Hashtable environment, String jndiName, Class narrowTo)
+    {
+        try
+        {
+            Object home = lookupHome(environment,jndiName,narrowTo);
+            Class cls = home.getClass();
+	    Class[] varargs = null;
+	    Method meth = cls.getMethod("create", varargs);
+	    return meth.invoke(home,varargs);
 	}
+        catch (Exception ex)
+        {
+            throw new javax.ejb.EJBException(ex);
+        }
+    }
 
-	/**
-	 * Gets the shared instance of this Class
-	 *
-	 * @return the shared service locator instance.
-	 */
-	public static ServiceLocator instance()
-	{
-		if (instance == null)
-		{
-			instance = new ServiceLocator();
-		}
-		return instance;
+    private Object getServiceLocal(String jndiName)
+    {
+        try
+        {
+            Object home = lookupLocalHome(jndiName+"Local");
+            Class cls = home.getClass();
+	    Class[] varargs = null;
+            Method meth = cls.getMethod("create", varargs);
+	    return meth.invoke(home,varargs);
+        }
+        catch (Exception ex)
+        {
+            throw new javax.ejb.EJBException(ex);
+        }
+    }
+
+    public Object getServiceBI(java.util.Hashtable environment, String jndiName, Class narrowTo)
+    {
+        Object bi = map.get(jndiName);
+        if(bi != null){
+            return bi;
 	}
+        else{
+        	    try
+            {
+                //tenta pegar o bean localmente
+                bi = getServiceLocal(jndiName);
+                map.put(jndiName, bi);
+		return bi;
+            }catch (Exception ex1)
+            {
+                try
+                {
+                    //tenta pegar o bean remotamente
+                    bi = getService(environment, jndiName, narrowTo);
+                    map.put(jndiName, bi);
+                    return bi;
+                }catch(Exception ex2)
+                {
+                    throw new javax.ejb.EJBException(ex2);
+                }
+            }
+        }
+    }
 
+
+
+
+     private Object getHome(
+            java.util.Hashtable environment,
+            String jndiName,
+            Class narrowTo) throws javax.naming.NamingException
+        {
+    		          return ServiceLocator.lookupHome(environment,jndiName,narrowTo);
+        }
+    private static Object lookupHome(
+        java.util.Hashtable environment,
+        String jndiName,
+        Class narrowTo) throws javax.naming.NamingException
+    {
+        javax.naming.InitialContext initialContext = new javax.naming.InitialContext(
+            environment);
+        try
+        {
+            Object object = initialContext.lookup(jndiName);
+            // only narrow if necessary
+            if (narrowTo.isInstance(java.rmi.Remote.class))
+            {
+                object = javax.rmi.PortableRemoteObject
+                    .narrow(object, narrowTo);
+            }
+            return object;
+        }
+        finally
+        {
+            initialContext.close();
+        }
+    }
+	
+	    private static Object lookupLocalHome(String jndiName) throws javax.naming.NamingException 
+	    {
+        javax.naming.InitialContext initialContext = new javax.naming.InitialContext(null);
+        Object object = initialContext.lookup(jndiName);
+        return object;
+    	}
+    
 #foreach ($service in $services)
+
+#if (!$service.hasStereotype("WebSrv"))
+
 #if(!$service.findTaggedValue("@andromda.services.shared"))
 ##gera codigo para pegar o bean remoto
 #set ($home = "${stringUtils.uncapitalize($service.name)}Home")
 #set ($homeClassName = "${service.fullyQualifiedName}Home")
+    private static $homeClassName $home = null;
+
 	/**
 	 * Gets an instance of <code>$service.fullyQualifiedName</code>
 	 */
 	private final $service.fullyQualifiedName get${service.name}()
 	{
-		Object bi = null;
-
 		try
 		{
-			Class narrowTo = null;
-
-			try
-			{
-				narrowTo = Class.forName("${service.fullyQualifiedName}Home");
-			}
-			catch(Exception e1)
-			{
-				narrowTo = Class.forName("${service.fullyQualifiedName}");
-			}
-
-			try
-			{
-				// for EJB 2
-				bi = getService(null, "${service.fullyQualifiedName}", narrowTo);
-			}
-			catch (Exception ex2)
-			{
-				// for EJB 3
-				bi = lookupHome(null, "${service.fullyQualifiedName}", narrowTo);
-			}
-
-			return (${service.fullyQualifiedName}) bi;
+            if ($home == null)
+            {
+                $home = ($homeClassName)lookupHome(
+                    null,
+                    ${homeClassName}.JNDI_NAME,
+                    ${homeClassName}.class);
+            }
+            return ${home}.create();
 		}
 		catch (Exception ex)
 		{
@@ -88,27 +183,20 @@ public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 ##gera codigo para pegar o bean local
 #set ($home = "${stringUtils.uncapitalize($service.name)}LocalHome")
 #set ($homeClassName = "${service.fullyQualifiedName}LocalHome")
+    private static $homeClassName $home = null;
+
 	/**
 	 * Gets an instance of <code>${service.fullyQualifiedName}Local</code>
 	 */
 	private final ${service.fullyQualifiedName}Local get${service.name}Local()
-	{
-		Object bi = null;
-
-		try
-		{
-			try
-			{
-				// for EJB 2
-				bi = super.getServiceLocal("${service.fullyQualifiedName}");
-			}
-			catch (Exception ex1)
-			{
-				// for EJB 3
-				bi = lookupLocalHome("${service.fullyQualifiedName}Local");
-			}
-
-			return (${service.fullyQualifiedName}Local) bi;
+ 	{
+        try
+        {
+            if ($home == null)
+            {
+                $home = ($homeClassName)lookupLocalHome(${homeClassName}.JNDI_NAME);
+            }
+            return ${home}.create();
 		}
 		catch (Exception ex)
 		{
@@ -147,16 +235,21 @@ public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 ##fim gera codigo para pegar o bean BI
 #end
 #end
+#end
+
+	private static ${customTypesPackage}.UtilServiceHandlerHome utilServiceHandlerHome = null;
 
 	private final ${customTypesPackage}.UtilServiceHandler getUtilServiceHandler()
 	{
 		try
 		{
-			${customTypesPackage}.UtilServiceHandlerHome utilServiceHandlerHome = (${customTypesPackage}.UtilServiceHandlerHome)lookupHome(
-				null,
-				${customTypesPackage}.UtilServiceHandlerHome.JNDI_NAME,
-				${customTypesPackage}.UtilServiceHandlerHome.class);
-
+            if (utilServiceHandlerHome == null)
+            {
+                utilServiceHandlerHome = (${customTypesPackage}.UtilServiceHandlerHome)lookupHome(
+                    null,
+                    ${customTypesPackage}.UtilServiceHandlerHome.JNDI_NAME,
+                    ${customTypesPackage}.UtilServiceHandlerHome.class);
+            }
 			return utilServiceHandlerHome.create();
 		}
 		catch (Exception ex)
@@ -165,11 +258,16 @@ public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 		}
 	}
 
+    private static ${customTypesPackage}.UtilServiceHandlerLocalHome utilServiceHandlerLocalHome = null;
+
 	private final ${customTypesPackage}.UtilServiceHandlerLocal getUtilServiceHandlerLocal()
 	{
 		try
 		{
-			${customTypesPackage}.UtilServiceHandlerLocalHome utilServiceHandlerLocalHome = (${customTypesPackage}.UtilServiceHandlerLocalHome)lookupLocalHome(${customTypesPackage}.UtilServiceHandlerLocalHome.JNDI_NAME);
+            if (utilServiceHandlerLocalHome == null)
+            {
+                utilServiceHandlerLocalHome = (${customTypesPackage}.UtilServiceHandlerLocalHome)lookupLocalHome(${customTypesPackage}.UtilServiceHandlerLocalHome.JNDI_NAME);
+            }
 
 			return utilServiceHandlerLocalHome.create();
 		}

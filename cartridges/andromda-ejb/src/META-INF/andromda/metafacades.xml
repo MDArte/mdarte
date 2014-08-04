@@ -93,8 +93,8 @@
     <metafacade class="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceFacadeLogicImpl">
         <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
             <stereotype>WEB_SRV</stereotype>
-            <stereotype>SERVICE</stereotype>
-        </mapping>
+            <!-- <stereotype>SERVICE</stereotype> -->
+		</mapping>
     </metafacade>
 
     <metafacade class="org.andromda.cartridges.ejb.metafacades.CoppetecEJBWebServiceClientFacadeLogicImpl" contextRoot="true">

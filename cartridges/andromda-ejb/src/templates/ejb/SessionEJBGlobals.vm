@@ -231,7 +231,7 @@
 
 		try{
 #if($actionName.equals("filter"))
-			${actionName}Return = paramAction.defaultValues() ? paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao()) : 
+			${actionName}Return = paramAction.defaultValues() ? paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(), numeroDeElemPorPagina${cont}) : 
 				paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(),paramAction.getLinhas(),paramAction.getPaginas());
 #elseif($actionName.equals("list"))
 			${actionName}Return = paramAction.defaultValues() ? 

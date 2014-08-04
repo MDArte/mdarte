@@ -1,4 +1,5 @@
 #parse("templates/ejb/SessionEJBGlobals.vm")
+#if(!$service.hasStereotype("$webSrv"))
 // license-header java merge-point
 //
 // Attention: Generated code! Do not modify by hand!
@@ -94,9 +95,9 @@ $operation.getDocumentation("	 * ")
 	 */
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
 #if($ejbSecurityEnabled && !$webService && !${service.openAccess})
-#renderSecurityBody($operation)
+#renderSecurityBodyPagination($operation)
 #else
-#renderOperationBody($operation $service)
+#renderOperationBodyPagination($operation $service)
 #end
 	}
 

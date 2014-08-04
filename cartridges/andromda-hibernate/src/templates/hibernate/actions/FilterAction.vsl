@@ -47,7 +47,7 @@ public class FilterAction extends Action {
 	}
 	
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		return this.defaultValues ? dao.filter(vo, paginacao) : dao.filter(vo,paginacao,linhas,paginas);
+		return this.defaultValues ? dao.filter(vo, paginacao, null) : dao.filter(vo,paginacao,linhas,paginas);
 	}
 		
 	public DataObject getVo(){
