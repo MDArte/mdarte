@@ -1,0 +1,109 @@
+#set ($generatedFile = "struts-config-${pacote.webModuleName}.xml")
+##
+##  CONSTANTS
+##
+#set ($login = "/")
+#set ($login = $login.concat($stringUtils.replace($secureDir, ".", "/")))
+#set ($main = "/")
+#set ($main = $main.concat($stringUtils.replace($mainDir, ".", "/")))
+#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
+#set($gerar = true)
+#if($applicationUseCases)
+#if($modulo == 'true')
+#set($gerar = false)
+#end
+#end
+#if ($pacote)
+#set ($applicationUseCases = $pacote.useCases)
+#set ($useCases = $pacote.useCases)
+#set ($manageables = $pacote.manageables)
+#else
+#if(!$applicationUseCases.empty)#set($applicationUseCase=$applicationUseCases.iterator().next())#end
+#set ($useCases = $applicationUseCase.allUseCases)
+#end
+#set ($validationDesired = ($clientValidation=='true' || $serverValidation=='true'))
+##
+##  START TEMPLATE
+##
+#if($gerar)
+<?xml version="1.0" encoding="$xmlEncoding" ?>
+
+<!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd"[
+
+#foreach ($useCase in $useCases)
+##looking for a field on this action
+#set($hasAction = "false")
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+#set($hasAction = "true")
+#end
+#end
+#if($hasAction == "true")
+##generated only if this action has at least one field
+    <!ENTITY forms_${useCase.name} SYSTEM "struts-config-forms-uc-${useCase.name}.xml">
+#end
+	<!ENTITY actions_${useCase.name} SYSTEM "struts-config-actions-uc-${useCase.name}.xml">
+#end
+
+]>
+
+<struts-config>
+
+    <!-- display-name merge point -->
+
+    <!-- description merge point -->
+
+    <data-sources>
+        <!-- data-sources merge point -->
+    </data-sources>
+
+    <form-beans>
+        <!-- form-beans merge-point -->
+#foreach ($useCase in $useCases)
+##looking for a field on this action
+#set($hasAction = "false")
+#foreach ($action in $useCase.actions)
+#if (!$action.actionFormFields.empty)
+#set($hasAction = "true")
+#end
+#end
+#if($hasAction == "true")
+##generated only if this action has at least one field
+        &forms_${useCase.name};
+#end
+#end
+##      
+#foreach ($manageable in $manageables)
+        <form-bean name="$manageable.formBeanName" type="$manageable.formBeanType" />
+#end
+##
+    </form-beans>
+
+    <global-forwards>
+        <!-- global-forwards merge-point -->
+#foreach ($useCase in $useCases)
+#if (!$useCase.package.webModuleName.equals("principal"))
+##set ($webModuleName = "/$useCase.package.webModuleName")
+#set ($webModuleName = "")
+#else
+#set ($webModuleName = "")
+#end
+        <forward
+            name="$stringUtils.toResourceMessageKey($useCase.name)"
+            path="${webModuleName}${useCase.actionPath}.do"
+            redirect="false" />
+#end
+        
+    </global-forwards>
+
+    <action-mappings>
+        <!-- action-mappings merge-point -->
+#foreach ($useCase in $useCases)
+        &actions_${useCase.name};
+#end
+	</action-mappings>   
+                      
+</struts-config>
+#end

@@ -1,0 +1,211 @@
+#set ($generatedFile = "FlushEventListener.java")
+#if($stringUtils.isNotEmpty($customTypesPackage))
+package $customTypesPackage.${modelPackageName};
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${modelPackageName}/${generatedFile}")
+#end
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.HibernateException;
+import org.hibernate.action.CollectionRecreateAction;
+import org.hibernate.action.CollectionRemoveAction;
+import org.hibernate.action.CollectionUpdateAction;
+import org.hibernate.collection.PersistentCollection;
+import org.hibernate.engine.ActionQueue;
+import org.hibernate.engine.Cascade;
+import org.hibernate.engine.CascadingAction;
+import org.hibernate.engine.CollectionEntry;
+import org.hibernate.engine.CollectionKey;
+import org.hibernate.engine.Collections;
+import org.hibernate.engine.EntityEntry;
+import org.hibernate.engine.PersistenceContext;
+import org.hibernate.engine.Status;
+import org.hibernate.event.EventSource;
+import org.hibernate.event.FlushEntityEvent;
+import org.hibernate.event.FlushEntityEventListener;
+import org.hibernate.event.FlushEvent;
+import org.hibernate.event.def.DefaultFlushEventListener;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.hibernate.persister.entity.EntityPersister;
+import org.hibernate.pretty.Printer;
+import org.hibernate.util.IdentityMap;
+import org.hibernate.util.LazyIterator;
+
+public class FlushEventListener extends DefaultFlushEventListener {
+
+	private void cascadeOnFlush(EventSource session, EntityPersister persister, Object object) throws HibernateException {
+		session.getPersistenceContext().incrementCascadeLevel();
+
+		boolean setou = false;
+
+		try {
+			if (AbstractDAO.evictCascadeThread.get() != null && persister.hasCascades()) {
+				try {
+					Field field = AbstractEntityPersister.class.getDeclaredField("entityMetamodel");
+					field.setAccessible(true);
+					Object entityMetamodel = field.get(persister);
+
+					Field fieldEntity = entityMetamodel.getClass().getDeclaredField("hasCascades");
+					fieldEntity.setAccessible(true);
+
+					fieldEntity.set(entityMetamodel, Boolean.FALSE);
+
+					setou = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			new Cascade(getCascadingAction(), Cascade.BEFORE_FLUSH, session).cascade(persister, object, getAnything());
+		} finally {
+			if (setou) {
+				try {
+					Field field = AbstractEntityPersister.class.getDeclaredField("entityMetamodel");
+					field.setAccessible(true);
+					Object entityMetamodel = field.get(persister);
+
+					Field fieldEntity = entityMetamodel.getClass().getDeclaredField("hasCascades");
+					fieldEntity.setAccessible(true);
+
+					fieldEntity.set(entityMetamodel, Boolean.TRUE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			session.getPersistenceContext().decrementCascadeLevel();
+		}
+	}
+
+	private void flushCollections(EventSource session) throws HibernateException {
+		List list = IdentityMap.entries(session.getPersistenceContext().getCollectionEntries());
+		int size = list.size();
+		for (int i = 0; i < size; i++) {
+			Map.Entry me = (Map.Entry) list.get(i);
+			CollectionEntry ce = (CollectionEntry) me.getValue();
+			if (!ce.isReached() && !ce.isIgnore()) {
+				Collections.processUnreachableCollection((PersistentCollection) me.getKey(), session);
+			}
+		}
+
+		// Schedule updates to collections:
+		list = IdentityMap.entries(session.getPersistenceContext().getCollectionEntries());
+		size = list.size();
+		ActionQueue actionQueue = session.getActionQueue();
+		for (int i = 0; i < size; i++) {
+			Map.Entry me = (Map.Entry) list.get(i);
+			PersistentCollection coll = (PersistentCollection) me.getKey();
+			CollectionEntry ce = (CollectionEntry) me.getValue();
+
+			if (ce.isDorecreate()) {
+				session.getInterceptor().onCollectionRecreate(coll, ce.getCurrentKey());
+				actionQueue.addAction(new CollectionRecreateAction(coll, ce.getCurrentPersister(), ce.getCurrentKey(), session));
+			}
+			if (ce.isDoremove()) {
+				session.getInterceptor().onCollectionRemove(coll, ce.getLoadedKey());
+				actionQueue.addAction(new CollectionRemoveAction(coll, ce.getLoadedPersister(), ce.getLoadedKey(),
+						ce.isSnapshotEmpty(coll), session));
+			}
+			if (ce.isDoupdate()) {
+				session.getInterceptor().onCollectionUpdate(coll, ce.getLoadedKey());
+				actionQueue.addAction(new CollectionUpdateAction(coll, ce.getLoadedPersister(), ce.getLoadedKey(),
+						ce.isSnapshotEmpty(coll), session));
+			}
+
+		}
+
+		actionQueue.sortCollectionActions();
+
+	}
+
+	private void flushEntities(FlushEvent event) throws HibernateException {
+		// Among other things, updateReachables() will recursively load all
+		// collections that are moving roles. This might cause entities to
+		// be loaded.
+
+		// So this needs to be safe from concurrent modification problems.
+		// It is safe because of how IdentityMap implements entrySet()
+
+		final EventSource source = event.getSession();
+
+		final Map.Entry[] list = IdentityMap.concurrentEntries(source.getPersistenceContext().getEntityEntries());
+		final int size = list.length;
+		for (int i = 0; i < size; i++) {
+
+			// Update the status of the object and if necessary, schedule an
+			// update
+
+			Map.Entry me = list[i];
+			EntityEntry entry = (EntityEntry) me.getValue();
+			Status status = entry.getStatus();
+
+			if (status != Status.LOADING && status != Status.GONE) {
+				FlushEntityEvent entityEvent = new FlushEntityEvent(source, me.getKey(), entry);
+				FlushEntityEventListener[] listeners = source.getListeners().getFlushEntityEventListeners();
+				for (int j = 0; j < listeners.length; j++) {
+					listeners[j].onFlushEntity(entityEvent);
+				}
+			}
+		}
+
+		source.getActionQueue().sortActions();
+	}
+
+	@Override
+	protected void flushEverythingToExecutions(FlushEvent event) throws HibernateException {
+		EventSource session = event.getSession();
+
+		final PersistenceContext persistenceContext = session.getPersistenceContext();
+		session.getInterceptor().preFlush(new LazyIterator(persistenceContext.getEntitiesByKey()));
+
+		prepareEntityFlushes(session);
+		// we could move this inside if we wanted to
+		// tolerate collection initializations during
+		// collection dirty checking:
+		prepareCollectionFlushes(session);
+		// now, any collections that are initialized
+		// inside this block do not get updated - they
+		// are ignored until the next flush
+
+		persistenceContext.setFlushing(true);
+		try {
+			flushEntities(event);
+			flushCollections(session);
+		} finally {
+			persistenceContext.setFlushing(false);
+		}
+	}
+
+	@Override
+	protected CascadingAction getCascadingAction() {
+		CascadingAction ca = super.getCascadingAction();
+		return ca;
+	}
+
+	private void prepareCollectionFlushes(SessionImplementor session) throws HibernateException {
+		final List list = IdentityMap.entries(session.getPersistenceContext().getCollectionEntries());
+		final int size = list.size();
+		for (int i = 0; i < size; i++) {
+			Map.Entry e = (Map.Entry) list.get(i);
+			((CollectionEntry) e.getValue()).preFlush((PersistentCollection) e.getKey());
+		}
+	}
+
+	private void prepareEntityFlushes(EventSource session) throws HibernateException {
+		final Map.Entry[] list = IdentityMap.concurrentEntries(session.getPersistenceContext().getEntityEntries());
+		// safe from concurrent modification because of how entryList() is
+		// implemented on IdentityMap
+		final int size = list.length;
+		for (int i = 0; i < size; i++) {
+			Map.Entry me = list[i];
+			EntityEntry entry = (EntityEntry) me.getValue();
+			Status status = entry.getStatus();
+			if (status == Status.MANAGED || status == Status.SAVING) {
+				cascadeOnFlush(session, entry.getPersister(), me.getKey());
+			}
+		}
+	}
+}
