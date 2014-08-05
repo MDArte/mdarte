@@ -205,16 +205,18 @@
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162894_138222_1240' name='novaConsulta'/>
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162894_529221_1241' name='detalha${manageable.Name}'>
 																			<UML:Event.parameter>
+#set($parameterName = "id")
+#set($parameterName = $parameterName.concat($manageable.name.subSequence(0,1).toString().toUpperCase()).concat($manageable.name.substring(1)))
 																				<UML:Parameter xmi.id='_9_5_1_1ff104dd_1312206678671_642730_1034' name='id'>
 																					<UML:Parameter.type>
-																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId('Long',${projectDir})}'>
+																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId("Long",${projectDir})}'>
 																							<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
 																								<referentPath xmi.value='datatype::Long'/>
 																							</XMI.extension>
 																						</UML:Classifier>
 																					</UML:Parameter.type>
 																					<UML:ModelElement.taggedValue>
-																						<UML:TaggedValue xmi.id='_9_5_1_56901e9_1384118155608_230172_0' name='@andromda.presentation.web.view.field.type'>
+																						<UML:TaggedValue xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='@andromda.presentation.web.view.field.type'>
 																							<UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
 																							<UML:TaggedValue.type>
 																								<UML:TagDefinition href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_175825_53'>
@@ -224,9 +226,9 @@
 																								</UML:TagDefinition>
 																							</UML:TaggedValue.type>
 																							<UML:TaggedValue.referenceValue>
-																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_219748_20'>
+																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_572946_12'>
 																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
-																										<referentPath xmi.value='org.andromda.profile::presentation::WebFieldType::plaintext'/>
+																										<referentPath xmi.value='org.andromda.profile::presentation::WebFieldType::hidden'/>
 																									</XMI.extension>
 																								</UML:ModelElement>
 																							</UML:TaggedValue.referenceValue>
@@ -385,23 +387,75 @@
 																						</UML:TaggedValue>
 																					</UML:ModelElement.taggedValue>
 #end
-																				</UML:Parameter>																				
+																				</UML:Parameter>
+#else
+#set($parameterName = "id")
+#set($parameterName = $parameterName.concat($manageable.name.subSequence(0,1).toString().toUpperCase()).concat($manageable.name.substring(1)))
+																					<UML:Parameter xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='id'>
+																						<UML:Parameter.type>
+																							<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId(${attribute.type.Name},${projectDir})}'>
+																								<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
+																									<referentPath xmi.value='datatype::Long'/>
+																								</XMI.extension>
+																							</UML:Classifier>
+																						</UML:Parameter.type>
+																						<UML:ModelElement.taggedValue>
+																						<UML:TaggedValue xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='@andromda.presentation.web.view.field.type'>
+																							<UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+																							<UML:TaggedValue.type>
+																								<UML:TagDefinition href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_175825_53'>
+																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
+																										<referentPath xmi.value='org.andromda.profile::presentation::@andromda.presentation.web.view.field.type'/>
+																									</XMI.extension>
+																								</UML:TagDefinition>
+																							</UML:TaggedValue.type>
+																							<UML:TaggedValue.referenceValue>
+																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_572946_12'>
+																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
+																										<referentPath xmi.value='org.andromda.profile::presentation::WebFieldType::hidden'/>
+																									</XMI.extension>
+																								</UML:ModelElement>
+																							</UML:TaggedValue.referenceValue>
+																						</UML:TaggedValue>
+																					</UML:ModelElement.taggedValue>
+																					</UML:Parameter>
 #end
 #end
 #end
-																				</UML:Event.parameter>
+																			</UML:Event.parameter>
 																		</UML:SignalEvent>
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162897_712258_1246' name='voltar'/>
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162897_823729_1247' name='detalha${manageable.Name}'>
 																			<UML:Event.parameter>
-																				<UML:Parameter xmi.id='_9_5_1_1ff104dd_1312207049935_127421_1234' name='id'>
+																				<UML:Parameter xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='id'>
+#set($parameterName = "id")
+#set($parameterName = $parameterName.concat($manageable.name.subSequence(0,1).toString().toUpperCase()).concat($manageable.name.substring(1)))
 																					<UML:Parameter.type>
-																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId('Long',${projectDir})}'>
+																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId("Long",${projectDir})}'>
 																							<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
 																								<referentPath xmi.value='datatype::Long'/>
 																							</XMI.extension>
 																						</UML:Classifier>
 																					</UML:Parameter.type>
+																					<UML:ModelElement.taggedValue>
+																						<UML:TaggedValue xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='@andromda.presentation.web.view.field.type'>
+																							<UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+																							<UML:TaggedValue.type>
+																								<UML:TagDefinition href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_175825_53'>
+																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
+																										<referentPath xmi.value='org.andromda.profile::presentation::@andromda.presentation.web.view.field.type'/>
+																									</XMI.extension>
+																								</UML:TagDefinition>
+																							</UML:TaggedValue.type>
+																							<UML:TaggedValue.referenceValue>
+																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_572946_12'>
+																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
+																										<referentPath xmi.value='org.andromda.profile::presentation::WebFieldType::hidden'/>
+																									</XMI.extension>
+																								</UML:ModelElement>
+																							</UML:TaggedValue.referenceValue>
+																						</UML:TaggedValue>
+																					</UML:ModelElement.taggedValue>
 																				</UML:Parameter>
 																			</UML:Event.parameter>
 																		</UML:SignalEvent>
@@ -499,7 +553,7 @@
 																								</UML:TagDefinition>
 																							</UML:TaggedValue.type>
 																							<UML:TaggedValue.referenceValue>
-																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_219748_20'>
+																								<UML:ModelElement href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_572946_12'>
 																									<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
 																										<referentPath xmi.value='org.andromda.profile::presentation::WebFieldType::plaintext'/>
 																									</XMI.extension>
@@ -515,16 +569,18 @@
 																		</UML:SignalEvent>
 																		<UML:SignalEvent xmi.id='_9_5_1_1ff104dd_1312207162898_22761_1251' name='edita${manageable.Name}'>
 																			<UML:Event.parameter>
+#set($parameterName = "id")
+#set($parameterName = $parameterName.concat($manageable.name.subSequence(0,1).toString().toUpperCase()).concat($manageable.name.substring(1)))
 																				<UML:Parameter xmi.id='_9_5_1_1ff104dd_1312206810455_829001_1109' name='id'>
 																					<UML:Parameter.type>
-																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId('Long',${projectDir})}'>
+																						<UML:Classifier href='andromda-profile-datatype-3.1.xml.zip|${bpmUtils.getDataTypeId("Long",${projectDir})}'>
 																							<XMI.extension xmi.extender='MagicDraw UML 9.5' xmi.extenderID='MagicDraw UML 9.5'>
 																								<referentPath xmi.value='datatype::Long'/>
 																							</XMI.extension>
 																						</UML:Classifier>
 																					</UML:Parameter.type>
 																					<UML:ModelElement.taggedValue>
-																						<UML:TaggedValue xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, 'id')}' name='@andromda.presentation.web.view.field.type'>
+																						<UML:TaggedValue xmi.id='${bpmUtils.getNewMagicDrawID(${manageable.name}, "id")}' name='@andromda.presentation.web.view.field.type'>
 																							<UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
 																							<UML:TaggedValue.type>
 																								<UML:TagDefinition href='andromda-profile-presentation-3.1.xml.zip|_9_0_1fe00f9_1119337248937_175825_53'>
