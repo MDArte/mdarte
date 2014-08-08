@@ -19,7 +19,7 @@ import ${serviceRef.targetElement.fullyQualifiedName}Home;
 #end
 #if ($colOperation == true)
 #set ($util = "${stringUtils.replace($utilDir,'/','.')}")
-import ${customTypesPackage}.${util}.Constantes;
+import ${customTypesPackage}.${util}.PaginationStrategy;
 #end
 
 /**
@@ -109,17 +109,17 @@ $operation.getDocumentation("	 * ")
 #if ($operation.exceptionsPresent)
 #set($exception = "throws $operation.exceptionList")
 #end
-	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception;
+	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos) $exception;
 
 	/**
 $operation.getDocumentation("	 * ")
 	 */
 	
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
-		return ${operation.name}(#if(${operation.argumentNames} && !${operation.argumentNames.isEmpty()})$operation.argumentNames, #end paginacao, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+		return ${operation.name}(#if(${operation.argumentNames} && !${operation.argumentNames.isEmpty()})$operation.argumentNames, #end paginacao);
 	}
 	
-	$operation.visibility  $return ${operation.name} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception {
+	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
 #if($ejbSecurityEnabled && !${service.openAccess})
 #renderSecurityBodyPagination($operation)
 #else

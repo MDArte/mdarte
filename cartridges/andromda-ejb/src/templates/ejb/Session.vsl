@@ -3,6 +3,7 @@
 #if($service.findTaggedValue("@andromda.services.shared"))
 #set ($generatedFile = "../../../../../core/cs/shared/target/src/${service.fullyQualifiedNamePath}.java")
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 // license-header java merge-point
 //
 // Attention: Generated code! Do not modify by hand!
@@ -11,6 +12,8 @@
 #if ($stringUtils.isNotBlank($service.packageName))
 package $service.packageName;
 #end
+
+import ${customTypesPackage}.${util}.PaginationStrategy;
 
 /**
  * @see $service.fullyQualifiedName
@@ -82,8 +85,6 @@ public interface $service.name
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException, $operation.exceptionList;
-		
-		$operation.visibility  $return ${operation.name} ($listaArgumentos, Integer linhas, Integer paginas) throws java.rmi.RemoteException, $operation.exceptionList;
 #end
 
 #else
@@ -93,8 +94,6 @@ public interface $service.name
 	$operation.getDocumentation("    * ")
 	    */
 		$operation.visibility  $return ${operation.name} ($listaArgumentos) throws java.rmi.RemoteException;
-		
-		$operation.visibility  $return ${operation.name} ($listaArgumentos, Integer linhas, Integer paginas) throws java.rmi.RemoteException;
 #end
 #end
 #end
@@ -112,7 +111,7 @@ public interface $service.name
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> insertOrUpdate${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 	throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> list${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.ListAction action) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> select${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
-	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;  	  	  	  	  	  
+	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> update${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name})) 		throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
 #end
 	  public java.util.List<${customTypesPackage}.${modelPackageName}.AbstractEntity> manipula${dependencia.targetElement.name}(${dependencia.targetElement.FullyQualifiedName} $stringUtils.lowerCase(${dependencia.targetElement.name}), ${customTypesPackage}.${actionPackageName}.Action action) throws java.rmi.RemoteException, ${customTypesPackage}.${actionPackageName}.ActionException;
 
