@@ -3,60 +3,39 @@
 package $customTypesPackage.${actionPackageName};
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
-
-
+import ${customTypesPackage}.${util}.PaginationStrategy;
 
 public class ListAction extends Action{
 
 	private String propriedade;
-	private Integer paginacao;
-	private Integer linhas;
-	private Integer paginas;
+	private PaginationStrategy paginacao;
 	private Boolean desc;
-	private Boolean defaultValues;
 	
 	public ListAction(){
 		this.propriedade = null;
 		this.paginacao = null;
-		this.linhas = null;
-		this.paginas = null;
 		this.desc = Boolean.FALSE;
-		this.defaultValues = Boolean.TRUE;
 	}
 	
 	public ListAction(String propriedade, Boolean desc){
 		this.propriedade = propriedade;
 		this.paginacao = null;
-		this.linhas = null;
-		this.paginas = null;
 		this.desc = desc;
-		this.defaultValues = Boolean.TRUE;
 	}
 	
-	public ListAction(String propriedade, Boolean desc, Integer paginacao) {
+	public ListAction(String propriedade, Boolean desc, PaginationStrategy paginacao) {
 		this.propriedade = propriedade;
 		this.paginacao = paginacao;
-		this.linhas = null;
-		this.paginas = null;
 		this.desc = desc;
-		this.defaultValues = Boolean.TRUE;
-	}
-	
-	public ListAction(String propriedade, Boolean desc, Integer paginacao, Integer linhas, Integer paginas) {
-		this.propriedade = propriedade;
-		this.paginacao = paginacao;
-		this.linhas = linhas;
-		this.paginas = paginas;
-		this.desc = desc;
-		this.defaultValues = Boolean.FALSE;
 	}
 
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		return this.defaultValues ? dao.list(paginacao, propriedade, desc) : dao.list(paginacao, propriedade, desc, linhas, paginas);
+		return dao.list(paginacao, propriedade, desc);
 	}
 	
 	public String getPropriedade(){
@@ -67,19 +46,8 @@ public class ListAction extends Action{
 		return this.desc;
 	}
 		
-	public Integer getPaginacao(){
+	public PaginationStrategy getPaginacao(){
 		return this.paginacao;
 	}
-	
-	public Integer getLinhas() {
-		return this.linhas;
-	}
-	
-	public Integer getPaginas() {
-		return this.paginas;
-	}
-	
-	public Boolean defaultValues() {
-		return this.defaultValues;
-	}
+
 }
