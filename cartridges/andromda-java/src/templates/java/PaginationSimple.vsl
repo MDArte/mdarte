@@ -1,0 +1,41 @@
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/PaginationSimple.java")
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+package ${customTypesPackage}.${package};
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import java.util.List;
+
+public class PaginationSimple extends PaginationStrategy {
+	
+	public PaginationSimple(Integer paginacao) {
+		super(paginacao);
+	}
+	
+	public PaginationSimple(Integer paginacao, Integer linhas, Integer paginas) {
+		super(paginacao, linhas, paginas);
+	}
+	
+	public void paginateResult(org.hibernate.Query res) {
+	
+		if (paginacao != null){
+				int extra = 0;
+				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+				res.setMaxResults(linhas*paginas);
+		}
+		
+	}
+	
+	public void paginateResult(org.hibernate.Criteria res) {
+	
+		if (paginacao != null){
+				int extra = 0;
+				//if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
+				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+				res.setMaxResults(linhas*paginas);
+		}
+
+	}
+
+}

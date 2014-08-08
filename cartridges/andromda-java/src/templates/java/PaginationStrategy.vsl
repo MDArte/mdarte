@@ -1,0 +1,37 @@
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/PaginationStrategy.java")
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+package ${customTypesPackage}.${package};
+
+import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import ${customTypesPackage}.${package}.Constantes;
+
+public abstract class PaginationStrategy {
+
+	protected Integer paginacao;
+	protected Integer linhas;
+	protected Integer paginas;
+	
+	public PaginationStrategy () {
+		this.paginacao = null;
+		this.linhas = Constantes.TABLE_LINES;
+		this.paginas = Constantes.TABLE_PAGES;
+	}
+	
+	public PaginationStrategy (Integer paginacao) {
+		this.paginacao = paginacao;
+		this.linhas = Constantes.TABLE_LINES;
+		this.paginas = Constantes.TABLE_PAGES;
+	}
+	
+	public PaginationStrategy (Integer paginacao, Integer linhas, Integer paginas) {
+		this.paginacao = paginacao;
+		this.linhas = linhas;
+		this.paginas = paginas;
+	}
+	
+	public abstract void paginateResult(org.hibernate.Query res);
+	
+	public abstract void paginateResult(org.hibernate.Criteria res);
+}
