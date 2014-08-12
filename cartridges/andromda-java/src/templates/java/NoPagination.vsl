@@ -2,10 +2,6 @@
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 package ${customTypesPackage}.${package};
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import java.util.List;
-
 public class NoPagination extends PaginationStrategy {
 
 	public NoPagination() {

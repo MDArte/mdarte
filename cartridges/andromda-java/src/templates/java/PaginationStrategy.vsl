@@ -2,9 +2,6 @@
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 package ${customTypesPackage}.${package};
 
-import java.util.List;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
 import ${customTypesPackage}.${package}.Constantes;
 
 public abstract class PaginationStrategy {
