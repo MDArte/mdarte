@@ -4,20 +4,20 @@ package ${customTypesPackage}.${package};
 
 public class PaginationDisplaytag extends PaginationStrategy {
 	
-	public PaginationDisplaytag(Integer paginacao) {
-		super(paginacao);
+	public PaginationDisplaytag(Integer paginaAtual) {
+		super(paginaAtual);
 	}
 
-	public PaginationDisplaytag(Integer paginacao, Integer linhas, Integer paginas) {
-		super(paginacao, linhas, paginas);
+	public PaginationDisplaytag(Integer paginaAtual, Integer linhas, Integer paginas) {
+		super(paginaAtual, linhas, paginas);
 	}
 	
 	public void paginateResult(org.hibernate.Query res) {
 	
-		if (paginacao != null){
+		if (paginaAtual != null){
 				int extra = 0;
-				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+				if (paginaAtual % paginas == 0 && paginaAtual != 0)  extra = 1;
+				res.setFirstResult(((paginaAtual)/paginas - extra)*linhas*paginas);
 				res.setMaxResults(linhas*paginas + 1);
 		}
 		
@@ -25,10 +25,10 @@ public class PaginationDisplaytag extends PaginationStrategy {
 	
 	public void paginateResult(org.hibernate.Criteria res) {
 	
-		if (paginacao != null){
+		if (paginaAtual != null){
 				int extra = 0;
-				if (paginacao % paginas == 0 && paginacao != 0)  extra = 1;
-				res.setFirstResult(((paginacao)/paginas - extra)*linhas*paginas);
+				if (paginaAtual % paginas == 0 && paginaAtual != 0)  extra = 1;
+				res.setFirstResult(((paginaAtual)/paginas - extra)*linhas*paginas);
 				res.setMaxResults(linhas*paginas + 1);
 		}
 		

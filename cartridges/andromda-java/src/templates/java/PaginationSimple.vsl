@@ -4,18 +4,23 @@ package ${customTypesPackage}.${package};
 
 public class PaginationSimple extends PaginationStrategy {
 	
-	public PaginationSimple(Integer paginacao) {
-		super(paginacao);
+	public PaginationSimple(Integer paginaAtual) {
+		super(paginaAtual);
 	}
 	
-	public PaginationSimple(Integer paginacao, Integer linhas, Integer paginas) {
-		super(paginacao, linhas, paginas);
+	public PaginationSimple(Integer paginaAtual, Integer linhas) {
+		super(paginaAtual);
+		this.linhas = linhas;
+	}
+	
+	public PaginationSimple(Integer paginaAtual, Integer linhas, Integer paginas) {
+		super(paginaAtual, linhas, paginas);
 	}
 	
 	public void paginateResult(org.hibernate.Query res) {
 	
-		if (paginacao != null){
-				res.setFirstResult(((paginacao)/pagina)*linhas*paginas);
+		if (paginaAtual != null){
+				res.setFirstResult(((paginaAtual)/paginas)*linhas*paginas);
 				res.setMaxResults(linhas*paginas);
 		}
 		
@@ -23,8 +28,8 @@ public class PaginationSimple extends PaginationStrategy {
 	
 	public void paginateResult(org.hibernate.Criteria res) {
 	
-		if (paginacao != null){
-				res.setFirstResult(((paginacao)/paginas)*linhas*paginas);
+		if (paginaAtual != null){
+				res.setFirstResult(((paginaAtual)/paginas)*linhas*paginas);
 				res.setMaxResults(linhas*paginas);
 		}
 
