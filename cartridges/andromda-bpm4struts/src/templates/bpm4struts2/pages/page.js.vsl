@@ -238,6 +238,7 @@ function createJTable${variable.name}() {
     	paging: true,
     	pageSize: ${variable.tableMaxRows},
     	sorting: ${variable.tableSortable},
+    	columnSelectable: false,
     	multiSorting: true,
     	defaultSorting: '',
     	actions: {
@@ -248,6 +249,26 @@ function createJTable${variable.name}() {
 #end    
 		},
     	fields: {
+#foreach($_action in $jsp.getActions())
+#foreach($_parameter in $_action.getActionParameters())
+#set($columnHidden=true)
+#foreach($column in $variable.tableColumns)
+#if(${column.name})
+#set($columnName=${column.name})
+#else
+#set($columnName=${column})
+#end
+#if($columnName.equals($parameter.name))
+#set($columnHidden=false)
+#end
+#end
+#if($columnHidden)
+			"$_parameter.name" : {
+				'type': 'hidden',
+			},
+#end	
+#end
+#end
 #set($i = 0)
 #set($limit = $variable.tableColumns.size() - 1)
 #foreach($column in $variable.tableColumns)

@@ -254,6 +254,11 @@ $operation.getDocumentation("     * ")
 		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
 		
 		String [] columns = {
+#foreach($_action in $page.getActions())
+#foreach($_parameter in $_action.getActionParameters())
+					"$_parameter.name",		
+#end
+#end
 #set($i=0)
 #set($limit=$parametro.tableColumns.size() - 1)
 #foreach($column in $parametro.tableColumns)
