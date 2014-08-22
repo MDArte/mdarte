@@ -76,20 +76,11 @@ public interface ${service.name}BI
 
 #if($operation.visibility == 'public')
 		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception, $operation.exceptionList;
-
-#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
-		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception, $operation.exceptionList;
-
-#end
 #end
 
 #else
 #if($operation.visibility == 'public')
 		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception;
-#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
-
-		$operation.visibility abstract $return ${operation.name} ($listaArgumentos)  throws Exception;
-#end
 #end
 #end
 #end

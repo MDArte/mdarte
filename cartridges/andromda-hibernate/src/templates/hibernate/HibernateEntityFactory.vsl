@@ -779,17 +779,22 @@ $operation.getDocumentation("     * ")
 #set($argumentList = "PaginationStrategy paginacao")
 #end
 #else
+#set($collections="false")
 #set($argumentList = $operation.typedArgumentList)	
 #end
 ## Fim
-#if($collections)
+#if($collections=="true")
 #if ($operation.exceptionsPresent)
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($operation.typedArgumentList)
         throws DAOException, $operation.exceptionList {
 #else
     $operation.visibility $returnType.fullyQualifiedName ${operation.name} ($operation.typedArgumentList) throws DAOException {
 #end
+#if(!$stringUtils.isEmpty($operation.argumentNames))
 		return ${operation.name}(${operation.argumentNames}, new NoPagination());
+#else
+		return ${operation.name}(new NoPagination());
+#end
 	}
 
 #end
