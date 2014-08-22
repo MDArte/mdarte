@@ -173,7 +173,7 @@
         outlet="configuration"
         overwrite="true"
         outputToSingleFile="true"
-        outputOnEmptyElements="false">
+        outputOnEmptyElements="true">
         <modelElements variable="dummy">
             <modelElement>
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">

@@ -45,6 +45,15 @@
                 <application.dependency>true</application.dependency>
             </properties>
         </dependency>
+		<dependency>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>${hibernate.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
