@@ -21,9 +21,9 @@
 	function setaParametros${table.name}(param1, param2) {
 		document.${table.name}.action = "";
 		document.${table.name}.action = getPath${table.name}() + '/' + param2 + '.do';
-		document.${table.name}.name=param1;						   
-		document.${table.name}.submit(); 
-		return true;                
+		document.${table.name}.name=param1;
+		document.${table.name}.submit();
+		return true;
 	}
 
 	function selecionaDeseleciona(){

@@ -36,12 +36,24 @@ public abstract class PaginationStrategy {
 		return this.paginaAtual;
 	}
 	
+	public void setPaginaAtual(Integer pagina) {
+		this.paginaAtual = pagina;
+	}
+	
 	public Integer getLinhas() {
 		return this.linhas;
 	}
 	
+	public void setLinhas(Integer linhas) {
+		this.linhas = linhas;
+	}
+	
 	public Integer getPaginas() {
 		return this.paginas;
+	}
+	
+	public void setPaginas(Integer paginas) {
+		this.paginas = paginas;
 	}
 
 }
