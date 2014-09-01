@@ -38,7 +38,7 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
     $visibility final $returnType ${operation.name}($operation.interfaceType form, ViewContainer container) throws Exception {
     	/*Caso seja necessario usar paginacao		
     		Integer pagina = ((Double)container.getAttribute(Constantes.PARAMETRO_PAGINA)).intValue();
-			${customTypesPackage}.${package}.PaginationDisplaytag paginacao = new ${customTypesPackage}.${package}.PaginationDisplaytag(paginacao);
+			${customTypesPackage}.${package}.PaginationDisplaytag paginacao = new ${customTypesPackage}.${package}.PaginationDisplaytag(pagina);
 		*/##acredito que essa parte talvez seja encapsulada num aspecto.
 	
 #set($allowDummyData = ($dummyData == 'true'))
