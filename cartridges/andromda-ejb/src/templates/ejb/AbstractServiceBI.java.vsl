@@ -10,6 +10,8 @@
   package $service.packageName;
 #end
 
+import ${customTypesPackage}.${util}.PaginationStrategy;
+
 /**
  * @see $service.fullyQualifiedName
  */

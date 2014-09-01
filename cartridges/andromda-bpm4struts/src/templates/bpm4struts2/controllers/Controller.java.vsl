@@ -18,6 +18,7 @@ package $controller.packageName;
 
 #set ($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
+import ${packageUtil}.PaginationStrategy;
 import ${servletPackage}.ViewContainer;
 import ${servletPackage}.ControllerAbstract;
 import org.json.simple.JSONArray;
@@ -201,9 +202,9 @@ $operation.getDocumentation("     * ")
 #end
 #set($actionName=$actionName.concat($tableName))
 #set($actions = $page.getActions())
-	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
+	protected abstract Integer get${actionName}TableLength(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
 
-	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
+	protected abstract Collection load${actionName}Table(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
 	
 	protected void load${actionName}Table(ViewContainer container) throws Exception {
 		
@@ -217,6 +218,8 @@ $operation.getDocumentation("     * ")
 		
 		if(container.getParameter("jtSorting") != null)
 		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+			
+		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
 
 #foreach($action in $page.getActions())
 #if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
@@ -251,7 +254,7 @@ $operation.getDocumentation("     * ")
 #end
 #end
 		
-		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
+		Collection rows = this.load${actionName}Table(strategy,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
 		
 		String [] columns = {
 #foreach($_action in $page.getActions())
@@ -287,7 +290,7 @@ $operation.getDocumentation("     * ")
         JSONObject obj = new JSONObject();
         
         obj.put("Result","OK");
-        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container));
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(strategy,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container));
         obj.put("Records",array);
         
         container.setContentType("application/json;charset=UTF-8");

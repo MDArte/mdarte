@@ -21,7 +21,9 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import accessControl.ControleAcesso;
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
+import ${customTypesPackage}.${util}.PaginationStrategy;
 import ${customTypesPackage}.${modelPackageName}.LogInterceptor;
 
 public abstract class AbstractDAO {
@@ -154,17 +156,11 @@ public abstract class AbstractDAO {
 	
 	public abstract java.util.List<AbstractEntity> delete(AbstractEntity objTO) throws DAOException;
 	
-	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc) throws DAOException;
+	public abstract java.util.List<AbstractEntity> list(PaginationStrategy paginacao, String propriedade, Boolean desc) throws DAOException;
 	
-	public abstract java.util.List<AbstractEntity> list(Integer paginacao, String propriedade, Boolean desc, Integer linhas, Integer paginas) throws DAOException;
+	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, PaginationStrategy paginacao) throws DAOException;
 	
-	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao) throws DAOException;
-	
-	public abstract java.util.List<AbstractEntity> filter(br.ufrj.coppetec.DataObject vo, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
-	
-	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao) throws DAOException;
-	
-	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, Integer paginacao, Integer linhas, Integer paginas) throws DAOException;
+	public abstract java.util.List<AbstractEntity> defaultFilter(br.ufrj.coppetec.to.AbstractTO to, PaginationStrategy paginacao) throws DAOException;
 	
 	public abstract org.hibernate.Criteria xmlExport(br.ufrj.coppetec.ValueObject vo, org.hibernate.Session session) throws DAOException;
 	
