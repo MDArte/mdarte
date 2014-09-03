@@ -116,11 +116,27 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
 #end
 #set($actionAjax=$actionAjax.concat($tableName))
 #set($actions = $page.getActions())
-	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
+##Pegando parametros que deverão aparecer como hidden na view da 
+## jtable para os casos em que a filtragem vem de outra tela
+#set($incomingActions = $page.getIncomingActions())
+#set($impressos = $collection.class.newInstance())
+#foreach($incoming in $incomingActions)
+#set($formFields = $incoming.getActionFormFields())
+#foreach($param in $formFields)
+#if($param.table && $param.tableType.equals("jtable") && !$incoming.ajaxAction)
+#foreach($parameter in $formFields)
+#if(!$impressos.contains($parameter) && !$parameter.table)
+#set($lixo = $impressos.add($parameter))
+#end
+#end
+#end
+#end
+#end
+	public final java.util.Collection load${actionAjax}Table(Integer paginacao, Integer linhas, String propriedade, Boolean desc,#foreach($param in $impressos)$param.type.fullyQualifiedName $param.name,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end#end ViewContainer container) throws Exception {
 		return null;
 	}
 	
-	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end ViewContainer container) throws Exception {
+	public final Integer get${actionAjax}TableLength(Integer paginacao, Integer linhas, String propriedade, Boolean desc, #foreach($param in $impressos)$param.type.fullyQualifiedName $param.name,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parameter.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name,#end#end#end#end ViewContainer container) throws Exception {
 		return null;
 	}
 #end

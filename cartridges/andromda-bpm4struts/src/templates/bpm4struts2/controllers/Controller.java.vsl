@@ -201,11 +201,28 @@ $operation.getDocumentation("     * ")
 #end
 #set($actionName=$actionName.concat($tableName))
 #set($actions = $page.getActions())
-	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
-
-	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
+##Pegando parametros que deverão aparecer como hidden na view da 
+## jtable para os casos em que a filtragem vem de outra tela
+#set($incomingActions = $page.getIncomingActions())
+#set($impressos = $collection.class.newInstance())
+#foreach($incoming in $incomingActions)
+#set($formFields = $incoming.getActionFormFields())
+#foreach($param in $formFields)
+#if($param.table && $param.tableType.equals("jtable") && !$incoming.ajaxAction)
+#foreach($parameter in $formFields)
+#if(!$impressos.contains($parameter) && !$parameter.table)
+#set($lixo = $impressos.add($parameter))
+#end
+#end
+#end
+#end
+#end
 	
-	protected void load${actionName}Table(ViewContainer container) throws Exception {
+	protected abstract Integer get${actionName}TableLength(Integer paginacao,Integer linhas, String propriedade, Boolean desc,#foreach($param in $impressos)$param.type.fullyQualifiedName $param.fullyQualifiedName,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end#end ViewContainer container) throws Exception;
+
+	protected abstract Collection load${actionName}Table(Integer paginacao,Integer linhas, String propriedade, Boolean desc, #foreach($param in $impressos)$param.type.fullyQualifiedName  $param.fullyQualifiedName,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end#end ViewContainer container) throws java.lang.Exception;
+	
+	protected void load${actionName}Table(#foreach($param in $impressos)$param.type.fullyQualifiedName $param.name,#end ViewContainer container) throws Exception {
 		
 		Integer linhas = (container.getParameter("jtPageSize") != null) ? Integer.valueOf(container.getParameter("jtPageSize")) : 10;
 		
@@ -251,7 +268,7 @@ $operation.getDocumentation("     * ")
 #end
 #end
 		
-		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
+		Collection rows = this.load${actionName}Table(paginacao,linhas,propriedade,desc,#foreach($param in $impressos)$param.name,#end#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))$param.name,#end#end#end#end container);
 		
 		String [] columns = {
 #foreach($_action in $page.getActions())
@@ -287,7 +304,7 @@ $operation.getDocumentation("     * ")
         JSONObject obj = new JSONObject();
         
         obj.put("Result","OK");
-        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container));
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(paginacao,linhas,propriedade,desc,#foreach($param in $impressos)$param.name,#end#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))$param.name,#end#end#end#end container));
         obj.put("Records",array);
         
         container.setContentType("application/json;charset=UTF-8");
@@ -307,5 +324,4 @@ $operation.getDocumentation("     * ")
 		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
 	}
 }
-
 #end

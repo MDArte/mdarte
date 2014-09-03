@@ -319,7 +319,29 @@ function createJTable${variable.name}() {
     	}
 	});
 	
-	$("div#${variable.name}").jtable("load");
+	$("div#${variable.name}").jtable("load", { 
+#set($incomingActions = $jsp.getIncomingActions())
+#set($impressos = $collection.class.newInstance())
+#foreach($incoming in $incomingActions)
+#set($formFields = $incoming.getActionFormFields())
+#foreach($param in $formFields)
+#if($param.table && $param.tableType.equals("jtable"))
+#foreach($parameter in $formFields)
+#if(!$impressos.contains($parameter) && !$parameter.table)
+#set($lixo = $impressos.add($parameter))
+#end
+#end
+#end
+#end
+#end
+#set($hidden = "Hidden")
+#set($size = $impressos.size())
+#set($i=0)
+#foreach($parameter in $impressos)
+	$parameter.name: $("#${parameter.name}${hidden}${parameter.jsp.useCase.name}").val()#if($i<$size - 1),#end
+#set($i=$i+1)
+#end
+	});
 	
 }
 #end
@@ -918,7 +940,9 @@ $(document).ready(function(){
 #if($_action.ajaxAction)
 #if($_action.temParametroTabela)
 #if($_action.ajaxTable.equals(""))
-	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); });
+	$("input#${_action.actionName.toString().replace(' ','')}").click(function(){
+		setaAcaoAjaxStruts2('${_action.actionPath}' , '${_action.actionName}','${_action.actionFormat}','divTabelas' ); 
+	});
 #else
 	$("input#${_action.actionName.toString().replace(' ','')}").click(function() {
 #set($i=0)

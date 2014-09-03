@@ -31,13 +31,23 @@
 #end
 #end
 ## fim do codigo
+#set($jtable = false)
+#foreach($_tabela in $jsp.getTables())
+#if($_tabela.tableType.equals("jtable"))
+#set($jtable = true)
 #end
+#end
+#end
+<!-- jtable = $jtable -->
 #set ($messageKey = $action.messageKey)
 #set ($actionTrigger = $action.actionTrigger)
 <div id="$action.styleId" class="action">
 	<div class="trigger">
 #if ($action.tableAction)## this means this action allows rows to be selected and sent
 		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
+#if($jtable)
+			<%@ include file="${jsp.fullPath}-fields.jsp" %>
+#end
 			<%@ include file="${jsp.fullPath}-actions.jsp" %>
 		</s:form>
 #elseif ($action.formPost || $action.hyperlink || $action.popup)
@@ -45,6 +55,9 @@
 		## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 		<s:form id="${action.formBeanName}" action="${action.actionClassName}" namespace="${action.actionPathRoot}" method="post" cssClass="form-horizontal">
 			<s:actionerror />
+#if($jtable)
+			<%@ include file="${jsp.fullPath}-fields.jsp" %>
+#end
 			<%@ include file="${jsp.fullPath}-actions.jsp" %>
 		</s:form>
 #else

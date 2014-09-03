@@ -99,7 +99,6 @@ public class ${action.actionClassName} extends ActionSupport implements ServletR
 #end
 ##
 #foreach ($field in $action.actionFormFields)
-
 #set ($fieldName = $field.name)
 #set ($fieldType = $field.type.fullyQualifiedName)
 #if ($field.file)

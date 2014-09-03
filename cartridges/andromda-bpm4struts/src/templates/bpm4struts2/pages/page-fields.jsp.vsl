@@ -5,6 +5,7 @@
 ##
 ##
 ## Codigo acrescentado para pegar action que cont�m parametros ##
+<div id="fields">
 #if ($jsp.actions.size() > 0)
 #set ($action = $jsp.actions.get(0))
 #set($achou = "false")
@@ -49,7 +50,6 @@
 	<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
 #end
-<div id="fields">
 #foreach ($field in $actionParameters)
 #if (!$field.multiboxPropertyName && ($field.widgetType != "hidden") && !$field.table)
 ## for now multibox field can only be displayed in tables
@@ -75,9 +75,30 @@
 #end
 #end
 #end
+#end
+#end
+#end
+#end
+
+#set($incomingActions = $jsp.getIncomingActions())
+#set($impressos = $collection.class.newInstance())
+#foreach($incoming in $incomingActions)
+#set($formFields = $incoming.getActionFormFields())
+#foreach($param in $formFields)
+#if($param.table && $param.tableType.equals("jtable"))
+#foreach($parameter in $formFields)
+#if(!$impressos.contains($parameter) && !$parameter.table)
+	<s:set name="__value" value="#session.form.${parameter.name}" />
+	<div id="divHidden${parameter.name}${parameter.jsp.useCase.name}" class=" hidden">
+		<s:hidden id="${parameter.name}Hidden${parameter.jsp.useCase.name}" name="${parameter.name}"
+			cssClass="hidden" label="" value="%{#session.form.${parameter.name}}"
+			title="" styleId="${parameter.name}${parameter.jsp.useCase.name}" />
+	</div>
+#set($lixo = $impressos.add($parameter))
+#end
+#end
+#end
+#end
+#end
 </div>
-#end
-#end
-#end
-#end
 #end

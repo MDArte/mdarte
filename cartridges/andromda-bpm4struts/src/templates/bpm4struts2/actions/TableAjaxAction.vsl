@@ -20,7 +20,6 @@
 //
 
 package ${package};
-//$parameter.table
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -58,12 +57,230 @@ public class ${actionName}Ajax extends ActionSupport implements ServletRequestAw
 	public void setServletRequest(HttpServletRequest request)
 	{
 		this.request = request;
-	}
+	}	
 
 	protected String __casoDeUso = "/${parameter.getJsp().getUseCas().getName()}";
 	protected String __urlCasoDeUso = "/${parameter.getJsp().getUseCase().getName()}/${actionName}Ajax.action";
 	protected String __modulo = "${parameter.getJsp().getUseCase().package.webModuleName}";
 	protected String __contexto = "$stringUtils.replaceOnce(${parameter.getJsp().getUseCase().package.contexto}, ${contextoPrincipal}, "")";
+#end
+
+##Carregando os parametros necessários para carregar a tabela
+##mesmo quando a requisição inicial não é ajax
+#set($incomingActions = $parameter.jsp.getIncomingActions())
+#set($fields = $collection.class.newInstance())
+#foreach($incoming in $incomingActions)
+#set($formFields = $incoming.getActionFormFields())
+#foreach($param in $formFields)
+#if($param.table && $param.tableType.equals("jtable"))
+#foreach($parameter in $formFields)
+#if(!$fields.contains($parameter) && !$parameter.table)
+#set($lixo = $fields.add($parameter))
+#end
+#end
+#end
+#end
+#end
+#foreach($field in $fields)
+#set ($fieldName = $field.name)
+#set ($fieldType = $field.type.fullyQualifiedName)
+#if ($field.file)
+	private java.io.File $field.name = null;
+	private java.lang.String ${field.name}FileName = null;
+	private java.lang.String ${field.name}ContentType = null;
+#elseif ($field.table)
+	private $field.type.fullyQualifiedName $field.name;
+#elseif ($field.strutsAction.tableAction)
+	private java.util.List ${field.name}RowSelection;
+#elseif ($field.type.mapType)
+	private java.util.Map $field.name = new java.util.HashMap();
+#elseif($field.widgetType=="money")
+	private java.lang.String $field.name;
+#elseif($field.widgetType=="multibox")
+	private ${field.type.fullyQualifiedName}#if($field.type.enumeration)[]#end $field.name;
+#elseif ($field.doubleSelect)
+	private $field.type.fullyQualifiedName $field.name;
+	private $field.type.fullyQualifiedName ${field.name}__Double;
+
+	public ${field.type.fullyQualifiedName} ${field.getterName}__Double()
+	{
+		return ${fieldName}__Double;
+	}
+
+	public void ${field.setterName}__Double($fieldType ${fieldName}__Double)
+	{
+		this.${fieldName}__Double = ${fieldName}__Double;
+	}
+
+#else
+	private $field.type.fullyQualifiedName $field.name;
+#end
+#if(${field.widgetType}=="select" || ${field.radioButton})
+	public java.util.Map ${field.name}ComboList;
+	public java.util.Map ${field.getterName}ComboList()
+	{
+		if(${field.name}ComboList==null)${field.name}ComboList=new java.util.HashMap();
+		return ${field.name}ComboList;
+	}
+#end
+#if(!($field.file))
+#if($field.strutsAction.tableAction)
+	public java.util.List ${field.getterName}RowSelection ()
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#if ($enumeration.literalType.primitive)
+#set($literalType = $enumeration.literalType.wrapperName)
+#else
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
+#end
+	public ${literalType}#if($field.widgetType == "multibox")[]#end ${field.getterName}() 
+#else 
+	public ${field.type.fullyQualifiedName} ${field.getterName}() 
+#end
+	{
+#if($field.strutsAction.tableAction)
+		return ${fieldName}RowSelection;
+#elseif($field.type.enumeration)
+#if($field.widgetType == "multibox")
+		${literalType}[] result = new ${literalType}[${fieldName}.length];
+	
+		for (int i = 0; i < this.${fieldName}.length; i++) {
+			result[i] = ${fieldName}[i].getValue();
+		}
+		
+		return result;
+#else
+		return ${fieldName}.getValue();
+#end
+#else
+		return ${fieldName};
+#end
+	}
+
+#if(${field.type.fullyQualifiedName}=="java.util.Date")
+	public void ${field.setterName}(String $fieldName)
+	{
+		java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
+		 if ($fieldName == null || ${fieldName}.trim().length() == 0)
+			{
+				this.${fieldName} = null;
+			}
+			else
+			{
+				try
+				{
+					this.${fieldName} = formatter.parse(${fieldName});
+				}
+				catch(java.text.ParseException e)
+				{
+					this.${fieldName} = null;
+				}
+			}
+	}
+#elseif($field.strutsAction.tableAction)
+	public void ${field.setterName}RowSelection(java.util.List ${fieldName}RowSelection)
+	{
+		this.${fieldName}RowSelection = ${fieldName}RowSelection;
+	}
+#elseif($field.type.enumeration)
+#set($enumeration = $field.type)
+#set($type = $enumeration.fullyQualifiedName)
+#if ($enumeration.literalType.primitive)
+#set($literalType = $enumeration.literalType.wrapperName)
+#else
+#set($literalType = $enumeration.literalType.fullyQualifiedName)
+#end
+	public void ${field.setterName}($literalType#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+#if($field.widgetType == "multibox")
+		if ($fieldName != null) {
+			this.${fieldName} = new ${type}[${fieldName}.length];
+	
+    		for (int i = 0; i < ${fieldName}.length; i++) {
+    			this.${fieldName}[i] =  ${type}.${enumeration.fromOperationName}(${fieldName}[i]);
+    		}
+		}
+#else
+		if ($fieldName != null)
+			this.${fieldName} = ${type}.${enumeration.fromOperationName}($fieldName);
+#end
+    }
+	
+	public void ${field.setterName}($type#if($field.widgetType == "multibox")[]#end $fieldName)
+    {
+		if ($fieldName != null)
+			this.${fieldName} = $fieldName;
+    }
+#else
+#if(!$field.hiddenField)
+	public void ${field.setterName}($fieldType $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
+#else
+#if($field.type.name=="String")
+	public void ${field.setterName}($fieldType $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
+#else
+	public void ${field.setterName}(Object $fieldName)
+	{
+		if($fieldName == null) this.$fieldName = null;
+		else if ($fieldName instanceof  String[]) {
+			String temp = ((String[])$fieldName)[0];
+			if (temp.isEmpty()) this.$fieldName = null;
+			else this.$fieldName = ${fieldType}.valueOf(((String[])$fieldName)[0]);
+		}
+		else this.$fieldName = (${fieldType}) $fieldName;
+	}
+#end
+#end
+#end
+#else
+	public void ${field.setterName}(java.io.File $fieldName)
+	{
+		this.$fieldName = $fieldName;
+	}
+
+	/**
+	$field.getDocumentation("     * ")
+	*/
+
+	public java.io.File ${field.getterName}()
+	{
+		return this.$fieldName;
+	}
+
+	public void ${field.setterName}ContentType(java.lang.String ${fieldName}ContentType)
+	{
+		this.${fieldName}ContentType = ${fieldName}ContentType;
+	}
+
+	/**
+	$field.getDocumentation("     * ")
+	*/
+
+	public java.lang.String ${field.getterName}ContentType()
+	{
+		return this.${fieldName}ContentType;
+	}
+
+	public void ${field.setterName}FileName(java.lang.String ${fieldName}FileName)
+	{
+		this.${fieldName}FileName = ${fieldName}FileName;
+	}
+
+	/**
+	$field.getDocumentation("     * ")
+	*/
+
+	public java.lang.String ${field.getterName}FileName()
+	{
+		return this.${fieldName}FileName;
+	}
+
+#end
 #end
 
 	public void saveErrorMessage(String message)
@@ -120,7 +337,7 @@ public class ${actionName}Ajax extends ActionSupport implements ServletRequestAw
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($method=$method.concat("$aux"))
 #end
-		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().load${actionName}Table(new Struts2ViewContainer(this,request,response));
+		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().load${actionName}Table(#foreach($param in $fields)this.$param.name,#end new Struts2ViewContainer(this,request,response));
 		
 		return forward;
 	}

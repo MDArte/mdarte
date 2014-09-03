@@ -15,6 +15,7 @@
     <templateObject name="bpmUtils" className="org.andromda.cartridges.bpm4struts.Bpm4StrutsUtils"/>
     <templateObject name="dateUtils" className="org.andromda.utils.DateUtilsHelper"/>
     <templateObject name="stringUtils" className="org.andromda.utils.StringUtilsHelper"/>
+    <templateObject name="collection" className="java.util.ArrayList" />
 
     <!-- cartridge-templateObject merge-point-->
 
@@ -1770,8 +1771,8 @@
         outlet="pages"
         overwrite="true"
         outputOnEmptyElements="true">
-        <modelElements variable="jsp">
-            <modelElement>
+        <modelElements>
+            <modelElement variable="jsp">
                 <type name="org.andromda.cartridges.bpm4struts.metafacades.CoppetecStrutsJsp"/>
             </modelElement>
         </modelElements>
