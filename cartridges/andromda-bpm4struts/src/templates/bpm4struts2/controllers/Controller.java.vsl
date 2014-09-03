@@ -202,7 +202,6 @@ $operation.getDocumentation("     * ")
 #end
 #set($actionName=$actionName.concat($tableName))
 #set($actions = $page.getActions())
-<<<<<<< HEAD
 ##Pegando parametros que deverão aparecer como hidden na view da 
 ## jtable para os casos em que a filtragem vem de outra tela
 #set($incomingActions = $page.getIncomingActions())
@@ -223,11 +222,6 @@ $operation.getDocumentation("     * ")
 	protected abstract Integer get${actionName}TableLength(PaginationStrategy paginacao, String propriedade, Boolean desc,#foreach($param in $impressos)$param.type.fullyQualifiedName $param.fullyQualifiedName,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end#end ViewContainer container) throws Exception;
 
 	protected abstract Collection load${actionName}Table(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($param in $impressos)$param.type.fullyQualifiedName  $param.fullyQualifiedName,#end#foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if(!$impressos.contains($param))#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end#end ViewContainer container) throws java.lang.Exception;
-=======
-	protected abstract Integer get${actionName}TableLength(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws Exception;
-
-	protected abstract Collection load${actionName}Table(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end ViewContainer container) throws java.lang.Exception;
->>>>>>> develop
 	
 	protected void load${actionName}Table(#foreach($param in $impressos)$param.type.fullyQualifiedName $param.name,#end ViewContainer container) throws Exception {
 		
@@ -241,15 +235,9 @@ $operation.getDocumentation("     * ")
 		
 		if(container.getParameter("jtSorting") != null)
 		    desc = container.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
-<<<<<<< HEAD
 		
 		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
 		
-=======
-			
-		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
-
->>>>>>> develop
 #foreach($action in $page.getActions())
 #if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
 #foreach($param in $action.getActionParameters())

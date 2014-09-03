@@ -20,6 +20,7 @@ package $controllerPackageName;
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 import ${customTypesPackage}.${package}.Constantes;
 import ${servletPackage}.ViewContainer;
+import ${packageUtil}.PaginationStrategy;
 
 /**
  * @see ${controllerPackageName}.${controllerClassName}

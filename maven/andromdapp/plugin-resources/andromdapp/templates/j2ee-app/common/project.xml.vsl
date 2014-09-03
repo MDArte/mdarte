@@ -9,6 +9,16 @@
           Contains the ${pom.name} module.
     </description>
     <dependencies>
+    	<dependency>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>${hibernate.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>${pom.groupId}-mda</artifactId>
