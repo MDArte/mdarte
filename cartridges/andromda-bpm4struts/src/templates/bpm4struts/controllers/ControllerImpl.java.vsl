@@ -43,9 +43,10 @@ public class ${controllerClassName}Impl extends ${controllerClassName}
      */
     $visibility final $returnType ${operation.name}(ActionMapping mapping, $operation.interfaceType form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-    	/*Caso seja necessario usar paginacao		
-    		Integer paginacao = (((Integer)request.getAttribute(Constantes.PARAMETRO_PAGINA)));
-    	*/
+		/*Caso seja necessario usar paginacao		
+    		Integer pagina = (((Integer)request.getAttribute(Constantes.PARAMETRO_PAGINA)));
+			${customTypesPackage}.${package}.PaginationDisplaytag paginacao = new ${customTypesPackage}.${package}.PaginationDisplaytag(pagina);
+		*/
 	
 #set($allowDummyData = ($dummyData == 'true'))
 #if ($allowDummyData)

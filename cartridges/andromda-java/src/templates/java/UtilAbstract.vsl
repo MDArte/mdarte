@@ -78,4 +78,17 @@ public abstract class UtilAbstract {
 		
 		return false;
 	}
+	
+	public static java.util.ArrayList paginateList(java.util.ArrayList res, Integer paginaAtual, Integer linhas) {
+	
+		java.util.ArrayList result = new java.util.ArrayList();
+		
+		for (int i = linhas*paginaAtual; i < linhas*paginaAtual + linhas; i++) {
+			if (i >= res.size()) break;
+			result.add(res.get(i));
+		}
+			
+		return result;
+	
+	}
 }
