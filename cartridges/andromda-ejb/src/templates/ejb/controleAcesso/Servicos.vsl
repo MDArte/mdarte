@@ -38,7 +38,7 @@
 -- Relacionado o usuario su ao perfil su do sistema $projectId
 
 --INSERT INTO PF_USR(USR_FK, PF_FK)
---VALUES ((SELECT ID FROM USUARIO WHERE NOME = 'su'), (SELECT ID FROM PERFIL WHERE SUPER_USUARIO = true AND SISTEMA_FK = (SELECT ID FROM SISTEMA WHERE NOME = '$projectId')));
+--VALUES ((SELECT ID FROM USUARIO WHERE LOGIN = 'su'), (SELECT ID FROM PERFIL WHERE SUPER_USUARIO = true AND SISTEMA_FK = (SELECT ID FROM SISTEMA WHERE NOME = '$projectId')));
 
 
 #foreach ($service in $services)
