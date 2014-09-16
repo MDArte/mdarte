@@ -448,7 +448,7 @@ ${indent}			<s:checkboxlist id="${field.name}${action.useCase.name}" $requiredSt
 ${indent}		</div>
 ${indent}	</div>
 #elseif($field.custom)
-${indent}	<div id="div${field.name}${action.useCase.name}" class="custom field">
+${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-control">
 ${indent}		<%@ include file="${field.name}.jsp"  %>
 ${indent}	</div>
 ##
