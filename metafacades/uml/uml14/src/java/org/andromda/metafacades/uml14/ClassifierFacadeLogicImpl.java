@@ -764,7 +764,7 @@ public class ClassifierFacadeLogicImpl
      */
 	protected boolean handleValidateFullyQualifiedNameSize() {
 
-		// Verifica se a propriedade validateSizeClass est· ativa (true)
+		// Verifica se a propriedade validateSizeClass est√° ativa (true)
 		boolean validate;
 		Object validateProperty = this.getConfiguredProperty(UMLMetafacadeProperties.VALIDATE_SIZE_CLASS);		
 		
@@ -773,10 +773,10 @@ public class ClassifierFacadeLogicImpl
 		else
 			validate = Boolean.parseBoolean(String.valueOf(validateProperty));
 
-		// Se n„o estiver ativada n„o realiza verificaÁ„o
+		// Se n√£o estiver ativada n√£o realiza verifica√ß√£o
 		if (!validate) return true;
 		
-		// LÍ a propriedade maxSizeClass que indica o tamanho m·ximo do fullyQualifiedName
+		// L√™ a propriedade maxSizeClass que indica o tamanho m√°ximo do fullyQualifiedName
 		int maxLength;
 		Object maxLengthProperty = this.getConfiguredProperty(UMLMetafacadeProperties.MAX_SIZE_CLASS);		
 		
@@ -786,7 +786,7 @@ public class ClassifierFacadeLogicImpl
 		try { maxLength = Integer.parseInt(String.valueOf(maxLengthProperty)); }
 		catch (Exception e) { return true; }
 		
-		// Faz a verificaÁ„o se o tamanho do fullyQualifiedName n„o ultrapassa o especificado
+		// Faz a verifica√ß√£o se o tamanho do fullyQualifiedName n√£o ultrapassa o especificado
 		return getFullyQualifiedName().length() <= maxLength;
 	}
  

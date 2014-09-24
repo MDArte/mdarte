@@ -107,7 +107,7 @@ public class ${formBeanClassName}
 #if (${field.widgetType}=="select" || ${field.radioButton} || $field.doubleSelect || $field.multibox)
 	private java.lang.Object[] $field.valueListName;
 	private java.lang.Object[] $field.labelListName;
-	private java.lang.Object[] ${field.labelListName}Double;    
+	private java.lang.Object[] ${field.labelListName}Double;
 	private java.lang.Object[] ${field.labelListName}Hints;
 	private java.lang.Object[] ${field.labelListName}Destination;
 
@@ -166,7 +166,7 @@ public class ${formBeanClassName}
 	this.$fieldName = $field.nullValue;
 #if($field.radioButton)
 #if($field.findTaggedValue("$radioSelected"))
-    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+    	${field.setterName}(${field.findTaggedValue("$radioSelected")});
 #end
 #end
     }

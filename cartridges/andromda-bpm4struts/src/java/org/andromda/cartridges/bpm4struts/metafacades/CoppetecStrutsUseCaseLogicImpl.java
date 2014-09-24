@@ -235,7 +235,7 @@ public class CoppetecStrutsUseCaseLogicImpl
 //                    	 only add these when a trigger is present, otherwise it's no use having them
             	
         		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Ajuda" + ";" + action.getOnlineHelpKey() + ";" + action.getOnlineHelpValue());
-        		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Documentaçao" + ";" + action.getDocumentationKey() + ";" + action.getDocumentationValue());
+        		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "DocumentaÃ§ao" + ";" + action.getDocumentationKey() + ";" + action.getDocumentationValue());
         		
         		// the regular trigger messages
         		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Titulo" + ";" + trigger.getTitleKey() + ";" + trigger.getTitleValue());
@@ -314,7 +314,7 @@ public class CoppetecStrutsUseCaseLogicImpl
 
 
     /** 
-     * Retorna uma coleção contendo os modos de operação de todos os casos de uso da aplicação.
+     * Retorna uma coleÃ§Ã£o contendo os modos de operaÃ§Ã£o de todos os casos de uso da aplicaÃ§Ã£o.
      */
     public Collection handleGetAllModosOperacao() {
     	Set setModosOperacao = new HashSet();
@@ -329,8 +329,8 @@ public class CoppetecStrutsUseCaseLogicImpl
     }
     
     /** 
-     * Retorna uma coleção contendo os modos de operação do caso de uso.
-     * Busca esses valores nas tagged values definidas nas transições e nos parâmetros.
+     * Retorna uma coleÃ§Ã£o contendo os modos de operaÃ§Ã£o do caso de uso.
+     * Busca esses valores nas tagged values definidas nas transiÃ§Ãµes e nos parÃ¢metros.
      */
     public Collection handleGetModosOperacao() {
     	Set setModosOperacao = new HashSet();    	
@@ -356,7 +356,7 @@ public class CoppetecStrutsUseCaseLogicImpl
     	return setModosOperacao;
     }
 
-    /** Retorna os modos de operação contidos em uma String como uma Collection de Strings */ 
+    /** Retorna os modos de operaÃ§Ã£o contidos em uma String como uma Collection de Strings */ 
 	private Collection listOperationModes (String operationModes) {
 		List lista = new ArrayList();
 		

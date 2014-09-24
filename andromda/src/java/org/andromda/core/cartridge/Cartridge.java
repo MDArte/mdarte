@@ -329,7 +329,7 @@ public class Cartridge extends BasePlugin {
 				return str.toString();
 			}
 		} catch (IOException e) {
-			AndroMDALogger.info("\n Erro no cartucho: erro na abertura do arquivo XML de arvore para geraÁ„o - arquivo: " + arquivo
+			AndroMDALogger.info("\n Erro no cartucho: erro na abertura do arquivo XML de arvore para gera√ß√£o - arquivo: " + arquivo
 					+ " . \n");
 		}
 		return null;
@@ -585,7 +585,7 @@ public class Cartridge extends BasePlugin {
 								}
 
 								/* ==================================================================
-								    [Moises-COPPETEC] CÛdigo usado para redirecionar o outlet para o mÛdulo correto
+								    [Moises-COPPETEC] C√≥digo usado para redirecionar o outlet para o m√≥dulo correto
 								   ================================================================== */
 
 								String outletReplaced = new String(outlet);
@@ -716,7 +716,7 @@ public class Cartridge extends BasePlugin {
 					} else {
 						long milisFim = System.currentTimeMillis();
 						tempoGerandoArquivosExistentes += (milisFim - milisIni);
-						//AndroMDALogger.info("\n Arquivo j· existente: '" + outputFile.getAbsolutePath() + "' - Tempo:"+(milisFim-milisIni));
+						//AndroMDALogger.info("\n Arquivo j√° existente: '" + outputFile.getAbsolutePath() + "' - Tempo:"+(milisFim-milisIni));
 					}
 				}
 			}

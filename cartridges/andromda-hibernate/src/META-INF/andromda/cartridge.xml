@@ -104,7 +104,7 @@
             <modelElement>
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
                     <property name="version">3</property>
-                </type>                
+                </type>
             </modelElement>
         </modelElements>
     </template> 
@@ -200,9 +200,9 @@
         <modelElements variable="dummy">
             <modelElement>
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="version">3</property>                    
-                </type>                   
-            </modelElement>         
+                    <property name="version">3</property>
+                </type>
+            </modelElement>
         </modelElements>
     </template>       
     <template
@@ -230,10 +230,10 @@
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
 					<property name="requiresMapping"/>
                     <property name="version">3</property>
-					<property name="auditoria" variable="auditoria"/>		
-					<property name="auditoria">true</property>			   
-				</type>          
-            </modelElement>            
+					<property name="auditoria" variable="auditoria"/>
+					<property name="auditoria">true</property>
+				</type>
+            </modelElement>
         </modelElements>
     </template>
 
@@ -303,7 +303,7 @@
         outlet="entities"
         overwrite="true">
         <modelElements variable="webServiceData">
-            <modelElement stereotype= "WebServiceData"/>         
+            <modelElement stereotype= "WebServiceData"/>
         </modelElements>
     </template>
 
@@ -330,7 +330,7 @@
             <modelElement>
                 <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
 					<property name="auditoria" variable="auditoria"/>
-					<property name="auditoria">true</property>					   
+					<property name="auditoria">true</property>
 				</type>
             </modelElement>
         </modelElements>

@@ -61,8 +61,8 @@ public final class CriptoUtils {
  * @param input - O array de bytes a ser criptografado
  * @param algoritmo - O algoritmo a ser utilizado
  * @return byte[] - O resultado da criptografia
- * @throws NoSuchAlgorithmException - Caso o algoritmo fornecido não seja
- * válido
+ * @throws NoSuchAlgorithmException - Caso o algoritmo fornecido nÃ£o seja
+ * vÃ¡lido
  */
  public static byte[] digest(byte[] input, String algoritmo)
      throws NoSuchAlgorithmException {
@@ -79,7 +79,7 @@ public final class CriptoUtils {
  * @param input - O array de bytes a ser criptografado
  * @return byte[] - O resultado da criptografia
  * @throws NoSuchAlgorithmException - Caso o algoritmo fornecido não seja
- * válido
+ * vÃ¡lido
  */
  public static byte[] digest(byte[] input)
      throws NoSuchAlgorithmException {
@@ -108,7 +108,7 @@ public final class CriptoUtils {
 	}
 
 	/** 
-	 * Extrai a chave p�blica do arquivo. 
+	 * Extrai a chave pública do arquivo. 
 	 */  
 	public static PublicKey getPublicKeyFromFile(File cert, String alias, String password, String keyStoreType) throws Exception {  
 		KeyStore ks = KeyStore.getInstance (keyStoreType);  
@@ -122,14 +122,14 @@ public final class CriptoUtils {
 	}
 
 	/** 
-	 * Extrai a chave p�blica do arquivo. 
+	 * Extrai a chave pública do arquivo. 
 	 */  
 	public static PublicKey getPublicKeyFromFile(File cert, String alias, String password) throws Exception {  
 		return getPublicKeyFromFile(cert, alias, password, "JKS");  
 	}
 
 	/** 
-	 * Extrai a chave p�blica do arquivo. 
+	 * Extrai a chave pública do arquivo. 
 	 */  
 	public static PublicKey getPublicKeyFromFile() throws Exception {  
 		return getPublicKeyFromFile(DS_CERTIFICATE, DS_ALIAS, DS_PASSWORD);  
@@ -157,7 +157,7 @@ public final class CriptoUtils {
 	}  
 
 	/** 
-	 * Verifica a assinatura para o buffer de bytes, usando a chave p�blica. 
+	 * Verifica a assinatura para o buffer de bytes, usando a chave pública. 
 	 * @param key PublicKey 
 	 * @param buffer Array de bytes a ser verificado. 
 	 * @param signed Array de bytes assinado (encriptado) a ser verificado. 
@@ -171,7 +171,7 @@ public final class CriptoUtils {
 	}  
 
 	/** 
-	 * Verifica a assinatura para o buffer de bytes, usando a chave p�blica e o algoritmo padrao. 
+	 * Verifica a assinatura para o buffer de bytes, usando a chave pública e o algoritmo padrao. 
 	 * @param buffer Array de bytes a ser verificado. 
 	 * @param signed Array de bytes assinado (encriptado) a ser verificado. 
 	 */  
@@ -200,7 +200,7 @@ public final class CriptoUtils {
   * Converte uma String hexa no array de bytes correspondente.
   * @param hexa - A String hexa
   * @return O vetor de bytes
-  * @throws IllegalArgumentException - Caso a String não sej auma
+  * @throws IllegalArgumentException - Caso a String não seja uma
   * representação haxadecimal válida
   */
  public static byte[] hexStringToByteArray(String hexa)

@@ -13,7 +13,7 @@ public class CoppetecUMLMetafacadeProperties extends UMLMetafacadeProperties {
     public static final String FOREIGN_KEY_PREFIX = "foreignKeyPrefix";
 
     /**
-     * O caminho do arquivo de abreviações utilizado na abreviação de nomes de tabelas e colunas.
+     * O caminho do arquivo de abrevia��es utilizado na abreviação de nomes de tabelas e colunas.
      */
     public static final String CAMINHO_DO_ARQUIVO_DE_ABREVIACOES = "caminhoDoArquivoDeAbreviacoes";
     
