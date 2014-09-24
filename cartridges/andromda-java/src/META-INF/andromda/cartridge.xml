@@ -126,6 +126,34 @@
         outlet="util"
         overwrite="true">
     </template>
+    
+    <template
+        path="templates/java/PaginationStrategy.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/java/PaginationDisplaytag.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/java/PaginationSimple.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
+    
+    <template
+        path="templates/java/NoPagination.vsl"
+        outputPattern="$generatedFile"
+        outlet="util"
+        overwrite="true">
+    </template>
 
     <template
         path="templates/java/CriptoUtils.vsl"

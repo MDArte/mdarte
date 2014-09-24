@@ -14,9 +14,9 @@
 			#if ($operation.returnTypePresent)return #end
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (paginacao,linhas,paginas);
+			handle${stringUtils.capitalize(${operation.name})} (paginacao);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao, linhas, paginas);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -36,9 +36,9 @@
 #set($paginacao = "")
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+			handle${stringUtils.capitalize(${operation.name})} (null);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, null);
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -123,9 +123,9 @@
 			#if ($operation.returnTypePresent)return #end
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+			handle${stringUtils.capitalize(${operation.name})} (new PaginationDisplaytag(null,Constantes.TABLE_LINES, Constantes.TABLE_PAGES));
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, null, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, new PaginationDisplaytag(null,Constantes.TABLE_LINES, Constantes.TABLE_PAGES));
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -166,9 +166,9 @@
 			#if ($operation.returnTypePresent)return #end
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )	
 #if($stringUtils.isEmpty($operation.argumentNames))
-			handle${stringUtils.capitalize(${operation.name})} (paginacao,linhas,paginas);
+			handle${stringUtils.capitalize(${operation.name})} (paginacao);
 #else
-			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao, linhas, paginas);
+			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames, paginacao);
 #end
 #else
 			handle${stringUtils.capitalize(${operation.name})} ($operation.argumentNames);
@@ -231,12 +231,9 @@
 
 		try{
 #if($actionName.equals("filter"))
-			${actionName}Return = paramAction.defaultValues() ? paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(), numeroDeElemPorPagina${cont}) : 
-				paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao(),paramAction.getLinhas(),paramAction.getPaginas());
+			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getVo(), paramAction.getPaginacao());
 #elseif($actionName.equals("list"))
-			${actionName}Return = paramAction.defaultValues() ? 
-				paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(), paramAction.getPropriedade(), paramAction.getDesc()) :
-				paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(),paramAction.getPropriedade(),paramAction.getDesc(),paramAction.getLinhas(),paramAction.getPaginas());
+			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramAction.getPaginacao(), paramAction.getPropriedade(), paramAction.getDesc());
 #elseif($actionName.equals("select"))
 			${actionName}Return = paramEntity.getDaoImpl().${actionName}(paramEntity.getId());
 #elseif($actionName.equals("export"))

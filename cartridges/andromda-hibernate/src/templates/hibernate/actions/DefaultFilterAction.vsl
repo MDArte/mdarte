@@ -3,51 +3,39 @@
 package $customTypesPackage.${actionPackageName};
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${actionPackageName}/${generatedFile}")
 #end
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 
 import ${customTypesPackage}.${modelPackageName}.AbstractDAO;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
 import ${customTypesPackage}.${modelPackageName}.AbstractEntity;
+import ${customTypesPackage}.${util}.PaginationStrategy;
 import br.ufrj.coppetec.to.AbstractTO;
 
 public class DefaultFilterAction extends Action {
 
 	private AbstractTO to;
-	private Integer paginacao;
-	private Integer linhas;
-	private Integer paginas;
+	private PaginationStrategy paginacao;
 	
 	public DefaultFilterAction(){
 		to = null;
 		paginacao = null;
 	}
 	
-	public DefaultFilterAction(AbstractTO to, Integer paginacao){
+	public DefaultFilterAction(AbstractTO to, PaginationStrategy paginacao){
 		this.to = to;
 		this.paginacao = paginacao;
-		this.paginas = null;
-		this.linhas = null;
-	}
-
-	public DefaultFilterAction(AbstractTO to, Integer paginacao, Integer linhas, Integer paginas){
-		this.to = to;
-		this.paginacao = paginacao;
-		this.linhas = linhas;
-		this.paginas = paginas;
 	}
 
 	
 	protected java.util.List<AbstractEntity> execute(AbstractEntity to, AbstractDAO dao) throws DAOException {
-		if(paginas == null || linhas == null)
-			return dao.defaultFilter(this.to, paginacao);
-		else 
-			return dao.defaultFilter(this.to, paginacao,linhas,paginas);
+		return dao.defaultFilter(this.to, paginacao);
 	}
 		
 	public AbstractTO getTo(){
 		return to;
 	}
 	
-	public Integer getPaginacao(){
+	public PaginationStrategy getPaginacao(){
 		return paginacao;
 	}
 }

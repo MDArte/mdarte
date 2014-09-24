@@ -28,6 +28,8 @@ import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}","
 import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}",".${transferPackageName}")}TOExample;
 import br.ufrj.coppetec.to.AbstractTO;
 import br.ufrj.coppetec.to.AbstractTOExample;
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
+import ${customTypesPackage}.${util}.PaginationStrategy;
 import $customTypesPackage.${modelPackageName}.TOUtil;
 #set ($sharp = "#")
 
@@ -102,33 +104,31 @@ public abstract class ${entity.entityName}Abstract
 
     protected ${entity.name}Abstract getEntityFromTO (${tipoTO} to, ${entity.name} bean, java.util.HashMap map) throws Exception 
     {
-	if(to == null) return null;
-	map.put(to.getClass().toString() + to.hashCode(), bean);
+		if(to == null) return null;
+		map.put(to.getClass().toString() + to.hashCode(), bean);
 
-
-        if (to != null)
-        {
-        if(to.getId() == null){
-        #renderConstructorBody("true")
-	}else{
+		if (to != null) {
+			if(to.getId() == null){
+				#renderConstructorBody("true")
+			} else {
 #if(!$entity.abstract)
-	${entity.name}DAOImpl dao = new ${entity.name}DAOImpl(); 
-	if(bean.getId() == null) bean = (${entity.name}Impl)dao.select(to.getId()).iterator().next();
-	map.put(to.getClass().toString() + to.hashCode(), bean);
+				${entity.name}DAOImpl dao = new ${entity.name}DAOImpl(); 
+				if(bean.getId() == null) bean = (${entity.name}Impl)dao.select(to.getId()).iterator().next();
+				map.put(to.getClass().toString() + to.hashCode(), bean);
 #if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
 #set ($versionProperty = $entity.hibernateVersionProperty)
 #set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
-	if(bean.get$versionPropertyCapitalized() != to.get$versionPropertyCapitalized()){
-		throw new Exception("hibernate.version.is.different");	
-	}
+				if(bean.get$versionPropertyCapitalized() != to.get$versionPropertyCapitalized()){
+					throw new Exception("hibernate.version.is.different");	
+				}
 #end
 #end
-	#renderConstructorBody("false")
-        }
-		return (${entity.name}Abstract)bean;
+				#renderConstructorBody("false")
+			}
+			return (${entity.name}Abstract)bean;
+		}
+		return null;
 	}
-	return null;
-}
 
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)

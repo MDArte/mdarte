@@ -23,9 +23,9 @@
 #end  ##fim foreach $parametro
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #if($nome)
-#set($attName = "java.lang.Integer paginacao, java.lang.Integer numElementos")
+#set($attName = "PaginationStrategy paginacao")
 #else
-#set($attName = "java.lang.Integer")
+#set($attName = "PaginationStrategy")
 #end
 #if(!$stringUtils.isEmpty($listaAtributos))
 #set($listaAtributos = "$listaAtributos, $attName")
@@ -89,9 +89,9 @@
 #end  ##fim foreach $parametro
 #if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
 #if($nome)
-#set($attName = "java.lang.Integer paginacao, java.lang.Integer numElementos")
+#set($attName = "PaginationStrategy paginacao")
 #else
-#set($attName = "java.lang.Integer")
+#set($attName = "PaginationStrategy")
 #end
 #if(!$stringUtils.isEmpty($listaAtributos))
 #set($listaAtributos = "$listaAtributos, $attName")

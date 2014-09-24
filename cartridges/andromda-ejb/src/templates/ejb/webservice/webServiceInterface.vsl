@@ -11,6 +11,8 @@ import java.rmi.RemoteException;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import ${customTypesPackage}.${util}.PaginationStrategy;
+
 /**
 $service.getDocumentation(" * ")
  */

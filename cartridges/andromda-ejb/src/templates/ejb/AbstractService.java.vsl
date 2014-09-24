@@ -8,6 +8,8 @@
 package $service.packageName;
 #end
 
+import ${customTypesPackage}.${util}.PaginationStrategy;
+
 /**
 $service.getDocumentation(" * ")
  */

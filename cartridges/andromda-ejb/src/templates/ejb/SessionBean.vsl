@@ -21,6 +21,9 @@ import ${serviceRef.targetElement.fullyQualifiedName}Home;
 #if ($colOperation == true)
 #set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 import ${customTypesPackage}.${util}.Constantes;
+import ${customTypesPackage}.${util}.PaginationStrategy;
+import ${customTypesPackage}.${util}.PaginationDisplaytag;
+import ${customTypesPackage}.${util}.NoPagination;
 #end
 
 /**
@@ -69,6 +72,7 @@ $attribute.getDocumentation("	 * ")
 #foreach ($operation in $service.operations)
 #set($contParameter = 0)
 #set($cont = $cont + 1)
+#if(!($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType) )
 #set ($listaArgumentos = '')
 #set ($return = '')
 #if($webService)
@@ -103,14 +107,17 @@ $operation.getDocumentation("	 * ")
 
 ## [MOISES-COPPETEC]
 ## Código para gerar métodos que receba o grupo a ser carregado na paginação, caso este método retorne uma coleção
-#if($operation.returnType.collectionType || $operation.returnType.listType || $operation.returnType.setType )
+#else
+#set ($listaArgumentosPaginacao = '')
 #set ($listaArgumentos = '')
 #set ($return = '')
 #if($webService)
-#renderParametersWSPaginacao($operation $listaArgumentos true)
+#renderParametersWSPaginacao($operation $listaArgumentosPaginacao true)
+#renderParametersWS($operation $listaArgumentos true)
 #renderReturnWS($operation $return)
 #else
-#renderParametersPaginacao($operation $listaArgumentos true)
+#renderParametersPaginacao($operation $listaArgumentosPaginacao true)
+#renderParameters($operation $listaArgumentos true)
 #set($return = $operation.returnType.fullyQualifiedName)
 #end
 
@@ -118,7 +125,7 @@ $operation.getDocumentation("	 * ")
 #if ($operation.exceptionsPresent)
 #set($exception = "throws $operation.exceptionList")
 #end
-	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception;
+	$operation.visibility  abstract $return handle${stringUtils.capitalize(${operation.name})} ($listaArgumentosPaginacao) $exception;
 #if($ejbSecurityEnabled)	
 	Integer paginacao${cont} = null;
 	Integer numElementos${cont} = null;	
@@ -129,10 +136,10 @@ $operation.getDocumentation("	 * ")
 	 */
 	
 	$operation.visibility  $return ${operation.name} ($listaArgumentos) $exception {
-		return ${operation.name}(#if(${operation.argumentNames} && !${operation.argumentNames.isEmpty()})$operation.argumentNames, #end paginacao, Constantes.TABLE_LINES, Constantes.TABLE_PAGES);
+		return ${operation.name}(#if(${operation.argumentNames} && !${operation.argumentNames.isEmpty()})$operation.argumentNames, #end new NoPagination());
 	}
 	
-	$operation.visibility  $return ${operation.name} ($listaArgumentos,java.lang.Integer linhas, java.lang.Integer paginas) $exception {
+	$operation.visibility  $return ${operation.name} ($listaArgumentosPaginacao) $exception {
 #if($ejbSecurityEnabled && !${service.openAccess})
 #renderSecurityBodyPagination($operation)
 #else
