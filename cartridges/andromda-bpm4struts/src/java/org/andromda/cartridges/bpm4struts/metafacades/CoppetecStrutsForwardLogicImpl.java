@@ -44,7 +44,7 @@ extends CoppetecStrutsForwardLogic
   
             if(((StrutsFinalState)target).findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_EXTERNAL_APPLICATION_NAME)== null || ((StrutsFinalState)target).findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_EXTERNAL_APPLICATION_NAME).equals("")){
 	            if(((StrutsFinalState)target).findTaggedValue(UMLProfile.TAGGEDVALUE_EXTERNAL_HYPERLINK) == null){
-	            	// caso tagged value n„o preenchida.. entao considera que N√O È troca de modulo
+	            	// caso tagged value n√£o preenchida.. entao considera que N√ÉO √© troca de modulo
 	            	
 	        		
 	            }
@@ -86,7 +86,7 @@ extends CoppetecStrutsForwardLogic
     		if(((StrutsFinalState)target).findTaggedValue(UMLProfile.TAGGEDVALUE_EXTERNAL_HYPERLINK) != null)
     			return true;
     		
-    		// caso caso de uso alvo n„o esteja no modelo.. considera que N√O È troca de mÛdulo
+    		// caso caso de uso alvo n√£o esteja no modelo.. considera que N√ÉO √© troca de m√≥dulo
     		if (((StrutsFinalState)target).getTargetUseCase() == null)
     			return false;
     		
@@ -175,7 +175,7 @@ extends CoppetecStrutsForwardLogic
 			}
 			String externalLink= (String)((StrutsFinalState)target).findTaggedValue(UMLProfile.TAGGEDVALUE_EXTERNAL_HYPERLINK);
 			if(externalLink!=null && !externalLink.equals("")){
-				//O caso de uso de destino est· no mÛdulo principal
+				//O caso de uso de destino est√° no m√≥dulo principal
 				return contextoPrincipal.replace("//", "/");
 			}
 			if(this.getUseCase().getPackage()!=null){

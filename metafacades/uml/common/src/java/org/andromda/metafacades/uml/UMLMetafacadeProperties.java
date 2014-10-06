@@ -199,12 +199,12 @@ public class UMLMetafacadeProperties
     public static final String MANAGEABLE_ID_DISPLAY_STRATEGY = "manageableIdDisplayStrategy";
     
     /**
-     * Define se deve haver validaÁ„o do tamanho do nome da classe
+     * Define se deve haver valida√ß√£o do tamanho do nome da classe
      */
     public static final String VALIDATE_SIZE_CLASS = "validateSizeClass";
 
     /**
-     * Define o tamanho m·ximo do nome da classe
+     * Define o tamanho m√°ximo do nome da classe
      */
     public static final String MAX_SIZE_CLASS = "maxSizeClass";
 

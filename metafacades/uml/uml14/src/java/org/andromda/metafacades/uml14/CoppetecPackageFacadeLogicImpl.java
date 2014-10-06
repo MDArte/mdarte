@@ -141,7 +141,7 @@ public class CoppetecPackageFacadeLogicImpl
 
 
 	/**
-	 * Retorna os elementos dentro do pacote que possuem o estereótipo passado como parâmetro
+	 * Retorna os elementos dentro do pacote que possuem o estereÃ³tipo passado como parÃ¢metro
 	 */
 	private Collection getElementsByStereotype(String stereotype)
 	{
@@ -152,7 +152,7 @@ public class CoppetecPackageFacadeLogicImpl
 	
 	
 	/**
-	 * Retorna os elementos dentro do pacote que possuem os estereótipos passados como parâmetro
+	 * Retorna os elementos dentro do pacote que possuem os estereÃ³tipos passados como parÃ¢metro
 	 */
 	private Collection getElementsByStereotypes(String[] stereotypes)
 	{

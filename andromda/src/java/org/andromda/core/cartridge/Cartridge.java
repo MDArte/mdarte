@@ -251,7 +251,7 @@ public class Cartridge
                                 }
                                 
                                 /* ==================================================================
-                                    [Moises-COPPETEC] CÛdigo usado para redirecionar o outlet para o mÛdulo correto
+                                    [Moises-COPPETEC] C√≥digo usado para redirecionar o outlet para o m√≥dulo correto
                                    ================================================================== */
                                 
                                 String outletReplaced = new String(outlet);
@@ -460,7 +460,7 @@ public class Cartridge
             		this.getLogger().error("Propriedade maxSizeClass deve ser um inteiro");
 				}
             	catch (Exception e) {
-					this.getLogger().error("Propriedade maxSizeClass n„o configurada");
+					this.getLogger().error("Propriedade maxSizeClass n√£o configurada");
 				}
             
             	

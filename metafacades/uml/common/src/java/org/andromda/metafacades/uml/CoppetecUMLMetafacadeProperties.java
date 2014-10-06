@@ -37,7 +37,7 @@ public class CoppetecUMLMetafacadeProperties extends UMLMetafacadeProperties {
      */
     public static final String CONTEXTO_PRINCIPAL = "contextoPrincipal";
     /**
-     * Contexto web utilizado para compartilhamento de sess„o
+     * Contexto web utilizado para compartilhamento de sess√£o
      */
     public static final String SERVLET_CONTEXT = "servletContext";
     

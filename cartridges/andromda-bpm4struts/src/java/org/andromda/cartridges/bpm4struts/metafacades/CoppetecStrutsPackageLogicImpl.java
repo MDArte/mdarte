@@ -30,8 +30,8 @@ public class CoppetecStrutsPackageLogicImpl
     
     
     /** 
-     * Retorna uma coleção contendo os modos de operação do módulo.
-     * Busca esses valores nas tagged values definidas nas transições e nos parâmetros.
+     * Retorna uma coleÃ§Ã£o contendo os modos de operaÃ§Ã£o do mÃ³dulo.
+     * Busca esses valores nas tagged values definidas nas transiÃ§Ãµes e nos parÃ¢metros.
      */
     public Collection handleGetModosOperacao() {
     	

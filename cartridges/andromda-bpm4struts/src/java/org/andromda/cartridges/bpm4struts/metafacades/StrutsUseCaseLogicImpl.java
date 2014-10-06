@@ -596,7 +596,7 @@ public class StrutsUseCaseLogicImpl
 //                    	 only add these when a trigger is present, otherwise it's no use having them
                     	
                 		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Ajuda" + ";" + action.getOnlineHelpKey() + ";" + action.getOnlineHelpValue());
-                		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Documentaçao" + ";" + action.getDocumentationKey() + ";" + action.getDocumentationValue());
+                		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Documentacao" + ";" + action.getDocumentationKey() + ";" + action.getDocumentationValue());
                 		
                 		// the regular trigger messages
                 		messages.add(useCaseStr + ";" + trigger.getStrutsAction().getInput().getName() + ";" + "Titulo" + ";" + trigger.getTitleKey() + ";" + trigger.getTitleValue());
