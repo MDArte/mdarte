@@ -1,11 +1,12 @@
 #parse("templates/bpm4struts/pages/page.jsp.vm")
+#set($table=$param)
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
 #set ($targetColumns = $table.targettedTableColumnNames)
 #set ($sortable = $table.tableSortable)
 #set ($exportable = $table.tableExportable)
 #set($gerarJSP = false)
-#if($table.oldStruts)
+#if($jsp.oldStruts)
 #set($gerarJSP = true)	
 #end
 #if($gerarJSP)
