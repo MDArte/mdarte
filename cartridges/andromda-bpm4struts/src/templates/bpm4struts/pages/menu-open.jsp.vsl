@@ -1,0 +1,69 @@
+#if($struts2 == "false")
+#set ($generatedFile = "menu/menu-open.jsp")
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Iterator"%>
+<%@ include file="/taglib-imports.jspf" %>
+
+<% String url = request.getScheme( ) + "://" + request.getServerName( ) + 
+	(request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "" );   
+	url += "${contextoPrincipal}"; 
+%>
+
+<SCRIPT LANGUAGE="Javascript">
+function closeWindow() {
+	window.open('','_parent','');
+	window.close();
+}
+</script>
+
+<div id="MenuP">
+
+<% 
+		java.util.HashMap paramsPrincipal = new java.util.HashMap();
+		paramsPrincipal.put("modulo", "");
+		paramsPrincipal.put("path","");
+		pageContext.setAttribute("paramsPrincipal", paramsPrincipal);
+        %>
+
+	<html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page">
+       <span class='menuHome'/>
+	</html:link>
+
+	<a href="javascript:self.close()" >
+				<bean:message key="login.sair.link"/>
+				<%-- <span class='menuFechar'/> --%>
+    </a>
+       
+</div>
+<div id="barraNav1">
+	<div id="breadCrumb">
+		<%
+			Iterator breadCrumbIt = null;
+			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb");
+			
+			if (breadCrumbCollection != null){
+				
+				breadCrumbIt = breadCrumbCollection.iterator();
+				 
+				while (breadCrumbIt.hasNext()) {
+
+					out.print(breadCrumbIt.next().toString());
+				} 
+			}
+		
+		%>
+	</div>
+</div> 
+<div id="barraEndereco">
+  <h2>
+
+	<%
+		String tela = (String) session.getAttribute("nomeDeTela");
+		if (tela != null){
+			out.print(tela);
+		}
+	%>
+
+  </h2>
+ </div>
+#end
