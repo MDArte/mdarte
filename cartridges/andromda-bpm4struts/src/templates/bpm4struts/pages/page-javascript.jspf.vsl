@@ -9,6 +9,11 @@
 #end
 
     <tiles:put name="javascript" type="string">
+#set($name = "")
+#foreach($palavra in $jsp.fullPath.split('/'))
+#set($name=$palavra)
+#end
+		<script src="${name.toString().toLowerCase().replace(' ', '-')}-impl.js"></script>
 ## only load the calendar javascript when actually needed
 #if ($jsp.calendarRequired)
 ## using page and .do instead of action to avoid Struts2 rewrite
@@ -28,8 +33,28 @@
 #end
 #end
 
+<script type="text/javascript">
+$(document).ready(function(){
+#foreach($field in $jsp.allUniqueActionParameters)
+#if($field.editor)
+	tinymce.init({
+		selector: "#${field.name}${jsp.useCase.name}",
+		theme: "modern",
+		plugins: [
+			"advlist autolink lists link image charmap print preview hr anchor pagebreak",
+			"searchreplace wordcount visualblocks visualchars code fullscreen",
+			"insertdatetime media nonbreaking save table contextmenu directionality",
+			"emoticons template paste textcolor"
+		],
+		toolbar: "undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor emoticons | Sprint preview media",
+		menubar: "false"
+	});
+#end
+#end
+}
+</script>
 
- 
+
 #if ($hints=="true")
     	<script type="text/javascript" language="Javascript1.1">
 #if ($xhtml == "true")
@@ -90,11 +115,11 @@ function descriptionDestination(key , componenteNome){
 		<logic:iterate id="comboitem" indexId="idx" name="${formBeanName}" property="${parameter.backingListName}Destination">
 		'${parameter.titleKey}<%=idx%>':'<bean:write name="comboitem" property="labelDestination"/>',
 		</logic:iterate>
-		</c:if>		
+		</c:if>
 #end
 #end
 #end
-	} 
+	}
 	
 	
 	

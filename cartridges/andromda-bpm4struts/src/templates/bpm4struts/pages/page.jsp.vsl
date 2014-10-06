@@ -57,7 +57,11 @@ function atualizaElementos(){
 #if($jsp.useCase.hasStereotype("$simpleUseCase"))
 <tiles:insert definition="simple.layout">
 #else
+#if($jsp.useCase.openAccess)
+<tiles:insert definition="main.layout.open">
+#else
 <tiles:insert definition="main.layout">
+#end
 #end
 #end
 
@@ -76,22 +80,23 @@ function atualizaElementos(){
 
 
 
-<tiles:put name="style" type="string">
-<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+	<tiles:put name="style" type="string">
+		<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+		<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
 
 #if ($jsp.calendarRequired)
-<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
+		<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
 #end
-    </tiles:put>
+	</tiles:put>
 
 ##if($jsp.oldStruts)
-<%@ include file="${jsp.fullPath}-javascript.jspf" %>
+	<%@ include file="${jsp.fullPath}-javascript.jspf" %>
 ##end
 ##
 ##  SETS THE BODY OF THIS PAGE
 ##
 
-    <tiles:put name="body" type="string">
+<tiles:put name="body" type="string">
 
 <div id="pathway">
 #if($jsp.generateHelp)

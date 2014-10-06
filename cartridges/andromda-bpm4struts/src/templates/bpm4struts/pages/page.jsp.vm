@@ -417,6 +417,10 @@ ${indent}<input type="checkbox" name="$fieldName" value="on" <c:if test="${__val
 ${indent}<html:multibox name="$formBeanName" property="$field.multiboxPropertyName" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled $eventosMouseUp $eventosKeyUp $eventosKeyPress  styleId="$styleId">
 ${indent}    <c:out value="${__value}"/>
 ${indent}</html:multibox>
+#elseif($field.custom)
+${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-group">
+${indent}		<%@ include file="${field.name}.jsp"  %>
+${indent}	</div>
 #else
 
 
@@ -473,8 +477,8 @@ ${indent}</script>
 ##
 ##      T E X T A R E A
 ##
-#elseif ($field.textArea)
-${indent}<textarea name="$fieldName" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $readonly$rowCount$columnCount $disabled $eventosMouseUp $eventosKeyUp $eventosKeyPress  id="$styleId"><c:out value="${__value}"/></textarea>
+#elseif ($field.textArea || $field.editor)
+${indent}<textarea name="$fieldName" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $readonly$rowCount$columnCount $disabled $eventosMouseUp $eventosKeyUp $eventosKeyPress  id="${fieldName}${action.useCase.name}"><c:out value="${__value}"/></textarea>
 ##
 ##      M O N E Y
 ##
