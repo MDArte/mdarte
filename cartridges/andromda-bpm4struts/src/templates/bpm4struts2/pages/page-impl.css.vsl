@@ -1,4 +1,0 @@
-#if(!$jsp.oldStruts)
-#set ($generatedFile = "${jsp.fullPath}-impl.css")
-	/* Coloque o CSS customizado aqui */
-#end

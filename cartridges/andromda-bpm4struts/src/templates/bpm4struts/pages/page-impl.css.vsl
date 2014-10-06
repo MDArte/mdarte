@@ -1,0 +1,2 @@
+#set ($generatedFile = "${jsp.fullPath}-impl.css")
+	/* Coloque o CSS customizado aqui */
