@@ -124,7 +124,7 @@ $operation.getDocumentation("     * ")
 #end
 #if($keep.equals("true") || !$counterSO)
 			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
- #elseif($keep.equals("false") && $counterSO)
+#elseif($keep.equals("false") && $counterSO)
 			${servletPackage}.SessionObjectUtilStruts2.setSessionObject(container, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
 #end
 		}

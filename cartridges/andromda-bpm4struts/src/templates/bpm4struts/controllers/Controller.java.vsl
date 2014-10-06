@@ -8,13 +8,12 @@
 #if(${controller.useCase.useCaseOldStruts})
 #set($gerar = true)
 #end
-#if($gerar)
 ##
 ##  START TEMPLATE
 ##
+#if($gerar)
 // license-header java merge-point
 package $controller.packageName;
-
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
@@ -25,7 +24,7 @@ import ${packageUtil}.Constantes;
 /**
 $controller.getDocumentation(" * ")
  */
-public abstract class ${controller.name} implements java.io.Serializable
+public abstract class ${controller.name} extends ControllerAbstract
 {
 #set ($pseudostates = ${controller.useCase.activityGraph.pseudostates})
 #set ($decisionCounter = 1)
@@ -56,25 +55,25 @@ public abstract class ${controller.name} implements java.io.Serializable
 #if (!$returnType)
 #set ($returnType = "void")
 #end
-    /**
+	/**
 $operation.getDocumentation("     * ")
 #if ($operation.callingBackEnd)
-     *
-     * This operation delegates to
-     * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
+	 *
+	 * This operation delegates to
+	 * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
 #end
-     */
+	 */
 #if ($operation.callingBackEnd)
     $visibility $returnType ${operation.name}(org.apache.struts.action.ActionMapping mapping, $operation.interfaceType form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
-    {
-        ${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
+	{
+		${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
 #set ($comma = "")
 #foreach ($argument in $operation.backEndServiceOperation.arguments)
-            ${comma}form.${argument.getterName}()
+		${comma}form.${argument.getterName}()
 #set ($comma = ", ")
 #end
-        );
-    }
+		);
+	}
 #else
     $visibility abstract $returnType ${operation.name}(org.apache.struts.action.ActionMapping mapping, $operation.interfaceType form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception;
 #end
@@ -107,22 +106,21 @@ $operation.getDocumentation("     * ")
 #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
 #set($counterSO = true)
 #end
-
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-            object = ($sessionObject.fullyQualifiedName)attribute;
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			object = ($sessionObject.fullyQualifiedName)attribute;
 #if($keep.equals("false") && $counterSO)
             ${servletPackage}.SessionObjectUtil.resetSessionObjetCounter(request, object.SESSION_KEY, object.getIterations());
 #end
-        }
-        else if (attribute == null)
-        {
-            object = new $sessionObject.fullyQualifiedName ();
+		}
+		else if (attribute == null)
+		{
+			object = new $sessionObject.fullyQualifiedName ();
             set${accessorSuffix}(request, object);
-        }
+		}
 
-        return object;
-    }
+		return object;
+	}
 
     /**
      * Set the argument $sessionObject.name object in the session corresponding with the argument request.
@@ -144,7 +142,7 @@ $operation.getDocumentation("     * ")
     {
         javax.servlet.http.HttpSession session = request.getSession(createSession);
         if (session != null)
-        { 
+		{
 #set($keep = "false")
 #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
 #set($keep = "true")
@@ -153,14 +151,13 @@ $operation.getDocumentation("     * ")
 #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
 #set($counterSO = true)
 #end
-
-#if($keep.equals("true") || !$counterSO) 
+#if($keep.equals("true") || !$counterSO)
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
 #elseif($keep.equals("false") && $counterSO)
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
 #end
-        }
-    }
+		}
+	}
 
     /**
      * Removes the argument $sessionObject.name object from the session corresponding with the argument request.
@@ -194,119 +191,6 @@ $operation.getDocumentation("     * ")
     	request.setAttribute("$forwardKey", path);
     	request.setAttribute("$forwardKeyModule", modulo);
     }	
-
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @param arguments any arguments used within the message
-     */
-    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveWarningMessage(request, message, null);
-    }
-
-    /**
-     * Stores a success message in the session, if any other success messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     */
-    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores a success message in the session, if any other success messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveSuccessMessage(request, message, null);
-    }
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveErrorMessage(request, message, null);
-    }
 
 #foreach ($serviceRef in $controller.serviceReferences)
 #if ($stringUtils.isNotBlank($serviceRef.targetElement.accessorImplementation))

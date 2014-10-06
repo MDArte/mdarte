@@ -1,5 +1,13 @@
 #set ($className = "ControllerAbstract")
 #set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/${className}.java")
+#set($gerar = false)
+#if(!${controller.useCase.useCaseOldStruts})
+#set($gerar = true)
+#end
+##
+##  START TEMPLATE
+##
+#if($gerar)
 // license-header java merge-point
 package ${servletPackage};
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
@@ -282,3 +290,4 @@ public abstract class ControllerAbstract implements java.io.Serializable
 	
 	protected abstract String getNomeCasoUso();
 }
+#end
