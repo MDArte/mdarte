@@ -68,13 +68,14 @@
 		<filter-name>ActionServletFilter</filter-name>
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
+	
 
 #if($pacote)
     <!-- filter merge-${pacote.webModuleName}-point -->
 #end
     
     <!-- filter merge-point -->
-    
+##if ($struts2=="true")
 	## struts2
 	<filter>
 		<filter-name>struts2</filter-name>
@@ -93,6 +94,7 @@
 		<filter-name>struts2</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
+##end
     
 #if ($generateWebXmlIds=="true")
     <filter id="filter_1">
@@ -202,7 +204,7 @@
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
         <url-pattern>*.action</url-pattern>
