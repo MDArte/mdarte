@@ -306,7 +306,7 @@ ${indent}</security:containsOperationMode>
 ##
 ##
 ##      Esta macro foi criada por Milene Fiorio e Rodrigo Castilho
-##      Esta macro renderiza os botï¿½es de uma pagina
+##      Esta macro renderiza os botoes de uma pagina
 ##
 ##
 #macro ( renderFormButtonsCustomizado2 $action $indent )
