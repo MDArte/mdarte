@@ -5,6 +5,6 @@
 #set($generatedFile = "${path}/${parameter.name}.jsp")
 <!-- Implemente aqui o componente -->
 	#if ($requiredness && $parameter.required)<label class="textfieldLabel" for="${parameter.name}"><bean:message key="$parameter.messageKey"/> *</label>#else<label class="textfieldLabel" for="${parameter.name}"><bean:message key="$parameter.messageKey"/></label>#end
-	<s:textfield id="${parameter.name}${parameter.jsp.useCase.name}" name="${parameter.name}" label="%{getText('$parameter.messageKey')}" value="%{#form.$propertyValue}"   title=""  styleId="$styleId"  />
+	<input type="text" name="${parameter.name}" value="<c:out value=""/>" id="${parameter.styleId}"/>
 #end
 #end

@@ -1,8 +1,10 @@
+#if($struts2 == "true")
 #if ($parameter.custom)
 #set($path = ${parameter.getJsp().getUseCase().getPackagePath()})
 #set($package=$path.replace('/','.'))
 #set($generatedFile = "${path}/${parameter.name}.jsp")
 <!-- Implemente aqui o componente -->
-	#if ($requiredness && $parameter.required)<label class="textfieldLabel" for="${parameter.name}${action.useCase.name}"><bean:message key="$parameter.messageKey"/> *</label>#else<label class="textfieldLabel" for="${parameter.name}"><bean:message key="$parameter.messageKey"/></label>#end
+	#if ($requiredness && $parameter.required)<label class="textfieldLabel" for="${parameter.name}"><bean:message key="$parameter.messageKey"/> *</label>#else<label class="textfieldLabel" for="${parameter.name}"><bean:message key="$parameter.messageKey"/></label>#end
 	<s:textfield id="${parameter.name}${parameter.jsp.useCase.name}" name="${parameter.name}" label="%{getText('$parameter.messageKey')}" value="%{#form.$propertyValue}"   title=""  styleId="$styleId"  />
-#end 
+#end
+#end
