@@ -18,6 +18,7 @@ package $controller.packageName;
 
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
+import ${servletPackage}.ControllerAbstract;
 ##
 #set ($sharp = "#")
 
@@ -291,6 +292,10 @@ $operation.getDocumentation("     * ")
 					}
 		}
 		return modoOperacao;
+	}
+	
+	protected String getNomeCasoUso() {
+		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
 	}
 }
 #end
