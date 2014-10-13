@@ -35,25 +35,25 @@ form.already.submitted=This form has already been submitted
 ##Excecoes Default
 
 error.default.hibernate.exception=Erro no hibernate
-error.dafault.constraint.violation.exception=ViolaÁ„o de restriÁ„o
-error.default.data.exception=Erro na avaliaÁ„o da express„o sql
+error.dafault.constraint.violation.exception=Viola√ß√£o de restri√ß√£o
+error.default.data.exception=Erro na avalia√ß√£o da express√£o sql
 error.default.generic.jdbc.exception=Erro inesperado do banco de dados
-error.default.jdbc.connection.exception=Erro de conex„o ao banco
+error.default.jdbc.connection.exception=Erro de conex√£o ao banco
 error.default.lock.acquisition.exception=Erro ao tentar dar lock na base
 error.default.sql.grammar.exception=Erro na sintaxe do sql
-error.default.stale.stale.exception=Erro: o registro j· foi alterado por outro usu·rio
+error.default.stale.stale.exception=Erro: o registro j√° foi alterado por outro usu√°rio
 
 error.message.window=Erro
 warning.message.window=Aviso
 sucess.message.window=Sucesso
 
-error.generic.validator={0} contÈm caracteres n„o permitidos: {1}
+error.generic.validator={0} cont√©m caracteres n√£o permitidos: {1}
 
 error.default.exportid.notunique.exception=Busca de entidade pelo ExportId retornou mais de um elemento: {0}, {1}...
-error.default.importaction.exception=N„o foi possÌvel concluir a importaÁ„o, entidades referenciadas n„o foram encontradas na base
+error.default.importaction.exception=N√£o foi poss√≠vel concluir a importa√ß√£o, entidades referenciadas n√£o foram encontradas na base
 
-error.port.configuration=Erro na configuraÁ„o das portas
-port.file.not.found=Arquivo de configuraÁ„o de portas n„o encontrado
+error.port.configuration=Erro na configura√ß√£o das portas
+port.file.not.found=Arquivo de configura√ß√£o de portas n√£o encontrado
 
 #
 #   Messages for the menu
@@ -158,8 +158,8 @@ login.troca.de.senha.obrigatoria.processar.error=Ocorreu um erro no processament
 login.troca.de.senha.obrigatoria.processar.success=A senha foi trocada com sucesso
 login.troca.de.senha.sucsess.messsage=A senha foi trocada com sucesso
 login.troca.de.senha.obrigatoria.senha.antiga.igual.senha.nova=A nova senha deve ser diferente da senha atual
-login.troca.de.senha.obrigatoria.senha.fraca=A senha digitada n„o atende aos requisitos de seguranÁa
-login.troca.de.senha.obrigatoria.senha.nova.diferente.confirmacao=A nova senha est· diferente da confirmaÁ„o
+login.troca.de.senha.obrigatoria.senha.fraca=A senha digitada n√£o atende aos requisitos de seguran√ßa
+login.troca.de.senha.obrigatoria.senha.nova.diferente.confirmacao=A nova senha est√° diferente da confirma√ß√£o
 login.sair.link=Sair
 main.tela.principal.title=Tela inicial
 login.troca.de.senha.title=Troca de senha
@@ -172,27 +172,27 @@ usuario.bloqueado=Este login foi bloqueado. Entre em contato com o administrador
 ##saida.sistema.title=Logout
 login.logo=/layout/sgdc/LoginLogo.gif
 main.tela.principal.image=/layout/sgdc/LoginLogo.gif
-acesso.negado=O usuario n„o possui permiss„o para acessar este serviÁo.
-subject.null=O usuario n„o est· logado no sistema.
+acesso.negado=O usuario n√£o possui permiss√£o para acessar este servi√ßo.
+subject.null=O usuario n√£o est√° logado no sistema.
 
 #
 #   Messages for the client validator
 #
 
-validate.required=Campo È obrigatÛrio.
-validate.minlength=O tamanho n„o pode ser menor que {0} caracteres.
-validate.maxlength=O tamanho n„o pode ser maior que {0} caracteres.
+validate.required=Campo √© obrigat√≥rio.
+validate.minlength=O tamanho n√£o pode ser menor que {0} caracteres.
+validate.maxlength=O tamanho n√£o pode ser maior que {0} caracteres.
 
-validate.digits=O campo sÛ pode ter caracteres numÈricos.
-validate.integer=N„o È um n˙mero inteiro.
-validate.number=N„o È um n˙mero decimal.
+validate.digits=O campo s√≥ pode ter caracteres num√©ricos.
+validate.integer=N√£o √© um n√∫mero inteiro.
+validate.number=N√£o √© um n√∫mero decimal.
 
-validate.date=N„o È uma data v·lida.
+validate.date=N√£o √© uma data v√°lida.
 validate.range=O valor deve estar entre {0} e {1}.
-validate.creditcard=N˙mero de cart„o de crÈdito inv·lido.
-validate.email=EndereÁo de e-mail inv·lido.
-validate.url=URL inv·lido.
-validate.pattern=Texto inv·lido.
+validate.creditcard=N√∫mero de cart√£o de cr√©dito inv√°lido.
+validate.email=Endere√ßo de e-mail inv√°lido.
+validate.url=URL inv√°lido.
+validate.pattern=Texto inv√°lido.
 
 #
 #   Messages for the validator plugin
@@ -220,7 +220,7 @@ errors.email={0} is an invalid e-mail address.
 errors.url={0} is an invalid URL.
 errors.pattern={0} does not respect the established format.
 
-pagina.expirou=A p·gina expirou
+pagina.expirou=A p√°gina expirou
 
 #if($oAuthServer == "true")
 login.oauth.uc.pagina.de.login.title=Login
