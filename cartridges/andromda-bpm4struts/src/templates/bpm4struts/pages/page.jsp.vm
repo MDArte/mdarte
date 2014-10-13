@@ -407,6 +407,13 @@ ${indent}</table>
 ${indent}<input type="checkbox" name="$fieldName" value="on" <c:if test="${__value}">checked="checked" </c:if>#if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $eventosMouseUp $eventosKeyUp $eventosKeyPress  $disabled  id="$styleId"/>
 
 ##
+##      C U S T O M
+##
+#elseif($field.custom)
+${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-group">
+${indent}		<%@ include file="${field.name}.jsp"  %>
+${indent}	</div>
+##
 ##      M U L T I B O X
 ##
 ## @todo: disable this widget if not used in a row action
@@ -417,12 +424,7 @@ ${indent}<input type="checkbox" name="$fieldName" value="on" <c:if test="${__val
 ${indent}<html:multibox name="$formBeanName" property="$field.multiboxPropertyName" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled $eventosMouseUp $eventosKeyUp $eventosKeyPress  styleId="$styleId">
 ${indent}    <c:out value="${__value}"/>
 ${indent}</html:multibox>
-#elseif($field.custom)
-${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-group">
-${indent}		<%@ include file="${field.name}.jsp"  %>
-${indent}	</div>
 #else
-
 
 #if($field.type.collectionType)#set($selectProperty="${fieldName}AsArray")#else#set($selectProperty="$fieldName")#end
 ## Novo Codigo: (desenha uma serie de multiboxes com valores e labels especificados pela BackingList do campo)
