@@ -100,12 +100,12 @@ struts2.jquery.version=2.5.3
 xwork.core.version=2.1.6 
 
 #if(${controleAcesso})
-# vers„o do controle de acesso padr„o do mdarte
+# vers√£o do controle de acesso padr√£o do mdarte
 controle.acesso.version=2.0
 #end
 
 #if(${oauth})
-# vers„o do auth do mdarte
+# vers√£o do auth do mdarte
 oauth.core.version=1.0
 #end
 
