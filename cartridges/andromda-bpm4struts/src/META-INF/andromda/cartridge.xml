@@ -1762,6 +1762,14 @@
         outputPattern="$generatedFile"
         outlet="shared-actions"
         overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <property name="useCase"/>
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
     </template>
 
     <template
@@ -1769,6 +1777,14 @@
         outputPattern="$generatedFile"
         outlet="shared-actions"
         overwrite="true">
+        <modelElements variable="controller">
+            <modelElement>
+                <type name="org.andromda.cartridges.bpm4struts.metafacades.StrutsController">
+                    <property name="useCase"/>
+                    <property name="operations"/>
+                </type>
+            </modelElement>
+        </modelElements>
     </template>
     
     <template

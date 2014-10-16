@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.apache.struts.util.MessageResources;
 
 
 public abstract class ControllerAbstract implements java.io.Serializable
@@ -136,7 +137,7 @@ public abstract class ControllerAbstract implements java.io.Serializable
     }
 	
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * Mï¿½todo a ser utilizado na recuperaï¿½ï¿½o de serviï¿½os.
 	 */
 	protected <T> T getService(Class<T> clazz) throws Exception	{
 		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
@@ -293,13 +294,13 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return this.getModoOperacao(this.getNomeCasoUso(), request);
 	}
 	
-	protected String getMessage(br.ufrj.coppetec.Enumeration eo) {
-		return getMessage(eo.getInternationalizationKey());
+	protected String getMessage(br.ufrj.coppetec.Enumeration eo, javax.servlet.http.HttpServletRequest request) {
+		return getMessage(eo.getInternationalizationKey(), request);
 	}
 	
 	protected String getMessage(String key, javax.servlet.http.HttpServletRequest request) {
-		MessageResources messageResources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
-		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+		MessageResources messageResources = (MessageResources)request.getAttribute(org.apache.struts.Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 		
 		return messageResources.getMessage(locale, key);
 	}
