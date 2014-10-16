@@ -204,15 +204,15 @@ $operation.getDocumentation("     * ")
 #end
 
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * MÃ©todo a ser utilizado na recuperaÃ§Ã£o de serviÃ§os.
 	 */
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}() throws Exception {
 		return (${serviceRef.targetElement.fullyQualifiedName}BI) br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(null, "${serviceRef.targetElement.packageName}.${serviceRef.targetElement.name}", ${serviceRef.targetElement.packageName}.${serviceRef.targetElement.name}Home.class);
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o mÃ©todo ${serviceRef.getterName}().
 	 */
 	@Deprecated
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {
@@ -234,15 +234,15 @@ $operation.getDocumentation("     * ")
 #end
 
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * MÃ©todo a ser utilizado na recuperaÃ§Ã£o de serviÃ§os.
 	 */
 	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity entity#end)	throws Exception {
 		return ${dependencia.targetElement.fullyQualifiedName}Factory.getService(#if($factorySelectNodeName == false)entity#end);
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o mÃ©todo ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
 	 */
 	@Deprecated
 	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(javax.servlet.http.HttpServletRequest request#if($factorySelectNodeName == false), br.ufrj.coppetec.Entity entity#end) throws Exception {
@@ -264,8 +264,8 @@ $operation.getDocumentation("     * ")
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método getService(Class<T>).
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o mÃ©todo getService(Class<T>).
 	 */
 	@Deprecated
 	protected <T> T getService(Class<T> clazz, javax.servlet.http.HttpServletRequest request) throws Exception {
