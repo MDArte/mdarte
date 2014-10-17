@@ -4,7 +4,7 @@
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 ##
 ##
-## Codigo acrescentado para pegar action que cont�m parametros ##
+## Codigo acrescentado para pegar action que contem parametros ##
 #if ($jsp.actions.size() > 0)
 #set ($action = $jsp.actions.get(0))
 #set($achou = "false")
@@ -22,6 +22,7 @@
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
+## Considera os parametros de todas as acoes
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set ($hints = $hints.equalsIgnoreCase("true"))
 #set ($formBeanType = $action.formBeanType)## this will be the name of the form, as used in this page
@@ -56,10 +57,7 @@
 #if($fieldLinkValue.equals(""))
 #renderHyperlink2($_action "")
 #end
-#elseif($_action.lookupGrid)
-##<script src="${jsp.fullPath}.js"></script>		
-#renderLookupGrid2($_action)
-#elseif($_action.popup)
+#elseif($_action.lookupGrid || $_action.popup)
 #renderLookupGrid2($_action)
 #end
 #end
@@ -101,9 +99,7 @@
 #if($fieldLinkValue.equals(""))
 #renderHyperlink2($_action "	")
 #end
-#elseif($_action.lookupGrid)
-#renderLookupGrid2($_action)
-#elseif($_action.popup)
+#elseif($_action.lookupGrid || $_action.popup)
 #renderLookupGrid2($_action)
 #end
 #end

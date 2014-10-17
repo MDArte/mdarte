@@ -27,10 +27,6 @@
 #end
 #end
 
-## #if ($maxBreadCrumbs != "0")
-## <breadcrumbs:resize size="$maxBreadCrumbs"/>
-## <breadcrumbs:add value="$jsp.titleKey"/>
-## #end
 #if(!${jsp.oldStruts})
 <script>
 function atualizaElementos(){
@@ -64,7 +60,6 @@ function atualizaElementos(){
 #end
 #end
 #end
-
 ##
 ##  SETS THE TITLE
 ##
@@ -72,75 +67,71 @@ function atualizaElementos(){
     <tiles:put name="head" type="string">
         <sj:head jqueryui="true" jquerytheme="cupertino"/>
     </tiles:put>
-
 #end
-    <tiles:put name="title" type="string">
-        <bean:message key="$jsp.titleKey"/>
-    </tiles:put>
 
+<tiles:put name="title" type="string">
+	<bean:message key="$jsp.titleKey"/>
+</tiles:put>
 
-
-	<tiles:put name="style" type="string">
-		<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
-		<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
-
+<tiles:put name="style" type="string">
+	<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}.css"/>"></link>
+	<link rel="stylesheet" type="text/css" media="screen" href="<html:rewrite page="${jsp.fullPath}-impl.css"/>"></link>
 #if ($jsp.calendarRequired)
-		<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
+	<link rel="stylesheet" type="text/css" media="all" href="${strURL}${contextoPrincipal}/layout/${layout}/default-calendar.css"/>
 #end
-	</tiles:put>
+</tiles:put>
 
-##if($jsp.oldStruts)
-	<%@ include file="${jsp.fullPath}-javascript.jspf" %>
-##end
+<%@ include file="${jsp.fullPath}-javascript.jspf" %>
+
 ##
 ##  SETS THE BODY OF THIS PAGE
 ##
 
 <tiles:put name="body" type="string">
 
-<div id="pathway">
+	<div id="pathway">
 #if($jsp.generateHelp)
 #if($jsp.generateHelpLink)
 #if($jsp.HelpLinkModoOperacao)
-<% boolean achouModo = false; %>
+		<% boolean achouModo = false; %>
 #foreach ($helpLink in $jsp.helpLinkList)
 #if ($helpLink.modoOperacaoSet)
-   <security:containsOperationMode value="$helpLink.modoOperacao">
-      <html:link href="" onclick="window.open('$helpLink.link','','')">
-   	     <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-      </html:link>
-      <% achouModo = true; %>
-   </security:containsOperationMode>
+		<security:containsOperationMode value="$helpLink.modoOperacao">
+			<html:link href="" onclick="window.open('$helpLink.link','','')">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</html:link>
+			<% achouModo = true; %>
+		</security:containsOperationMode>
 #else
-   <% if (!achouModo) { %>
-   ## fazer alguma checagem
-     <html:link href="" onclick="window.open('$helpLink.link','','')">
-   	    <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-     </html:link>
-   <% } %>
+		<% if (!achouModo) { %>
+## fazer alguma checagem
+			<html:link href="" onclick="window.open('$helpLink.link','','')">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</html:link>
+		<% } %>
 #end	
 #end
 #else
-   <html:link href="" onclick="window.open('$jsp.helpLink','','')">   
-      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-   </html:link>
+		<html:link href="" onclick="window.open('$jsp.helpLink','','')">   
+			<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+		</html:link>
 #end
 #else
-   <a href="javascript:window.open('${layoutPath}/help.jsp','','height=600,width=600,scrollbars=yes');void(0);">
-      <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-   </a>
+		<a href="javascript:window.open('${layoutPath}/help.jsp','','height=600,width=600,scrollbars=yes');void(0);">
+			<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+		</a>
 #end
 #end
-
 #if ($jsp.onlineHelp)
-	<div id="helpLink">
-            <a href="" id="pageHelp" style="display:inline;" onclick="openWindow('${contextoPrincipal}${jsp.onlineHelpActionPath}.do','onlinehelp',true,false,760,540); return false;">
-                <img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
-            </a>
-    </div>
+		<div id="helpLink">
+			<a href="" id="pageHelp" style="display:inline;" onclick="openWindow('${contextoPrincipal}${jsp.onlineHelpActionPath}.do','onlinehelp',true,false,760,540); return false;">
+				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
+			</a>
+		</div>
+
 #end
 
-   <bean:message key="$jsp.titleKey"/>
+	<bean:message key="$jsp.titleKey"/>
 
 </div>
 
@@ -194,20 +185,6 @@ function atualizaElementos(){
 </blockquote>
        </div>
 
-   </tiles:put>
+</tiles:put>
 </tiles:insert>
-
-##if(! $jsp.oldStruts)
-##	<script>
-##$(document).ready(function() {
-##	$('.row').dataTable({"oLanguage": {
-##			"sLengthMenu": "Exibir _MENU_ registros por p&aacute;gina",
-##			"sZeroRecords": "Nenhum registro foi encontrado",
-##			"sInfo": "Exibindo de _START_ at&eacute; _END_ de _TOTAL_ registros",
-##			"sInfoEmpty": "",
-##			"sInfoFiltered": "(filtrado de _MAX_ registros)"
-##		}});
-##} );
-##</script>
-##end
 #end

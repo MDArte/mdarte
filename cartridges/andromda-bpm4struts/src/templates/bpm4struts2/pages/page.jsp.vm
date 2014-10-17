@@ -10,12 +10,8 @@
 #set ($triggerKey = $trigger.triggerKey)
 #set ($parameters = $action.actionParameters)
 #set ($formBeanName = $action.useCase.formKey)
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-###if ($securityEnabled)
-##${indent}<logic:present role="$roles">
-###end
 ##
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
@@ -25,6 +21,7 @@
 #if ($action.useCase.package.contexto == ${contextoPrincipal})
 #set ($prefixoLink = ${contextoPrincipal})
 #end
+##
 #set ($requestPath = "${prefixoLink}${action.actionPath}${actionEnd}")
 #set ($separator = "?")
 #foreach ($parameter in $parameters)
@@ -56,13 +53,13 @@ ${indent}	</security:containsPermission>
 ${indent}</security:containsOperationMode>
 #end
 #end
+##
 #macro ( renderFieldHyperlink2 $action $field $indent )
 #set ($trigger = $action.actionTrigger)
 #set ($triggerKey = $trigger.triggerKey)
 #set ($parameters = $action.actionParameters)
 #set ($formBeanName = $action.useCase.formKey)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 ##
 #set($actionEnd = ".do")
@@ -113,7 +110,6 @@ ${indent}</security:containsOperationMode>
 ##
 #macro ( renderTableHyperlink2 $action $columnName $indent )
 #set($uriQuery='')#set($delim='?')#set($beanName="row")
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #foreach ($parameter in $action.actionParameters)
@@ -131,6 +127,7 @@ ${indent}<security:containsOperationMode value="$valueOperationMode" useCase="${
 #if ($securityEnabled && !${action.useCase.openAccess}) 
 ${indent}	<security:containsPermission name="$action.actionTrigger.triggerKey">
 #end
+##
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
@@ -164,7 +161,6 @@ ${indent}</security:containsOperationMode>
 ##
 #macro ( renderTableButtonStruts2 $action $indent $rowIndex )
 #set($linkParameters="")
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set($delim='?')
 #set($beanName="row")
@@ -174,7 +170,6 @@ ${indent}</security:containsOperationMode>
 ## temporarily commented out, we're taking all parameters from the row since we can't easily check if the row property
 ## is missing the property (reflection is not supported in taglibs nor JSTL EL)
 ## the idea was to take a property from the action form when it is not defined on the row class
-##if(!$action.tableLinkParameter.tableColumnNames.contains($parameter.name))#set($beanName=$formName)#else#set($beanName="row")#end
 #set($linkParameters="${linkParameters}${delim}${parameter.name}=")
 #if ($parameter.widgetType == 'plaintext')
 #set($linkParameters="${linkParameters}${${beanName}.${parameter.name}}")
@@ -276,10 +271,10 @@ ${indent}	</security:containsPermission>
 ${indent}</security:containsOperationMode>
 #end
 #end
+##
 #macro (renderLookupGrid2 $action)
 #set ($messageKey = $action.messageKey)
 #set ($trigger = $action.actionTrigger)
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
@@ -312,14 +307,10 @@ ${indent}</security:containsOperationMode>
 #macro ( renderFormButtonsCustomizado2 $action $indent )
 #set ($messageKey = $action.messageKey)
 #set ($trigger = $action.actionTrigger)
-###set($useCaseName = $action.useCase.name)
 #set($useCaseName = "${action.useCase.package.webModuleName}${action.useCase.actionPath}.action")
 #set ($roles = $action.actionRoles)
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 #set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
-###if ($securityEnabled)
-##${indent}<logic:present role="$roles">
-###end
 #set($valueOperationMode = "")
 #set($valueOperationMode = $action.findTaggedValue("$operationMode"))
 #if( $valueOperationMode != "" && !${action.useCase.openAccess})
@@ -338,21 +329,7 @@ ${indent}</security:containsOperationMode>
 #if ($action.resettable)
 ${indent}<input id="reset${action.actionName.toString().replace(' ','')}" class="btn btn-primary" type="button" name="${action.actionName}" value="<s:property value="%{getText('$trigger.triggerKey')}" />" />
 #end
-###if ($securityEnabled)
-##${indent}</logic:present>
-##${indent}<logic:notPresent role="$roles">
-##${indent}   <security:containsPermission name="$trigger.triggerKey">
-##${indent}   <html:button #if($hints)onmouseover="hints.show('${trigger.name}_no')" onmouseout="hints.hide()"#end disabled="true" styleId="form_submit" onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired})" property="${action.actionName}">
-##${indent}       <bean:message key="$trigger.triggerKey"/>
-##${indent}   </html:button>
-##${indent}   </security:containsPermission>
-###if ($action.resettable)
-##${indent}   <html:reset #if($hints)onmouseover="hints.show('${trigger.name}_noreset')" onmouseout="hints.hide()"#end disabled="true" styleId="form_reset">
-##${indent}       <bean:message key="$trigger.resetMessageKey"/>
-##${indent}   </html:reset>
-###end
-##${indent}</logic:notPresent>
-##end
+
 #end
 ##
 ##
@@ -377,7 +354,6 @@ ${indent}<input id="reset${action.actionName.toString().replace(' ','')}" class=
 #else
 #set ($readonly = '')
 #end
-##set($form="#session.")
 #set ($propertyValue = "#session.${beanName}.${fieldName}")
 #set($requiredness = ($clientValidation || $serverValidation))
 #if ($requiredness && $field.required)
@@ -437,6 +413,13 @@ ${indent}			</label>
 ${indent}		</div>
 ${indent}	</div>
 ##
+##      C U S T O M
+##
+#elseif($field.custom)
+${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-group">
+${indent}		<%@ include file="${field.name}.jsp"  %>
+${indent}	</div>
+##
 ##      M U L T I B O X
 ##
 ## @todo: disable this widget if not used in a row action
@@ -446,10 +429,6 @@ ${indent}		<label class="control-labe col-sm-2"><bean:message key="$field.messag
 ${indent}		<div>
 ${indent}			<s:checkboxlist id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$fieldName" list="#session.form.${field.name}List"#if($field.type.enumeration) listValue="%{getText(value)}" #end value="#session.form.${field.name}DefaultValue"/>
 ${indent}		</div>
-${indent}	</div>
-#elseif($field.custom)
-${indent}	<div id="div${field.name}${action.useCase.name}" class="custom form-group">
-${indent}		<%@ include file="${field.name}.jsp"  %>
 ${indent}	</div>
 ##
 ##     P A S S W O R D
@@ -495,7 +474,7 @@ ${indent}			<input type="text" id="${field.name}${action.useCase.name}" $require
 ${indent}		</div>
 ${indent}	</div>
 ##
-##      T E X T A R E A 
+##      T E X T A R E A
 ##
 #elseif ($field.textArea || $field.editor)
 ${indent}	<div id="div${field.name}${action.useCase.name}" class="textarea form-group">
@@ -567,15 +546,7 @@ ${indent}	</div>
 ##      L I N K
 ##
 #elseif ($field.hyperlink)
-##foreach ($_action in $jsp.actions)
-##if ($_action.hyperlink && $_action.findTaggedValue("$fieldLink"))
-##set($fieldLinkValue = "")
-##set($fieldLinkValue = $_action.findTaggedValue("$fieldLink"))
-##if($fieldLinkValue.equals("$fieldName"))
 #renderFieldHyperlink2($action $field "	")
-##end
-##end
-##end
 ##
 ##      F I L E
 ##
@@ -602,7 +573,6 @@ ${indent}			<p id="${field.name}${action.useCase.name}" class="form-control-stat
 ${indent}		</div>
 ${indent}	</div>
 #end
-##${indent}<label id="$field.name"><c:out value="${__value}"/></label>
 #end
 #macro(cleanButton2 $action $indent)
 #if($action.findTaggedValue("$cleanTable").equals("true"))
@@ -618,6 +588,6 @@ ${indent}				}
 ${indent}			}
 ${indent}		</script>
 ${indent}
-${indent}		<input id="clean${action.useCase.name}" class="btn btn-mini btn-clean" type="button" value="clean"><!--Clean()-->
+${indent}		<input id="clean${action.useCase.name}" class="btn btn-mini btn-clean" type="button" value="clean">
 #end
 #end
