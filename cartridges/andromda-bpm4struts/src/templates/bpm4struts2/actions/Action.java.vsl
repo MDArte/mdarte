@@ -602,28 +602,7 @@ $actionState.getDocumentation("	 * ")
 #if(!$reportName.equals(""))
 		try
 		{
-			##java.util.Properties properties = new java.util.Properties();
-			##java.io.FileInputStream in = new java.io.FileInputStream("${reportPropertiesPath}");
-			##properties.load(in);
-			##in.close(); 
-			##String path = properties.getProperty("report.path");		
-			##String pathGerado = properties.getProperty("report.path.generated");
-
-			##java.util.Date data = new java.util.Date();
-			##java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("ddMMyyyyhhmmss");
-
-			##String fs = System.getProperty("file.separator");
-			##String layout = getRequest().getSession().getServletContext().getRealPath("") + fs + "${controller.packagePath}" + fs +  "${parameterReport.reportName}.jasper";		   			 
-			##String layout = path + fs + "${parameterReport.reportName}.jasper";  
-			##$stringUtils.capitalize(${parameterReport.name})DataSourceImpl ds = new $stringUtils.capitalize(${parameterReport.name})DataSourceImpl((($formBeanClassName)form).${parameterReport.getterName}());
-			##java.util.Map parameters = ds.getParameters();
-
-			##java.io.InputStream input = net.sf.jasperreports.engine.util.JRLoader.getLocationInputStream(layout);
-			##net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(input,parameters, ds);
-			##net.sf.jasperreports.engine.JasperExportManager.exportReportToPdfFile(jasperPrint, pathGerado + fs + "${parameterReport.reportName}" + dateFormat.format(data) + ".pdf"); 						
-			##net.sf.jasperreports.view.JasperViewer.viewReport(jasperPrint, false);
-
-			String fs = System.getProperty("file.separator");	
+			String fs = System.getProperty("file.separator");
 			java.io.File tempFile = java.io.File.createTempFile("${parameterReport.reportName}", "${parameterReport.reportType}");
 			tempFile.deleteOnExit();
 			$stringUtils.capitalize(${parameterReport.name})DataSourceImpl ds = new $stringUtils.capitalize(${parameterReport.name})DataSourceImpl((($formBeanClassName)form).${parameterReport.getterName}());
@@ -646,16 +625,13 @@ $actionState.getDocumentation("	 * ")
 			byte[] dados = new byte[1024];
 			java.io.InputStream in = new java.io.FileInputStream (tempFile);
 			int length = in.read(dados);
-			while(length >= 0)
-			{
+			while(length >= 0) {
 				response.getOutputStream().write(dados);
 				length = in.read(dados); 
 			}
 
 #processTransitionStruts2($actionState.forward "		")
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw e;
 		}
 #end
@@ -706,6 +682,7 @@ $decisionTransition.getDocumentation("	 * ")
 #processTransitionStruts2($defaultOutcome "		")
 		return forward;
 	}
+
 #end
 
 	private java.util.Map getInvalidatePageControlCounter(javax.servlet.http.HttpServletRequest request)
