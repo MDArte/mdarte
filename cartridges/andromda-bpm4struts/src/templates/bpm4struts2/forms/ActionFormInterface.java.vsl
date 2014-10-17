@@ -1,7 +1,7 @@
 #parse("templates/bpm4struts/forms/Form.java.vm")
 #set ($generatedFile = "${operation.interfaceFullPath}.java")
-#set($gerar = true)
 #set ($hash = "#")
+#set($gerar = true)
 #set($Q = '"')
 #if(${operation.controller.useCase.useCaseOldStruts})
 #set($gerar = false)
@@ -25,7 +25,6 @@ $operation.getDocumentation(" * ")
  */
 public interface $operation.interfaceName
 {
-###foreach ($field in $operation.formFields)
 #foreach ($field in $operation.interfaceFormFields)
 #if(${field.widgetType}=="multibox")
 #set($type = ${field.type.literalType.fullyQualifiedName})
@@ -67,10 +66,6 @@ public interface $operation.interfaceName
 #set($optionField=$field)
 #end
 #end
-##if ($field.type.stereotypeNames.contains("ValueObject"))
-##set ($vo = $field)
-##processVOFieldsInterface ($vo)
-##end
 #if ($field.doubleSelect)
 
 	public $fieldType ${field.getterName}__Double();
@@ -82,7 +77,6 @@ public interface $operation.interfaceName
 	public void ${field.setterName}Map(java.util.Map ${fieldName}Map,java.lang.String value, java.lang.String label, java.lang.String value2, java.lang.String label2);
 #end
 #if ($field.type.collectionType)
-
     /**
      * This field is a collection type, and this method allows you to set it into the form.
      *
@@ -347,7 +341,7 @@ $field.getDocumentation("     * ")
      * given the same argument.
      */
     public $field.type.fullyQualifiedName ${field.getterName}OptionValue(int optionIndex);
-	
+
 #if($field.findTaggedValue("$radioSelected"))
 #if($field.type.isStringType())
     public $field.type.fullyQualifiedName ${field.name}Default = new ${field.type.fullyQualifiedName}(${Q}${field.findTaggedValue("$radioSelected")}${Q});
@@ -363,11 +357,7 @@ $field.getDocumentation("     * ")
      * Resets the <code>$field.name</code> field.
      */
     public void ${field.resetName}();
-###if ($field.selectable)
-##if ($field.doubleSelect || ${field.widgetType}=="multibox")
-##processListsInterface ($field ${operation.controller.useCase.useCaseOldStruts})
-##end
-###end
+
 #end
 }
 #end
