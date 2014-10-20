@@ -17,7 +17,6 @@
 #end
 #end
 ## fim do codigo
-##set ($action = $jsp.actions.get(0))
 #if ($jsp.actions.size() > 0 && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
@@ -29,15 +28,6 @@
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
 
-#set($achou = false)
-#foreach($jspAction in $jsp.actions)
-#if($jspAction.hasStereotype("$enterAction"))
-#if(!$jspAction.tableLink && $jspAction.formPost && !$achou)
-#set($defaultAction = $jspAction)
-#set($achou = true)
-#end
-#end
-#end
 #if ($xhtml == "true")
 		<html:xhtml/>
 #end

@@ -109,7 +109,7 @@
 			<logic:iterate id="comboitem" indexId="idx" name="${formBeanName}" property="${parameter.backingListName}Destination">
 				'${parameter.titleKey}<%=idx%>':'<bean:write name="comboitem" property="labelDestination"/>',
 			</logic:iterate>
-			</c:if>		
+			</c:if>
 #end
 #end
 #end
