@@ -54,7 +54,7 @@ button.update=Update
 button.delete=Delete
 button.clear=Clear
 
-error.generic.validator={0} contÈm caracteres n„o permitidos: {1}
+error.generic.validator={0} cont√©m caracteres n√£o permitidos: {1}
 
 referencing.entity.marker= *
 select.option.blank=-- Select --
