@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.PrintWriter;
 import ${servletPackage}.ActionUtil;
-import ${servletPackage}.Struts2ViewContainer;
 #if ($securityEnabled && !${action.useCase.openAccess})
 import ${controleAcessoDir}.LoginControllerFactory;
 #end
