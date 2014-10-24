@@ -218,7 +218,7 @@ $operation.getDocumentation("     * ")
 
 	/**
 	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
+	 * Em novas aplicações, utilizar o metodo ${serviceRef.getterName}().
 	 */
 	@Deprecated
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {

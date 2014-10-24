@@ -154,10 +154,13 @@ $(document).ready(function(){
 	
 		$("div#${variable.name}").jtable("load");
 	
-#end
-#end
-	}
+	};
 
+	createJTableestudantes();
+	
+#end
+#end	
+});
 </script>
 
 
