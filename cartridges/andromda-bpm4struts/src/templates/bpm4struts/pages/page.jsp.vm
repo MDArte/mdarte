@@ -490,6 +490,8 @@ ${indent}    <c:otherwise>
 ${indent}        <html:select name="$beanName" property="$selectProperty" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled$columnCount $eventosMouseUp $eventosKeyUp $eventosKeyPress   styleId="$styleId"/>
 ${indent}    </c:otherwise>
 ${indent}</c:choose>
+#elseif($field.autocomplete)
+${indent}<input type="text" $requiredStyle name="$fieldName" class="" label=""  value="<c:out value="${__value}"/>" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled  title=""  $readonly $columnCount id="$styleId"  />
 ##
 ##	D O U B L E   S E L E C T
 ##
