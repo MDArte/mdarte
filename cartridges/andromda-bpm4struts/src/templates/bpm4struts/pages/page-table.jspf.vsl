@@ -10,6 +10,10 @@
 #set($gerarJSP = true)	
 #end
 #if($gerarJSP)
+#if($table.tableType.equals("jtable"))
+<div id="${table.name}">
+</div>
+#else
 ## [MOISES-COPPETEC]
 ## Acaoo a ser utilizada no link "NEXT" na paginacao.
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
@@ -201,4 +205,5 @@ ${indent}   </security:containsPermission>
     </form>
 #end
 </div>
+#end
 #end
