@@ -25,6 +25,7 @@ $operation.getDocumentation(" * ")
  */
 public interface $operation.interfaceName
 {
+#set ($hasDoubleSelect = false)
 #foreach ($field in $operation.interfaceFormFields)
 #if(${field.widgetType}=="multibox")
 #set($type = ${field.type.literalType.fullyQualifiedName})
@@ -67,6 +68,7 @@ public interface $operation.interfaceName
 #end
 #end
 #if ($field.doubleSelect)
+#set ($hasDoubleSelect = true)
 
 	public $fieldType ${field.getterName}__Double();
 
@@ -357,6 +359,35 @@ $field.getDocumentation("     * ")
      * Resets the <code>$field.name</code> field.
      */
     public void ${field.resetName}();
+
+#end
+#if ($hasDoubleSelect)
+	public final static class LabelValue
+	{
+		private java.lang.Object label = null;
+		private java.lang.Object value = null;
+
+		public LabelValue(Object label, java.lang.Object value)
+		{
+			this.label = label;
+			this.value = value;
+		}
+
+		public java.lang.Object getLabel()
+		{
+			return this.label;
+		}
+		
+		public java.lang.Object getValue()
+		{
+			return this.value;
+		}
+		
+		public java.lang.String toString()
+		{
+			return label + "=" + value;
+		}
+	}
 
 #end
 }

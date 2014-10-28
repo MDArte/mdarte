@@ -528,17 +528,17 @@ ${indent}	</div>
 ##	D O U B L E   S E L E C T
 ##
 #elseif ($field.doubleSelect)
-${indent}	<div id="div${field.name}${action.useCase.name}" class="doubleSelect field">
-${indent}		<label class="doubleSelectLabel"><bean:message key="$field.messageKey"/>$requiredLabel</label>
+${indent}	<div id="div${field.name}${action.useCase.name}" class="form-group combobox">
+${indent}		<label class="control-label col-sm-2"><bean:message key="$field.messageKey"/>$requiredLabel</label>
 #if ($field.readOnly)
 #set ($disabled = 'disabled="true"')
 #end
 #set($multiple='')
 #set($selectProperty="$fieldName")
 ${indent}		<div class="col-xs-8">
-${indent}			<s:doubleselect id="${field.name}${action.useCase.name}" $requiredStyle name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
+${indent}			<s:doubleselect id="${field.name}${action.useCase.name}" $requiredStyle cssClass="form-control" name="$selectProperty" list="#session.form.${field.name}Map.keySet()"
 ${indent}				listKey="value" listValue="label"
-${indent}				doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
+${indent}				doubleCssClass="form-control" doubleName="${selectProperty}__Double" doubleList="#session.form.${field.name}Map.get(top)"
 ${indent}				doubleListKey="value" doubleListValue="label" />
 ${indent}		</div>
 ${indent}	</div>
