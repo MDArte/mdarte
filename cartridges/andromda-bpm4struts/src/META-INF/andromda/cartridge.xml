@@ -1386,13 +1386,13 @@
         path="templates/bpm4struts/pages/controleAcesso/entrar-login-actions.jsp.vsl"
         outputPattern="$secureDir/entrar-login-actions.jsp"
         outlet="controleAcessoImpl"
-        overwrite="false"/>      
+        overwrite="false"/>
 
 	 <template
         path="templates/bpm4struts2/pages/controleAcesso/entrar-login.css.vsl"
         outputPattern="$secureDir/entrar-login.css"
         outlet="controleAcessoImpl"
-        overwrite="false"/>        
+        overwrite="false"/>
 
     <template
         path="templates/bpm4struts2/pages/controleAcesso/entrar-login.jsp.vsl"
