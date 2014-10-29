@@ -75,10 +75,19 @@ $(document).ready(function(){
 	    	multiSorting: true,
 	    	defaultSorting: '',
 	    	actions: {
-#if($jsp.useCase.package.isWebModulePrincipal())
-				listAction: "/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#if($jsp.oldStruts)
+#set($sufixo = "do")
 #else
-				listAction: "/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.action",
+#set($sufixo = "action")
+#end
+#if($jsp.useCase.package.isWebModulePrincipal())
+#set($path="/${projectId}/${jsp.useCase.name}/${jspName}${tableName}Ajax.")
+#set($path = $path.concat($sufixo))
+				listAction: "$path",
+#else
+#set($path="/${projectId}/${jsp.useCase.package.webModuleName}/${jsp.useCase.name}/${jspName}${tableName}Ajax.")
+#set($path = $path.concat($sufixo))
+				listAction: "$path",
 #end    
 			},
 	    	fields: {
@@ -163,6 +172,23 @@ $(document).ready(function(){
 });
 </script>
 
+<script>
+#foreach($action in $jsp.actions)
+#if($action.ajax  && !$action.ajaxTable.equals(""))
+function ${action.ajaxTable}JTableReload(){
+	$('div#${action.ajaxTable}').jtable('load', {
+#foreach($param in $action.getActionParameters()) 
+		$param.name : 
+#if($param.checkbox) 
+			document.getElementById('${param.name}${jsp.useCase.name}').checked 
+#else
+			$('#${param.name}${jsp.useCase.name}').val() #end#set($i=$i+1)#if($i != $action.getActionParameters().size()),#end
+#end
+	});
+}; 
+#end
+#end
+</script>
 
 #if ($hints=="true")
     	<script type="text/javascript" language="Javascript1.1">

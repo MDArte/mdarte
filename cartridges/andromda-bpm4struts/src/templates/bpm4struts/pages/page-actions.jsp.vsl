@@ -238,6 +238,7 @@
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
+<!-- Entrei no if tabAction e mandei dar render no botao da action $action.name -->
 			<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
 				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<%@ include file="${action.input.fullPath}-${action.tableLinkParameter.name}.jspf" %>
@@ -273,6 +274,7 @@
 #foreach ($_action in $jsp.actions)
 #if(!$_action.tableLink)
 #if($_action.formPost )
+<!-- Entrei no else if e mandei dar render no botao da action $action.name -->
 					#renderFormButtonsCustomizado($_action "                           ")
 #elseif ($_action.hyperlink)
 #set($fieldLinkValue = "")
@@ -294,6 +296,7 @@
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
+<!-- Cai na droga do else-->
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
         			<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 #foreach($acao in $jsp.actions)
