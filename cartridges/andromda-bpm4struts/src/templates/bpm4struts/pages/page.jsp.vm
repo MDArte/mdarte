@@ -313,7 +313,7 @@ ${indent}			onclick="confirm ('$valueConfirmMessage')? setaAcaoAjaxStruts2('${ac
 ${indent}			onclick="setaAcaoAjaxStruts2('${action.actionPath}' , '${action.actionName}','${action.actionFormat}','divTabelas' : false )" property="${action.actionName}" >
 #end
 #else
-${indent}			onclick="${action.ajaxTable}JTableReload()"  property="${action.actionName}">
+${indent}			onclick="${action.ajaxTable}JTableReload()"  property="">
 #end
 #end
 #end

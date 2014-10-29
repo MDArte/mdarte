@@ -174,7 +174,9 @@ $(document).ready(function(){
 
 <script>
 #foreach($action in $jsp.actions)
-#if($action.ajax  && !$action.ajaxTable.equals(""))
+// $action.name
+#set($i=0)
+#if($action.ajaxAction  && !$action.ajaxTable.equals(""))
 function ${action.ajaxTable}JTableReload(){
 	$('div#${action.ajaxTable}').jtable('load', {
 #foreach($param in $action.getActionParameters()) 
@@ -182,7 +184,7 @@ function ${action.ajaxTable}JTableReload(){
 #if($param.checkbox) 
 			document.getElementById('${param.name}${jsp.useCase.name}').checked 
 #else
-			$('#${param.name}${jsp.useCase.name}').val() #end#set($i=$i+1)#if($i != $action.getActionParameters().size()),#end
+			$('#${param.styleId}').val() #end#set($i=$i+1)#if($i != $action.getActionParameters().size()),#end
 #end
 	});
 }; 
