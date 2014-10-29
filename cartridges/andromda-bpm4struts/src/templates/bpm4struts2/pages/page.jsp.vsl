@@ -37,7 +37,7 @@
 <tiles:insert definition="simple.layout">
 #else
 #if($jsp.useCase.openAccess)
-<tiles:insert definition="main.layout.open">
+<tiles:insert definition="main.layout.open2">
 #else
 <tiles:insert definition="main.layout2">
 #end

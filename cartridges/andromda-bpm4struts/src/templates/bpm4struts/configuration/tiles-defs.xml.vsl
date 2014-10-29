@@ -13,7 +13,25 @@
         <put name="javascript" type="string" value=""/>
         <put name="body" type="string" value=""/>
         <put name="menu" type="definition" value="menu.tile"/>
+#if($struts2 == "false")
         <put name="messages" type="definition" value="messages.tile"/>
+#else
+        <put name="messages" type="definition" value="messages.other.tile"/>
+#end
+   </definition>
+   
+   <definition name="main.layout.open" page="/layout/main-layout-open.jsp">
+        <put name="head" type="string" value=""/>
+        <put name="title" type="string" value=""/>
+        <put name="style" type="string" value=""/>
+        <put name="javascript" type="string" value=""/>
+        <put name="body" type="string" value=""/>
+        <put name="menu" type="definition" value="menu.open"/>
+#if($struts2 == "false")
+        <put name="messages" type="definition" value="messages.tile"/>
+#else
+        <put name="messages" type="definition" value="messages.other.tile"/>
+#end
    </definition>
    
     <definition name="main.layout2" page="/layout/main-layout2.jsp">
@@ -27,9 +45,14 @@
         <put name="javascript" type="string" value=""/>
         <put name="body" type="string" value=""/>
         <put name="menu" type="definition" value="menu.tile"/>
+#if($struts2 == "true")
         <put name="messages" type="definition" value="messages.tile"/>
+#else
+        <put name="messages" type="definition" value="messages.other.tile"/>
+#end
    </definition>
-   <definition name="main.layout.open" page="/layout/main-layout-open.jsp">
+   
+   <definition name="main.layout.open2" page="/layout/main-layout-open2.jsp">
         <put name="head" type="string" value=""/>
         <put name="title" type="string" value=""/>
         <put name="style" type="string" value=""/>
@@ -40,7 +63,11 @@
         <put name="javascript" type="string" value=""/>
         <put name="body" type="string" value=""/>
         <put name="menu" type="definition" value="menu.open"/>
+#if($struts2 == "true")
         <put name="messages" type="definition" value="messages.tile"/>
+#else
+        <put name="messages" type="definition" value="messages.other.tile"/>
+#end
    </definition>
 
    <definition name="login.layout" page="/accessControl/login-layout.jsp">
@@ -59,6 +86,7 @@
         <put name="messages" type="definition" value="messages.tile"/>
     </definition>
     <definition name="messages.tile" page="/messages/messages.jsp"/>
+	<definition name="messages.other.tile" page="/messages/messages-other.jsp"/>
 	<definition name="messages.login.tile" page="/messages/messages-login.jsp"/>
     <definition name="menu.tile" page="/menu/menu.jsp"/>
     <definition name="menu.open" page="/menu/menu-open.jsp"/>

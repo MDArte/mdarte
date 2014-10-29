@@ -1,4 +1,3 @@
-#if($struts2 == "false")
 #set ($generatedFile = "layout/main-layout.jsp")
 <%@ include file="/taglib-imports.jspf" %>
 <%@ include file="/layout-configuration.jsp" %>
@@ -47,4 +46,3 @@
     </body>
 
 </html:html>
-#end
