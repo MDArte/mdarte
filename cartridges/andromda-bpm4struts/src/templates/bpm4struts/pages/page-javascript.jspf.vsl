@@ -173,6 +173,34 @@ $(document).ready(function(){
 </script>
 
 <script>
+//js dos campos de autocomplete
+#foreach($parameter in $jsp.allUniqueActionParameters)
+#if($parameter.autocomplete)
+//modulo is $modulo
+#set($actionName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($palavras = ${jsp.getName().split(" ")})
+#set($pageName = "")
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
+#set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
+#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#else
+#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#end
+	$("input#${parameter.styleId}").typeahead({
+		name: "${parameter.name}",
+		remote: "$url?query=%QUERY",
+		limit: 10
+	});
+
+#end
+#end
+</script>
+
+<script>
 #foreach($action in $jsp.actions)
 // $action.name
 #set($i=0)
