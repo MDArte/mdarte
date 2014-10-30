@@ -176,7 +176,6 @@ $(document).ready(function(){
 //js dos campos de autocomplete
 #foreach($parameter in $jsp.allUniqueActionParameters)
 #if($parameter.autocomplete)
-//modulo is $modulo
 #set($actionName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
 #set($palavras = ${jsp.getName().split(" ")})
 #set($pageName = "")
