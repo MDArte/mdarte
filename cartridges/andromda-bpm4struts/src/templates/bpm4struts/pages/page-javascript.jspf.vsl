@@ -183,18 +183,24 @@ $(document).ready(function(){
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($pageName = $pageName.concat("$aux"))
 #end
+#if($parameter.oldStruts)
+#set($terminacao = "do")
+#else
+#set($terminacao = "action")
+#end
 #if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
 #set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
-#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.${terminacao}")
 #else
-#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.action")
+#set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}AutoComplete.${terminacao}")
 #end
+$(document).ready(function(){
 	$("input#${parameter.styleId}").typeahead({
 		name: "${parameter.name}",
 		remote: "$url?query=%QUERY",
 		limit: 10
 	});
-
+});
 #end
 #end
 </script>
