@@ -336,7 +336,48 @@ $operation.getDocumentation("     * ")
 	}
 #end
 #end
+#foreach($parameter in $page.allUniqueActionParameters)
+#if($parameter.autocomplete)
+#if($parameter.autocomplete)
+#set($pageName = $parameter.name) 
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($package = ${controller.getPackagePath().replace("/", ".")})
 
+	protected abstract String[] ${pageName}AutoComplete(String query, HttpServletRequest request,HttpServletResponse response) throws Exception;
+	
+	public void ${pageName}AutoComplete(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{	
+		String [] result;
+    	
+    	String query = request.getParameter("query");
+    	
+    	if(query == null)
+    		query = "";
+  
+		result =  this.${pageName}AutoComplete(query, request, response);
+
+		JSONArray jsonArray = new JSONArray();
+		
+		if(result != null)
+		{
+			for (String string : result)
+			{
+				jsonArray.add(string);
+		    }
+		}
+    	
+		response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(jsonArray.toString());
+        response.getWriter().flush();
+    	
+	}
+#end
+#end
+#end
 #end
 
 
