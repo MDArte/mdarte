@@ -1,16 +1,16 @@
-#if($parameter.getJsp().oldStruts && $parameter.tableType.equals("jtable"))
+#if($parameter.getJsp().oldStruts && $parameter.autocomplete)
 #parse("templates/bpm4struts/actions/Action.java.vm")
-#set($tableName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
+#set($paramName = $parameter.name.subSequence(0,1).toUpperCase().concat("$parameter.name.substring(1)") )
 #set($actionName= "")
 #set($palavras = ${parameter.getJsp().getName().split(" ")})
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($actionName = $actionName.concat("$aux"))
 #end
-#set($actionName=$actionName.concat($tableName))
+#set($actionName=$paramName.concat($actionName))
 #set($path = ${parameter.getJsp().getUseCase().getPackagePath()})
 #set($package=$path.replace('/','.'))
-#set($generatedFile = "${path}/${actionName}Ajax.java")
+#set($generatedFile = "${path}/${actionName}AutoComplete.java")
 #set($controllerClass = ${parameter.getJsp().getUseCase().getController()})
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 // license-header java merge-point
@@ -40,11 +40,11 @@ import ${parameter.getJsp().getUseCase().getController().fullyQualifiedName}Fact
 
 
 #if ($securityEnabled && !${action.useCase.openAccess}) 
-public final class ${actionName}Ajax extends ${controleAcessoDir}.Login
+public final class ${actionName}AutoComplete extends ${controleAcessoDir}.Login
 {
 	public org.apache.struts.action.ActionForward particularExecute(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception {
 #else
-public final class ${actionName}Ajax extends org.apache.struts.action.Action
+public final class ${actionName}AutoComplete extends org.apache.struts.action.Action
 {
 	protected String __casoDeUso = "${parameter.getJsp().getUseCase().getName()}";
 	protected String __urlCasoDeUso = "/${parameter.getJsp().getUseCase().getName()}/${actionName}Ajax.action";
@@ -64,7 +64,7 @@ public final class ${actionName}Ajax extends org.apache.struts.action.Action
 			request.getSession().removeAttribute(Constantes.COPY_PARAMETERS);
 		}
 		
-		forward = _loadTable(mapping,form,request,response);
+		forward = _autocomplete(mapping,form,request,response);
 
 		request.removeAttribute("$forwardKey");
 		request.removeAttribute("$forwardKeyModule");
@@ -73,7 +73,7 @@ public final class ${actionName}Ajax extends org.apache.struts.action.Action
 		
 	}
 	
-	private org.apache.struts.action.ActionForward _loadTable(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
+	private org.apache.struts.action.ActionForward _autocomplete(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
 	{
 		org.apache.struts.action.ActionForward forward = null;
 #set($palavras = $parameter.getJsp().getName().split(" "))
@@ -82,7 +82,7 @@ public final class ${actionName}Ajax extends org.apache.struts.action.Action
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
 #set($method=$method.concat("$aux"))
 #end
-		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().load${actionName}Table(request,response);
+		${package}.${controllerClass.name}Factory.get${controllerClass.name}Instance().${method}AutoComplete(request,response);
 		
 		return forward;
 	}
