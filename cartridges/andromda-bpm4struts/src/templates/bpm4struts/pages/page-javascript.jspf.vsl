@@ -165,7 +165,7 @@ $(document).ready(function(){
 	
 	};
 
-	createJTableestudantes();
+	createJTable${variable.name}();
 	
 #end
 #end	
