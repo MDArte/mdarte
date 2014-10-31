@@ -18,7 +18,13 @@ package $controller.packageName;
 
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
+import ${packageUtil}.PaginationStrategy;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import ${servletPackage}.ControllerAbstract;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.util.Collection;
 ##
 #set ($sharp = "#")
 
@@ -212,7 +218,7 @@ $operation.getDocumentation("     * ")
 
 	/**
 	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
+	 * Em novas aplicações, utilizar o metodo ${serviceRef.getterName}().
 	 */
 	@Deprecated
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {
@@ -221,6 +227,159 @@ $operation.getDocumentation("     * ")
 
 #end
 #end
+#set($pages = $controller.getUseCase().getPages())
+#foreach($page in $pages)
+#foreach($variable in $page.getPageVariables())
+#if($variable.tableType.equals("jtable") && $variable.table)
+#set($tableName = $variable.name.subSequence(0,1).toUpperCase().concat($variable.name.substring(1)) )
+#set($actionName = "")
+#set($palavras = ${variable.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionName = $actionName.concat("$aux"))
+#end
+#set($actionName=$actionName.concat($tableName))
+#set($actions = $page.getActions())
+
+	protected abstract Integer get${actionName}TableLength(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	protected abstract Collection load${actionName}Table(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end HttpServletRequest request, HttpServletResponse response) throws java.lang.Exception;
+
+	protected void load${actionName}Table(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Integer linhas = (request.getParameter("jtPageSize") != null) ? Integer.valueOf(request.getParameter("jtPageSize")) : 10;
+		
+		Integer paginacao = (request.getParameter("jtStartIndex") != null) ? Integer.valueOf(request.getParameter("jtStartIndex")) / linhas : 0;
+		
+		String propriedade = request.getParameter("jtSorting") != null ? request.getParameter("jtSorting").split(" ")[0] : "";
+	
+		Boolean desc = new Boolean(false);
+		
+		if(request.getParameter("jtSorting") != null)
+		    desc = request.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+			
+		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
+
+#foreach($action in $page.getActions())
+#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
+#foreach($param in $action.getActionParameters())
+#if($param.type.name.equalsIgnoreCase("Integer")) 
+		$param.type.name $param.name = null;
+
+		try {
+			$param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("")? null : Integer.valueOf(request.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Double"))
+		$param.type.name $param.name = null;
+		try {
+			 $param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("")? null ? Double.valueOf(request.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Boolean"))
+		$param.type.name $param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("") ? null : Boolean.valueOf(request.getParameter("${param.name}").toString())); 
+		
+#else 
+		String $param.name = this.extractParameterFromViewContainer(request, "${param.name}");
+		
+#end
+#end
+#end
+#end
+		
+		Collection rows = this.load${actionName}Table(strategy,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end request,response);
+		
+		String [] columns = {
+#foreach($_action in $page.getActions())
+#foreach($_parameter in $_action.getActionParameters())
+			"$_parameter.name",		
+#end
+#end
+#set($i=0)
+#set($limit=$variable.tableColumns.size() - 1)
+#foreach($column in $variable.tableColumns)
+#if($i != $limit)
+#if($column.name)
+			"$column.name",
+#else
+			"$column",
+#end
+#else
+#if($column.name) 
+			"$column.name"
+#else
+			"$column"
+#end
+#end
+#set($i=$i+1)
+#end		
+		};
+		
+		JSONArray array = new JSONArray();
+		
+		if(rows != null)
+			array = this.parseCollectionToJSON(rows,columns);
+        
+        JSONObject obj = new JSONObject();
+        
+        obj.put("Result","OK");
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(strategy,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end request,response));
+        obj.put("Records",array);
+        
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(obj.toString());
+        response.getWriter().flush();
+	}
+#end
+#end
+#foreach($parameter in $page.allUniqueActionParameters)
+#if($parameter.autocomplete)
+#if($parameter.autocomplete)
+#set($pageName = $parameter.name) 
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($package = ${controller.getPackagePath().replace("/", ".")})
+
+	protected abstract String[] ${pageName}AutoComplete(String query, HttpServletRequest request,HttpServletResponse response) throws Exception;
+	
+	public void ${pageName}AutoComplete(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{	
+		String [] result;
+    	
+    	String query = request.getParameter("query");
+    	
+    	if(query == null)
+    		query = "";
+  
+		result =  this.${pageName}AutoComplete(query, request, response);
+
+		JSONArray jsonArray = new JSONArray();
+		
+		if(result != null)
+		{
+			for (String string : result)
+			{
+				jsonArray.add(string);
+		    }
+		}
+    	
+		response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(jsonArray.toString());
+        response.getWriter().flush();
+    	
+	}
+#end
+#end
+#end
+#end
+
 
 #foreach($dependencia in  $controller.sourceDependencies)
 #if($dependencia.targetElement.hasExactStereotype("ServiceFactory"))

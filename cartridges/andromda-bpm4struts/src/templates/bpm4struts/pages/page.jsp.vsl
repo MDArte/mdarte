@@ -153,16 +153,16 @@ function atualizaElementos(){
 #end
 #end
 
-#if($jsp.oldStruts)
-#foreach ($variable in $jsp.pageVariables)
+##if($jsp.oldStruts)
+##foreach ($variable in $jsp.pageVariables)
 ## tables that have actions targetting them globally will include them in the corresponding JSP fragment, not here
-#if ($variable.table)
-        <%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
-#end
-#end
-#elseif($jsp.temTabela)
+##if ($variable.table)
+##        <%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
+##end
+##end
+#if($jsp.temTabela)
 	<div id="divTabelas">
-	<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
+		<%@ include file="${jsp.fullPath}-tabelas.jsp" %>
 	</div>
 #end
 

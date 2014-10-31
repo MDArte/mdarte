@@ -290,13 +290,33 @@ ${indent}</security:containsOperationMode>
 #set ($valueConfirmMessage = $action.findTaggedValue("$confirmMessage"))
 #set($valueOperationMode = "")
 #set($valueOperationMode = $action.findTaggedValue("$operationMode"))
+
 #if( $valueOperationMode != "" && !${action.useCase.openAccess})
 ${indent}<security:containsOperationMode value="$valueOperationMode" useCase="${useCaseName}">
 #end
 #if ($securityEnabled && !${action.useCase.openAccess})
 ${indent}	<security:containsPermission name="$trigger.triggerKey">
 #end
-${indent}		<html:button  #if($hints)onmouseover="hints.show('${trigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" #if($valueConfirmMessage)onclick="confirm ('$valueConfirmMessage')?setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', '${action.actionFormat}' ): false" property="${action.actionName}"#else onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}','${action.actionFormat}' )" property="${action.actionName}" #end>
+${indent}		<html:button  #if($hints)onmouseover="hints.show('${trigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" 
+#if(!$action.ajaxAction) <!-- action $action.name -->
+#if($valueConfirmMessage)
+${indent}			onclick="confirm ('$valueConfirmMessage')? setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', '${action.actionFormat}' ): false" property="${action.actionName}">
+#else 
+${indent}			onclick="setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}','${action.actionFormat}' )" property="${action.actionName}" >
+#end
+#else
+#if($action.temParametroTabela)
+#if($action.ajaxTable.equals(""))
+#if($valueConfirmMessage)
+${indent}			onclick="confirm ('$valueConfirmMessage')? setaAcaoAjaxStruts2('${action.actionPath}' , '${action.actionName}','${action.actionFormat}','divTabelas' : false )" property="${action.actionName}" >
+#else
+${indent}			onclick="setaAcaoAjaxStruts2('${action.actionPath}' , '${action.actionName}','${action.actionFormat}','divTabelas' : false )" property="${action.actionName}" >
+#end
+#else
+${indent}			onclick="${action.ajaxTable}JTableReload()"  property="">
+#end
+#end
+#end
 ${indent}			<bean:message key="$trigger.triggerKey"/>
 ${indent}		</html:button>
 #if ($securityEnabled && !${action.useCase.openAccess})
@@ -490,6 +510,8 @@ ${indent}    <c:otherwise>
 ${indent}        <html:select name="$beanName" property="$selectProperty" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled$columnCount $eventosMouseUp $eventosKeyUp $eventosKeyPress   styleId="$styleId"/>
 ${indent}    </c:otherwise>
 ${indent}</c:choose>
+#elseif($field.autocomplete)
+${indent}<input type="text" $requiredStyle name="$fieldName" class="" label=""  value="<c:out value="${__value}"/>" #if($hints)onmouseover="hints.show('$field.hintKey', '$styleId')" title="" onmouseout="hints.hide()"#end $disabled  title=""  $readonly $columnCount id="$styleId"  />
 ##
 ##	D O U B L E   S E L E C T
 ##
