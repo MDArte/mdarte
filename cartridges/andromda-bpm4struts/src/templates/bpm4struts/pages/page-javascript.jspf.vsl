@@ -131,7 +131,12 @@ $(document).ready(function(){
 						var $parameter.name = data.record.${parameter.name};
 #end
 #set($first=true)
-						return "<a class='' href='"+ "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>"+data.record.${columnName}+"</a>";
+#if($tableAction.oldStruts)
+#set($end="do")
+#else
+#set($end="action")
+#end
+						return "<a class='' href='"+ "${prefixoLink}${tableAction.actionPath}.${sufixo}?"#foreach ($param in $tableAction.actionParameters)#if(!$first)+"&" #end+"$param.name="+ $param.name  + #set($first=false)#end"'>"+data.record.${columnName}+"</a>";
 					},
 #end
 #end
@@ -152,7 +157,7 @@ $(document).ready(function(){
 #foreach ($parameter in $tableAction.actionParameters)
 						var $parameter.name = data.record.${parameter.name};
 #end
-						return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='" + "${prefixoLink}${tableAction.actionPath}.action?"#foreach ($param in $tableAction.actionParameters)#if(!$first) + "&" #end + "$param.name="+ $param.name  + #set($first=false)#end"'>" + #if(!$tableAction.imageLink)HINTS_ITEMS["${tableAction.name}"] #else #set($link = "")#foreach($palavra in $tableAction.imagePath.split('/') )#set($link=$palavra)#end"<div class='imageHyperlink' id='imageHyperlink${tableAction.name.replace(' ','')}'></div>"#end + "</a>";
+						return "<a id='tableHyperlink${tableAction.name.replace(' ','')}' href='" + "${prefixoLink}${tableAction.actionPath}.${sufixo}?"#foreach ($param in $tableAction.actionParameters)#if(!$first) + "&" #end + "$param.name="+ $param.name  + #set($first=false)#end"'>" + #if(!$tableAction.imageLink)HINTS_ITEMS["${tableAction.name}"] #else #set($link = "")#foreach($palavra in $tableAction.imagePath.split('/') )#set($link=$palavra)#end"<div class='imageHyperlink' id='imageHyperlink${tableAction.name.replace(' ','')}'></div>"#end + "</a>";
 					},
 					title: HINTS_ITEMS["${tableAction.name}_column_action_name"]
 				}
