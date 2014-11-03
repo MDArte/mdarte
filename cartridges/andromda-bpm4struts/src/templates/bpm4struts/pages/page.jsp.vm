@@ -297,8 +297,8 @@ ${indent}<security:containsOperationMode value="$valueOperationMode" useCase="${
 #if ($securityEnabled && !${action.useCase.openAccess})
 ${indent}	<security:containsPermission name="$trigger.triggerKey">
 #end
-${indent}		<html:button  #if($hints)onmouseover="hints.show('${trigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit" 
-#if(!$action.ajaxAction) <!-- action $action.name -->
+${indent}		<html:button  #if($hints)onmouseover="hints.show('${trigger.name}')" onmouseout="hints.hide()"#end styleId="form_submit"
+#if(!$action.ajaxAction)
 #if($valueConfirmMessage)
 ${indent}			onclick="confirm ('$valueConfirmMessage')? setaAcao('${action.actionPath}', '${action.formValidationMethodName}', ${action.validationRequired} , '${action.actionName}', '${action.actionFormat}' ): false" property="${action.actionName}">
 #else 
@@ -315,6 +315,8 @@ ${indent}			onclick="setaAcaoAjaxStruts2('${action.actionPath}' , '${action.acti
 #else
 ${indent}			onclick="${action.ajaxTable}JTableReload()"  property="">
 #end
+#else
+					property="$action.actionName" >
 #end
 #end
 ${indent}			<bean:message key="$trigger.triggerKey"/>
