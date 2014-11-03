@@ -298,7 +298,7 @@
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
         			<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 #foreach($acao in $jsp.actions)
-#if (!$acao.hiddenActionParameters.empty)
+#if (!$acao.hiddenActionParameters.empty && !$acao.tableLink)
             		<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
 #end
