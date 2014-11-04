@@ -45,7 +45,7 @@
 ## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
 #else
 #foreach($acao in $jsp.actions)
-#if (!$acao.hiddenActionParameters.empty)
+#if (!$acao.hiddenActionParameters.empty && !$acao.tableLink)
 	<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
 #end
