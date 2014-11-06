@@ -20,7 +20,7 @@ maven.idea.project.multiproject.basedir=.
 
 # AndroMDA dependencies version
 andromda.version=3.1
-cartridge.version=3.1.1.3.4.19-RC11
+cartridge.version=3.1.1.3.4.19-RC12
 
 # Numeros de caracteres de uma classe
 maxSizeClass=150
