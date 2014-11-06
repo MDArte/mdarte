@@ -78,7 +78,7 @@ public class StrutsFinalStateLogicImpl
                 }
                 else if (name != null && !name.trim().equals(""))
                 {
-                	// caso o caso de uso alvo n„o esteja no mesmo modelo.. monta caminho usando o nome do estado final
+                	// caso o caso de uso alvo n√£o esteja no mesmo modelo.. monta caminho usando o nome do estado final
                 	name = StringUtils.capitalize(name);
                 	String formato = ".action";
 
@@ -170,7 +170,7 @@ protected Boolean handleValidateWebModule() {
 		CoppetecFrontEndPackage pacoteDestino = (CoppetecFrontEndPackage)(this.getTargetUseCase().getPackage());
 		CoppetecFrontEndPackage pacoteOrigem = (CoppetecFrontEndPackage)(((StrutsAction)this.getActions().get(0)).getUseCase().getPackage());
 		return new Boolean(pacoteDestino.getWebModuleName().equals(pacoteOrigem.getWebModuleName()));
-		// o operador new È utilizado para criar uma nova inst‚ncia da classe Boolean pois o compilador n„o aceita autoboxing
+		// o operador new √© utilizado para criar uma nova inst√¢ncia da classe Boolean pois o compilador n√£o aceita autoboxing
 		
 	}
     

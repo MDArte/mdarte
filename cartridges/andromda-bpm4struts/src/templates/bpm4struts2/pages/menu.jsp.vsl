@@ -33,18 +33,15 @@ function closeWindow() {
 	<div id="breadCrumb">
 		<%
 			Iterator breadCrumbIt = null;
-			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb"); 
+			ArrayList breadCrumbCollection = (ArrayList) session.getAttribute("breadCrumb");
 			
 			if (breadCrumbCollection != null){
 				
 				breadCrumbIt = breadCrumbCollection.iterator();
 				 
-				while (breadCrumbIt.hasNext()) {	   
-				
-	
+				while (breadCrumbIt.hasNext()) {
+
 					out.print(breadCrumbIt.next().toString());
-	
-	
 				} 
 			}
 		

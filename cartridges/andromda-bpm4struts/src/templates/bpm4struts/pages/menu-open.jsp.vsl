@@ -1,5 +1,5 @@
 #if($struts2 == "false")
-#set ($generatedFile = "menu/menu.jsp")
+#set ($generatedFile = "menu/menu-open.jsp")
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@ include file="/taglib-imports.jspf" %>
@@ -9,30 +9,15 @@
 	url += "${contextoPrincipal}"; 
 %>
 
-#set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
-#if ($securityEnabled)
-<SCRIPT LANGUAGE="Javascript">
-function sair( )
-{
-	var msg = <%out.print("\"");%><bean:message key="saida.sistema.confirma.saida"/><%out.print("\"");%>;
-	if( confirm( msg ) ) 
-		window.location = "<%=url%>/${secureDir}/SaidaSistema.do";
-}
-</script> 
-
-#else
 <SCRIPT LANGUAGE="Javascript">
 function closeWindow() {
 	window.open('','_parent','');
 	window.close();
 }
 </script>
-#end
 
 <div id="MenuP">
-#if ($securityEnabled) 
-<a href="<%=url%>/${secureDir}/TrocaDeSenhaObrigatoriaProcessar.do?menu=true"><bean:message key="login.troca.de.senha.title"/></a>
-#end
+
 <% 
 		java.util.HashMap paramsPrincipal = new java.util.HashMap();
 		paramsPrincipal.put("modulo", "");
@@ -44,7 +29,7 @@ function closeWindow() {
        <span class='menuHome'/>
 	</html:link>
 
-	<a #if ($securityEnabled)href="<%=url%>/${secureDir}/NovaConexao.do"#else href="javascript:self.close()" #end >
+	<a href="javascript:self.close()" >
 				<bean:message key="login.sair.link"/>
 				<%-- <span class='menuFechar'/> --%>
     </a>

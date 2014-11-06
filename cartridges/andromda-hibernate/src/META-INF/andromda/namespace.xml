@@ -704,7 +704,7 @@
                 </documentation>
             </property>
             <property name="xmlEncoding">
-                <default>ISO-8859-1</default>
+                <default>UTF-8</default>
                 <documentation>
                     Encoding for generated XML files.
                 </documentation>

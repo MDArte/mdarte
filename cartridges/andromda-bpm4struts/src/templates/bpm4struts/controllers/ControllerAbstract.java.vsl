@@ -1,7 +1,7 @@
 #set ($className = "ControllerAbstract")
 #set ($generatedFile = "$stringUtils.replace($servletPackage, '.', '/')/${className}.java")
 #set($gerar = false)
-#if(!${controller.useCase.useCaseOldStruts})
+#if(${controller.useCase.useCaseOldStruts})
 #set($gerar = true)
 #end
 ##
@@ -12,12 +12,11 @@
 package ${servletPackage};
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
-import ${servletPackage}.ViewContainer;
-import com.opensymphony.xwork2.ActionSupport;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.apache.struts.util.MessageResources;
 
 
 public abstract class ControllerAbstract implements java.io.Serializable
@@ -33,18 +32,20 @@ public abstract class ControllerAbstract implements java.io.Serializable
      * @param message the message key to lookup the actual message to display
      * @param arguments any arguments used within the message
      */
-	protected final void saveWarningMessage(String message, String[] arguments, ViewContainer container) {
-		// we explicitely store and retrieve the messages from the session, as opposed to using
-		// Action.saveMessages because this constroller does not have access to the current Action instance
-		org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
-		if (messages == null)
-		{
-			messages = new org.apache.struts.action.ActionMessages();
-			container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
-		}
-		messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-## EM struts 2 ha s:actionmessenger e s:errormenseger como tags e addActionMenssage,addErrorMenssage		
-}
+    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
+    {
+        final javax.servlet.http.HttpSession session = request.getSession();
+
+        // we explicitely store and retrieve the messages from the session, as opposed to using
+        // Action.saveMessages because this constroller does not have access to the current Action instance
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
+        if (messages == null)
+        {
+            messages = new org.apache.struts.action.ActionMessages();
+            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
+        }
+        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
+    }
 
     /**
      * Stores a warning message in the session, if any other warning messages exist, this one
@@ -53,10 +54,11 @@ public abstract class ControllerAbstract implements java.io.Serializable
      *
      * @param session the session to which the messages will be saved.
      * @param message the message key to lookup the actual message to display
-     * @see saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     * @see ${sharp}saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
      */
-    protected final void saveWarningMessage(String message, ViewContainer container) {
-        this.saveWarningMessage(message, null, container);
+    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
+    {
+        this.saveWarningMessage(request, message, null);
     }
 
     /**
@@ -67,24 +69,34 @@ public abstract class ControllerAbstract implements java.io.Serializable
      * @param request the request from which the session will be taken into which the messages will be saved.
      * @param message the message key to lookup the actual message to display
      */
-    protected final void saveSuccessMessage(String message, String[] arguments, ViewContainer container) {
-        
+    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
+    {
+        final javax.servlet.http.HttpSession session = request.getSession();
 
         // we explicitely store and retrieve the messages from the session, as opposed to using
         // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
         if (messages == null)
         {
             messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
         }
         messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
     }
 
-	protected final void saveSuccessMessage(String message, ViewContainer container) {
-		this.saveSuccessMessage(message,null,container);
-	}
-
+    /**
+     * Stores a success message in the session, if any other success messages exist, this one
+     * is simply added. This message will be removed from the session after the first time
+     * it has been accessed (a feature supported by Struts since version 1.2.4).
+     *
+     * @param request the request from which the session will be taken into which the messages will be saved.
+     * @param message the message key to lookup the actual message to display
+     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     */
+    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
+    {
+        this.saveSuccessMessage(request, message, null);
+    }
 
     /**
      * Stores an error message in the session, if any other error messages exist, this one
@@ -93,17 +105,19 @@ public abstract class ControllerAbstract implements java.io.Serializable
      *
      * @param request the request from which the session will be taken into which the messages will be saved.
      * @param message the message key to lookup the actual message to display
-     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
      */
-    protected final void saveErrorMessage(String message, String[] arguments, ViewContainer container) {
+    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
+    {
+        final javax.servlet.http.HttpSession session = request.getSession();
 
         // we explicitely store and retrieve the messages from the session, as opposed to using
         // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)container.getFromSession(org.apache.struts.Globals.MESSAGE_KEY);
+        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
         if (messages == null)
         {
             messages = new org.apache.struts.action.ActionMessages();
-            container.setOnSession(org.apache.struts.Globals.MESSAGE_KEY, messages);
+            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
         }
         messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
     }
@@ -115,23 +129,24 @@ public abstract class ControllerAbstract implements java.io.Serializable
      *
      * @param request the request from which the session will be taken into which the messages will be saved.
      * @param message the message key to lookup the actual message to display
-     * @see saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
+     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
      */
-    protected final void saveErrorMessage(java.lang.String message,ViewContainer container) {
-        this.saveErrorMessage(message, null,container);
+    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
+    {
+        this.saveErrorMessage(request, message, null);
     }
 	
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * Mï¿½todo a ser utilizado na recuperaï¿½ï¿½o de serviï¿½os.
 	 */
 	protected <T> T getService(Class<T> clazz) throws Exception	{
 		return br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(clazz);
 	}
 
-	protected java.util.Collection<String> getModoOperacao(String nomeCasoDeUso, ViewContainer container) {
+	protected java.util.Collection<String> getModoOperacao(String nomeCasoDeUso, javax.servlet.http.HttpServletRequest request) {
 		java.util.Collection<String> modoOperacao = new java.util.ArrayList();
-		if(container.getFromSession(Constantes.MODO_OPERACAO) != null){
-			java.util.Map map = (java.util.Map)container.getFromSession(Constantes.MODO_OPERACAO);
+		if(request.getSession().getAttribute(Constantes.MODO_OPERACAO) != null){
+			java.util.Map map = (java.util.Map)request.getSession().getAttribute(Constantes.MODO_OPERACAO);
 			if(nomeCasoDeUso != null){
 				if(map.get(nomeCasoDeUso) != null){
 					String modoOperacaoStr = (String)map.get(nomeCasoDeUso);
@@ -146,19 +161,19 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return modoOperacao;
 	}
 	
-	protected void adicionaModoOperacao(String modoOperacao, ViewContainer container) {
-		this.adicionaModoOperacao(this.getNomeCasoUso(), modoOperacao, container);
+	protected void adicionaModoOperacao(String modoOperacao, javax.servlet.http.HttpServletRequest request) {
+		this.adicionaModoOperacao(this.getNomeCasoUso(), modoOperacao, request);
 	}
 	
-	protected void adicionaModoOperacao(String casoUso, String modoOperacao, ViewContainer container) {
-		if(possuiModoOperacao(casoUso, modoOperacao, container))
+	protected void adicionaModoOperacao(String casoUso, String modoOperacao, javax.servlet.http.HttpServletRequest request) {
+		if(possuiModoOperacao(casoUso, modoOperacao, request))
 			return;
 		
-		Map listaModosOperacao = (Map) container.getFromSession(Constantes.MODO_OPERACAO);
+		Map listaModosOperacao = (Map) request.getSession().getAttribute(Constantes.MODO_OPERACAO);
 		
 		if(listaModosOperacao == null) {
 			listaModosOperacao = new HashMap<String, String>();
-			container.setOnSession(Constantes.MODO_OPERACAO, listaModosOperacao);
+			request.getSession().setAttribute(Constantes.MODO_OPERACAO, listaModosOperacao);
 		}
 		
 		String modosOperacao = (String) listaModosOperacao.get(casoUso);
@@ -167,13 +182,13 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		listaModosOperacao.put(casoUso, modosOperacao);
 	}
 	
-	protected boolean possuiModoOperacao(String modoOperacao, ViewContainer container) 	{
-		return this.possuiModoOperacao(this.getNomeCasoUso(), modoOperacao, container);
+	protected boolean possuiModoOperacao(String modoOperacao, javax.servlet.http.HttpServletRequest request) 	{
+		return this.possuiModoOperacao(this.getNomeCasoUso(), modoOperacao, request);
 	}
 	
-	protected boolean possuiModoOperacao(String casoUso, String modoOperacao, ViewContainer container)
+	protected boolean possuiModoOperacao(String casoUso, String modoOperacao, javax.servlet.http.HttpServletRequest request)
 	{
-		Map listaModosOperacao = (Map) container.getFromSession(Constantes.MODO_OPERACAO);
+		Map listaModosOperacao = (Map) request.getSession().getAttribute(Constantes.MODO_OPERACAO);
 		
 		if(listaModosOperacao == null)
 			return false;
@@ -200,16 +215,16 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return false;
 	}
 	
-	protected void removeModoOperacao(String modoOperacaoASerRemovido, ViewContainer container) {
-		this.removeModoOperacao(this.getNomeCasoUso(), modoOperacaoASerRemovido, container);
+	protected void removeModoOperacao(String modoOperacaoASerRemovido, javax.servlet.http.HttpServletRequest request) {
+		this.removeModoOperacao(this.getNomeCasoUso(), modoOperacaoASerRemovido, request);
 	}
 	
-	protected void removeModoOperacao(String casoUso, String modoOperacaoASerRemovido, ViewContainer container) {
-		Map listaModosOperacao = (Map) container.getFromSession(Constantes.MODO_OPERACAO);
+	protected void removeModoOperacao(String casoUso, String modoOperacaoASerRemovido, javax.servlet.http.HttpServletRequest request) {
+		Map listaModosOperacao = (Map) request.getSession().getAttribute(Constantes.MODO_OPERACAO);
 		
 		if(listaModosOperacao == null) {
 			listaModosOperacao = new HashMap<String, String>();
-			container.setOnSession(Constantes.MODO_OPERACAO, listaModosOperacao);
+			request.getSession().setAttribute(Constantes.MODO_OPERACAO, listaModosOperacao);
 		}
 		
 		String modosOperacao = (String) listaModosOperacao.get(casoUso);
@@ -271,21 +286,23 @@ public abstract class ControllerAbstract implements java.io.Serializable
 		return array;
 	}
 	
-	protected String extractParameterFromViewContainer(ViewContainer container, String parameter) {
-		return container.getParameter(parameter) == null ? "" : String.valueOf(container.getParameter(parameter));
+	protected String extractParameterFromViewContainer(javax.servlet.http.HttpServletRequest request, String parameter) {
+		return request.getParameter(parameter) == null ? "" : String.valueOf(request.getParameter(parameter));
 	}
 	
-	protected java.util.Collection<String> getModoOperacao(ViewContainer container) {
-		return this.getModoOperacao(this.getNomeCasoUso(), container);
+	protected java.util.Collection<String> getModoOperacao(javax.servlet.http.HttpServletRequest request) {
+		return this.getModoOperacao(this.getNomeCasoUso(), request);
 	}
 	
-	protected String getMessage(br.ufrj.coppetec.Enumeration eo) {
-		return getMessage(eo.getInternationalizationKey());
+	protected String getMessage(br.ufrj.coppetec.Enumeration eo, javax.servlet.http.HttpServletRequest request) {
+		return getMessage(eo.getInternationalizationKey(), request);
 	}
 	
-	protected String getMessage(String key) {
-		ActionSupport actionSupport = new ActionSupport();
-		return actionSupport.getText(key);
+	protected String getMessage(String key, javax.servlet.http.HttpServletRequest request) {
+		MessageResources messageResources = (MessageResources)request.getAttribute(org.apache.struts.Globals.MESSAGES_KEY);
+		java.util.Locale locale = (java.util.Locale)request.getSession().getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+		
+		return messageResources.getMessage(locale, key);
 	}
 	
 	protected abstract String getNomeCasoUso();

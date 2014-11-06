@@ -5,9 +5,9 @@
 # set this to true will deploy the $projectType exploded
 deployExploded=$deployExploded
 
-# habilita o empacotamento dos JARs das dependências no EAR da aplicação
+# habilita o empacotamento dos JARs das dependÃªncias no EAR da aplicaÃ§Ã£o
 packDependencies=true
-# habilita o empacotamento dos WARs no EAR da aplicação
+# habilita o empacotamento dos WARs no EAR da aplicaÃ§Ã£o
 packWar=true
 
 # The datasource for the application

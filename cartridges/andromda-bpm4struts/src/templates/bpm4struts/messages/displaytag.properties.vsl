@@ -19,31 +19,30 @@ export.pdf.filename=export.pdf
 #
 basic.msg.empty_list=Nada foi encontrado para exibir.
 basic.msg.empty_list_row=<tr class="empty"><td colspan="{0}">Nada foi encontrado para exibir.</td></tr>
-error.msg.invalid_page=página inválida
+error.msg.invalid_page=pÃ¡gina invÃ¡lida
 
-export.banner=<div class="exportlinks">Opções de exportação: {0}</div>
+export.banner=<div class="exportlinks">OpÃ§Ãµes de exportaÃ§Ã£o: {0}</div>
 export.banner.sepchar= |
 
 paging.banner.item_name=item
 paging.banner.items_name=itens
 
 paging.banner.no_items_found=<span class="pagebanner">Nenhum {0} encontrado.</span>
-paging.banner.one_item_found=<span class="pagebanner">Um {0} encotrado.</span>
+paging.banner.one_item_found=<span class="pagebanner">Um {0} encontrado.</span>
 paging.banner.all_items_found=<span class="pagebanner">{0} {1} encontrados, exibindo todos {2}.</span>
 
 ## (MDArte)
 ## changing the banner and removing the link to support pagination
-paging.banner.some_items_found=<span class="pagebanner">Grupo {0}, exibindo página {1} até {2}.</span>
+paging.banner.some_items_found=<span class="pagebanner">Grupo {0}, exibindo pÃ¡gina {1} atÃ© {2}.</span>
 
-paging.banner.full=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [<a href="{3}">Próximo</a>]</span>
-paging.banner.first=<span class="pagelinks">[Primeiro/Anterior] {0} [<a href="{3}">Próximo</a>]</span>
-paging.banner.last=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [Próximo]</span>
-paging.banner.first.last=<span class="pagelinks">[Primeiro/Anterior] {0} [Próximo]</span>
+paging.banner.full=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [<a href="{3}">PrÃ³ximo</a>]</span>
+paging.banner.first=<span class="pagelinks">[Primeiro/Anterior] {0} [<a href="{3}">PrÃ³ximo</a>]</span>
+paging.banner.last=<span class="pagelinks">[<a href="{1}">Primeiro</a>/<a href="{2}">Anterior</a>] {0} [PrÃ³ximo]</span>
+paging.banner.first.last=<span class="pagelinks">[Primeiro/Anterior] {0} [PrÃ³ximo]</span>
 paging.banner.onepage=<span class="pagelinks">{0}</span>
 
 ##Fim
 
 paging.banner.page.selected=<strong>{0}</strong>
-paging.banner.page.link=<a href="{1}" title="Ir para página {0}">{0}</a>
+paging.banner.page.link=<a href="{1}" title="Ir para pÃ¡gina {0}">{0}</a>
 paging.banner.page.separator=,
-

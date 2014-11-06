@@ -17,9 +17,7 @@
 #set($gerarAction = true)	
 #end	
 #if($gerarAction)
-	
 #if ($action.useCaseStart == true && $stringUtils.isNotEmpty($useCase.customLink))
-
  		<action
             path="/$useCase.customLink"
             type="$action.actionType"
@@ -119,7 +117,7 @@
 ##Codigo que mapeia as actions de autocomplete
 #foreach($page in $useCase.pages)
 #foreach($parameter in $page.allUniqueActionParameters)
-#if($parameter.autocomplete && !$parameter.jsp.oldStruts)
+#if($parameter.autocomplete )
 #set($actionName=${parameter.getName().subSequence(0,1).toUpperCase().concat("${parameter.getName().substring(1)}")})
 #set($palavras=${parameter.getJsp().getName().split(" ")})
 #foreach($palavra in $palavras)
@@ -143,10 +141,13 @@
 	       	path="/ForwardAction.do"
 	       	redirect="false" /> 
 	 </action>
-#elseif($parameter.tableType.equals("jtable"))	 
-#set($tableName = $parametro.name.subSequence(0,1).toUpperCase().concat($parametro.name.substring(1)) )
+#end
+#end
+#foreach($variable in $page.getPageVariables())
+#if($variable.tableType.equals("jtable"))	 
+#set($tableName = $variable.name.subSequence(0,1).toUpperCase().concat($variable.name.substring(1)) )
 #set($actionAjax= "")
-#set($palavras = ${parametro.getJsp().getName().split(" ")})
+#set($palavras = ${variable.getJsp().getName().split(" ")})
 #foreach($palavra in $palavras)
 #set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
 #set($actionAjax = $actionAjax.concat("$aux"))

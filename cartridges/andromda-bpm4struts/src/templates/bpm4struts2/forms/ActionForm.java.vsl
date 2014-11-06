@@ -48,7 +48,7 @@ public class ${formBeanClassName}
     {
         simbolosDecimais.setGroupingSeparator('.');
         simbolosDecimais.setDecimalSeparator(',');
-    }
+	}
 
     private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
 #foreach ($field in $fields)
@@ -333,11 +333,11 @@ $field.getDocumentation("     * ")
 				String myFormat = "#,#" + "#" +"#.00";
 				java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
 				s = myFormatter.format($fieldName);
-				
+
 				if(s.startsWith(",")){
 					s = "0"+s;
 				}
-				
+
 				this.$fieldName = s;
 			}
 		} catch(Exception e) {
@@ -348,7 +348,7 @@ $field.getDocumentation("     * ")
     public java.lang.Double ${field.getterName}As${asType}(){
     	if(this.$fieldName != null && !this.${fieldName}.equals("")){
     		java.lang.String $fieldName = this.$fieldName;
-    		$fieldName = ${fieldName}.replace(".", "");
+			$fieldName = ${fieldName}.replace(".", "");
 			$fieldName = ${fieldName}.replace(",", ".");
 			return new java.lang.Double($fieldName);
 		}
@@ -580,7 +580,7 @@ $field.getDocumentation("     * ")
 #else
 
 #if ($field.doubleSelect)
-    public void ${field.setterName}($fieldType $fieldName)
+	public void ${field.setterName}($fieldType $fieldName)
     {
         this.$fieldName = $fieldName;
     }

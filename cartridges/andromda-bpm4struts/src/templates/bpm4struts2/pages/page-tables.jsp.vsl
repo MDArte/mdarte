@@ -1,5 +1,5 @@
 #set($generatedFile = "${jsp.fullPath}-tabelas.jsp")
-#if(!$jsp.oldStruts)
+##if(!$jsp.oldStruts)
 #set($gerar = false)
 #foreach ($variable in $jsp.pageVariables)
 #if($variable.table)
@@ -51,8 +51,8 @@
 #end
 #set($i=$i+1)
   			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
-#end 
   		</div>
+#end 
 #end
 #foreach ($variable in $jsp.allUniqueActionParameters)
 #if ($variable.table)
@@ -63,10 +63,10 @@
 #end
 #set($i=$i+1)
   			<%@ include file="${jsp.fullPath}-${variable.name}.jspf" %>
-#end 
   		</div>
+#end 
 #end
 	</div>
 </div>
-#end
+##end
 #end

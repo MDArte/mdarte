@@ -1,3 +1,4 @@
+#if(${jsp.oldStruts})
 #parse("templates/bpm4struts/pages/page.jsp.vm")
 #set ($generatedFile = "${jsp.fullPath}-actions.jsp")
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
@@ -6,11 +7,6 @@
 ## Codigo acrescentado para pegar action que contem parametros ##
 #if ($jsp.actions.size() > 0)
 #set ($action = $jsp.actions.get(0))
-#set($gerarJSP = false)
-#if($action.actionOldStruts)
-#set($gerarJSP = true)	
-#end
-#if($gerarJSP)
 #set($achou = "false")
 #foreach($_action in $jsp.actions)
 #if(!$achou.equals("true"))
@@ -21,14 +17,11 @@
 #end
 #end
 ## fim do codigo
-
 ##set ($action = $jsp.actions.get(0))
-#if ($jsp.actions.size() > 0 && !$action.tableLink && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
-##
+#if ($jsp.actions.size() > 0 && !$action.useCaseStart)## we don't generate tiles for events that do not have an input page
 #set ($clientValidationDesired = ($clientValidation=='true'))
 #set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
-###set ($actionParameters = $action.actionParameters)
 ## Considera os parametros de todas as acoes
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set ($hints = $hints.equalsIgnoreCase("true"))
@@ -239,19 +232,14 @@
 #set ($actionTrigger = $action.actionTrigger)
 	<div id="$action.styleId" class="action">
     	<div class="trigger">
-##if ($action.hyperlink)
-##	#renderHyperlink($action "        ")
 #if ($action.tableAction)## this means this action allows rows to be selected and sent
 
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
-#if(!$jsp.temTabela)
+<!-- Entrei no if tabAction e mandei dar render no botao da action $action.name -->
 			<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
-#else
-			<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get" enctype="multipart/form-data" >
-#end
 				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<%@ include file="${action.input.fullPath}-${action.tableLinkParameter.name}.jspf" %>
 				<div class="FormLinhaBotoes">
@@ -266,27 +254,21 @@
 #if($fieldLinkValue.equals(""))
 					#renderHyperlink($_action "        ")
 #end
-#elseif($_action.lookupGrid)
-					#renderLookupGrid($_action)
-#elseif($_action.popup)
+#elseif($_action.lookupGrid || $_action.popup)
 					#renderLookupGrid($_action)
 #end
 #end
 #end
 				</div>
         	</html:form>
-#elseif (($action.formPost || $action.hyperlink ||  $action.popup))
+#elseif ($action.formPost || $action.hyperlink || $action.popup)
 #if ($action.actionParameters.empty)
 #set($actionEnd = ".do")
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
 ## unfortunately <html:form> cannot handle actions without a form so we need to treat this case separately
-#if(!$jsp.temTabela)
-				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
-#else
-				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get">
-#end
+        		<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post">
 ##				<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 				<div class="FormLinhaBotoes">
 #foreach ($_action in $jsp.actions)
@@ -313,22 +295,17 @@
 #if(!${action.actionOldStruts})
 #set($actionEnd = ".action")
 #end
-#if(!$jsp.temTabela)
 				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="post" enctype="multipart/form-data" >
-#else
-				<form id="${action.formBeanName}" action='<html:rewrite page="${action.actionPath}${actionEnd}"/>' method="get" enctype="multipart/form-data" >
-#end
         			<%@ include file="${jsp.fullPath}-control-params.jspf" %>
 #foreach($acao in $jsp.actions)
-#if (!$acao.hiddenActionParameters.empty)
+#if (!$acao.hiddenActionParameters.empty && !$acao.tableLink)
             		<%@ include file="${acao.fullTilePath}-hidden-params.jspf" %>
 #end
 #end
 
-                    	            <table>
-                <tbody>
+                    <table>
+						<tbody>
 #foreach ($field in $actionParameters)
-
 #if (!$field.multiboxPropertyName && ($field.widgetType != "hidden"))
 ## for now multibox field can only be displayed in tables
 #if($field.visivelPor)
@@ -372,9 +349,7 @@
 #if($fieldLinkValue.equals(""))					
 					#renderHyperlink($_action "        ")
 #end
-#elseif($_action.lookupGrid)
-					#renderLookupGrid($_action)
-#elseif($_action.popup)
+#elseif($_action.lookupGrid || $_action.popup)
 					#renderLookupGrid($_action)
 #end
 #end

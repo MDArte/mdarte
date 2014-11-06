@@ -375,7 +375,7 @@
 				<property name="messages">${maven.andromda.web.generated.dir}/WEB-INF/classes</property>
 				<property name="messages-modulo">${maven.andromda.web.modulo.generated.dir}/WEB-INF/classes</property>
 				<property name="configuration">${maven.andromda.web.modulo.generated.dir}/WEB-INF</property>
-				<property name="pageEncoding">ISO-8859-1</property>
+				<property name="pageEncoding">UTF-8</property>
 				<property name="controleAcesso-config">${maven.andromda.web.modulo.generated.dir}/../config/accessControl</property>
 #else
 				<property name="session-objects">${maven.andromda.web.generated.dir}</property>
@@ -396,7 +396,7 @@
 				<property name="decorators">${maven.andromda.web.manual.java.dir}</property>
 				<property name="messages">${maven.andromda.web.generated.dir}/WEB-INF/classes</property>
 				<property name="configuration">${maven.andromda.web.generated.dir}/WEB-INF</property>
-				<property name="pageEncoding">ISO-8859-1</property>
+				<property name="pageEncoding">UTF-8</property>
 				<property name="controleAcesso-config">${maven.andromda.web.generated.dir}/../config/accessControl</property>
 #end
 				<property name="layout-util">${maven.andromda.web.generated.dir}</property>

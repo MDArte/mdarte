@@ -18,13 +18,13 @@
 
 #end
 <html:html lang="true">
-    <head>
-        <title><bean:message key="error.${param.code}.title"/></title>
-        <html:base/>
+	<head>
+		<title><bean:message key="error.${param.code}.title"/></title>
+		<html:base/>
 #if ($xhtml == "true")
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset:utf-8" />
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset:utf-8" />
 #else
-        <meta http-equiv="Content-Type" content="text/html; charset:utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset:utf-8" />
 #end
 <%-- uncomment this to enable the browser 'favorites' icons
         <link rel="shortcut icon" href="my-custom-image.ico"></link>
@@ -97,13 +97,14 @@
 
             <div id="push"></div>
         </div>
-
-        <div id="footer">
-            <div class="container">
-                <div id="link"><html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
-                <p class="muted credit">&copy; MDArte</a>.</p>
-            </div>
-        </div>
-    </body>
+			
+			<div id="footer">
+				<div class="container">
+					<div id="link"><html:link page="/ForwardAction.do" name="paramsPrincipal" scope="page" titleKey="error.link.title"><bean:message key="error.link.text"/></html:link></div>
+					<p class="muted credit">&copy; MDArte.</p>
+				</div>
+			</div>
+		</div>
+	</body>
 </html:html>
 #end

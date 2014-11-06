@@ -1,15 +1,32 @@
 #parse("templates/bpm4struts/pages/page.jsp.vm")
+#set($table=$param)
 #set ($jsp = $table.jsp)
 #set ($generatedFile = "${jsp.fullPath}-${table.name}.jspf")
 #set ($targetColumns = $table.targettedTableColumnNames)
 #set ($sortable = $table.tableSortable)
 #set ($exportable = $table.tableExportable)
 #set($gerarJSP = false)
-#if($table.oldStruts)
+#if($jsp.oldStruts)
 #set($gerarJSP = true)	
 #end
 #if($gerarJSP)
+#if($table.tableType.equals("jtable"))
+<div id="${table.name}">
+</div>
 
+#else
+## [MOISES-COPPETEC]
+## Acaoo a ser utilizada no link "NEXT" na paginacao.
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+<% String acao_${table.name};
+   if (session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL).toString().indexOf("/") == 0) {
+	acao_${table.name} = request.getContextPath() + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
+   }else{
+	acao_${table.name} = request.getContextPath() + "/" + session.getAttribute(${customTypesPackage}.${package}.Constantes.ACAO_ATUAL);
+   }
+%>
+
+## Fim
 <% 
   String nomeProjeto${table.name} = request.getContextPath(); 
   out.println("<script>");
@@ -191,4 +208,5 @@ ${indent}   </security:containsPermission>
     </form>
 #end
 </div>
+#end
 #end

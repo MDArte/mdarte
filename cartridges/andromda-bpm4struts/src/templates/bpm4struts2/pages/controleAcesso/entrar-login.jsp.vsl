@@ -29,7 +29,7 @@
 				'validar_noreset':'<formatting:escape language="javascript"><bean:message key="login.entrar.login.validar.title.reset.not.allowed"/></formatting:escape>',
 				'calendar.popup':'<formatting:escape language="javascript"><bean:message key="calendar.popup"/></formatting:escape>'
 			};
-			
+
 			var hints = new Hints (HINTS_ITEMS);
 		//-->
 		</script>

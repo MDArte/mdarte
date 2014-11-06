@@ -8,24 +8,30 @@
 #if(${controller.useCase.useCaseOldStruts})
 #set($gerar = true)
 #end
-#if($gerar)
 ##
 ##  START TEMPLATE
 ##
+#if($gerar)
 // license-header java merge-point
 package $controller.packageName;
-
 #set ($securityEnabled = $stringUtils.isNotBlank($securityRealm))
 
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
+import ${packageUtil}.PaginationStrategy;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import ${servletPackage}.ControllerAbstract;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.util.Collection;
 ##
 #set ($sharp = "#")
 
 /**
 $controller.getDocumentation(" * ")
  */
-public abstract class ${controller.name} implements java.io.Serializable
+public abstract class ${controller.name} extends ControllerAbstract
 {
 #set ($pseudostates = ${controller.useCase.activityGraph.pseudostates})
 #set ($decisionCounter = 1)
@@ -56,25 +62,25 @@ public abstract class ${controller.name} implements java.io.Serializable
 #if (!$returnType)
 #set ($returnType = "void")
 #end
-    /**
+	/**
 $operation.getDocumentation("     * ")
 #if ($operation.callingBackEnd)
-     *
-     * This operation delegates to
-     * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
+	 *
+	 * This operation delegates to
+	 * <code>${operation.backEndServiceOperation.owner.fullyQualifiedName}.${operation.backEndServiceOperation.name}</code>
 #end
-     */
+	 */
 #if ($operation.callingBackEnd)
     $visibility $returnType ${operation.name}(org.apache.struts.action.ActionMapping mapping, $operation.interfaceType form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception
-    {
-        ${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
+	{
+		${operation.backEndServiceOperation.owner.accessorImplementation}.${operation.backEndServiceOperation.name}(
 #set ($comma = "")
 #foreach ($argument in $operation.backEndServiceOperation.arguments)
-            ${comma}form.${argument.getterName}()
+		${comma}form.${argument.getterName}()
 #set ($comma = ", ")
 #end
-        );
-    }
+		);
+	}
 #else
     $visibility abstract $returnType ${operation.name}(org.apache.struts.action.ActionMapping mapping, $operation.interfaceType form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.lang.Exception;
 #end
@@ -107,22 +113,21 @@ $operation.getDocumentation("     * ")
 #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
 #set($counterSO = true)
 #end
-
-        if (attribute instanceof $sessionObject.fullyQualifiedName)
-        {
-            object = ($sessionObject.fullyQualifiedName)attribute;
+		if (attribute instanceof $sessionObject.fullyQualifiedName)
+		{
+			object = ($sessionObject.fullyQualifiedName)attribute;
 #if($keep.equals("false") && $counterSO)
             ${servletPackage}.SessionObjectUtil.resetSessionObjetCounter(request, object.SESSION_KEY, object.getIterations());
 #end
-        }
-        else if (attribute == null)
-        {
-            object = new $sessionObject.fullyQualifiedName ();
+		}
+		else if (attribute == null)
+		{
+			object = new $sessionObject.fullyQualifiedName ();
             set${accessorSuffix}(request, object);
-        }
+		}
 
-        return object;
-    }
+		return object;
+	}
 
     /**
      * Set the argument $sessionObject.name object in the session corresponding with the argument request.
@@ -144,7 +149,7 @@ $operation.getDocumentation("     * ")
     {
         javax.servlet.http.HttpSession session = request.getSession(createSession);
         if (session != null)
-        { 
+		{
 #set($keep = "false")
 #if(($sessionObject.findTaggedValue("$keepSO") && $sessionObject.findTaggedValue("$keepSO")))
 #set($keep = "true")
@@ -153,14 +158,13 @@ $operation.getDocumentation("     * ")
 #if($sessionObject.findTaggedValue("$sessionObjectCounter") && ($sessionObject.findTaggedValue("$sessionObjectCounter") && !$sessionObject.findTaggedValue("$sessionObjectCounter").equals("")))
 #set($counterSO = true)
 #end
-
-#if($keep.equals("true") || !$counterSO) 
+#if($keep.equals("true") || !$counterSO)
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, "$controller.useCase.name", $keep);
 #elseif($keep.equals("false") && $counterSO)
 	    ${servletPackage}.SessionObjectUtil.setSessionObject(request, object, ${sessionObject.fullyQualifiedName}.SESSION_KEY, $sessionObject.findTaggedValue("$sessionObjectCounter"));
 #end
-        }
-    }
+		}
+	}
 
     /**
      * Removes the argument $sessionObject.name object from the session corresponding with the argument request.
@@ -195,119 +199,6 @@ $operation.getDocumentation("     * ")
     	request.setAttribute("$forwardKeyModule", modulo);
     }	
 
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @param arguments any arguments used within the message
-     */
-    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$warningMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores a warning message in the session, if any other warning messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param session the session to which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveWarningMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveWarningMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveWarningMessage(request, message, null);
-    }
-
-    /**
-     * Stores a success message in the session, if any other success messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     */
-    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$successMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores a success message in the session, if any other success messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveSuccessMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveSuccessMessage(request, message, null);
-    }
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message, java.lang.String[] arguments)
-    {
-        final javax.servlet.http.HttpSession session = request.getSession();
-
-        // we explicitely store and retrieve the messages from the session, as opposed to using
-        // Action.saveMessages because this constroller does not have access to the current Action instance
-        org.apache.struts.action.ActionMessages messages = (org.apache.struts.action.ActionMessages)session.getAttribute(org.apache.struts.Globals.MESSAGE_KEY);
-        if (messages == null)
-        {
-            messages = new org.apache.struts.action.ActionMessages();
-            session.setAttribute(org.apache.struts.Globals.MESSAGE_KEY, messages);
-        }
-        messages.add("$errorMessagesKey", new org.apache.struts.action.ActionMessage(message, arguments));
-    }
-
-    /**
-     * Stores an error message in the session, if any other error messages exist, this one
-     * is simply added. This message will be removed from the session after the first time
-     * it has been accessed (a feature supported by Struts since version 1.2.4).
-     *
-     * @param request the request from which the session will be taken into which the messages will be saved.
-     * @param message the message key to lookup the actual message to display
-     * @see ${sharp}saveSuccessMessage(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String[])
-     */
-    protected final void saveErrorMessage(javax.servlet.http.HttpServletRequest request, java.lang.String message)
-    {
-        this.saveErrorMessage(request, message, null);
-    }
-
 #foreach ($serviceRef in $controller.serviceReferences)
 #if ($stringUtils.isNotBlank($serviceRef.targetElement.accessorImplementation))
 	/**
@@ -319,15 +210,15 @@ $operation.getDocumentation("     * ")
 #end
 
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * MÃ©todo a ser utilizado na recuperaÃ§Ã£o de serviÃ§os.
 	 */
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}() throws Exception {
 		return (${serviceRef.targetElement.fullyQualifiedName}BI) br.ufrj.coppetec.ServiceLocator.instance().getServiceBI(null, "${serviceRef.targetElement.packageName}.${serviceRef.targetElement.name}", ${serviceRef.targetElement.packageName}.${serviceRef.targetElement.name}Home.class);
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${serviceRef.getterName}().
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o metodo ${serviceRef.getterName}().
 	 */
 	@Deprecated
 	protected final ${serviceRef.targetElement.fullyQualifiedName}BI ${serviceRef.getterName}(javax.servlet.http.HttpServletRequest request) throws Exception {
@@ -336,6 +227,159 @@ $operation.getDocumentation("     * ")
 
 #end
 #end
+#set($pages = $controller.getUseCase().getPages())
+#foreach($page in $pages)
+#foreach($variable in $page.getPageVariables())
+#if($variable.tableType.equals("jtable") && $variable.table)
+#set($tableName = $variable.name.subSequence(0,1).toUpperCase().concat($variable.name.substring(1)) )
+#set($actionName = "")
+#set($palavras = ${variable.getJsp().getName().split(" ")})
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat($palavra.substring(1)))
+#set($actionName = $actionName.concat("$aux"))
+#end
+#set($actionName=$actionName.concat($tableName))
+#set($actions = $page.getActions())
+
+	protected abstract Integer get${actionName}TableLength(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	protected abstract Collection load${actionName}Table(PaginationStrategy paginacao, String propriedade, Boolean desc, #foreach($action in $actions)#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())#if($param.type.name.equalsIgnoreCase("integer") || $param.type.name.equalsIgnoreCase("Double") || $param.type.name.equalsIgnoreCase("Boolean")) $param.type.fullyQualifiedName #else String#end $param.name, #end#end#end HttpServletRequest request, HttpServletResponse response) throws java.lang.Exception;
+
+	protected void load${actionName}Table(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Integer linhas = (request.getParameter("jtPageSize") != null) ? Integer.valueOf(request.getParameter("jtPageSize")) : 10;
+		
+		Integer paginacao = (request.getParameter("jtStartIndex") != null) ? Integer.valueOf(request.getParameter("jtStartIndex")) / linhas : 0;
+		
+		String propriedade = request.getParameter("jtSorting") != null ? request.getParameter("jtSorting").split(" ")[0] : "";
+	
+		Boolean desc = new Boolean(false);
+		
+		if(request.getParameter("jtSorting") != null)
+		    desc = request.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
+			
+		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
+
+#foreach($action in $page.getActions())
+#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
+#foreach($param in $action.getActionParameters())
+#if($param.type.name.equalsIgnoreCase("Integer")) 
+		$param.type.name $param.name = null;
+
+		try {
+			$param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("")? null : Integer.valueOf(request.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Double"))
+		$param.type.name $param.name = null;
+		try {
+			 $param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("")? null ? Double.valueOf(request.getParameter("${param.name}").toString()));
+		} catch(java.lang.NumberFormatException e) {
+
+		}
+		
+#elseif($param.type.name.equalsIgnoreCase("Boolean"))
+		$param.type.name $param.name = request.getParameter("${param.name}") == null ? null : (request.getParameter("${param.name}").toString().equals("") ? null : Boolean.valueOf(request.getParameter("${param.name}").toString())); 
+		
+#else 
+		String $param.name = this.extractParameterFromViewContainer(request, "${param.name}");
+		
+#end
+#end
+#end
+#end
+		
+		Collection rows = this.load${actionName}Table(strategy,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end request,response);
+		
+		String [] columns = {
+#foreach($_action in $page.getActions())
+#foreach($_parameter in $_action.getActionParameters())
+			"$_parameter.name",		
+#end
+#end
+#set($i=0)
+#set($limit=$variable.tableColumns.size() - 1)
+#foreach($column in $variable.tableColumns)
+#if($i != $limit)
+#if($column.name)
+			"$column.name",
+#else
+			"$column",
+#end
+#else
+#if($column.name) 
+			"$column.name"
+#else
+			"$column"
+#end
+#end
+#set($i=$i+1)
+#end		
+		};
+		
+		JSONArray array = new JSONArray();
+		
+		if(rows != null)
+			array = this.parseCollectionToJSON(rows,columns);
+        
+        JSONObject obj = new JSONObject();
+        
+        obj.put("Result","OK");
+        obj.put("TotalRecordCount", this.get${actionName}TableLength(strategy,propriedade,desc, #foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end request,response));
+        obj.put("Records",array);
+        
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(obj.toString());
+        response.getWriter().flush();
+	}
+#end
+#end
+#foreach($parameter in $page.allUniqueActionParameters)
+#if($parameter.autocomplete)
+#if($parameter.autocomplete)
+#set($pageName = $parameter.name) 
+#set($palavras = $parameter.getJsp().getName().split(" "))
+#foreach($palavra in $palavras)
+#set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+#set($pageName = $pageName.concat("$aux"))
+#end
+#set($package = ${controller.getPackagePath().replace("/", ".")})
+
+	protected abstract String[] ${pageName}AutoComplete(String query, HttpServletRequest request,HttpServletResponse response) throws Exception;
+	
+	public void ${pageName}AutoComplete(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{	
+		String [] result;
+    	
+    	String query = request.getParameter("query");
+    	
+    	if(query == null)
+    		query = "";
+  
+		result =  this.${pageName}AutoComplete(query, request, response);
+
+		JSONArray jsonArray = new JSONArray();
+		
+		if(result != null)
+		{
+			for (String string : result)
+			{
+				jsonArray.add(string);
+		    }
+		}
+    	
+		response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(jsonArray.toString());
+        response.getWriter().flush();
+    	
+	}
+#end
+#end
+#end
+#end
+
 
 #foreach($dependencia in  $controller.sourceDependencies)
 #if($dependencia.targetElement.hasExactStereotype("ServiceFactory"))
@@ -349,15 +393,15 @@ $operation.getDocumentation("     * ")
 #end
 
 	/**
-	 * Método a ser utilizado na recuperação de serviços.
+	 * MÃ©todo a ser utilizado na recuperaÃ§Ã£o de serviÃ§os.
 	 */
 	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity entity#end)	throws Exception {
 		return ${dependencia.targetElement.fullyQualifiedName}Factory.getService(#if($factorySelectNodeName == false)entity#end);
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o mÃ©todo ${dependencia.getterName}(#if($factorySelectNodeName == false)br.ufrj.coppetec.Entity#end).
 	 */
 	@Deprecated
 	protected final ${dependencia.targetElement.fullyQualifiedName}BI ${dependencia.getterName}(javax.servlet.http.HttpServletRequest request#if($factorySelectNodeName == false), br.ufrj.coppetec.Entity entity#end) throws Exception {
@@ -379,8 +423,8 @@ $operation.getDocumentation("     * ")
 	}
 
 	/**
-	 * Método utilizado em aplicações legadas.
-	 * Em novas aplicações, utilizar o método getService(Class<T>).
+	 * MÃ©todo utilizado em aplicaÃ§Ãµes legadas.
+	 * Em novas aplicaÃ§Ãµes, utilizar o mÃ©todo getService(Class<T>).
 	 */
 	@Deprecated
 	protected <T> T getService(Class<T> clazz, javax.servlet.http.HttpServletRequest request) throws Exception {
@@ -407,6 +451,10 @@ $operation.getDocumentation("     * ")
 					}
 		}
 		return modoOperacao;
+	}
+	
+	protected String getNomeCasoUso() {
+		return "${controller.useCase.package.webModuleName}${controller.useCase.actionPath}.action";
 	}
 }
 #end

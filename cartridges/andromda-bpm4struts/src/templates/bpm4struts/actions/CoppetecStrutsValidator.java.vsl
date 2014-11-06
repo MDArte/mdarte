@@ -33,7 +33,8 @@ public class $className
             boolean valid = true;
             String genericField = ValidatorUtils.getValueAsString(bean, field
                 .getProperty());
-            String caracteresInvalidos = "${invalidInputCharacters}";
+##            String caracteresInvalidos = "${invalidInputCharacters}";
+            String caracteresInvalidos = "";
           	if (genericField != null) {
           		 for (int i=0; i < caracteresInvalidos.length();i++) {
                      if (genericField.indexOf(caracteresInvalidos.charAt(i)) > -1) {

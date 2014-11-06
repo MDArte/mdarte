@@ -37,7 +37,7 @@
 <tiles:insert definition="simple.layout">
 #else
 #if($jsp.useCase.openAccess)
-<tiles:insert definition="main.layout.open">
+<tiles:insert definition="main.layout.open2">
 #else
 <tiles:insert definition="main.layout2">
 #end
@@ -81,7 +81,7 @@
 			<html:link href="" onclick="window.open('$helpLink.link','','')">
 				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
 			</html:link>
-		<% } %>     
+		<% } %>
 #end	
 #end
 #else
@@ -101,7 +101,7 @@
 				<img src="${layoutPath}/imagens/help.gif" align="right" height="22" width="22" border="0"/>
 			</a>
 		</div>
-		
+
 #end
 		<h2><bean:message key="$jsp.titleKey"/></h2>
 		<br/>

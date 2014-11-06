@@ -11,7 +11,9 @@ Adicionar css usando o seguinte formato:
 -->
 
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/dimming/dimming.css"></link>
+#if ($struts2)
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/bootstrap.css"></link>
+#end
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/style-default.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/datepicker.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/jtable.min.css"></link>
