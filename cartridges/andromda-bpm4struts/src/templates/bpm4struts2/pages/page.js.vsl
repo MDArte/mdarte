@@ -29,6 +29,8 @@ function getPath() {
 	return "${contextoPrincipal}#if(${jsp.useCase.package.webModuleName} && !${jsp.useCase.package.webModulePrincipal})/${jsp.useCase.package.webModuleName}#end";
 }
 
+#set ($clientValidationDesired = ($clientValidation=='true'))
+#set ($requiredness = ($clientValidationDesired || $serverValidation=='true'))
 #set ($formBeanName = $action.formBeanName)
 #set ($actionParameters = $jsp.allUniqueActionParameters )
 #set ($hints = $hints.equalsIgnoreCase("true"))
@@ -236,7 +238,6 @@ function createJTable${variable.name}() {
     	paging: true,
     	pageSize: ${variable.tableMaxRows},
     	sorting: ${variable.tableSortable},
-    	columnSelectable: false,
     	multiSorting: true,
     	defaultSorting: '',
     	actions: {
@@ -247,26 +248,6 @@ function createJTable${variable.name}() {
 #end    
 		},
     	fields: {
-#foreach($_action in $jsp.getActions())
-#foreach($_parameter in $_action.getActionParameters())
-#set($columnHidden=true)
-#foreach($column in $variable.tableColumns)
-#if(${column.name})
-#set($columnName=${column.name})
-#else
-#set($columnName=${column})
-#end
-#if($columnName.equals($parameter.name))
-#set($columnHidden=false)
-#end
-#end
-#if($columnHidden)
-			"$_parameter.name" : {
-				'type': 'hidden',
-			},
-#end	
-#end
-#end
 #set($i = 0)
 #set($limit = $variable.tableColumns.size() - 1)
 #foreach($column in $variable.tableColumns)
@@ -349,7 +330,7 @@ function selecionaDeseleciona${table.name}(){
 #end 
 #end
 #if($jsValidation)
-//Javascript de validaï¿½ï¿½o
+//Javascript de validação
 
 $('form').validate({
 	rules: {
@@ -438,7 +419,7 @@ $('form').validate({
 #end
 	},
 ##
-##      Colocando mensagens de erro de validaï¿½ï¿½o
+##      Colocando mensagens de erro de validação
 ##
 	messages: {
 ##
@@ -549,7 +530,7 @@ $('form').validate({
 	}
 });
 
-//Fim do Javascript de validaï¿½ï¿½o
+//Fim do Javascript de validação
 #end
 
 $(document).ready(function(){
@@ -699,7 +680,37 @@ $(document).ready(function(){
 		remote: "$url?query=%QUERY",
 		limit: 10
 	});
-	
+#elseif($field.select2)	
+	$("#${field.name}${jsp.useCase.name}").select2();
+###set($actionName = $field.name.subSequence(0,1).toUpperCase().concat("$field.name.substring(1)") )
+###set($palavras = ${jsp.getName().split(" ")})
+###set($pageName = "")
+###foreach($palavra in $palavras)
+###set($aux=$palavra.subSequence(0,1).toUpperCase().concat("$palavra.substring(1)"))
+###set($pageName = $pageName.concat("$aux"))
+###end
+###if($modulo && !$jsp.getUseCase().getPackage().webModulePrincipal)
+###set($moduloWeb=$jsp.getUseCase().getPackage().webModuleName)
+###set($url="/$projectId/$moduloWeb/${jsp.useCase.name}/${actionName}${pageName}Select2.action")
+###else
+###set($url="/$projectId/${jsp.useCase.name}/${actionName}${pageName}Select2.action")
+###end
+##	$("input#${field.name}${jsp.useCase.name}").select2({
+##		multiple: true,
+##        allowClear: true,
+##		ajax: {
+##			url: "$url",
+##			dataType: 'json',
+##			data: function (term, page) {
+##				return {
+##					query: term,
+##				};
+##			},
+##			results: function (data, page) {
+##				return { results: data };
+##			}
+##		}
+##	});
 #elseif($field.checkbox || $field.password || $field.textField || $field.textArea || $field.hiddenField || $field.file)
 	$("input#${field.name}${jsp.useCase.name}").keyup(function(){verifica() });
 	$("input#${field.name}${jsp.useCase.name}").keypress(function(){verifica(); });
@@ -890,7 +901,7 @@ $(document).ready(function(){
 	$("#lookupGrid${_action.actionName.toString().replace(' ','')}").click(function(){apaga(); });
 #end
 #else
-##se nï¿½o for nenhuma das opï¿½ï¿½es seta a aï¿½ï¿½o do struts2
+##se não for nenhuma das opções seta a ação do struts2
 	$("#${_action.actionName}").click(function(){#if($_action.clientValidation)if($("form").valid())#end setaAcaoStruts2('${_action.actionPath}' , '${_action.actionName}', '${_action.actionFormat}');});
 #end
 #end

@@ -72,20 +72,20 @@ extends CoppetecStrutsParameterLogic
 			buffer.append(crlf);
 		}
 
-		buffer.append(isRequired() ? "Este campo √© obrigat√≥rio." : "Este campo √© opcional.");
+		buffer.append(isRequired() ? "Este campo È obrigatÛrio." : "Este campo È opcional.");
 		buffer.append(crlf);
 
 		if ("password".equals(getWidgetType()))
 		{
-			buffer.append("Este √© um campo de senha, ele n√£o exibir√° os dados digitados, ")
-			.append("cada caractere ser√° mascarado usando um asterisco.");
+			buffer.append("Este È um campo de senha, ele n„o exibir· os dados digitados, ")
+			.append("cada caractere ser· mascarado usando um asterisco.");
 			buffer.append(crlf);
 		}
 
 //		if (isCreditCardFormat(format))
 //		{
 //			buffer.append("O valor deste campo deve refletir um ")
-//			.append("<a href=\"http://www.beachnet.com/~hstiles/cardtype.html\" target=\"_blank\">cart√£o de cr√©dito</a>.");
+//			.append("<a href=\"http://www.beachnet.com/~hstiles/cardtype.html\" target=\"_blank\">cart„o de crÈdito</a>.");
 //			buffer.append(crlf);
 //		}
 
@@ -98,15 +98,15 @@ extends CoppetecStrutsParameterLogic
 //			buffer.append(dateFormat).append("</a>. ");
 //
 //			if (isStrictDateFormat()) buffer
-//			.append("Este formato √© estrito no sentido que o analisador n√£o usar√° qualquer heur√≠stica para ")
-//			.append("descobrir a data pretendida no caso da entrada n√£o casar perfeitamente com o formato.");
+//			.append("Este formato È estrito no sentido que o analisador n„o usar· qualquer heurÌstica para ")
+//			.append("descobrir a data pretendida no caso da entrada n„o casar perfeitamente com o formato.");
 //			else
 //			{
-//				buffer.append("Este formato √© tolerante no sentido que o analisador tentar√° usar heur√≠sticas para ")
-//				.append("descobrir a data pretendida no caso da entrada n√£o casar perfeitamente com o formato.");
+//				buffer.append("Este formato È tolerante no sentido que o analisador tentar· usar heurÌsticas para ")
+//				.append("descobrir a data pretendida no caso da entrada n„o casar perfeitamente com o formato.");
 //			}
 //			buffer.append(crlf);
-//			buffer.append("Um calend√°rio foi disponibilizado para a sele√ß√£o da data, ele converter√° automaticamente a data ")
+//			buffer.append("Um calend·rio foi disponibilizado para a seleÁ„o da data, ele converter· automaticamente a data ")
 //			.append("para o formato apropriado.");
 //			buffer.append(crlf);
 //		}
@@ -115,7 +115,7 @@ extends CoppetecStrutsParameterLogic
 //		{
 //			String dateFormat = getDateFormat();
 //			buffer
-//			.append("Este campo representa um hor√°rio e deve ser formatado na forma descrita aqui ")
+//			.append("Este campo representa um hor·rio e deve ser formatado na forma descrita aqui ")
 //			.append("<a href=\"http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html\" ")
 //			.append("target=\"_jdk\">");
 //			buffer.append(dateFormat).append("</a>. ");
@@ -123,13 +123,13 @@ extends CoppetecStrutsParameterLogic
 
 //		if (isEmailFormat(format))
 //		{
-//			buffer.append("O valor deste campo deve refletir um endere√ßo de email.");
+//			buffer.append("O valor deste campo deve refletir um endereÁo de email.");
 //			buffer.append(crlf);
 //		}
 
 		if (isMaxLengthFormat(format))
 		{
-			buffer.append("Este campo n√£o deve conter mais que ");
+			buffer.append("Este campo n„o deve conter mais que ");
 			buffer.append(getMaxLengthValue(format));
 			buffer.append(" caracteres.");
 			buffer.append(crlf);
@@ -148,7 +148,7 @@ extends CoppetecStrutsParameterLogic
 //			buffer.append("O valor deve casar com esta ");
 //			buffer.append(
 //			"<a href=\"http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html\" target=\"_jdk\">");
-//			buffer.append("express√£o regular</a>: ");
+//			buffer.append("express„o regular</a>: ");
 //			buffer.append(getPatternValue(format));
 //			buffer.append(crlf);
 //		}
@@ -166,14 +166,14 @@ extends CoppetecStrutsParameterLogic
 		final String validWhen = getValidWhen();
 		if (validWhen != null)
 		{
-			buffer.append("Este campo s√≥ √© v√°lido sob condi√ß√µes espec√≠ficas, mais concretamente a seguinte ")
-			.append("express√£o deve ser verdadeira: ").append(validWhen);
+			buffer.append("Este campo sÛ È v·lido sob condiÁıes especÌficas, mais concretamente a seguinte ")
+			.append("express„o deve ser verdadeira: ").append(validWhen);
 			buffer.append(crlf);
 		}
 
 		if (isReadOnly())
 		{
-			buffer.append("O valor deste campo n√£o pode ser alterado, ele √© somente-leitura.");
+			buffer.append("O valor deste campo n„o pode ser alterado, ele È somente-leitura.");
 			buffer.append(crlf);
 		}
 
@@ -188,7 +188,7 @@ extends CoppetecStrutsParameterLogic
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">byte</a> (n¬∫ inteiro).");
+//			.append("target=\"_jdk\">byte</a> (n∫ inteiro).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorChar())
@@ -202,35 +202,35 @@ extends CoppetecStrutsParameterLogic
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">double precision integer</a> (n¬∫ inteiro).");
+//			.append("target=\"_jdk\">double precision integer</a> (n∫ inteiro).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorFloat())
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">floating point</a> (n¬∫ real).");
+//			.append("target=\"_jdk\">floating point</a> (n∫ real).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorInteger())
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">integer</a> (n¬∫ inteiro).");
+//			.append("target=\"_jdk\">integer</a> (n∫ inteiro).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorLong())
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">long integer</a> (n¬∫ inteiro).");
+//			.append("target=\"_jdk\">long integer</a> (n∫ inteiro).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorShort())
 //		{
 //			buffer.append("O valor deste campo deve refletir um valor do tipo ")
 //			.append("<a href=\"http://java.sun.com/docs/books/tutorial/java/nutsandbolts/datatypes.html\" ")
-//			.append("target=\"_jdk\">short integer</a> (n¬∫ inteiro).");
+//			.append("target=\"_jdk\">short integer</a> (n∫ inteiro).");
 //			buffer.append(crlf);
 //		}
 //		else if (isValidatorUrl())
@@ -264,6 +264,10 @@ extends CoppetecStrutsParameterLogic
 					else if (isMultiple()) widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_SELECT;
 					else widgetType = Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_TEXT;
 				}
+			}
+			else if(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_SELECT2.equalsIgnoreCase(fieldType))
+			{
+				widgetType =  Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_SELECT2;
 			}
 			else if(Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_CUSTOM.equalsIgnoreCase(fieldType)) {
 
@@ -355,6 +359,9 @@ extends CoppetecStrutsParameterLogic
 		return true;
 	}
 	
+	protected boolean handleIsSelect2() {
+		return Bpm4StrutsProfile.TAGGEDVALUE_INPUT_TYPE_SELECT2.equals(this.getWidgetType());
+	}
 	
 	protected boolean handleIsCustom() {
 

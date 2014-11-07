@@ -428,6 +428,7 @@
                     <value>autocomplete</value>
                     <value>custom</value>
                     <value>editor</value>
+                    <value>select2</value>
                 </allowedValues>
             </element>
             <element name="INPUT_MULTIBOX">

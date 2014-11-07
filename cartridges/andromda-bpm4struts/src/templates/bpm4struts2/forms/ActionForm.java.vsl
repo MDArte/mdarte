@@ -48,7 +48,7 @@ public class ${formBeanClassName}
     {
         simbolosDecimais.setGroupingSeparator('.');
         simbolosDecimais.setDecimalSeparator(',');
-	}
+    }
 
     private final static int TAMANHO_MAXIMO_LABEL_DESTINO = 250;
 #foreach ($field in $fields)
@@ -179,6 +179,33 @@ public class ${formBeanClassName}
 		this.${field.name}DefaultValue = ${field.name}DefaultValue;
     }
 
+#end
+#if (${field.widgetType}=="select2")
+	public java.util.Map ${field.name}List;
+	
+	public java.util.Map ${field.getterName}List()
+    {
+		if(${field.name}List==null)${field.name}List=new java.util.HashMap();
+		
+		return ${field.name}List;
+    }
+
+	public void ${field.setterName}List(java.util.Map ${field.name}List)
+    {
+		this.${field.name}List = ${field.name}List;
+    }
+
+	public ${field.type.fullyQualifiedName} ${field.name}DefaultValue;
+	
+	public ${field.type.fullyQualifiedName} ${field.getterName}DefaultValue()
+    {
+		return ${field.name}DefaultValue;
+    }
+	
+	public void ${field.setterName}DefaultValue(${field.type.fullyQualifiedName} ${field.name}DefaultValue)
+    {
+		this.${field.name}DefaultValue = ${field.name}DefaultValue;
+    }
 #end
 #if(${field.widgetType}=="select" || ${field.radioButton})
 #if($field.type.enumeration)
@@ -333,11 +360,11 @@ $field.getDocumentation("     * ")
 				String myFormat = "#,#" + "#" +"#.00";
 				java.text.DecimalFormat myFormatter = new java.text.DecimalFormat(myFormat, simbolosDecimais);
 				s = myFormatter.format($fieldName);
-
+				
 				if(s.startsWith(",")){
 					s = "0"+s;
 				}
-
+				
 				this.$fieldName = s;
 			}
 		} catch(Exception e) {
@@ -348,7 +375,7 @@ $field.getDocumentation("     * ")
     public java.lang.Double ${field.getterName}As${asType}(){
     	if(this.$fieldName != null && !this.${fieldName}.equals("")){
     		java.lang.String $fieldName = this.$fieldName;
-			$fieldName = ${fieldName}.replace(".", "");
+    		$fieldName = ${fieldName}.replace(".", "");
 			$fieldName = ${fieldName}.replace(",", ".");
 			return new java.lang.Double($fieldName);
 		}
@@ -580,7 +607,7 @@ $field.getDocumentation("     * ")
 #else
 
 #if ($field.doubleSelect)
-	public void ${field.setterName}($fieldType $fieldName)
+    public void ${field.setterName}($fieldType $fieldName)
     {
         this.$fieldName = $fieldName;
     }
