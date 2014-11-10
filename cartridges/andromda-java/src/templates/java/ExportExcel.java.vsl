@@ -1,0 +1,59 @@
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/ExportGenerator.java")
+
+#set ($package = "${stringUtils.replace($utilDir,'/','.')}")
+package ${customTypesPackage}.${package};
+
+import org.hibernate.Criteria;
+import org.hibernate.ScrollabeResults;
+import org.hibernate.ScrollMode;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public abstract class ExportExcel {
+	
+	private Criteria criteria
+	
+	private String sheetName;
+	
+	private HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
+	
+	public ExcelGenerator(Criteria criteria, String sheetName) {
+		this.criteria = criteria;
+		this.sheetName = sheetName;
+	}
+	
+	public abstract void header();
+	
+	public abstract void linha();
+	
+	public abstract void stylus();
+	
+	public XSSFWorkbook run(){
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		
+		XSSFSheet sheet = workbook.createSheet(sheetName);
+
+		stylus();
+		
+		header();
+		
+		ScrollableResults results = criteria.scroll(ScrollMode.FORWARD_ONLY);
+		
+		if(results != null) {
+			results.beforeFirst();
+		
+			while(results.next()) {
+			
+				linha();
+			
+			}
+			
+		}
+		
+	}
+}
