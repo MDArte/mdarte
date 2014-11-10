@@ -6,6 +6,8 @@ package ${customTypesPackage}.${package};
 import org.hibernate.Criteria;
 import org.hibernate.ScrollabeResults;
 import org.hibernate.ScrollMode;
+import org.hibernate.Type;
+
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -14,15 +16,19 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.HashMap;
+
 public abstract class ExportExcel {
 	
-	private Criteria criteria
+	private Criteria criteria;
 	
 	private String sheetName;
 	
 	private String[] columns;
 	
-	private HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
+	private ScrollableResults results = null;
+	
+	protected HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
 	
 	public ExcelGenerator(Criteria criteria, String sheetName, String[] columns) {
 		this.criteria = criteria;
@@ -30,14 +36,28 @@ public abstract class ExportExcel {
 		this.columns = columns;
 	}
 	
+	public Type getColumnType(int i) {
+		return results.getType(i);
+	}
 	
-	public abstract void header(XSSFWorkbook workbook);
+	public int getCurrentRowNumber() {
+		return results.getRowNumber();
+	}
 	
-	public abstract void linha(XSSFWorkbook workbook,XSSFSheet sheet, Object[] linha);
+	private void columnsAutoResize(XSSFSheet sheet){
+		for(int i = 0; i < columns.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+	}
 	
 	public abstract void stylus();
 	
+	public abstract void header(XSSFWorkbook workbook);
+	
+	public abstract void line(XSSFWorkbook workbook,XSSFSheet sheet, Object[] row);
+	
 	public XSSFWorkbook run(){
+		
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		
 		XSSFSheet sheet = workbook.createSheet(sheetName);
@@ -46,18 +66,25 @@ public abstract class ExportExcel {
 		
 		header();
 		
-		ScrollableResults results = criteria.scroll(ScrollMode.FORWARD_ONLY);
+		if(criteria != null) {
+		
+			results = criteria.scroll(ScrollMode.FORWARD_ONLY);
+		
+		}
 		
 		if(results != null) {
+		
 			results.beforeFirst();
 		
 			while(results.next()) {
 			
-				linha(workbook, sheet,results.get());
+				line(workbook, sheet, results.get());
 			
 			}
 			
 		}
+		
+		columnsAutoResize(sheet);
 		
 	}
 }
