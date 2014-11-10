@@ -20,16 +20,20 @@ public abstract class ExportExcel {
 	
 	private String sheetName;
 	
+	private String[] columns;
+	
 	private HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
 	
-	public ExcelGenerator(Criteria criteria, String sheetName) {
+	public ExcelGenerator(Criteria criteria, String sheetName, String[] columns) {
 		this.criteria = criteria;
 		this.sheetName = sheetName;
+		this.columns = columns;
 	}
 	
-	public abstract void header();
 	
-	public abstract void linha();
+	public abstract void header(XSSFWorkbook workbook);
+	
+	public abstract void linha(XSSFWorkbook workbook,XSSFSheet sheet, Object[] linha);
 	
 	public abstract void stylus();
 	
@@ -49,7 +53,7 @@ public abstract class ExportExcel {
 		
 			while(results.next()) {
 			
-				linha();
+				linha(workbook, sheet,results.get());
 			
 			}
 			
