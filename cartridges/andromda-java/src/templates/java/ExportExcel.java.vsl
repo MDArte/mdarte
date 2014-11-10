@@ -7,7 +7,6 @@ import org.hibernate.Criteria;
 import org.hibernate.ScrollabeResults;
 import org.hibernate.ScrollMode;
 import org.hibernate.Type;
-
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -17,6 +16,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.HashMap;
+
+import javax.print.attribute.standard.SheetCollate;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+
+import java.io.ServletOutputStream;
 
 public abstract class ExportExcel {
 	
@@ -30,10 +36,19 @@ public abstract class ExportExcel {
 	
 	protected HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
 	
-	public ExcelGenerator(Criteria criteria, String sheetName, String[] columns) {
+	protected HttpServletRequest request;
+	
+	protected HttpServletResponse response;
+	
+	protected String errorMessage; 
+	
+	public ExcelGenerator(Criteria criteria, String sheetName, String[] columns, HttpServletRequest request,HttpServletResponse response) {
 		this.criteria = criteria;
 		this.sheetName = sheetName;
 		this.columns = columns;
+		this.request = request;
+		this.response = response;
+		this.ERROR_MESSAGE = "Erro ao exportar planilha " + sheetName+ " .";
 	}
 	
 	public Type getColumnType(int i) {
@@ -45,9 +60,41 @@ public abstract class ExportExcel {
 	}
 	
 	private void columnsAutoResize(XSSFSheet sheet){
+		
 		for(int i = 0; i < columns.length; i++) {
+		
 			sheet.autoSizeColumn(i);
+		
 		}
+		
+	}
+	
+	private void exportDatasheet(XSSFWorkbook workbook) throws Exception {
+		
+		Cookie cookie = new Cookie("fimLoader", "fimLoader");
+		
+		cookie.setMaxAge(2);
+		
+		response.addCookie(cookie);
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment;filename=\"" + sheetName + ".xlsx\"");
+		
+		try {
+			
+			ServletOutputStream out = response.getOutputStream();
+			
+			workbook.write(out);
+			
+			out.flush();
+			
+			workbook.dispose();
+			
+		} catch(Exception exception) {
+			
+			throw new Exception(errorMessage, exception);
+		
+		}
+		
 	}
 	
 	public abstract void stylus(XSSFWorkbook workbook);
@@ -56,35 +103,37 @@ public abstract class ExportExcel {
 	
 	public abstract void line(XSSFWorkbook workbook,XSSFSheet sheet, Object[] row);
 	
-	public XSSFWorkbook run(){
+	public XSSFWorkbook run() throws Exception{
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		
 		XSSFSheet sheet = workbook.createSheet(sheetName);
-
+		
 		stylus(workbook);
 		
 		header(workbook);
 		
 		if(criteria != null) {
-		
+			
 			results = criteria.scroll(ScrollMode.FORWARD_ONLY);
-		
+			
 		}
 		
 		if(results != null) {
-		
+			
 			results.beforeFirst();
-		
+			
 			while(results.next()) {
-			
+				
 				line(workbook, sheet, results.get());
-			
+				
 			}
 			
 		}
 		
 		columnsAutoResize(sheet);
+		
+		exportDatasheet(workbook);
 		
 	}
 	
