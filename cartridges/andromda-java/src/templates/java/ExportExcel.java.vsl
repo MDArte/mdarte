@@ -4,9 +4,10 @@
 package ${customTypesPackage}.${package};
 
 import org.hibernate.Criteria;
-import org.hibernate.ScrollabeResults;
+import org.hibernate.ScrollableResults;
 import org.hibernate.ScrollMode;
-import org.hibernate.Type;
+import org.hibernate.type.Type;
+
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -17,12 +18,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.HashMap;
 
-import javax.print.attribute.standard.SheetCollate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 
-import java.io.ServletOutputStream;
+import javax.servlet.ServletOutputStream;
 
 public abstract class ExportExcel {
 	
@@ -42,13 +42,13 @@ public abstract class ExportExcel {
 	
 	protected String errorMessage; 
 	
-	public ExcelGenerator(Criteria criteria, String sheetName, String[] columns, HttpServletRequest request,HttpServletResponse response) {
+	public ExportExcel(Criteria criteria, String sheetName, String[] columns, HttpServletRequest request, HttpServletResponse response) {
 		this.criteria = criteria;
 		this.sheetName = sheetName;
 		this.columns = columns;
 		this.request = request;
 		this.response = response;
-		this.ERROR_MESSAGE = "Erro ao exportar planilha " + sheetName+ " .";
+		this.errorMessage = "Erro ao exportar planilha " + sheetName+ " .";
 	}
 	
 	public Type getColumnType(int i) {
@@ -88,6 +88,8 @@ public abstract class ExportExcel {
 			out.flush();
 			
 			workbook.dispose();
+			
+			workbook.close();
 			
 		} catch(Exception exception) {
 			
