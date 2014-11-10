@@ -24,7 +24,7 @@ public abstract class ExportExcel {
 	
 	private String sheetName;
 	
-	private String[] columns;
+	protected String[] columns;
 	
 	private ScrollableResults results = null;
 	
