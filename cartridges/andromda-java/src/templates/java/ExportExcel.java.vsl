@@ -50,7 +50,7 @@ public abstract class ExportExcel {
 		}
 	}
 	
-	public abstract void stylus();
+	public abstract void stylus(XSSFWorkbook workbook);
 	
 	public abstract void header(XSSFWorkbook workbook);
 	
@@ -62,9 +62,9 @@ public abstract class ExportExcel {
 		
 		XSSFSheet sheet = workbook.createSheet(sheetName);
 
-		stylus();
+		stylus(workbook);
 		
-		header();
+		header(workbook);
 		
 		if(criteria != null) {
 		
@@ -87,4 +87,5 @@ public abstract class ExportExcel {
 		columnsAutoResize(sheet);
 		
 	}
+	
 }
