@@ -1,4 +1,4 @@
-#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/ExportGenerator.java")
+#set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/ExportExcel.java")
 
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 package ${customTypesPackage}.${package};
@@ -13,10 +13,10 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+//import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.HashMap;
 
@@ -71,9 +71,7 @@ public abstract class ExportExcel {
 		
 	}
 	
-	private void exportDatasheet(Workbook workbook) throws Exception {
-		
-		SXSSFWorkbook wb = (SXSSFWorkbook) workbook;
+	private void exportDatasheet(SXSSFWorkbook workbook) throws Exception {
 		
 		Cookie cookie = new Cookie("fimLoader", "fimLoader");
 		
@@ -87,13 +85,13 @@ public abstract class ExportExcel {
 			
 			ServletOutputStream out = response.getOutputStream();
 			
-			wb.write(out);
+			workbook.write(out);
 			
 			out.flush();
 			
-			wb.dispose();
+			//wb.dispose();
 			
-			wb.close();
+			//workbook.close();
 			
 		} catch(Exception exception) {
 			
@@ -113,7 +111,7 @@ public abstract class ExportExcel {
 		
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
 		
-		XSSFSheet sheet = workbook.createSheet(sheetName);
+		XSSFSheet sheet = (XSSFSheet) workbook.createSheet(sheetName);
 		
 		stylus(workbook);
 		
