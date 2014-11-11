@@ -20,3 +20,6 @@ Adicionar css usando o seguinte formato:
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/jquery-ui-1.10.3.custom.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/jquery-ui-1.10.3.theme.css"></link>
 <link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/jquery-ui-1.10.3.ie.css"></link>
+
+<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/select2.css"></link>
+<link rel="stylesheet" type="text/css" media="screen" href="/${projectId}/layout/${layout}/css/select2-bootstrap.css"></link>
