@@ -37,9 +37,9 @@ public abstract class ExportExcel {
 
 	private Criteria criteria;
 
-	private String sheetName;
+	private String sheetName = "datasheet";
 
-	protected String[] columns;
+	protected String[] columns = null;
 
 	private ScrollableResults results = null;
 
@@ -52,6 +52,8 @@ public abstract class ExportExcel {
 	protected String errorMessage; 
 
 	private int rowNumber = 0;
+	
+	private String extension = "xlsx";
 
 	public ExportExcel(Criteria criteria, String sheetName, String[] columns, HttpServletRequest request, HttpServletResponse response) {
 		this.criteria = criteria;
@@ -61,7 +63,22 @@ public abstract class ExportExcel {
 		this.response = response;
 		this.errorMessage = "Erro ao exportar planilha " + sheetName+ " .";
 	}
-
+	
+	public ExportExcel(Criteria criteria, String sheetName, HttpServletRequest request, HttpServletResponse response) {
+		this.criteria = criteria;
+		this.sheetName = sheetName;
+		this.request = request;
+		this.response = response;
+		this.errorMessage = "Erro ao exportar planilha " + sheetName+ " .";
+	}
+	
+	public ExportExcel(Criteria criteria,HttpServletRequest request, HttpServletResponse response) {
+		this.criteria = criteria;
+		this.request = request;
+		this.response = response;
+		this.errorMessage = "Erro ao exportar planilha " + sheetName+ " .";
+	}
+		
 	public Type getColumnType(int i) {
 		return results.getType(i);
 	}
@@ -83,7 +100,15 @@ public abstract class ExportExcel {
 		}
 
 	}
-
+	
+	protected void setErrorMessage(String message) {
+		this.errorMessage = message;
+	}
+	
+	protected void setFileExtension(String extension) {
+		this.extension = extension;
+	}
+	
 	private void exportDatasheet(SXSSFWorkbook workbook) throws Exception {
 
 		Cookie cookie = new Cookie("fimLoader", "fimLoader");
@@ -92,7 +117,7 @@ public abstract class ExportExcel {
 
 		response.addCookie(cookie);
 		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment;filename=\"" + sheetName + ".xlsx\"");
+		response.setHeader("Content-Disposition", "attachment;filename=\"" + sheetName + "." + extension + "\"");
 
 		try {
 
@@ -104,6 +129,7 @@ public abstract class ExportExcel {
 			out.close();
 		
 			workbook.dispose();
+
 
 		} catch(Exception exception) {
 
