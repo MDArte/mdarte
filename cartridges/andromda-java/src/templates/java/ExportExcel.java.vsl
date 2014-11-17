@@ -7,43 +7,52 @@ import org.hibernate.Criteria;
 import org.hibernate.ScrollableResults;
 import org.hibernate.ScrollMode;
 import org.hibernate.type.Type;
-
+import org.apache.poi.hssf.usermodel.HSSFBorderFormatting;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-//import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
-
 import javax.servlet.ServletOutputStream;
 
 public abstract class ExportExcel {
-	
+
 	private Criteria criteria;
-	
+
 	private String sheetName;
-	
+
 	protected String[] columns;
-	
+
 	private ScrollableResults results = null;
-	
-	protected HashMap<String,XSSFCellStyle> styles = new HashMap<String,XSSFCellStyle> ();
-	
+
+	protected HashMap<String,CellStyle> styles = new HashMap<String,CellStyle> ();
+
 	protected HttpServletRequest request;
-	
+
 	protected HttpServletResponse response;
-	
+
 	protected String errorMessage; 
-	
+
+	private int rowNumber = 0;
+
 	public ExportExcel(Criteria criteria, String sheetName, String[] columns, HttpServletRequest request, HttpServletResponse response) {
 		this.criteria = criteria;
 		this.sheetName = sheetName;
@@ -52,93 +61,103 @@ public abstract class ExportExcel {
 		this.response = response;
 		this.errorMessage = "Erro ao exportar planilha " + sheetName+ " .";
 	}
-	
+
 	public Type getColumnType(int i) {
 		return results.getType(i);
 	}
-	
-	public int getCurrentRowNumber() {
+
+	public int getResultsRowNumber() {
 		return results.getRowNumber();
 	}
-	
-	private void columnsAutoResize(XSSFSheet sheet){
-		
-		for(int i = 0; i < columns.length; i++) {
-		
-			sheet.autoSizeColumn(i);
-		
-		}
-		
+
+	public int getSheetRowNumber(){
+		return this.rowNumber;
 	}
-	
+
+	private void columnsAutoResize(SXSSFSheet sheet){
+
+		for(int i = 0; i < columns.length; i++) {
+
+			sheet.autoSizeColumn(i);
+
+		}
+
+	}
+
 	private void exportDatasheet(SXSSFWorkbook workbook) throws Exception {
-		
+
 		Cookie cookie = new Cookie("fimLoader", "fimLoader");
-		
+
 		cookie.setMaxAge(2);
-		
+
 		response.addCookie(cookie);
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment;filename=\"" + sheetName + ".xlsx\"");
-		
+
 		try {
-			
+
 			ServletOutputStream out = response.getOutputStream();
 			
 			workbook.write(out);
 			
 			out.flush();
-			
-			//wb.dispose();
-			
+			out.close();
+		
+			//workbook.dispose();
+
 			//workbook.close();
-			
+
 		} catch(Exception exception) {
-			
+
 			throw new Exception(errorMessage, exception);
-		
+
 		}
-		
+
 	}
-	
+
 	public abstract void stylus(SXSSFWorkbook workbook);
-	
-	public abstract void header(SXSSFWorkbook workbook);
-	
-	public abstract void line(SXSSFWorkbook workbook,XSSFSheet sheet, Object[] row);
-	
+
+	public abstract void header(SXSSFWorkbook workbook, SXSSFSheet sheet);
+
+	public abstract void line(SXSSFWorkbook workbook,SXSSFSheet sheet, Object[] resultsRow);
+
 	public void run() throws Exception{
-		
-		SXSSFWorkbook workbook = new SXSSFWorkbook();
-		
-		XSSFSheet sheet = (XSSFSheet) workbook.createSheet(sheetName);
-		
-		stylus(workbook);
-		
-		header(workbook);
-		
-		if(criteria != null) {
+		SXSSFWorkbook workbook = null;
+		workbook = new SXSSFWorkbook();
 			
-			results = criteria.scroll(ScrollMode.FORWARD_ONLY);
+		if(workbook != null) {
+			SXSSFSheet sheet = (SXSSFSheet)workbook.createSheet(sheetName);
+
+			stylus(workbook);
+
+			header(workbook,sheet);
 			
-		}
-		
-		if(results != null) {
-			
-			results.beforeFirst();
-			
-			while(results.next()) {
-				
-				line(workbook, sheet, results.get());
-				
+			rowNumber++;
+
+			if(criteria != null) {
+
+				results = criteria.scroll(ScrollMode.FORWARD_ONLY);
+
 			}
 			
+			if(results != null) {
+
+				while(results.next()) {
+
+					line(workbook, sheet, results.get());
+
+					rowNumber++;
+
+				}
+
+			}
+			
+			
+			columnsAutoResize(sheet);
+			
+			exportDatasheet(workbook);
+			
 		}
-		
-		columnsAutoResize(sheet);
-		
-		exportDatasheet(workbook);
-		
 	}
-	
+
 }
