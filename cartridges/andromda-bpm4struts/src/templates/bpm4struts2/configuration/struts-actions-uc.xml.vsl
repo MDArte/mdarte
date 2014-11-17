@@ -27,7 +27,7 @@
 #if($action.actionOldStruts)
 #set($gerar = false)
 #end
-## CÃ³digo que mapeia as actions de autocomplete para cada componente autocomplete que serve de parÃ¢metro para a action
+## Código que mapeia as actions de autocomplete para cada componente autocomplete que serve de parâmetro para a action
 #if($gerar)
 #foreach($parameter in $action.getActionParameters())
 #if($parameter.autocomplete)
@@ -46,9 +46,8 @@
 #end
 #end
 #end
-#end
 ## 
-## CÃ³digo que mapeia as actions de Ajax
+## Código que mapeia as actions de Ajax
 #if($gerar)
 #foreach($page in $useCase.getPages())
 #foreach($parameter in $page.getPageVariables())
@@ -68,7 +67,7 @@
 #end
 #end
 #end
-##fim do cÃ³digo
+##fim do código
 #if($gerar)
 		<action name="$actionName" class="${action.actionType}" method="execute">
 #if(${action.ajaxAction} &&  ${action.temParametroTabela})
@@ -165,6 +164,7 @@
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
 		</action>
+#end
 #end
 #end
 #end
