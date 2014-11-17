@@ -133,7 +133,6 @@ public abstract class ExportExcel {
 		
 			workbook.dispose();
 
-
 		} catch(Exception exception) {
 
 			throw new Exception(errorMessage, exception);
@@ -191,7 +190,6 @@ public abstract class ExportExcel {
 				}
 
 			}
-			
 			
 			columnsAutoResize(sheet);
 			
