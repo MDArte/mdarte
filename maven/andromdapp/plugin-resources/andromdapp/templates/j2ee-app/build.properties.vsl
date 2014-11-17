@@ -104,6 +104,10 @@ xwork.core.version=2.1.6
 controle.acesso.version=2.0
 #end
 
+poi.version=3.10
+
+xbean.version=2.5.0
+
 #if(${oauth})
 # versão do auth do mdarte
 oauth.core.version=1.0

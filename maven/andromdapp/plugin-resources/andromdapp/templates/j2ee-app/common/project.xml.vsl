@@ -63,6 +63,33 @@
                 <application.dependency>true</application.dependency>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
+		<dependency>
+            <groupId>poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
+		<dependency>
+            <groupId>xbean</groupId>
+            <artifactId>xbean</artifactId>
+            <version>${xbean.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
