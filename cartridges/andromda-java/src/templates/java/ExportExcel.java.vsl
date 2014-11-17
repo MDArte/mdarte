@@ -1,5 +1,4 @@
 #set ($generatedFile = "${stringUtils.replace($customTypesPackage,'.','/')}/${utilDir}/ExportExcel.java")
-
 #set ($package = "${stringUtils.replace($utilDir,'/','.')}")
 package ${customTypesPackage}.${package};
 
@@ -7,17 +6,21 @@ import org.hibernate.Criteria;
 import org.hibernate.ScrollableResults;
 import org.hibernate.ScrollMode;
 import org.hibernate.type.Type;
+
 import org.apache.poi.hssf.usermodel.HSSFBorderFormatting;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.util.HSSFColor;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -130,6 +133,7 @@ public abstract class ExportExcel {
 		
 			workbook.dispose();
 
+
 		} catch(Exception exception) {
 
 			throw new Exception(errorMessage, exception);
@@ -142,8 +146,21 @@ public abstract class ExportExcel {
 
 	public abstract void header(SXSSFWorkbook workbook, SXSSFSheet sheet);
 
-	public abstract void line(SXSSFWorkbook workbook,SXSSFSheet sheet, Object[] resultsRow);
+	public void line(SXSSFWorkbook workbook,SXSSFSheet sheet, Object[] resultsRow){
+		
+		Row row = sheet.createRow(getSheetRowNumber());
 
+		SXSSFCell cell;	
+
+		for(int i = 0; i < resultsRow.length; i++) {
+		
+			cell = (SXSSFCell) row.createCell(i);
+			cell.setCellValue(String.valueOf(resultsRow[i]));
+		
+		}
+		
+	}
+	
 	public void run() throws Exception{
 		SXSSFWorkbook workbook = null;
 		workbook = new SXSSFWorkbook();
@@ -174,7 +191,8 @@ public abstract class ExportExcel {
 				}
 
 			}
-					
+			
+			
 			columnsAutoResize(sheet);
 			
 			exportDatasheet(workbook);
