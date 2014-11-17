@@ -183,6 +183,13 @@
         overwrite="false">
     </template>
 
+	<template
+        path="templates/java/ExportExcel.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="util-impl"
+        overwrite="false">
+    </template>
+
     <!-- cartridge-template merge-point -->
 
 </cartridge>
