@@ -103,9 +103,7 @@ public abstract class ExportExcel {
 			out.flush();
 			out.close();
 		
-			//workbook.dispose();
-
-			//workbook.close();
+			workbook.dispose();
 
 		} catch(Exception exception) {
 
