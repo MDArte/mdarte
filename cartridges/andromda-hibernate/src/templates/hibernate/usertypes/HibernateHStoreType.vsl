@@ -1,0 +1,56 @@
+public class HstoreUserType implements UserType {
+
+      public Object assemble(Serializable cached, Object owner)
+              throws HibernateException {
+          return cached;
+      }
+
+      public Object deepCopy(Object o) throws HibernateException {
+          Map m = (Map) o;
+          return new HashMap(m);
+      }
+
+      public Serializable disassemble(Object o) throws HibernateException {
+          return (Serializable) o;
+      }
+
+      public boolean equals(Object object1, Object object2) throws HibernateException {
+          Map map1 = (Map) object1;
+          Map map2 = (Map) object2;
+          return map1.equals(map2);
+      }
+
+      public int hashCode(Object object) throws HibernateException {
+          return object.hashCode();
+      }
+
+      public boolean isMutable() {
+          return true;
+      }
+
+      public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
+              throws HibernateException, SQLException {
+          String column = strings[0];
+          String value = rs.getString(column);
+          return HstoreHelper.toMap(value);
+      }
+
+      public void nullSafeSet(PreparedStatement ps, Object obj, int i)
+              throws HibernateException, SQLException {
+          String s = HstoreHelper.toString((Map) obj);
+          ps.setObject(i, s, Types.OTHER);
+      }
+
+      public Object replace(Object original, Object target, Object owner)
+              throws HibernateException {
+          return original;
+      }
+
+      public Class returnedClass() {
+          return Map.class;
+      }
+
+      public int[] sqlTypes() {
+          return new int[] { Types.INTEGER };
+      }
+    }
