@@ -110,6 +110,13 @@ public class HibernateEntityAttributeLogicImpl
         return StringUtils.isNotBlank(value) ? Boolean.valueOf(value).booleanValue() : false;
     }
 
+    protected boolean handleIsHstore() {
+    	 
+    	final String value = (String)findTaggedValue(HibernateProfile.TAGGEDVALUE_HIBERNATE_HSTORE);
+    	 
+        return StringUtils.isNotBlank(value) ? Boolean.valueOf(value).booleanValue() : false;
+    }
+    
     /**
      * @see org.andromda.cartridges.hibernate.metafacades.HibernateEntityAttribute#getFormula()
      */

@@ -133,6 +133,19 @@
                     <value>Never</value>
                 </allowedValues>
             </element>
+            <element name="HIBERNATE_HSTORE">
+                <documentation>
+                    Defines wheter an attribute is hstore or not.
+                </documentation>
+                <value>@andromda.hibernate.attribute.hstore</value>
+                <appliedOnElement>
+                    Attribute
+                </appliedOnElement>
+                <allowedValues>
+                    <value>true</value>
+                    <value default="true">false</value>
+                </allowedValues>
+            </element>
             <element name="HIBERNATE_LAZY">
                 <documentation>
                     Used to denote how a relationship must be loaded:

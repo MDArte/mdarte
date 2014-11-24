@@ -46,6 +46,8 @@ public class HibernateProfile
      * Stores the aggregation kind (lazy/eager) of the Hibernate Session EJB.
      */
     public static final String TAGGEDVALUE_HIBERNATE_LAZY = profile.get("HIBERNATE_LAZY");
+    
+    public static final String TAGGEDVALUE_HIBERNATE_HSTORE = profile.get("HIBERNATE_HSTORE");
 
     /**
      * Support for hibernate inheritance strategy, supported values are <ul> <li>class : one table per base class</li>
