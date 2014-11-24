@@ -286,6 +286,7 @@ public abstract class ${entity.entityName}Abstract
 
 #end
     public ${entity.entityName}Abstract(){
+    
     }
 
 #set ($identifiers = $entity.getIdentifiers(false))
@@ -300,7 +301,6 @@ public abstract class ${entity.entityName}Abstract
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-
     private $typeName $attribute.name;
 
     /**
