@@ -5,13 +5,13 @@ public class HstoreUserType implements UserType {
           return cached;
       }
 
-      public Object deepCopy(Object o) throws HibernateException {
-          Map m = (Map) o;
-          return new HashMap(m);
+      public Object deepCopy(Object object) throws HibernateException {
+          Map map = (Map) object;
+          return new HashMap(map);
       }
 
-      public Serializable disassemble(Object o) throws HibernateException {
-          return (Serializable) o;
+      public Serializable disassemble(Object object) throws HibernateException {
+          return (Serializable) object;
       }
 
       public boolean equals(Object object1, Object object2) throws HibernateException {
@@ -31,14 +31,14 @@ public class HstoreUserType implements UserType {
       public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
               throws HibernateException, SQLException {
           String column = strings[0];
-          String value = rs.getString(column);
+          String value = resultSet.getString(column);
           return HstoreHelper.toMap(value);
       }
 
-      public void nullSafeSet(PreparedStatement ps, Object obj, int i)
+      public void nullSafeSet(PreparedStatement statement, Object object, int i)
               throws HibernateException, SQLException {
-          String s = HstoreHelper.toString((Map) obj);
-          ps.setObject(i, s, Types.OTHER);
+          String string = HstoreHelper.toString((Map) object);
+          statement.setObject(i, string, Types.OTHER);
       }
 
       public Object replace(Object original, Object target, Object owner)
