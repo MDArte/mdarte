@@ -383,6 +383,12 @@ public class UMLProfile
      * this type.
      */
     public static final String BLOB_TYPE_NAME = profile.get("BLOB_TYPE");
+    
+    /**
+     * Used to identify a Hstore type in the model, any other type that will be identified as a Blob type must specialize
+     * this type.
+     */
+    public static final String HSTORE_TYPE_NAME = profile.get("HSTORE_TYPE");
 
     /**
      * Used to identify a map type in the model, any other type that will be identified as a map type must specialize
