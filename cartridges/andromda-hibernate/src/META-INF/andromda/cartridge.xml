@@ -327,7 +327,7 @@
         overwrite="false"/>
       
       <template
-        path="templates/hibernate/usertypes/HibernateHStoreHelper.java.vsl"
+        path="templates/hibernate/HibernateHStoreHelper.java.vsl"
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="false"/>
