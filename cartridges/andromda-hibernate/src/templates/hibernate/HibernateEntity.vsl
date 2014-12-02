@@ -301,6 +301,20 @@ public abstract class ${entity.entityName}Abstract
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
+#if($typeName.equals("java.util.Map") && $attribute.isHstore())
+	
+	private $typeName $attribute.name = new $typeName<String,String>(); 
+	
+	$attribute.visibility String ${attribute.getterName}(String key)
+    {
+        return String.valueOf(this.${attribute.name}.get(key));
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(String key, String value)
+    {
+		this.${attribute.name}.put(key,value);
+    }  
+#else
     private $typeName $attribute.name;
 
     /**
@@ -319,8 +333,9 @@ $attribute.getDocumentation("     * ")
 #else
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name)
     {
-	this.${attribute.name} = $attribute.name;
+		this.${attribute.name} = $attribute.name;
     }
+#end
 #end
 
 #end
