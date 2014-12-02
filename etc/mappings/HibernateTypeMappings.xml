@@ -12,4 +12,9 @@
         <from>datatype::Clob</from>
         <to>org.andromda.persistence.hibernate.usertypes.HibernateStringClobType</to>
     </mapping>
+    <mapping>
+        <from>datatype::Hstore</from>
+        <to>org.andromda.persistence.hibernate.usertypes.HibernateHStoreUserType</to>
+    </mapping>
 </mappings>
+

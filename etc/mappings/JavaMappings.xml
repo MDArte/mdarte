@@ -127,6 +127,10 @@
         <from>datatype::Blob</from>
         <to>byte[]</to>
     </mapping>
+        <mapping>
+        <from>datatype::Hstore</from>
+        <to>java.util.Map</to>
+    </mapping>
     <mapping>
         <from>datatype::Map</from>
         <to>java.util.Map</to>
