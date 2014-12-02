@@ -112,9 +112,9 @@ public class HibernateEntityAttributeLogicImpl
 
     protected boolean handleIsHstore() {
     	 
-    	final String value = (String)findTaggedValue(HibernateProfile.TAGGEDVALUE_HIBERNATE_HSTORE);
+    	return this.getType().getName().equals("Hstore");
     	 
-        return StringUtils.isNotBlank(value) ? Boolean.valueOf(value).booleanValue() : false;
+        //return StringUtils.isNotBlank(value) ? Boolean.valueOf(value).booleanValue() : false;
     }
     
     /**
