@@ -12,19 +12,25 @@ import org.hibernate.HibernateException;
 import ${hibernateUtils.hibernateUserTypePackage}.UserType;
 
 import java.util.Map;
+import java.util.HashMap;
 
-import java.io.Serializible;
+import java.io.Serializable;
 
 public class $className implements UserType {
 
       public Object assemble(Serializable cached, Object owner)
               throws HibernateException {
+         
           return cached;
+     
       }
 
       public Object deepCopy(Object object) throws HibernateException {
+        
           Map map = (Map) object;
+       
           return new HashMap(map);
+     
       }
 
       public Serializable disassemble(Object object) throws HibernateException {
@@ -32,9 +38,12 @@ public class $className implements UserType {
       }
 
       public boolean equals(Object object1, Object object2) throws HibernateException {
+       
           Map map1 = (Map) object1;
           Map map2 = (Map) object2;
+       
           return map1.equals(map2);
+      
       }
 
       public int hashCode(Object object) throws HibernateException {
@@ -47,20 +56,26 @@ public class $className implements UserType {
 
       public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
               throws HibernateException, SQLException {
+         
           String column = strings[0];
           String value = resultSet.getString(column);
-          return HstoreHelper.toMap(value);
+         
+          return HibernateHStoreHelper.toMap(value);
       }
 
       public void nullSafeSet(PreparedStatement statement, Object object, int i)
               throws HibernateException, SQLException {
-          String string = HstoreHelper.toString((Map) object);
+          
+          String string = HibernateHStoreHelper.toString((Map) object);
           statement.setObject(i, string, Types.OTHER);
+      
       }
 
       public Object replace(Object original, Object target, Object owner)
               throws HibernateException {
+          
           return original;
+      
       }
 
       public Class returnedClass() {
@@ -70,4 +85,5 @@ public class $className implements UserType {
       public int[] sqlTypes() {
           return new int[] { Types.INTEGER };
       }
+      
     }
