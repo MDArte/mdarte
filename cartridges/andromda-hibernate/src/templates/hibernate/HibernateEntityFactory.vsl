@@ -6,6 +6,7 @@
 #if ($entity.packageName)
 package $entity.packageName;
 #end
+
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
@@ -46,7 +47,6 @@ import java.util.Date;
 import java.util.Collection;
 
 import accessControl.ControleAcesso;
-
 #end
 
 import org.dom4j.Document;
@@ -468,6 +468,9 @@ public abstract class ${entity.name}DAO
 #elseif($attribute.type.fullyQualifiedName == "java.lang.Character")
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name").charAt(0));		
 			entidade.${attribute.setterName}(valor${attribute.name});
+#elseif($attribute.isHstore())
+			$attribute.type.fullyQualifiedName valor$attribute.name = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toMap(String.valueOf(raiz.valueOf("./$attribute.name")));
+			entidade.${attribute.setterName}Map(valor${attribute.name});
 #else
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name"));		
 			entidade.${attribute.setterName}(valor${attribute.name});
@@ -584,9 +587,16 @@ public abstract class ${entity.name}DAO
 			
 			$entity.entityImplementationName obj = ($entity.entityImplementationName) entity; 
 			
-## Adiciona cada atributo
 #foreach ( $attribute in $entity.attributes )
-#if (!$attribute.hasExactStereotype("Identifier"))
+#if($attribute.isHstore())
+			if(!obj.${attribute.getterName}Map().isEmpty()) {
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+				
+				String textvalue = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toString(obj.${attribute.getterName}Map());
+				
+				att${attribute.name}.addText(textvalue);
+			}
+#elseif (!$attribute.hasExactStereotype("Identifier"))
 			if (obj.${attribute.getterName}() != null) {
 #if($attribute.type.fullyQualifiedName == "java.util.Date")
 				try { 
