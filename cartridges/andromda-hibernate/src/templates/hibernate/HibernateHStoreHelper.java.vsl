@@ -42,11 +42,11 @@ public class $className {
         
         for (String token : tokens) {
             String[] kv = token.split(K_V_SEPARATOR);
-            String k = kv[0];
-            k = k.trim().substring(1, k.length() - 1);
-            String v = kv[1];
-            v = v.trim().substring(1, v.length() - 1);
-            map.put(k, v);
+            String key = kv[0];
+            key = key.trim().substring(1, key.length() - 1);
+            String value = kv[1];
+            value = value.trim().substring(1, value.length() - 1);
+            map.put(key, value);
         }
         
         return map;

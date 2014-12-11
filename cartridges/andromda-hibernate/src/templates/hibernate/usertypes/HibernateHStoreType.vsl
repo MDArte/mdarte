@@ -27,9 +27,9 @@ public class $className implements UserType {
 
       public Object deepCopy(Object object) throws HibernateException {
         
-          Map map = (Map) object;
+          Map<String,String> map = (Map<String,String>) object;
        
-          return new HashMap(map);
+          return new HashMap<String,String>(map);
      
       }
 
@@ -39,8 +39,8 @@ public class $className implements UserType {
 
       public boolean equals(Object object1, Object object2) throws HibernateException {
        
-          Map map1 = (Map) object1;
-          Map map2 = (Map) object2;
+          Map<String,String> map1 = (Map<String,String>) object1;
+          Map<String,String> map2 = (Map<String,String>) object2;
        
           return map1.equals(map2);
       
@@ -66,7 +66,7 @@ public class $className implements UserType {
       public void nullSafeSet(PreparedStatement statement, Object object, int i)
               throws HibernateException, SQLException {
           
-          String string = HibernateHStoreHelper.toString((Map) object);
+          String string = HibernateHStoreHelper.toString((Map<String,String>) object);
           statement.setObject(i, string, Types.OTHER);
       
       }
