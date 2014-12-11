@@ -125,7 +125,7 @@ $attribute.getDocumentation("     * ")
         return String.valueOf(this.${attribute.name}.get(key));
     }
     
-    $attribute.visibility java.util.Map ${attribute.getterName}Map()
+    $attribute.visibility java.util.Map ${attribute.getterName}()
     {
         return (java.util.HashMap) ((java.util.HashMap)this.${attribute.name}).clone();
     }
@@ -135,7 +135,7 @@ $attribute.getDocumentation("     * ")
 		this.${attribute.name}.put(key,value);
     }
     
-    $attribute.visibility void ${attribute.setterName}Map(java.util.Map map)
+    $attribute.visibility void ${attribute.setterName}(java.util.Map map)
     {
 		this.${attribute.name} = (java.util.HashMap) ((java.util.HashMap)map).clone();
     }

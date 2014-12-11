@@ -470,7 +470,7 @@ public abstract class ${entity.name}DAO
 			entidade.${attribute.setterName}(valor${attribute.name});
 #elseif($attribute.isHstore())
 			$attribute.type.fullyQualifiedName valor$attribute.name = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toMap(String.valueOf(raiz.valueOf("./$attribute.name")));
-			entidade.${attribute.setterName}Map(valor${attribute.name});
+			entidade.${attribute.setterName}(valor${attribute.name});
 #else
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name"));		
 			entidade.${attribute.setterName}(valor${attribute.name});
@@ -589,10 +589,10 @@ public abstract class ${entity.name}DAO
 			
 #foreach ( $attribute in $entity.attributes )
 #if($attribute.isHstore())
-			if(!obj.${attribute.getterName}Map().isEmpty()) {
+			if(!obj.${attribute.getterName}().isEmpty()) {
 				Element att$attribute.name = raiz.addElement("$attribute.name");
 				
-				String textvalue = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toString(obj.${attribute.getterName}Map());
+				String textvalue = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toString(obj.${attribute.getterName}());
 				
 				att${attribute.name}.addText(textvalue);
 			}
