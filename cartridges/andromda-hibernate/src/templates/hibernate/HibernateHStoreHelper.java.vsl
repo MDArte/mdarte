@@ -31,24 +31,32 @@ public class $className {
     }
 
     public static Map<String, String> toMap(String string) {
-        
-        Map<String, String> map = new HashMap<String, String>();
-        
-        if (string.isEmpty()) {
-            return map;
-        }
-        
-        String[] tokens = string.split(", ");
-        
-        for (String token : tokens) {
-            String[] kv = token.split(K_V_SEPARATOR);
-            String key = kv[0];
-            key = key.trim().substring(1, key.length() - 1);
-            String value = kv[1];
-            value = value.trim().substring(1, value.length() - 1);
-            map.put(key, value);
-        }
-        
-        return map;
-    }
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		if (string.isEmpty()) {
+			return map;
+		}
+
+		String[] tokens = string.split(", ");
+
+		for (String token : tokens) {
+			String[] kv = token.split(K_V_SEPARATOR);
+			String key = kv[0];
+
+			key = key.trim().substring(1, key.length() - 1);
+
+			String value = kv[1];
+			
+			if(!value.equalsIgnoreCase("NULL")) {
+				value = value.trim().substring(1, value.length() - 1);
+			} else {
+				value = null;
+			}
+			
+			map.put(key, value);
+		}
+
+		return map;
+	}
 }

@@ -316,13 +316,19 @@ public abstract class ${entity.entityName}Abstract
     }
     
     $attribute.visibility void ${attribute.setterName}(String key, String value)
-    {
-		this.${attribute.name}.put(key,value);
+    {	
+    	if(key != null && value != null)
+			this.${attribute.name}.put(key,value);
     }
     
     $attribute.visibility void ${attribute.setterName}(java.util.Map<String,String> map)
     {
-		this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)map).clone();
+    	if(map != null)
+			this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)map).clone();
+    }
+    
+    $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
+    	this.${attribute.name}.remove(key);
     }
     
 #else
