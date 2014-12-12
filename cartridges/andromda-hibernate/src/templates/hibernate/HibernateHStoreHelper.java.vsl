@@ -21,12 +21,15 @@ public class $className {
         StringBuilder builder = new StringBuilder();
         int n = map.size();
         for (String key : map.keySet()) {
-            builder.append("\"" + key + "\"" + K_V_SEPARATOR + "\"" + map.get(key) + "\"");
-            if (n > 1) {
-                builder.append(", ");
-                n--;
-            }
-        }
+			if(map.get(key) == null)
+				builder.append("\"" + key + "\"" + K_V_SEPARATOR  + "null");
+			else
+				builder.append("\"" + key + "\"" + K_V_SEPARATOR + "\"" + map.get(key) + "\"");
+			if (n > 1) {
+				builder.append(", ");
+				n--;
+			}
+		}
         return builder.toString();
     }
 
