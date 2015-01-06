@@ -64,6 +64,11 @@
                 <appliedOnElement>class</appliedOnElement>
             </element>
             
+             <element name="SUBENTITY">
+                <value>SubEntity</value>
+                <appliedOnElement>class</appliedOnElement>
+            </element>
+            
             <element name="SERVICE">
                 <documentation>
                     Denotes a class is representing an EJB session bean that is supposed to be used as a facade

@@ -49,6 +49,13 @@
         </mapping>
         <property reference="sqlMappingsUri"/>
     </metafacade>
+    
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.SubEntityLogicImpl" contextRoot="true">
+        <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
+            <stereotype>SUBENTITY</stereotype>
+        </mapping>
+        <property reference="sqlMappingsUri"/>
+    </metafacade>
 
     <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateAssociationEndLogicImpl">
         <mapping class="org.omg.uml.foundation.core.AssociationEnd$Impl">
