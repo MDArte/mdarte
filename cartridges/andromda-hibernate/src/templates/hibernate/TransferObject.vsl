@@ -139,6 +139,10 @@ $attribute.getDocumentation("     * ")
     {
 		this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap)map).clone();
     }
+    
+    $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
+    	this.${attribute.name}.remove(key);
+    }
 #else
     private $tipo $attribute.name;
 
