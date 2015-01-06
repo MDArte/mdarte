@@ -149,6 +149,40 @@ public class StrutsActionLogicImpl
         return getFormBeanName();
     }
 
+	public String handleGetCustomActionName(){
+		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_CUSTOM_ACTION_NAME);
+		
+		return value == null ? "" : value.toString();
+	}
+	
+	public String handleGetCustomActionPath(){
+		Object value = this.findTaggedValue(Bpm4StrutsProfile.TAGGEDVALUE_CUSTOM_ACTION_PATH);
+		if(value != null) {
+			String caminho = value.toString();
+		
+			//Acrescenta '/' no início da string caso não possua
+			if(!caminho.startsWith("/"))
+				caminho = "/" + caminho;
+			
+			//Retira '/' do final da string caso possua
+			while(caminho.endsWith("/"))
+				caminho = caminho.substring(0, caminho.length()-1);
+			
+			//Retira '/' seguidos da string caso possua
+			for(int i = 0; i < caminho.length(); i++) {
+				while(caminho.charAt(i) == '/' && caminho.charAt(i+1) == '/') {
+					String aux1 = caminho.substring(0, i);
+					String aux2 = caminho.substring(i+1, caminho.length());
+					caminho = aux1 + aux2;
+				}
+			}
+			
+			return caminho;
+		}
+		
+		return "";
+	}
+    
     protected String handleGetActionInput()
     {
         final StateVertexFacade source = getSource();
@@ -314,13 +348,17 @@ public class StrutsActionLogicImpl
 
     protected java.lang.String handleGetActionPath()
     {
-        return getActionPathRoot() + '/' + getActionClassName();
+        return getActionPathRoot() + '/' + getActionClassName(); 
     }
 
     protected String handleGetActionPathRoot()
     {
         String actionPathRoot = null;
-
+        String customPath = this.getCustomActionPath();
+        
+        if(customPath != "")
+        	return customPath;
+        
         final FrontEndUseCase useCase = this.getUseCase();
         if (useCase != null)
         {
@@ -408,7 +446,11 @@ public class StrutsActionLogicImpl
     protected String handleGetActionClassName()
     {
         String name = null;
-
+        String customName = this.getCustomActionName();
+        
+        if(customName != "")
+        	return customName;
+        
         if (this.isExitingInitialState())
         {
             final UseCaseFacade useCase = this.getUseCase();

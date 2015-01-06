@@ -59,6 +59,20 @@
                 Bpm4struts allows you to add tagged values here and there but provides a
                 default value in case they are missing.
             </documentation>
+            <element name="CUSTOM_ACTION_NAME">
+				<documentation>
+					Altera o nome do caminho da action.
+				</documentation>
+				<value>@andromda.struts.custom.action.name</value>
+				<appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+			</element>
+            <element name="CUSTOM_ACTION_PATH">
+				<documentation>
+					Cria um submodulo para o caminho da action.
+				</documentation>
+				<value>@andromda.struts.custom.action.path</value>
+				<appliedOnElement>Transition coming out of an action state carrying the <![CDATA[<<FrontEndView>>]]> stereotype</appliedOnElement>
+			</element>
             <element name="OTHER_TECHNOLOGY">
                 <value>@andromda.presentation.web.technology.other</value>
                 <appliedOnElement>It is applicable on UseCase and Actions and Package elements to define its presentations technology</appliedOnElement>

@@ -24,6 +24,8 @@ public class Bpm4StrutsProfile
 
     public static final String TAGGEDVALUE_OTHER_TECHNOLOGY = profile.get("OTHER_TECHNOLOGY");
 
+    public static final String TAGGEDVALUE_CUSTOM_ACTION_NAME = profile.get("CUSTOM_ACTION_NAME");
+    public static final String TAGGEDVALUE_CUSTOM_ACTION_PATH = profile.get("CUSTOM_ACTION_PATH");
     public static final String TAGGEDVALUE_ACTION_TYPE = profile.get("ACTION_TYPE");
     public static final String TAGGEDVALUE_ACTION_RESETTABLE = profile.get("ACTION_RESETTABLE");
     public static final String TAGGEDVALUE_ACTION_SUCCESS_MESSAGE = profile.get("ACTION_SUCCESS_MESSAGE");

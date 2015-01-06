@@ -15,13 +15,21 @@
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
 	"http://struts.apache.org/dtds/struts-2.0.dtd">
-
+	
 <struts>
+	<constant name="struts.mapper.alwaysSelectFullNamespace" value="true" />	
+
 #set($useCaseName = $stringUtils.upperCamelCaseName($useCase.name))
 	<package name="$useCaseName" namespace="/$useCaseName" extends="${bpmUtils.getStrutsDefaultNameConfig()}">
+####    CRIA AS AÇÔES    ####
 #foreach ($action in $useCase.actions)
-#set($acaoDeControle = false)	
+#set($acaoDeControle = false)
+## Check if customActioName is empty
+#if($action.customActionName == "")
 #set($actionName = ${stringUtils.upperCamelCaseName($action.actionClassName)})
+#else
+#set($actionName = $action.customActionName)
+#end
 ##check if it is a struts 2 action
 #set($gerar = true)
 #if($action.actionOldStruts)
@@ -88,6 +96,7 @@
 				<param name="$field.name">${begin}${field.name}${end}</param>
 #end
 			</result>
+			
 #elseif($stringUtils.contains($actionForward.forwardPath, '.action'))
 			<result name="$actionForward.forwardName" type="redirectAction">
 				<param name="actionName">${actionForward.strutsActionName}</param>
@@ -163,10 +172,149 @@
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
 		</action>
+		
 #end
+#end	
+#end
+	</package>
+##
+##	CUSTOM ACTION PATH
+##
+##Array com as actions já criadas
+#set($alreadyCreated = [])
+#foreach($action in $useCase.actions)
+#if(!$alreadyCreated.contains($action))
+#set($customActionPath = $action.customActionPath)
+#if($customActionPath != "")
+#set($packageName = $stringUtils.replace($customActionPath, "/", ""))
+	<package name="$packageName" namespace="$customActionPath" extends="${bpmUtils.getStrutsDefaultNameConfig()}">
+#foreach($action in $useCase.actions)
+#if(($customActionPath == $action.customActionPath) && $customActionPath != "")
+##
+##	CRIA ACTION
+##
+#if($action.customActionName == "")
+#set($actionName = ${stringUtils.upperCamelCaseName($action.actionClassName)})
+#else
+#set($actionName = $action.customActionName)
+#end
+#if($gerar)
+		<action name="$actionName" class="${action.actionType}" method="execute">
+#if(${action.ajaxAction} &&  ${action.temParametroTabela})
+			<result name="recarregaTabelas">${action.targetPages.get(0).fullPath}-tabelas.jsp</result>
+#else
+#foreach ($actionForward in $action.actionForwards)	
+#if($stringUtils.contains($actionForward.forwardPath, '.do'))
+			<result name="$actionForward.forwardName" type="redirect">
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+				<param name="parse">true</param>
+#foreach ($field in $actionForward.actionFormFields)
+#set ($begin = "${")
+#set ($end = "}")
+				<param name="$field.name">${begin}${field.name}${end}</param>
+#end
+			</result>
+			
+#elseif($stringUtils.contains($actionForward.forwardPath, '.action'))
+			<result name="$actionForward.forwardName" type="redirectAction">
+				<param name="actionName">${actionForward.strutsActionName}</param>
+				<param name="namespace">${actionForward.strutsNamespace}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+			</result>
+#else
+			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end
+#if (!${action.input})
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
+#end
+#end
+#end
+#if (${action.input})
+			<result name="input">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
+#end
+## using the interceptor
+##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
+		</action>
+#set($acaoDeControle = true)
+#end
+#if ($acaoDeControle == false)
+#set($gerar = true)
+#if($action.actionOldStruts)
+#set($gerar = false)
+#end
+#if ($gerar)
+
+		<action name="$actionName" class="${action.actionType}" method = "execute" >
+#foreach ($actionForward in $action.actionForwards)
+#if($stringUtils.contains($actionForward.forwardPath, '.do'))
+			<result name="$actionForward.forwardName" type="redirect">
+				<param name="location">${actionForward.strutsNamespace}/${actionForward.strutsActionName}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+				<param name="parse">true</param>
+#foreach ($field in $actionForward.actionFormFields)
+#set ($begin = "${")
+#set ($end = "}")
+				<param name="$field.name">${begin}${field.name}${end}</param>
+#end
+			</result>
+#elseif($stringUtils.contains($actionForward.forwardPath, '.action'))
+			<result name="$actionForward.forwardName" type="redirectAction">
+				<param name="actionName">${actionForward.strutsActionName}</param>
+				<param name="namespace">${actionForward.strutsNamespace}</param>
+#if ($stringUtils.isBlank(${actionForward.strutsNamespace}))
+				<param name="prependServletContext">true</param>
+#else
+				<param name="prependServletContext">false</param>
+#end
+			</result>
+#else
+			<result name="$actionForward.forwardName">$actionForward.forwardPath</result>
+#end
+#if (!${action.input})
+			<result name="handleException">#if(!$action.useCaseStart)${actionForward.forwardPath}#else/error-page.jsp?code=exception#end</result>
+#end
+#end
+#if (${action.input})
+			<result name="input">${action.input.fullPath}.jsp</result>
+			<result name="handleException">#if(!$action.useCaseStart)${action.input.fullPath}.jsp#else/error-page.jsp?code=exception#end</result>
+#end
+## using the interceptor
+##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
+		</action>
+		
+#end
+#end
+##
+##	FIM DA CRIACAO DA ACTION
+##
+#set($foo = $alreadyCreated.add($action))
 #end
 #end
 	</package>
+#end
+#end
+#end
+##	
+##	FIM DO CUSTOM ACTION PATH
+##
+
+#set($raiz = "Raiz")
+	<package name="$useCaseName$raiz" namespace="/" extends="$useCaseName" />
+	
 #if ($onlineHelp == "true")
 	<!-- It is supposed to work such as FowardAction. It takes the name of the HelpAction and
 	redirects to the jsp page-->
