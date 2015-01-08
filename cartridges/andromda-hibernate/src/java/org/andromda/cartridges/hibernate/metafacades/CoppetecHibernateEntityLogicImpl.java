@@ -36,7 +36,7 @@ public class CoppetecHibernateEntityLogicImpl
             batch =  new Integer(batchStr).intValue();
         return batch;
     }
-
+    
     protected String handleGetTableName()
     {
         String tableName = super.getTableName();
@@ -212,4 +212,8 @@ public class CoppetecHibernateEntityLogicImpl
 
         return inheritance;
     }
+	
+	protected boolean handleIsSubentity() {
+		return this.hasStereotype(HibernateProfile.STEREOTYPE_HIBERNATE_SUBENTITY);
+	}
 }

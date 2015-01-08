@@ -193,4 +193,8 @@ public class CoppetecHibernateAssociationEndLogicImpl
         }
 		return retorno;
 	}
+	
+	protected boolean handleIsSubentity() {
+		return this.hasStereotype(HibernateProfile.STEREOTYPE_HIBERNATE_SUBENTITY);
+	}
 }
