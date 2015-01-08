@@ -260,6 +260,13 @@ public class ClassifierFacadeLogicImpl
             this,
             UMLProfile.BLOB_TYPE_NAME);
     }
+    
+    protected boolean handleIsHstoreType() 
+    {
+    	return UMLMetafacadeUtils.isType(
+                this,
+                UMLProfile.HSTORE_TYPE_NAME);
+    }
 
     /**
      * @see org.andromda.metafacades.uml.ClassifierFacade#isMapType()

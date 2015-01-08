@@ -386,6 +386,10 @@
                 <documentation></documentation>
                 <value>datatype::Blob</value>
             </element>
+            <element name="HSTORE_TYPE">
+                <documentation></documentation>
+                <value>datatype::Hstore</value>
+            </element>
             <element name="MAP_TYPE">
                 <documentation></documentation>
                 <value>datatype::Map</value>

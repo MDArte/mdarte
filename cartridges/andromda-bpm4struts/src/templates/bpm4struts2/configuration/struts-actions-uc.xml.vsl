@@ -46,7 +46,6 @@
 #end
 #end
 #end
-#end
 ## 
 ## Código que mapeia as actions de Ajax
 #if($gerar)
@@ -165,6 +164,7 @@
 ## using the interceptor
 ##			<exception-mapping result="handleException" exception="java.lang.Throwable"></exception-mapping>
 		</action>
+#end
 #end
 #end
 #end

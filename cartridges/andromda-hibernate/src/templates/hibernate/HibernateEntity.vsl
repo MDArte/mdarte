@@ -85,13 +85,11 @@ public abstract class ${entity.entityName}Abstract
 ##Transforma TO num Bean
 #set ($tipoTO = $stringUtils.replace(${entity.fullyQualifiedName}, ".${modelPackageName}.", ".${transferPackageName}."))
 #set ($tipoTO = $tipoTO.concat("TO"))
-
     public static ${entity.name}Abstract getEntityFromTO($tipoTO to) throws Exception{
     	AbstractDAO.currentSession().setFlushMode(FlushMode.NEVER);
     	${entity.name}Abstract entity = (${entity.name}Abstract)AbstractEntity.getEntityInstanceFromTO(to,  new java.util.HashMap());
     	AbstractDAO.currentSession().setFlushMode(FlushMode.AUTO);
     	return entity;
-    	
     }
 
 #if(!$entity.abstract)
@@ -164,7 +162,6 @@ public abstract class ${entity.entityName}Abstract
 ## fim da transforacao
 
 ## Inicio da construcao do TO
-
     public ${entity.name}TOImpl buildTO(${entity.name}TOExample exemploTO) throws Exception{
     	return (${entity.name}TOImpl)this.buildTO(exemploTO,  new java.util.HashMap());
     }
@@ -185,17 +182,17 @@ public abstract class ${entity.entityName}Abstract
     protected void mapEntityAttributes2TO(${entity.name}TO to){
 #foreach ($attribute in $entity.attributes)
 #set ($nome = $stringUtils.capitalize(${attribute.name}))
-	to.set${nome}(this.${attribute.getterName}());
+		to.set${nome}(this.${attribute.getterName}());
 #end
 
 #if ($stringUtils.isNotBlank($entity.hibernateVersionProperty))
 #set ($versionProperty = $entity.hibernateVersionProperty)
 #set ($versionPropertyCapitalized = $stringUtils.capitalize($entity.hibernateVersionProperty))
-	to.set$versionPropertyCapitalized(this.get${versionPropertyCapitalized}());
+		to.set$versionPropertyCapitalized(this.get${versionPropertyCapitalized}());
 #end
 		
 #if($entity.generalization)
-	super.mapEntityAttributes2TO(to);
+		super.mapEntityAttributes2TO(to);
 #end
     }
 
@@ -229,7 +226,7 @@ public abstract class ${entity.entityName}Abstract
 #end
 		}
 #if($entity.generalization)
-	super.mapEntityRelations2TO(to,exemploTO, map);
+		super.mapEntityRelations2TO(to,exemploTO, map);
 #end
     }
 
@@ -237,7 +234,6 @@ public abstract class ${entity.entityName}Abstract
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable)
 #if ($target.many)
-
     private $target.getterSetterTypeName build$stringUtils.capitalize(${target.name})(java.util.Collection templates, ${target.getterSetterTypeName} ${target.name}, java.util.HashMap map) throws Exception
     {
     	java.util.ArrayList list = new java.util.ArrayList();
@@ -265,7 +261,6 @@ public abstract class ${entity.entityName}Abstract
 #end
 
 ##Fim da construcao do TO
-
     /**
      * The serial version UID of this class. Needed for serialization.
      */
@@ -290,25 +285,53 @@ public abstract class ${entity.entityName}Abstract
     }
 
 #end
-
     public ${entity.entityName}Abstract(){
+    
     }
 
 #set ($identifiers = $entity.getIdentifiers(false))
 #if(!$entity.abstract && $identifiers && $identifiers.size > 0)
     #renderConstructorMethod($entity $entity.entityName $identifiers)
 #end
-
 #foreach ( $attribute in $entity.attributes )
 #set ($typeName = $attribute.type.fullyQualifiedName)
 #if ($attribute.containsEmbeddedObject)
 #set ($typeName = $attribute.type.fullyQualifiedEntityName)
 #end
-
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-
+#if($attribute.isHstore())
+	
+	private $typeName<String,String> $attribute.name = new java.util.HashMap<String,String>(); 
+	
+	$attribute.visibility String ${attribute.getterName}(String key)
+    {
+        return String.valueOf(this.${attribute.name}.get(key));
+    }
+    
+    $attribute.visibility java.util.Map<String,String> ${attribute.getterName}()
+    {
+        return (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)this.${attribute.name}).clone();
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(String key, String value)
+    {	
+    	if(key != null && value != null)
+			this.${attribute.name}.put(key,value);
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(java.util.Map<String,String> map)
+    {
+    	if(map != null)
+			this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)map).clone();
+    }
+    
+    $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
+    	this.${attribute.name}.remove(key);
+    }
+    
+#else
     private $typeName $attribute.name;
 
     /**
@@ -327,17 +350,16 @@ $attribute.getDocumentation("     * ")
 #else
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name)
     {
-	this.${attribute.name} = $attribute.name;
+		this.${attribute.name} = $attribute.name;
     }
 #end
-
 #end
 
+#end
 ## Generate the associations
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
-
 #set ($tipo = $target.getterSetterTypeName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $tipo.concat("Abstract"))
@@ -362,7 +384,6 @@ $target.getDocumentation("     * ")
 #if($target.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
-
 #if($target.findTaggedValue($throwsVetoException).equals("true"))	
     public void ${target.setterName}($target.getterSetterTypeName ${target.name}) throws $exceptionList
 #else
@@ -378,23 +399,18 @@ $target.getDocumentation("     * ")
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($exception = "throws java.beans.PropertyVetoException")
 #end
-
 #set ($rtipo = $target.getterSetterTypeName)
 #if ($rtipo.indexOf(".${modelPackageName}.") > 0)
 #set ($rtipo = $rtipo.concat("Abstract"))
-
 #else
 #set($rtipo = $target.getterSetterTypeName)   
-#end	
-
+#end
 #set ($tipo = $target.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
 #set ($tipo = $tipo.concat("Abstract"))
-
 #else
 #set($tipo = $target.type.fullyQualifiedName)   
 #end
-
     public void ${target.setterName}Inverse($target.getterSetterTypeName ${target.name}) $exception
     {
 		Hibernate.initialize(${target.name});
@@ -420,7 +436,6 @@ $target.getDocumentation("     * ")
 			}
         }
 #else
-
     	if(temp != null){
     		if(temp.${associationEnd.getterName}() != null)
     			temp.${associationEnd.getterName}().remove(this);
@@ -450,6 +465,7 @@ $target.getDocumentation("     * ")
         	}
         }
 #else
+
     	if(temp != null)
     		temp.${associationEnd.setterName}(null);
 
@@ -523,7 +539,6 @@ $target.getDocumentation("     * ")
 #end
 #end
 #end
-
 ## (MDArte) Codigo para gerar get's com acesso a paginacao 
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
@@ -546,14 +561,11 @@ $target.getDocumentation("     * ")
 #end
 ## Fim 
 ## (MDArte) Retirei a parte que colocava os metodos da classe de entidade na propria entidade e passei para o DAO
-
 #foreach ($operation in $entity.businessOperations)
 #set ($returnType = $operation.returnType)
 #set ($signature = $operation.signature)
 #set ($listaAtributos = $operation.typedArgumentList)
-
 #if($operation.findTaggedValue($daoMethod) && $operation.findTaggedValue($daoMethod).equals("false"))
-
 #if ($operation.exceptionsPresent)
 
     protected abstract $returnType.fullyQualifiedName handle${stringUtils.capitalize(${operation.name})} ($listaAtributos)
@@ -575,10 +587,9 @@ $target.getDocumentation("     * ")
 #else
             handle${stringUtils.capitalize($operation.name)}($operation.argumentNames);
 #end
-
-
 #if ($operation.exceptionsPresent)
 	}
+	
 #foreach ( $exception in $operation.exceptions )
         catch ($exception.fullyQualifiedName e)
         {
@@ -587,10 +598,8 @@ $target.getDocumentation("     * ")
 #end
 #end
 	}
-
 #end
 #end
-
 
 #if ($generateEntityEqualsAndHashCode.equalsIgnoreCase('true'))
 #set ($identifiers = $entity.getIdentifiers(false))
@@ -645,16 +654,13 @@ $target.getDocumentation("     * ")
 #end
      */
 #renderHashCodeMethod($entity $identifiers)
-
 #end
 
 ##[Moises-COPPETEC]
 ##Codigo para criar um metodo que retorne uma classe subconjunto desta para ser usada no webService
-
 #if($entity.hasStereotype("$wsdStereotype"))
 #set($wsdPackage = '$entity.packageName')
 #set($wsdPackage = $stringUtils.replace("$entity.packageName", "$modelPackageName", "$wsdPackageName"))
-
 public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS wsObj, java.util.HashMap map){
 	
 	${wsdPackage}.${entity.entityName}WS webServiceData = null;
@@ -668,10 +674,10 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 #foreach ( $attribute in $entity.attributes )
 #if(!$attribute.hasStereotype("$excludesWSDStereotype"))
 #set ($typeName = "${attribute.type.fullyQualifiedName}Abstract")
-
 	webServiceData.${attribute.setterName}(this.${attribute.getterName}());    	
 #end
 #end
+
 	map.put(webServiceData.getClass().toString() + this.getId().toString(), webServiceData);
 	
 	int i = 0;
@@ -700,12 +706,12 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
     }
     
     webServiceData.${target.setterName}(array${target.name});
-    
 #end
 #end
 #end
 #end
 #if($entity.generalization && $entity.generalization.hasStereotype("$wsdStereotype"))
+	
 	##super.setParentWebServiceObj(webServiceData, map);
 	super.getWebServiceObj(webServiceData, map);
 #end
@@ -717,7 +723,6 @@ public $customTypesPackage.${wsdPackageName}.AbstractWS getWebServiceObj($custom
 
 #set($wsdPackage = '$entity.packageName')
 #set($wsdPackage = $stringUtils.replace("$entity.packageName", "$modelPackageName", "$wsdPackageName"))
-
 public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS abstractWS, java.util.HashMap map){
 
 	${wsdPackage}.${entity.entityName}WS webServiceObj = (${wsdPackage}.${entity.entityName}WS)abstractWS;
@@ -726,7 +731,7 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 #foreach ( $attribute in $entity.attributes )
 #if(!$attribute.hasStereotype("$excludesWSDStereotype")&&!$attribute.hasStereotype("Identifier"))
 #set ($typeName = $attribute.type.fullyQualifiedName)
-	this.${attribute.setterName}(webServiceObj.${attribute.getterName}());
+		this.${attribute.setterName}(webServiceObj.${attribute.getterName}());
 #end
 #end
 
@@ -792,10 +797,8 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 #end
 	}catch(Exception e){
 		e.printStackTrace();
-	}
-	
+	}	
 }
-
 #end
 
 #if (!$entity.abstract)
@@ -843,7 +846,6 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 #if(!$pai)
 #set($pai = $entity)
 #end
-
 	public boolean instanceOf(Class<?> otherClass) {
 		return otherClass.isAssignableFrom(get${pai.entityName}Class());
 	}
@@ -904,5 +906,4 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 		this.auditoriaDataHora = auditoriaDataHora;
 	}
 #end
-
 }

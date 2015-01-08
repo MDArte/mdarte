@@ -31,11 +31,24 @@ br.ufrj.coppetec.Entity
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
 #set($exceptionList = "java.beans.PropertyVetoException")
 #end
+#if($attribute.isHstore())
+	$attribute.visibility $typeName<String,String> ${attribute.getterName}();
+	$attribute.visibility String ${attribute.getterName}(String key);
+	$attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key);
+#if($attribute.findTaggedValue($throwsVetoException).equals("true"))
+    $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name) throws $exceptionList;
+	$attribute.visibility void ${attribute.setterName}(String key, String value) throws $exceptionList;    
+#else
+    $attribute.visibility void ${attribute.setterName}(${typeName}<String,String> $attribute.name);
+    $attribute.visibility void ${attribute.setterName}(String key, String value);
+#end
+#else
     $attribute.visibility $typeName ${attribute.getterName}();
 #if($attribute.findTaggedValue($throwsVetoException).equals("true"))
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name) throws $exceptionList;
 #else
     $attribute.visibility void ${attribute.setterName}(${typeName} $attribute.name);
+#end
 #end
 #end
 

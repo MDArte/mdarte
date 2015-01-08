@@ -117,6 +117,32 @@ $attribute.getDocumentation("     * ")
 #end
         setUpdated();
     }
+#elseif($attribute.hstore)
+	private $attribute.type.fullyQualifiedName<String,String> $attribute.name = new java.util.HashMap<String,String>(); 
+	
+	$attribute.visibility String ${attribute.getterName}(String key)
+    {
+        return String.valueOf(this.${attribute.name}.get(key));
+    }
+    
+    $attribute.visibility java.util.Map<String,String> ${attribute.getterName}()
+    {
+        return (java.util.HashMap<String,String>) ((java.util.HashMap)this.${attribute.name}).clone();
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(String key, String value)
+    {
+		this.${attribute.name}.put(key,value);
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(java.util.Map<String,String> map)
+    {
+		this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap)map).clone();
+    }
+    
+    $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
+    	this.${attribute.name}.remove(key);
+    }
 #else
     private $tipo $attribute.name;
 

@@ -319,6 +319,18 @@
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="true"/>
+    
+     <template
+        path="templates/hibernate/usertypes/HibernateHStoreType.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="false"/>
+      
+      <template
+        path="templates/hibernate/HibernateHStoreHelper.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="false"/>
 
     <template
         path="templates/hibernate/usertypes/HibernateStringClobType.vsl"

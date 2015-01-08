@@ -1,0 +1,89 @@
+#set ($className = "HibernateHStoreUserType")
+#set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
+package $userTypesPackage;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
+import org.hibernate.HibernateException;
+
+import ${hibernateUtils.hibernateUserTypePackage}.UserType;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import java.io.Serializable;
+
+public class $className implements UserType {
+
+      public Object assemble(Serializable cached, Object owner)
+              throws HibernateException {
+         
+          return cached;
+     
+      }
+
+      public Object deepCopy(Object object) throws HibernateException {
+        
+          Map<String,String> map = (Map<String,String>) object;
+       
+          return new HashMap<String,String>(map);
+     
+      }
+
+      public Serializable disassemble(Object object) throws HibernateException {
+          return (Serializable) object;
+      }
+
+      public boolean equals(Object object1, Object object2) throws HibernateException {
+       
+          Map<String,String> map1 = (Map<String,String>) object1;
+          Map<String,String> map2 = (Map<String,String>) object2;
+       
+          return map1.equals(map2);
+      
+      }
+
+      public int hashCode(Object object) throws HibernateException {
+          return object.hashCode();
+      }
+
+      public boolean isMutable() {
+          return true;
+      }
+
+      public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
+              throws HibernateException, SQLException {
+         
+          String column = strings[0];
+          String value = resultSet.getString(column);
+         
+          return HibernateHStoreHelper.toMap(value);
+      }
+
+      public void nullSafeSet(PreparedStatement statement, Object object, int i)
+              throws HibernateException, SQLException {
+          
+          String string = HibernateHStoreHelper.toString((Map<String,String>) object);
+          statement.setObject(i, string, Types.OTHER);
+      
+      }
+
+      public Object replace(Object original, Object target, Object owner)
+              throws HibernateException {
+          
+          return original;
+      
+      }
+
+      public Class returnedClass() {
+          return Map.class;
+      }
+
+      public int[] sqlTypes() {
+          return new int[] { Types.INTEGER };
+      }
+      
+    }

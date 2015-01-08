@@ -1,0 +1,65 @@
+#set ($className = "HibernateHStoreHelper")
+#set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
+package $userTypesPackage;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class $className {
+
+    private static final String K_V_SEPARATOR = "=>";
+
+    public static String toString(Map<String, String> map) {
+        if (map.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        int n = map.size();
+        for (String key : map.keySet()) {
+			if(map.get(key) == null)
+				builder.append("\"" + key + "\"" + K_V_SEPARATOR  + "null");
+			else
+				builder.append("\"" + key + "\"" + K_V_SEPARATOR + "\"" + map.get(key) + "\"");
+			if (n > 1) {
+				builder.append(", ");
+				n--;
+			}
+		}
+        return builder.toString();
+    }
+
+    public static Map<String, String> toMap(String string) {
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		if (string.isEmpty()) {
+			return map;
+		}
+
+		String[] tokens = string.split(", ");
+
+		for (String token : tokens) {
+			String[] kv = token.split(K_V_SEPARATOR);
+			String key = kv[0];
+
+			key = key.trim().substring(1, key.length() - 1);
+
+			String value = kv[1];
+			
+			if(!value.equalsIgnoreCase("NULL")) {
+				value = value.trim().substring(1, value.length() - 1);
+			} else {
+				value = null;
+			}
+			
+			map.put(key, value);
+		}
+
+		return map;
+	}
+}
