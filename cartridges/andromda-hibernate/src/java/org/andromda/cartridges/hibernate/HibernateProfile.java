@@ -193,5 +193,7 @@ public class HibernateProfile
     public static final String TAGGEDVALUE_HIBERNATE_INVERSE = profile.get("HIBERNATE_INVERSE");
     
     public static final String STEREOTYPE_WEB_SERVICE_DATA = profile.get("WEB_SERVICE_DATA");
+    
+    public static final String STEREOTYPE_HIBERNATE_SUBENTITY = profile.get("SUBENTITY");
 
 }
