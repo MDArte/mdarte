@@ -59,6 +59,21 @@
 
     <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateAssociationEndLogicImpl">
         <mapping class="org.omg.uml.foundation.core.AssociationEnd$Impl">
+            <context>org.andromda.cartridges.hibernate.metafacades.SubEntity</context>
+        </mapping>
+        <property reference="hibernateAssociationEndOuterJoin"/>
+        <property reference="listTypeImplementation"/>
+        <property reference="setTypeImplementation"/>
+        <property reference="mapTypeImplementation"/>
+        <property reference="bagTypeImplementation"/>
+        <property reference="specificCollectionInterfaces"/>
+        <property reference="defaultCollectionInterface"/>
+        <property reference="associationEndCollectionIndexName"/>
+        <property reference="associationEndCollectionIndexType"/>
+    </metafacade>
+    
+    <metafacade class="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateAssociationEndLogicImpl">
+        <mapping class="org.omg.uml.foundation.core.AssociationEnd$Impl">
             <context>org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity</context>
         </mapping>
         <property reference="hibernateAssociationEndOuterJoin"/>
