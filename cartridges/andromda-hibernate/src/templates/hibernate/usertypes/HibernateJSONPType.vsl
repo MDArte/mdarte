@@ -1,0 +1,91 @@
+#set ($className = "HibernateJSONPUserType")
+#set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
+package $userTypesPackage;
+
+import ${hibernateUtils.hibernateUserTypePackage}.UserType;
+
+import org.hibernate.HibernateException;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import java.io.Serializable;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
+public class $className implements UserType {
+	  
+	  public Object assemble(Serializable cached, Object owner)
+              throws HibernateException {
+          return cached;
+      }
+      
+      public Serializable disassemble(Object object) throws HibernateException {
+          return (Serializable) object;
+      }
+	  
+	  public boolean equals(Object object1, Object object2) throws HibernateException {
+          JSONObject json1 = (JSONObject) object1;
+          JSONObject json2 = (JSONObject) object2;
+       
+          return json1.equals(json2);
+      }
+	  
+	  public void nullSafeSet(PreparedStatement statement, Object object, int i)
+              throws HibernateException, SQLException {
+          
+          if(object != null) {
+          	String string = ((JSONObject) object).toString();
+          
+          	statement.setObject(i, string, Types.OTHER);
+          }
+      }
+      
+      public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
+              throws HibernateException, SQLException {
+          String column = strings[0];
+          String value = resultSet.getString(column);
+         
+          JSONParser parser = new JSONParser();
+          
+          try {
+          	return (JSONObject) parser.parse(value);
+          } catch (Exception exception) {
+          	return null;
+          }
+      }
+	  
+	  public Object deepCopy(Object object) throws HibernateException {        
+          JSONObject json = (JSONObject) object;
+       
+          return object == null ? null : (JSONObject)json.clone();
+      }
+	  
+	  public Object replace(Object original, Object target, Object owner)
+              throws HibernateException {
+          return original;
+      }
+      
+      public int hashCode(Object object) throws HibernateException {
+          return object.hashCode();
+      }
+
+      public boolean isMutable() {
+          return true;
+      }
+      
+      public Class returnedClass() {
+          return String.class;
+      }
+      
+      public int[] sqlTypes() {
+          return new int[] { Types.INTEGER };
+      }
+}

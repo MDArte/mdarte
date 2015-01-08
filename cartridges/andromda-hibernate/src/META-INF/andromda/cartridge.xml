@@ -337,6 +337,12 @@
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="true"/>
+    
+    <template
+        path="templates/hibernate/usertypes/HibernateJSONPType.vsl"
+        outputPattern="$generatedFile"
+        outlet="entities"
+        overwrite="true"/>
 
     <template
         path="templates/hibernate/HibernateEnumeration.vsl"
