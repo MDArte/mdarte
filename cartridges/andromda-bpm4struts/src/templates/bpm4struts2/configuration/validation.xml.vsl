@@ -18,6 +18,9 @@
 #if(${action.useCase.name} == ${action.actionClassName})
 #set($gerar = false)
 #end
+#if(${action.customActionName} != "")
+#set($gerar = false)
+#end
 ##
 ##  START TEMPLATE
 ##
