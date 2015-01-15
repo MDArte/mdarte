@@ -74,10 +74,11 @@
 #if(!$auditoria)
 #foreach ($sourceEnd in $entity.associationEnds)
 #set ($otherEnd = $sourceEnd.otherEnd)
+<!-- $otherEnd.getType().toString() -->
 #if ($otherEnd.navigable || ($sourceEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($sourceEnd.one2One)
-#if($otherEnd.getType().subentity)
-		<property name="${otherEnd.getType().name}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONPUserType">
+#if($otherEnd.isSubentity())
+		<property name="${otherEnd.getType().name}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
 			
 		</property>
 #else

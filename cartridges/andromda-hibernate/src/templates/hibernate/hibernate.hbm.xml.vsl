@@ -1,5 +1,4 @@
 #if(!$entity.subentity)
-<!-- $entity.subentity -->
 <?xml version="1.0" encoding="$xmlEncoding"?>
 <!--
      Attention: Generated code! Do not modify by hand!
