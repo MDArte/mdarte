@@ -1,4 +1,4 @@
-#set ($className = "HibernateJSONPUserType")
+#set ($className = "HibernateJSONBUserType")
 #set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
 package $userTypesPackage;
 
