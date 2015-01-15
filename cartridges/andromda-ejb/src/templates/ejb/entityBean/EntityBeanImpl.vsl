@@ -1,3 +1,4 @@
+#if(!$entity.subentity)
 // license-header java merge-point
 #if ($stringUtils.isNotBlank($entity.packageName))
 package $entity.packageName;
@@ -61,3 +62,4 @@ $op.getDocumentation("     * ")
      
 #end
 }
+#end

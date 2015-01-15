@@ -1,3 +1,4 @@
+#if(!$class.subentity)
 #set ($modelPackage = ".${modelPackageName}")
 #set ($transferPackage = ".${transferPackageName}")
 #set ($generatedFile = "${stringUtils.replace(${stringUtils.replace($class.packageName,$modelPackage,$transferPackage)}, '.', '/')}/${class.name}TOExample.java")
@@ -128,3 +129,4 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 #end
 #end
 }
+#end

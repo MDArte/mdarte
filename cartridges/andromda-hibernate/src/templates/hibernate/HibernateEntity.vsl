@@ -1,5 +1,5 @@
+#if(!$entity.subentity)
 #set ($generatedFile = "${entity.packagePath}/${entity.entityName}Abstract.java")
-
 // license-header java merge-point
 //
 // Attention: Generated code! Do not modify by hand!
@@ -32,6 +32,7 @@ import br.ufrj.coppetec.to.AbstractTOExample;
 import ${customTypesPackage}.${util}.PaginationStrategy;
 import $customTypesPackage.${modelPackageName}.TOUtil;
 #set ($sharp = "#")
+import org.json.simple.JSONObject;
 
 /**
 $entity.getDocumentation(" * ")
@@ -203,6 +204,7 @@ public abstract class ${entity.entityName}Abstract
 			to.setExemploTO(exemploTO);
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if(!$target.subentity)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 #set ($tipo = $target.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
@@ -221,6 +223,7 @@ public abstract class ${entity.entityName}Abstract
     		if(exemploTO.${target.getterName}()!=null && !exemploTO.${target.getterName}().isEmpty()){  
     			to.${target.setterName}(build$stringUtils.capitalize(${target.name})(exemploTO.${target.getterName}(), $target.name, map));
     		}
+#end
 #end
 #end
 #end
@@ -366,7 +369,17 @@ $attribute.getDocumentation("     * ")
 #else
 #set($tipo = $target.getterSetterTypeName)
 #end
-
+#if($target.subentity)
+	private JSONObject $target.name = new JSONObject();
+	
+	public void ${target.setterName}(JSONObject object) {
+		this.${target.name} = (JSONObject)object.clone();
+	}
+	
+	public JSONObject ${target.getterName}() {
+		return (JSONObject)this.${target.name}.clone();
+	}
+#else
 #if ($target.many)
     private $tipo $target.name = $target.collectionTypeImplementation;
 #else
@@ -396,6 +409,7 @@ $target.getDocumentation("     * ")
     ## (MDArte) codigo para setar nos dois lados da associacao para resolver o problema do inverse
 #if ($associationEnd.navigable)
 #set($exception = "")
+#if(!$target.subentity)
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($exception = "throws java.beans.PropertyVetoException")
 #end
@@ -536,6 +550,8 @@ $target.getDocumentation("     * ")
 #end
 
 ## fim    
+#end
+#end
 #end
 #end
 #end
@@ -907,3 +923,4 @@ public void setWebServiceObj($customTypesPackage.${wsdPackageName}.AbstractWS ab
 	}
 #end
 }
+#end

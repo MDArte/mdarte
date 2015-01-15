@@ -1,3 +1,4 @@
+#if(!$class.subentity)
 ## Template customizado pela Coppetec.
 ## Rodrigo Castilho - 12/08/2005 - Inclusao deste template no cartucho andromda-hibernate.
 // license-header java merge-point
@@ -53,3 +54,4 @@ public #if($class.abstract) abstract #end class ${class.name}TOImpl extends ${cl
 ###end    
 
 }
+#end

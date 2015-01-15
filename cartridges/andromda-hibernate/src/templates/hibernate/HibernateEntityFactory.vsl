@@ -1,3 +1,4 @@
+#if(!$entity.subentity)
 // license-header java merge-point
 /**
  * Attention: Generated source! Do not modify by hand!
@@ -49,6 +50,9 @@ import java.util.Collection;
 import accessControl.ControleAcesso;
 #end
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.JSONObject;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -82,12 +86,14 @@ public abstract class ${entity.name}DAO
 			Session session = currentSession();
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if(!$target.subentity)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($associationEnd.navigable)
 #if($target.findTaggedValue($throwsVetoException).equals("true") || $associationEnd.findTaggedValue($throwsVetoException).equals("true") )
 #set($throwsVeto = "true")
 #end
 			entidade.${target.setterName}Inverse(null);
+#end
 #end
 #end
 #end
@@ -492,6 +498,13 @@ public abstract class ${entity.name}DAO
 ## Busca e atribui relacionamentos da entidade
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#set($camelCaseName = $target.name.substring(0,1).toUpperCase().concat($target.name.substring(1)))
+#if($target.subentity)
+		if (raiz.selectNodes("./${target.name}").size() != 0) {
+			java.lang.String valor${target.name} = java.lang.String.valueOf(raiz.valueOf("./${target.name}"));		
+			entidade.set${camelCaseName}((JSONObject)new JSONParser().parse(valor${target.name}));
+		}
+#else
 #if ($target.navigable)	
 #if(!$target.many && !$target.hibernateInverse)
 
@@ -566,6 +579,7 @@ public abstract class ${entity.name}DAO
 		} catch (java.beans.PropertyVetoException exp${target.name}) { 
 			throw new DAOException(exp${target.name}); 
 		}
+#end
 #end
 #end
 #end
@@ -1029,3 +1043,4 @@ $finder.getDocumentation("     * ")
 
 #end
 }
+#end

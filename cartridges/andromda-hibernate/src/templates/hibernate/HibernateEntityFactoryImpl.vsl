@@ -1,3 +1,4 @@
+#if(!$entity.subentity)
 #set ($generatedFile = "${entity.packagePath}/${entity.entityName}DAOImpl.java")
 // license-header java merge-point
 /**
@@ -78,3 +79,4 @@ public class ${entity.name}DAOImpl extends ${entity.name}DAO {
 #end
 
 }
+#end

@@ -1,3 +1,4 @@
+#if(!$class.subentity)
 ##parse("templates/hibernate/hibernate.java.vm")
 // license-header java merge-point
 // Attention: Generated code! Do not modify by hand!
@@ -12,6 +13,10 @@ package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${tran
 #end
 import br.ufrj.coppetec.to.AbstractTOExample;
 import br.ufrj.coppetec.to.AbstractTO;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
 $class.getDocumentation(" * ")
@@ -163,6 +168,39 @@ $attribute.getDocumentation("     * ")
 ## Generate the relation methods.
 #foreach ($associationEnd in $class.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if($target.subentity)
+#set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+	private JSONObject $target.name = new JSONObject();
+	
+	public void set${targetUpperCaseName}DoubleProperty(String property, double number ){
+		this.${target.name}.put(property, number);
+	}
+	
+	public void set${targetUpperCaseName}StringProperty(String property, String string ){
+		this.${target.name}.put(property, string);
+	}
+	
+	public void set${targetUpperCaseName}BooleanProperty(String property, boolean bool ){
+		this.${target.name}.put(property, bool);
+	}
+	
+	public void set${targetUpperCaseName}ObjectProperty(String property, JSONObject object ){
+		this.${target.name}.put(property, object);
+	}
+	
+	public Object get${targetUpperCaseName}Property(String property) {
+		return this.${target.name}.get(property);
+	}
+	
+	public JSONObject get${targetUpperCaseName} () {
+		return (JSONObject) this.${target.name}.clone();
+	}
+	
+	public void set${targetUpperCaseName} (JSONObject object) {
+		this.${target.name} = (JSONObject) object.clone(); 
+	}
+	
+#else
 #if ($target.navigable)
 #set ($tipo = ${target.getterSetterTypeName})
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
@@ -360,6 +398,7 @@ $target.getDocumentation("     * ")
 
 #end
 #end
+#end
 
 #if(!$class.abstract)
 	public String getEntityClassName(){
@@ -414,3 +453,4 @@ $target.getDocumentation("     * ")
 		return ${class.name}TOImpl.class;
 	}
 }
+#end

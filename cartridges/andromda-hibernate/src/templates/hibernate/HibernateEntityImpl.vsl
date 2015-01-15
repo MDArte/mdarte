@@ -1,3 +1,4 @@
+#if(!$entity.subentity)
 #if($auditoria)
 #set ($generatedFile = "${entity.packagePath}/${entity.entityName}LogRec.java")
 #else
@@ -214,3 +215,4 @@ public#if ($entity.abstract) abstract#end class #if($auditoria)${entity.entityNa
 #end
 
 }
+#end
