@@ -195,6 +195,6 @@ public class CoppetecHibernateAssociationEndLogicImpl
 	}
 	
 	protected boolean handleIsSubentity() {
-		return this.hasStereotype(HibernateProfile.STEREOTYPE_HIBERNATE_SUBENTITY);
+		return this.getType().hasStereotype(HibernateProfile.STEREOTYPE_HIBERNATE_SUBENTITY);
 	}
 }
