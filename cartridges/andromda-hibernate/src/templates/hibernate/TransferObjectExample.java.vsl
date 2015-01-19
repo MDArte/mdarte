@@ -6,6 +6,8 @@
 package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${transferPackageName}")};
 #end
 
+import org.json.simple.JSONObject;
+
 public class ${class.name}TOExample
 #if($class.generalization)
 #set ($generalizacao = ${class.generalization.fullyQualifiedName})
@@ -51,8 +53,39 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 
 #foreach ($associationEnd in $class.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+#if($target.subentity)
+	private JSONObject $target.name = new JSONObject();
+	
+	public void set${targetUpperCaseName}DoubleProperty(String property, double number ){
+		this.${target.name}.put(property, number);
+	}
+	
+	public void set${targetUpperCaseName}StringProperty(String property, String string ){
+		this.${target.name}.put(property, string);
+	}
+	
+	public void set${targetUpperCaseName}BooleanProperty(String property, boolean bool ){
+		this.${target.name}.put(property, bool);
+	}
+	
+	public void set${targetUpperCaseName}ObjectProperty(String property, JSONObject object ){
+		this.${target.name}.put(property, object);
+	}
+	
+	public Object get${targetUpperCaseName}Property(String property) {
+		return this.${target.name}.get(property);
+	}
+	
+	public JSONObject get${targetUpperCaseName} () {
+		return (JSONObject) this.${target.name}.clone();
+	}
+	
+	public void set${targetUpperCaseName} (JSONObject object) {
+		this.${target.name} = (JSONObject) object.clone(); 
+	}
+#else
 #if ($target.navigable)
-
 #set($rtipo = $target.type.fullyQualifiedName)
 #if($rtipo.indexOf(".${modelPackageName}.") > 0)
 #set($rtipo = $rtipo.concat("TOExample"))
@@ -125,6 +158,7 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 	
 			this.${target.setterName}(${target.name});
     	}
+#end
 #end
 #end
 #end

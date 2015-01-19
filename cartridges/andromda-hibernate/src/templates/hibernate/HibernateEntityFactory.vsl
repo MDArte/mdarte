@@ -51,7 +51,7 @@ import accessControl.ControleAcesso;
 #end
 
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.JSONObject;
+import org.json.simple.JSONObject;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -502,7 +502,11 @@ public abstract class ${entity.name}DAO
 #if($target.subentity)
 		if (raiz.selectNodes("./${target.name}").size() != 0) {
 			java.lang.String valor${target.name} = java.lang.String.valueOf(raiz.valueOf("./${target.name}"));		
-			entidade.set${camelCaseName}((JSONObject)new JSONParser().parse(valor${target.name}));
+			try {
+				entidade.set${camelCaseName}((JSONObject)new JSONParser().parse(valor${target.name}));
+			} catch (Exception e) {
+				entidade.set${camelCaseName}(new JSONObject());
+			}
 		}
 #else
 #if ($target.navigable)	
@@ -628,6 +632,12 @@ public abstract class ${entity.name}DAO
 ## Adiciona cada associacao
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if($target.subentity)
+			if(obj.${attribute.getterName}() != null) {
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+				att${attribute.name}.addText(obj.${attribute.getterName}().toString());
+			}
+#else
 #if ($target.navigable)	
 #if (!$target.many && !$target.hibernateInverse)
 			
@@ -699,6 +709,7 @@ public abstract class ${entity.name}DAO
 #end
 #end
 #end
+#end
 ## Adiciona atributos e associacoes da classe pai
 #if($entity.generalization)
 
@@ -716,6 +727,7 @@ public abstract class ${entity.name}DAO
 ## Generate finderByAssociations
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if(!$target.subentity)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
     /**
 $target.getDocumentation("     * ")
@@ -762,6 +774,7 @@ $target.getDocumentation("     * ")
 		} 
     }
 ## Fim
+#end
 #end
 #end
 #foreach ($operation in $entity.businessOperations)

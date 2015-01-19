@@ -1,9 +1,11 @@
 package org.andromda.cartridges.hibernate.metafacades;
 
+import java.util.Collection;
+
 import org.andromda.cartridges.hibernate.HibernateProfile;
+import org.andromda.metafacades.uml.EntityMetafacadeUtils;
 import org.andromda.metafacades.uml.TypeMappings;
 import org.andromda.metafacades.uml.UMLMetafacadeProperties;
-import org.andromda.metafacades.uml.EntityMetafacadeUtils;
 import org.apache.log4j.Logger;
 
 
@@ -212,6 +214,10 @@ public class CoppetecHibernateEntityLogicImpl
 
         return inheritance;
     }
+	
+	public Collection handleGetSubEntityAssociationEnds(){
+		return null;
+	}
 	
 	protected boolean handleIsSubentity() {
 		return this.hasStereotype(HibernateProfile.STEREOTYPE_HIBERNATE_SUBENTITY);
