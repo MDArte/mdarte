@@ -339,7 +339,7 @@
         overwrite="true"/>
     
     <template
-        path="templates/hibernate/usertypes/HibernateJSONBType.vsl"
+        path="templates/hibernate/usertypes/HibernateJSONType.vsl"
         outputPattern="$generatedFile"
         outlet="entities"
         overwrite="true"/>

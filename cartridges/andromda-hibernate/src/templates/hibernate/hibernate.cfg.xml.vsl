@@ -107,10 +107,10 @@
 
 #set($entities = $hibernateUtils.getEntity())
 #foreach($entity in $entities)
-#if($entity.requiresMapping)
+#if($entity.requiresMapping && !$entity.subentity)
         <mapping resource="${entity.packagePath}/${entity.entityName}.hbm.xml"/>
 #end
-#if($entity.auditoria)
+#if($entity.auditoria && !$entity.subentity)
 #if($entity.requiresMapping)
 			<mapping resource="${entity.packagePath}/${entity.entityName}LogRec.hbm.xml"/>
 #end
