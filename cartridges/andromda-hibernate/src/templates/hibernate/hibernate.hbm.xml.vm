@@ -74,13 +74,12 @@
 #if(!$auditoria)
 #foreach ($sourceEnd in $entity.associationEnds)
 #set ($otherEnd = $sourceEnd.otherEnd)
-<!-- $otherEnd.getType().toString() -->
 #if ($otherEnd.navigable || ($sourceEnd.child && $entity.foreignHibernateGeneratorClass))
 #if ($sourceEnd.one2One)
 #if($otherEnd.isSubentity())
-		<property name="${otherEnd.getType().name}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
-			
-		</property>
+##		<property name="${otherEnd.getType().name}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
+##			<column name="${otherEnd.name.toUpperCase()}" not-null="$otherEnd.required" sqlType="JSONB" />
+##		</property> -->
 #else
 #if ($sourceEnd.one2OneSecondary)
 ##<one-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end constrained="false"#if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end />
