@@ -273,13 +273,19 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 #foreach ($attribute in $entity.attributes) 
 	bean.${attribute.setterName}(to.${attribute.getterName}());
 #end
+#foreach($end in $entity.associationEnds)
+#if($end.otherEnd.subentity)
+#set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+	bean.set${targetUpperCaseName}(to.get${targetUpperCaseName}());
+#end
+#end
 #if($semId.equals("false") && $entity.attributes.size() > 0)
 	}
 #end
 
-
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if(!$target.subentity)
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorentity))
 #set ($tipo = $target.type.fullyQualifiedName)
 #if ($tipo.indexOf(".${modelPackageName}.") > 0)
@@ -315,6 +321,7 @@ bean.${attribute.setterName}(to.${attribute.getterName}());
 			bean.${target.setterName}(construct$stringUtils.capitalize(${target.name})(to.${target.getterName}(), bean.${target.getterName}(), map));
 #if($semId.equals("false"))
 		}
+#end
 #end
 #end
 #end

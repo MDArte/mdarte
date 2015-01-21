@@ -237,6 +237,7 @@ public abstract class ${entity.entityName}Abstract
 
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
+#if(!$target.subentity)
 #if ($target.navigable)
 #if ($target.many)
     private $target.getterSetterTypeName build$stringUtils.capitalize(${target.name})(java.util.Collection templates, ${target.getterSetterTypeName} ${target.name}, java.util.HashMap map) throws Exception
@@ -261,6 +262,7 @@ public abstract class ${entity.entityName}Abstract
 		}
 		return list;
 	} 	
+#end
 #end
 #end
 #end
@@ -359,8 +361,8 @@ $attribute.getDocumentation("     * ")
     }
 #end
 #end
-
 #end
+
 ## Generate the associations
 #foreach ($associationEnd in $entity.associationEnds)
 #set ($target = $associationEnd.otherEnd)
