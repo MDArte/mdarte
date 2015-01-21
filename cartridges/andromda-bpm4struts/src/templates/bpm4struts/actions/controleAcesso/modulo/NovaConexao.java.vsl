@@ -27,7 +27,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.management.MBeanServer;
+#if($jbossVersion == '6')
+import org.jboss.mx.util.MBeanServerLocator;
+#else
 import javax.management.MBeanServerFactory;
+#end
 import javax.management.ObjectName;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -79,9 +83,15 @@ public class NovaConexao extends Action {
 		catch(java.io.IOException e){
 			throw new RuntimeException("port.file.not.found");
 		}
-
+		
 		// busca modulos da aplicacao
 		boolean serverJbossEncontrado = false;
+#if($jbossVersion == '6')
+		MBeanServer server = MBeanServerLocator.locateJBoss();
+		
+		if (server==null)
+			throw new IllegalStateException("No 'jboss' MBeanServer found!");
+#else
 		MBeanServer server = null;
 		for (Iterator i = MBeanServerFactory.findMBeanServer(null).iterator(); i.hasNext(); ) {
 			server = (MBeanServer) i.next();
@@ -93,6 +103,7 @@ public class NovaConexao extends Action {
 
 		if (!serverJbossEncontrado)
 			throw new IllegalStateException("No 'jboss' MBeanServer found!");
+#end
 
 		String query = "jboss.web.deployment:*";
 		Set matches = server.queryNames( new ObjectName( query ), null );

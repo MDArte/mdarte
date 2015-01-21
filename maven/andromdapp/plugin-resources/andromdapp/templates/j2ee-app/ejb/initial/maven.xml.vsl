@@ -58,7 +58,7 @@
 
     <goal name="earInstall">
         <j:set var="earDirectory" value="${open}basedir${end}/../../../target/ear"/>
-
+#if(!$jboss6)
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
@@ -70,7 +70,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
-
+#end
         <ant:copy
             file="${maven.repo.local}/${pom.groupId}/sars/${pom.artifactId}-${pom.currentVersion}.sar"
             tofile="${earDirectory}/${pom.artifactId}-${pom.currentVersion}.sar"/>

@@ -8,6 +8,8 @@
     <property reference="disableValidationForHiddenFormFields"/>
     <property reference="help"/>
     <property reference="struts2"/>
+    
+    <property reference="jbossVersion"/>
 
     <metafacade class="org.andromda.cartridges.bpm4struts.metafacades.StrutsBackendServiceLogicImpl">
         <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">

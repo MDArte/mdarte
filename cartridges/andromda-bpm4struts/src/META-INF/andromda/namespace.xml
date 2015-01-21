@@ -947,6 +947,13 @@
                     Indica se o projeto usara Struts 2 como padrao.
                 </documentation>
             </property>
+            
+            <property name="jbossVersion" required="false">
+                <default>4</default>
+                <documentation>
+                    Indica a versão do Jboss (4 ou 6).
+                </documentation>
+            </property>
         </propertyGroup>
     </properties>
 </namespace>

@@ -1,5 +1,7 @@
 #set($generatedFile = "${package.name}/maven.xml")
-##
+#if($jbossVersion == '6')
+#set($jboss6 = true)
+#end
 <project default="ejb:install"
          xmlns:ant="jelly:ant"
          xmlns:u="jelly:util"
@@ -118,7 +120,7 @@
 
     <goal name="earInstall">
         <j:set var="earDirectory" value="${open}basedir${end}/../../../target/ear"/>
-
+#if(!$jboss6)
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
@@ -130,7 +132,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
-
+#end
         <ant:copy file="${maven.repo.local}/${pom.groupId}/ejbs/${pom.artifactId}-${pom.CurrentVersion}.jar"
             tofile="${earDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
 

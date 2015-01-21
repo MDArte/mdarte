@@ -119,6 +119,7 @@
 	<property reference="viewTestApplicationPort"/>
 	<property reference="viewTestAccessControlDir"/>
 	<property reference="viewTestBasicDir"/>
+	<property reference="jbossVersion"/>
 	
 	
 	

@@ -1,4 +1,21 @@
 #set ($generatedFile = "layout-configuration.jsp")
+#if($jbossVersion == '6')
+<%@page import="javax.management.MBeanServer"%>
+<%@page import="org.jboss.mx.util.MBeanServerLocator"%>
+<%@page import="javax.management.ObjectName"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Set"%>
+
+<% 
+	try {
+
+	boolean serverJbossEncontrado = false;
+	MBeanServer server = MBeanServerLocator.locateJBoss();
+	
+	if (server==null)
+		throw new IllegalStateException("No 'jboss' MBeanServer found!");
+		
+#else
 <%@page import="javax.management.MBeanServer"%>
 <%@page import="javax.management.MBeanServerFactory"%>
 <%@page import="javax.management.ObjectName"%>
@@ -20,6 +37,7 @@
 	
 	if (!serverJbossEncontrado)
 		throw new IllegalStateException("No 'jboss' MBeanServer found!");
+#end
 
 	String query = "jboss.web:type=Connector,*";
 	Set matches = server.queryNames(new ObjectName( query ), null );

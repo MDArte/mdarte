@@ -112,7 +112,7 @@
 
     <goal name="earInstall">
         <j:set var="earDirectory" value="${open}basedir${end}/../../target/ear"/>
-
+#if(!$jboss6)
         <!-- Copia libs necessarias para o ear -->
         <j:if test="${packDependencies}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
@@ -130,7 +130,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
-
+#end
         <!-- Copia .war para a pasta do ear -->
         <ant:copy file="${maven.repo.local}/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"
                     tofile="${earDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"/>

@@ -375,6 +375,12 @@
                     The name of data source.
                 </documentation>
             </property>
+            <property name="jbossVersion" required="false">
+                <default>4</default>
+                <documentation>
+                    Indica a versão do Jboss (4 ou 6).
+                </documentation>
+            </property>
         </propertyGroup>
     </properties>
 </namespace>

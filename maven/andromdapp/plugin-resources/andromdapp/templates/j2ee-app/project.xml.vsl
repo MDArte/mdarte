@@ -68,5 +68,14 @@
   			</properties>
   		</dependency>
 #end
+#if($jboss6)
+		<dependency> 
+            <groupId>jboss</groupId>
+            <artifactId>jboss-j2se</artifactId>
+            <version>${jboss6.version}</version>
+            <type>jar</type>
+  		</dependency>
+#end
+
     </dependencies>
 </project>

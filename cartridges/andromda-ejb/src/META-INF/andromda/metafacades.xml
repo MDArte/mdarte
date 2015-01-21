@@ -3,6 +3,8 @@
     <property reference="transactionType"/>
     <property reference="ejb3"/>
     <property reference="projectId"/>
+    <property reference="jbossVersion"/>
+    
     <metafacade class="org.andromda.cartridges.ejb.metafacades.ValueObjectFacadeLogicImpl" contextRoot="true">
         <mapping class="org.omg.uml.foundation.core.UmlClass$Impl">
             <stereotype>VALUE_OBJECT</stereotype>

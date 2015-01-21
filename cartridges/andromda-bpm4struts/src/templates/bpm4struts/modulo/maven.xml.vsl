@@ -1,5 +1,7 @@
 #set($generatedFile = "${package.name}/maven.xml")
-
+#if($jbossVersion == '6')
+#set($jboss6 = true)
+#end
 <project default="install"
          xmlns:ant="jelly:ant"
          xmlns:u="jelly:util"
@@ -376,7 +378,7 @@
 
     <goal name="earInstall">
         <j:set var="earDirectory" value="${basedir}/../../target/ear"/>
-
+#if(!$jboss6)
         <!-- Copia libs necessarias para o ear -->
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
@@ -389,6 +391,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
+#end
 
         <!-- Copia .war para a pasta do ear -->
         <ant:copy file="${maven.repo.local}/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"

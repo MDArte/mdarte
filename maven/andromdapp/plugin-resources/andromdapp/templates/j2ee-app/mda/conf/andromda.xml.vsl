@@ -71,6 +71,11 @@
 #else
 				<property name="ejb3">false</property>
 #end
+#if($jboss6)
+				<property name="jbossVersion">6</property>
+#else
+				<property name="jbossVersion">4</property>
+#end
 #if ($spring)
 				<property name="hibernateVersion">$hibernateVersion</property>
 #end
