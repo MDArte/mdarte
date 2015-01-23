@@ -761,7 +761,7 @@
         <j:while test="${empty(jbossVersion) or (jbossVersion ne '4' and jbossVersion ne '6')}">
             <i:ask
                 question="Please enter the JBoss version (4 or 6):"
-                answer="databaseType"/>
+                answer="jbossVersion"/>
         </j:while>
         
         <j:while test="${empty(databaseType) or (databaseType ne 'hypersonic' and databaseType ne 'oracle' and databaseType ne 'mysql' and databaseType ne 'postgres')}">
