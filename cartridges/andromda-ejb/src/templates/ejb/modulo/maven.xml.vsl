@@ -1,5 +1,5 @@
 #set($generatedFile = "${package.name}/maven.xml")
-#if($jbossVersion == '6')
+#if($jbossVersion == "6")
 #set($jboss6 = true)
 #end
 <project default="ejb:install"

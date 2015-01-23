@@ -157,6 +157,9 @@
                 <application.dependency>true</application.dependency>
 #if($modulos)
                 <war.manifest.classpath>true</war.manifest.classpath>
+#if($jboss6)
+				<war.bundle>true</war.bundle>
+#end
 #else
                 <war.bundle>true</war.bundle>
 #end
@@ -171,6 +174,9 @@
                 <application.dependency>true</application.dependency>
 #if($modulos)
                 <war.manifest.classpath>true</war.manifest.classpath>
+#if($jboss6)
+				<war.bundle>true</war.bundle>
+#end
 #else
                 <war.bundle>true</war.bundle>
 #end
