@@ -78,7 +78,7 @@
 #if ($sourceEnd.one2One)
 #if($otherEnd.isSubentity())
 
-		<property name="${otherEnd.getType().name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
+		<property name="${otherEnd.getType().name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONUserType">
 			<column name="${otherEnd.name.toUpperCase()}" not-null="$otherEnd.required" sql-type="JSON" >
 			</column>
 		</property>

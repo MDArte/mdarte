@@ -1,4 +1,4 @@
-#set ($className = "HibernateJSONBUserType")
+#set ($className = "HibernateJSONUserType")
 #set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
 package $userTypesPackage;
 
@@ -32,6 +32,10 @@ public class $className implements UserType {
       }
 	  
 	  public boolean equals(Object object1, Object object2) throws HibernateException {
+          if(object1 == null) {
+          	return object2 == null; 
+          }
+          
           JSONObject json1 = (JSONObject) object1;
           JSONObject json2 = (JSONObject) object2;
        
@@ -45,6 +49,8 @@ public class $className implements UserType {
           	String string = ((JSONObject) object).toString();
           
           	statement.setObject(i, string, Types.OTHER);
+          } else {
+          	statement.setNull(i, Types.OTHER);
           }
       }
       
@@ -63,9 +69,7 @@ public class $className implements UserType {
       }
 	  
 	  public Object deepCopy(Object object) throws HibernateException {        
-          JSONObject json = (JSONObject) object;
-       
-          return object == null ? null : (JSONObject)json.clone();
+         return object;
       }
 	  
 	  public Object replace(Object original, Object target, Object owner)
@@ -82,10 +86,10 @@ public class $className implements UserType {
       }
       
       public Class returnedClass() {
-          return String.class;
+          return JSONObject.class;
       }
       
       public int[] sqlTypes() {
-          return new int[] { Types.INTEGER };
+          return new int[] { Types.JAVA_OBJECT};
       }
 }
