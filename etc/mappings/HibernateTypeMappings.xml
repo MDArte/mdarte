@@ -16,5 +16,17 @@
         <from>datatype::Hstore</from>
         <to>org.andromda.persistence.hibernate.usertypes.HibernateHStoreUserType</to>
     </mapping>
+    <mapping>
+        <from>datatype::String[]</from>
+        <to>org.andromda.persistence.hibernate.usertypes.HibernateStringArrayUserType</to>
+    </mapping>
+    <mapping>
+        <from>datatype::Integer[]</from>
+        <to>org.andromda.persistence.hibernate.usertypes.HibernateIntegerArrayUserType</to>
+    </mapping>
+    <mapping>
+        <from>datatype::Boolean[]</from>
+        <to>org.andromda.persistence.hibernate.usertypes.HibernateBooleanArrayUserType</to>
+    </mapping>
 </mappings>
 
