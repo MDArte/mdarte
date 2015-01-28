@@ -1,780 +1,586 @@
 <cartridge>
 
-    <templateEngine>
-        <macrolibrary name="templates/hibernate/hibernate.java.vm"/>
-        <macrolibrary name="templates/hibernate/hibernate.hbm.xml.vm"/>
-        <!-- cartridge-macrolibrary merge-point-->
-    </templateEngine>
+	<templateEngine>
+		<macrolibrary name="templates/hibernate/hibernate.java.vm" />
+		<macrolibrary name="templates/hibernate/hibernate.hbm.xml.vm" />
+		<!-- cartridge-macrolibrary merge-point -->
+	</templateEngine>
 
-    <!-- define the template objects that are made available to the template -->
-    <templateObject name="stringUtils" className="org.apache.commons.lang.StringUtils"/>
-    <templateObject name="hibernateUtils" className="org.andromda.cartridges.hibernate.HibernateUtils">
-        <property reference="hibernateVersion"/>
-    </templateObject>
-    <templateObject name="criptoUtils" className="org.andromda.cartridges.hibernate.CriptoUtils">
-        <property reference="maxSqlNameLength"/>
-    </templateObject>
+	<!-- define the template objects that are made available to the template -->
+	<templateObject name="stringUtils"
+		className="org.apache.commons.lang.StringUtils" />
+	<templateObject name="hibernateUtils"
+		className="org.andromda.cartridges.hibernate.HibernateUtils">
+		<property reference="hibernateVersion" />
+	</templateObject>
+	<templateObject name="criptoUtils"
+		className="org.andromda.cartridges.hibernate.CriptoUtils">
+		<property reference="maxSqlNameLength" />
+	</templateObject>
 
-    <!-- cartridge-templateObject merge-point-->
+	<!-- cartridge-templateObject merge-point -->
 
-    <property reference="projectId"/>
-    <property reference="maxSqlNameLength"/>
-    <property reference="dialetoExterno"/>
-	<property reference="modelPackageName"/>
-	<property reference="transferPackageName"/>
-	<property reference="wsdPackageName"/>
-	<property reference="actionPackageName"/>  	 
-	<property reference="exportPackageName"/>
-    <property reference="securityRealm"/>
-    <property reference="customTypesPackage"/>
+	<property reference="projectId" />
+	<property reference="maxSqlNameLength" />
+	<property reference="dialetoExterno" />
+	<property reference="modelPackageName" />
+	<property reference="transferPackageName" />
+	<property reference="wsdPackageName" />
+	<property reference="actionPackageName" />
+	<property reference="exportPackageName" />
+	<property reference="securityRealm" />
+	<property reference="customTypesPackage" />
 	<property reference="controleAcessoDir" />
-    <!-- contains the package for the Hibernate user types -->
-    <property reference="userTypesPackage"/>
-    <!-- the name to give the service locator class -->
-    <property reference="hibernateVersion"/>
-    <property reference="serviceLocatorName"/>
-    <property reference="sequenceIdentifierPrefix"/>
-    <property reference="sequenceIdentifierSuffix"/>
-    <property reference="driver"/>
-    <property reference="username"/>
-    <property reference="password"/>
-    <property reference="connectionUrl"/>
-    <property reference="dataSource"/>
-	<property reference="utilDir"/>
-    <property reference="hibernateDefaultCascade"/>
-    <property reference="hibernatePoolSize"/>
-    <property reference="hibernateTransactionFactoryClass"/>
-    <property reference="hibernateTransactionManagerStrategy"/>
-    <property reference="hibernateUserTransactionName"/>
-    <property reference="hibernateTransactionManagerLookup"/>
-    <property reference="hibernateUseOuterJoin"/>
-    <property reference="hibernateShowSql"/>
-    <property reference="hibernateJndiName"/>
-    <property reference="hibernateDialect"/>
-    <property reference="hibernateDefaultSchema"/>
-    <property reference="hibernateMaxFetchDepth"/>
-    <property reference="hibernateJdbcFetchSize"/>
-    <property reference="hibernateJdbcBatchSize"/>
-    <property reference="hibernateJdbcUseScrollableResultSet"/>
-    <property reference="hibernateJdbcUseStreamsForBinary"/>
-    <property reference="hibernateHbm2DDLAuto"/>
-    <property reference="hibernateQuerySubstitutions"/>
-    <property reference="hibernateEnableCache"/>
-    <property reference="hibernateEnableSecondLevelCache"/>
-    <property reference="hibernateEnableAssociationsCache"/>
-    <property reference="hibernateEhCacheDiskStore"/>
-    <property reference="hibernateCacheProvider"/>
-    <property reference="hibernateQueryCacheFactory"/>
-    <property reference="xmlEncoding"/>
-    <property reference="generateEntityEqualsAndHashCode"/>
-    <property reference="hibernateProxy"/>
-	<property reference="maxRows"/>
-    <property reference="maxPages"/>
-    <property reference="daoMethod"/>
-    <property reference="throwsVetoException"/>
-    <property reference="exportId"/>    
-    <property reference="ejb3"/>
-    <property reference="wsdStereotype"/>
-    <property reference="excludesWSDStereotype"/>
-    <property reference="maxSizeClass"/>
-    <property reference="comment"/>
-    <property reference="visitorAdapterRoot"/>
-    <property reference="tamanhoAssociacao"/>
-    <property reference="procedureName"/>
-    <property reference="loginDefault"/>
-    <property reference="auditoriaUsaAssinaturaDigital"/>
-    <property reference="enumTypesPackage"/>
+	<!-- contains the package for the Hibernate user types -->
+	<property reference="userTypesPackage" />
+	<!-- the name to give the service locator class -->
+	<property reference="hibernateVersion" />
+	<property reference="serviceLocatorName" />
+	<property reference="sequenceIdentifierPrefix" />
+	<property reference="sequenceIdentifierSuffix" />
+	<property reference="driver" />
+	<property reference="username" />
+	<property reference="password" />
+	<property reference="connectionUrl" />
+	<property reference="dataSource" />
+	<property reference="utilDir" />
+	<property reference="hibernateDefaultCascade" />
+	<property reference="hibernatePoolSize" />
+	<property reference="hibernateTransactionFactoryClass" />
+	<property reference="hibernateTransactionManagerStrategy" />
+	<property reference="hibernateUserTransactionName" />
+	<property reference="hibernateTransactionManagerLookup" />
+	<property reference="hibernateUseOuterJoin" />
+	<property reference="hibernateShowSql" />
+	<property reference="hibernateJndiName" />
+	<property reference="hibernateDialect" />
+	<property reference="hibernateDefaultSchema" />
+	<property reference="hibernateMaxFetchDepth" />
+	<property reference="hibernateJdbcFetchSize" />
+	<property reference="hibernateJdbcBatchSize" />
+	<property reference="hibernateJdbcUseScrollableResultSet" />
+	<property reference="hibernateJdbcUseStreamsForBinary" />
+	<property reference="hibernateHbm2DDLAuto" />
+	<property reference="hibernateQuerySubstitutions" />
+	<property reference="hibernateEnableCache" />
+	<property reference="hibernateEnableSecondLevelCache" />
+	<property reference="hibernateEnableAssociationsCache" />
+	<property reference="hibernateEhCacheDiskStore" />
+	<property reference="hibernateCacheProvider" />
+	<property reference="hibernateQueryCacheFactory" />
+	<property reference="xmlEncoding" />
+	<property reference="generateEntityEqualsAndHashCode" />
+	<property reference="hibernateProxy" />
+	<property reference="maxRows" />
+	<property reference="maxPages" />
+	<property reference="daoMethod" />
+	<property reference="throwsVetoException" />
+	<property reference="exportId" />
+	<property reference="ejb3" />
+	<property reference="wsdStereotype" />
+	<property reference="excludesWSDStereotype" />
+	<property reference="maxSizeClass" />
+	<property reference="comment" />
+	<property reference="visitorAdapterRoot" />
+	<property reference="tamanhoAssociacao" />
+	<property reference="procedureName" />
+	<property reference="loginDefault" />
+	<property reference="auditoriaUsaAssinaturaDigital" />
+	<property reference="enumTypesPackage" />
 
-    <!-- This property is only relevant for Hibernate 3 -->
-    <property reference="hibernateQueryFactory"/>
+	<!-- This property is only relevant for Hibernate 3 -->
+	<property reference="hibernateQueryFactory" />
 
-    <!-- cartridge-property merge-point-->
+	<!-- cartridge-property merge-point -->
 
-    <!-- cartridge-resource merge-point -->
+	<!-- cartridge-resource merge-point -->
 
 
-    <!-- hibernate 3 templates -->
+	<!-- hibernate 3 templates -->
 
-    <template
-        path="templates/hibernate/HibernateEntityFactory.vsl"
-        outputPattern="{0}/{1}DAO.java"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="version">3</property>
-                </type>
-            </modelElement>
-        </modelElements>
-    </template> 
-    
-    <template
-        path="templates/hibernate/VisitorAdapter.vsl"
-        outputPattern="{0}/{1}VisitorAdapter.java"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="visitor">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateVisitorAdapter">
-                </type>                
-            </modelElement>
-        </modelElements>
-    </template> 
-    
-    <template
-        path="templates/hibernate/VisitorAdapterImpl.vsl"
-        outputPattern="{0}/{1}VisitorAdapterImpl.java"
-        outlet="entity-impls"
-        overwrite="false">
-        <modelElements variable="visitor">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateVisitorAdapter">
-                </type>                
-            </modelElement>
-        </modelElements>
-    </template> 
-    
-    <template
-        path="templates/hibernate/AbstractDAO.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template>
-	<template
-        path="templates/hibernate/LogInterceptor.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template> 
-	<template
-        path="templates/hibernate/Auditable.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template>    
-        
-    <template
-        path="templates/hibernate/HibernateEntityFactoryImpl.vsl"
-        outputPattern="$generatedFile"
-        outlet="entity-impls"
-        overwrite="false">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="version">3</property>
-                </type>                   
-            </modelElement>
-        </modelElements>
-    </template>
-    <template
-        path="templates/hibernate/hibernate.cfg.xml.vsl"
-        outputPattern="$generatedFile"
-        outlet="configuration"
-        overwrite="true"
-        outputToSingleFile="true"
-        outputOnEmptyElements="false">
-        <modelElements variable="dummy">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="version">3</property>
-                </type>
-            </modelElement>
-        </modelElements>
-    </template>       
-    <template
-        path="templates/hibernate/hibernate.hbm.xml.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="requiresMapping"/>
-                    <property name="version">3</property>
-                </type>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/hibernate.hbm.xml.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-					<property name="requiresMapping"/>
-                    <property name="version">3</property>
-					<property name="auditoria" variable="auditoria"/>
-					<property name="auditoria">true</property>
-				</type>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <!-- common templates -->
-    <template
-        path="templates/hibernate/HibernateEmbeddedValue.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="embeddedValue">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValue"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/DAOException.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template>  
-
-    <template
-        path="templates/hibernate/HibernateEmbeddedValueImpl.vsl"
-        outputPattern="$generatedFile"
-        outlet="entity-impls"
-        overwrite="false">
-        <modelElements variable="embeddedValue">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValue"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-   <!-- <template
-        path="templates/hibernate2/HibernateEntity.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-					<property name="version">2</property>   
-				</type>          
-            </modelElement>
-        </modelElements>
-    </template> -->
-    
-    <template
-        path="templates/hibernate/HibernateEntity.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+	<template path="templates/hibernate/HibernateEntityFactory.vsl"
+		outputPattern="{0}/{1}DAO.java" outlet="entities" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
 					<property name="version">3</property>
 				</type>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/webServiceData.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="webServiceData">
-            <modelElement stereotype= "WebServiceData"/>
-        </modelElements>
-    </template>
-
-   <template
-        path="templates/hibernate/HibernateEntityImpl.vsl"
-        outputPattern="$generatedFile"
-        outlet="entity-impls"
-        overwrite="false">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-                    <property name="version">3</property>
-                </type>
-            </modelElement>
-        </modelElements>
-
-    </template>
-       <template
-        path="templates/hibernate/HibernateEntityImpl.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-					<property name="auditoria" variable="auditoria"/>
-					<property name="auditoria">true</property>
-				</type>
-            </modelElement>
-        </modelElements>
-    </template>
-
-
-    <template
-        path="templates/hibernate/usertypes/HibernateByteBlobType.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true"/>
-    
-     <template
-        path="templates/hibernate/usertypes/HibernateHStoreType.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="false"/>
-      
-      <template
-        path="templates/hibernate/HibernateHStoreHelper.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="false"/>
-
-    <template
-        path="templates/hibernate/usertypes/HibernateStringClobType.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true"/>
-
-    <template
-        path="templates/hibernate/HibernateEnumeration.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="enumeration">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.EnumerationFacade"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-	<!--  Nao estamos utilizando o ejb do cartucho do hibernate -->
-    <!--  <template
-        path="templates/hibernate/ejb/ejb-jar.xml.vsl"
-        outputPattern="META-INF/ejb-jar.xml"
-        outlet="session-beans"
-        overwrite="true"
-        outputToSingleFile="true"
-        outputOnEmptyElements="false">
-        <modelElements variable="services">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/jboss.xml.vsl"
-        outputPattern="META-INF/jboss.xml"
-        outlet="session-beans"
-        overwrite="true"
-        outputToSingleFile="true"
-        outputOnEmptyElements="false">
-        <modelElements variable="services">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateSessionEJBLocator.vsl"
-        outputPattern="$generatedFile"
-        outlet="session-beans"
-        overwrite="true"
-        outputToSingleFile="true"
-        outputOnEmptyElements="false">
-        <modelElements variable="services">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateSessionBean.vsl"
-        outputPattern="{0}/{1}Bean.java"
-        outlet="session-beans"
-        overwrite="true">
-        <modelElements variable="service">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateSessionBeanImpl.vsl"
-        outputPattern="{0}/{1}BeanImpl.java"
-        outlet="session-impls"
-        overwrite="false">
-        <modelElements variable="service">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateSession.vsl"
-        outputPattern="$generatedFile"
-        outlet="session-beans"
-        overwrite="true">
-        <modelElements variable="service">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateSessionHome.vsl"
-        outputPattern="$generatedFile"
-        outlet="session-beans"
-        overwrite="true">
-        <modelElements variable="service">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Service"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/ejb/HibernateUtils.vsl"
-        outputPattern="$generatedFile"
-        outlet="session-beans"
-        overwrite="true"/>
-         -->
-
-    <template
-        path="templates/hibernate/ehcache.xml.vsl"
-        outputPattern="ehcache.xml"
-        outlet="configuration"
-        overwrite="true"
-        outputToSingleFile="true"
-        outputOnEmptyElements="false">
-        <modelElements variable="entities">
-            <modelElement>
-                <type name="org.andromda.metafacades.uml.Entity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-    <template
-        path="templates/hibernate/AbstractEntity.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template>
-
-    <template
-        path="templates/hibernate/EntityInterface.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true"/>
-
-    
-    <template
-        path="templates/hibernate/AbstractWS.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true"/>        
-    <template
-        path="templates/hibernate/actions/Action.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>   
-    
-    <template
-        path="templates/hibernate/actions/ListAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template> 
-    
-    <template
-        path="templates/hibernate/actions/UpdateAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>       
-         
-    <template
-        path="templates/hibernate/actions/DeleteAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>       
-    
-    <template
-        path="templates/hibernate/actions/FilterAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>    
-
-    <template
-        path="templates/hibernate/actions/DefaultFilterAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>   
-    
-    <template
-        path="templates/hibernate/actions/SelectAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>     
-    
-    <template
-        path="templates/hibernate/actions/InsertAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>   
-    
-    <template
-        path="templates/hibernate/actions/InsertOrUpdateAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>    
-    
-    <template
-        path="templates/hibernate/actions/ExportAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    
-    <template
-        path="templates/hibernate/actions/ImportAction.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-
-
-    <template
-        path="templates/hibernate/actions/ActionException.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    
-    <template
-        path="templates/hibernate/actions/export/Export.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template> 
-    <template
-        path="templates/hibernate/actions/export/XMLExport.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>            
-    
-    <template
-        path="templates/hibernate/actions/export/Import.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template> 
-    <template
-        path="templates/hibernate/actions/export/XMLImport.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>            
-
-    <!-- Gera o TO a partir de um entity no modelo. -->
-    <template
-        path="templates/hibernate/TransferObject.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true" >
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    
-
-    <template
-        path="templates/hibernate/TransferObjectExample.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true" >
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>         
-        </modelElements>
-    </template>
-    
-    <template
-        path="templates/hibernate/EntityTOInterface.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true" >
-        <modelElements variable="entity">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>
-        </modelElements>
-    </template>
-    
-    <!-- Gera o TOImpl a partir de um entity no modelo. -->
-    <template
-        path="templates/hibernate/TransferObjectImpl.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfer-impls"
-        overwrite="false">
-        <modelElements variable="class">
-            <modelElement>
-                <type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"/>
-            </modelElement>             
-        </modelElements>
-    </template>
-        
-    <!-- 
-    <template
-        path="templates/hibernate/AbstractTO.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true"/> -->
-        
-    <!-- 
-    <template
-        path="templates/hibernate/AbstractTOExample.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true"/> -->
-        
-        <template
-        path="templates/hibernate/TOUtil.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true"/>
-        
-    <template
-        path="templates/hibernate/TOException.java.vsl"
-        outputPattern="$generatedFile"
-        outlet="transfers"
-        overwrite="true">
-    </template>          
-        
-    <template
-        path="templates/hibernate/AuditoriaEntity.vsl"
-        outputPattern="$generatedFile"
-        outlet="entities"
-        overwrite="true">
-    </template>
-
-	<!--  inicio - statistics templates -->
-
-	<template
-		path="templates/statistics/statistics_entities.xml.vsl"
-		outputPattern="statistics_entities.xml"
-		outlet="statistics"
-		overwrite="true"
-		outputToSingleFile="true"
-		outputOnEmptyElements="false">
-		<modelElements variable="entities">
-			<modelElement>
-				<type name="org.andromda.metafacades.uml.Entity"/>
 			</modelElement>
 		</modelElements>
 	</template>
 
-	<!--  fim - statistics templates -->
+	<template path="templates/hibernate/VisitorAdapter.vsl"
+		outputPattern="{0}/{1}VisitorAdapter.java" outlet="entities"
+		overwrite="true">
+		<modelElements variable="visitor">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateVisitorAdapter">
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
 
-    <!-- cartridge-template merge-point -->
+	<template path="templates/hibernate/VisitorAdapterImpl.vsl"
+		outputPattern="{0}/{1}VisitorAdapterImpl.java" outlet="entity-impls"
+		overwrite="false">
+		<modelElements variable="visitor">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateVisitorAdapter">
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/AbstractDAO.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+	<template path="templates/hibernate/LogInterceptor.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+	<template path="templates/hibernate/Auditable.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+
+	<template path="templates/hibernate/HibernateEntityFactoryImpl.vsl"
+		outputPattern="$generatedFile" outlet="entity-impls" overwrite="false">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="version">3</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+	<template path="templates/hibernate/hibernate.cfg.xml.vsl"
+		outputPattern="$generatedFile" outlet="configuration" overwrite="true"
+		outputToSingleFile="true" outputOnEmptyElements="false">
+		<modelElements variable="dummy">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="version">3</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+	<template path="templates/hibernate/hibernate.hbm.xml.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="requiresMapping" />
+					<property name="version">3</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/hibernate.hbm.xml.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="requiresMapping" />
+					<property name="version">3</property>
+					<property name="auditoria" variable="auditoria" />
+					<property name="auditoria">true</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- common templates -->
+	<template path="templates/hibernate/HibernateEmbeddedValue.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="embeddedValue">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValue" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/DAOException.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+
+	<template path="templates/hibernate/HibernateEmbeddedValueImpl.vsl"
+		outputPattern="$generatedFile" outlet="entity-impls" overwrite="false">
+		<modelElements variable="embeddedValue">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.HibernateEmbeddedValue" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- <template path="templates/hibernate2/HibernateEntity.vsl" outputPattern="$generatedFile" 
+		outlet="entities" overwrite="true"> <modelElements variable="entity"> <modelElement> 
+		<type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity"> 
+		<property name="version">2</property> </type> </modelElement> </modelElements> 
+		</template> -->
+
+	<template path="templates/hibernate/HibernateEntity.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="version">3</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/webServiceData.java.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="webServiceData">
+			<modelElement stereotype="WebServiceData" />
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/HibernateEntityImpl.vsl"
+		outputPattern="$generatedFile" outlet="entity-impls" overwrite="false">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="version">3</property>
+				</type>
+			</modelElement>
+		</modelElements>
+
+	</template>
+	<template path="templates/hibernate/HibernateEntityImpl.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="auditoria" variable="auditoria" />
+					<property name="auditoria">true</property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+
+
+	<template path="templates/hibernate/usertypes/HibernateByteBlobType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+
+	<template path="templates/hibernate/usertypes/HibernateHStoreType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+
+	<template path="templates/hibernate/HibernateHStoreHelper.java.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+
+	<template path="templates/hibernate/usertypes/HibernateStringClobType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+
+	<template path="templates/hibernate/HibernateEnumeration.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="enumeration">
+			<modelElement>
+				<type name="org.andromda.metafacades.uml.EnumerationFacade" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- Nao estamos utilizando o ejb do cartucho do hibernate -->
+	<!-- <template path="templates/hibernate/ejb/ejb-jar.xml.vsl" outputPattern="META-INF/ejb-jar.xml" 
+		outlet="session-beans" overwrite="true" outputToSingleFile="true" outputOnEmptyElements="false"> 
+		<modelElements variable="services"> <modelElement> <type name="org.andromda.metafacades.uml.Service"/> 
+		</modelElement> </modelElements> </template> <template path="templates/hibernate/ejb/jboss.xml.vsl" 
+		outputPattern="META-INF/jboss.xml" outlet="session-beans" overwrite="true" 
+		outputToSingleFile="true" outputOnEmptyElements="false"> <modelElements variable="services"> 
+		<modelElement> <type name="org.andromda.metafacades.uml.Service"/> </modelElement> 
+		</modelElements> </template> <template path="templates/hibernate/ejb/HibernateSessionEJBLocator.vsl" 
+		outputPattern="$generatedFile" outlet="session-beans" overwrite="true" outputToSingleFile="true" 
+		outputOnEmptyElements="false"> <modelElements variable="services"> <modelElement> 
+		<type name="org.andromda.metafacades.uml.Service"/> </modelElement> </modelElements> 
+		</template> <template path="templates/hibernate/ejb/HibernateSessionBean.vsl" 
+		outputPattern="{0}/{1}Bean.java" outlet="session-beans" overwrite="true"> 
+		<modelElements variable="service"> <modelElement> <type name="org.andromda.metafacades.uml.Service"/> 
+		</modelElement> </modelElements> </template> <template path="templates/hibernate/ejb/HibernateSessionBeanImpl.vsl" 
+		outputPattern="{0}/{1}BeanImpl.java" outlet="session-impls" overwrite="false"> 
+		<modelElements variable="service"> <modelElement> <type name="org.andromda.metafacades.uml.Service"/> 
+		</modelElement> </modelElements> </template> <template path="templates/hibernate/ejb/HibernateSession.vsl" 
+		outputPattern="$generatedFile" outlet="session-beans" overwrite="true"> <modelElements 
+		variable="service"> <modelElement> <type name="org.andromda.metafacades.uml.Service"/> 
+		</modelElement> </modelElements> </template> <template path="templates/hibernate/ejb/HibernateSessionHome.vsl" 
+		outputPattern="$generatedFile" outlet="session-beans" overwrite="true"> <modelElements 
+		variable="service"> <modelElement> <type name="org.andromda.metafacades.uml.Service"/> 
+		</modelElement> </modelElements> </template> <template path="templates/hibernate/ejb/HibernateUtils.vsl" 
+		outputPattern="$generatedFile" outlet="session-beans" overwrite="true"/> -->
+
+	<template
+		path="templates/hibernate/usertypes/HibernateStringArrayUserType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+	<template
+		path="templates/hibernate/usertypes/HibernateIntegerArrayUserType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+	<template
+		path="templates/hibernate/usertypes/HibernateBooleanArrayUserType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+
+	<template path="templates/hibernate/ehcache.xml.vsl"
+		outputPattern="ehcache.xml" outlet="configuration" overwrite="true"
+		outputToSingleFile="true" outputOnEmptyElements="false">
+		<modelElements variable="entities">
+			<modelElement>
+				<type name="org.andromda.metafacades.uml.Entity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/AbstractEntity.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+
+	<template path="templates/hibernate/EntityInterface.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true" />
+
+
+	<template path="templates/hibernate/AbstractWS.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+	<template path="templates/hibernate/actions/Action.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/ListAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/UpdateAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/DeleteAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/FilterAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/DefaultFilterAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/SelectAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/InsertAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/InsertOrUpdateAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/ExportAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/ImportAction.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+
+	<template path="templates/hibernate/actions/ActionException.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/export/Export.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+	<template path="templates/hibernate/actions/export/XMLExport.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/actions/export/Import.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+	<template path="templates/hibernate/actions/export/XMLImport.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- Gera o TO a partir de um entity no modelo. -->
+	<template path="templates/hibernate/TransferObject.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/TransferObjectExample.java.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<template path="templates/hibernate/EntityTOInterface.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
+		<modelElements variable="entity">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- Gera o TOImpl a partir de um entity no modelo. -->
+	<template path="templates/hibernate/TransferObjectImpl.vsl"
+		outputPattern="$generatedFile" outlet="transfer-impls" overwrite="false">
+		<modelElements variable="class">
+			<modelElement>
+				<type
+					name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- <template path="templates/hibernate/AbstractTO.vsl" outputPattern="$generatedFile" 
+		outlet="transfers" overwrite="true"/> -->
+
+	<!-- <template path="templates/hibernate/AbstractTOExample.java.vsl" outputPattern="$generatedFile" 
+		outlet="transfers" overwrite="true"/> -->
+
+	<template path="templates/hibernate/TOUtil.vsl" outputPattern="$generatedFile"
+		outlet="entities" overwrite="true" />
+
+	<template path="templates/hibernate/TOException.java.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
+	</template>
+
+	<template path="templates/hibernate/AuditoriaEntity.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true">
+	</template>
+
+	<!-- inicio - statistics templates -->
+
+	<template path="templates/statistics/statistics_entities.xml.vsl"
+		outputPattern="statistics_entities.xml" outlet="statistics" overwrite="true"
+		outputToSingleFile="true" outputOnEmptyElements="false">
+		<modelElements variable="entities">
+			<modelElement>
+				<type name="org.andromda.metafacades.uml.Entity" />
+			</modelElement>
+		</modelElements>
+	</template>
+
+	<!-- fim - statistics templates -->
+
+	<!-- cartridge-template merge-point -->
 
 </cartridge>

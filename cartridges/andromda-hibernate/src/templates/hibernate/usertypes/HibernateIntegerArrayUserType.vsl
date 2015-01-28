@@ -1,0 +1,97 @@
+#set ($className = "HibernateIntegerArrayUserType")
+#set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
+package $userTypesPackage;
+
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.sql.Array;
+import java.util.ArrayList;
+import org.hibernate.*;
+import org.hibernate.usertype.UserType;
+
+public class HibernateIntegerArrayUserType implements UserType
+{
+
+	public int[] sqlTypes() {
+		return new int[] {Types.INTEGER};
+	}
+
+	public Class returnedClass() {
+		return Integer[].class;
+	}
+	
+	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws
+		HibernateException, SQLException {Array array = (Array) resultSet.getArray(names[0]);
+
+		Integer[] integers = null;
+
+		if(array!=null){
+			integers = (Integer[]) array.getArray();
+		}
+		
+		return integers;
+	}
+	
+	public void nullSafeSet(PreparedStatement statement, Object value, int index) throws
+		HibernateException, SQLException {
+
+		if (value == null){
+			statement.setNull(index, 0);
+		} else {
+			Integer[] inteiros = (Integer[]) value;
+
+			String tmp = "{";
+
+			for(Integer i: inteiros){
+				tmp = tmp.concat(i+",");
+			}
+
+			tmp = tmp.substring(0, tmp.length()-1)+"}";
+
+			statement.setObject(index, tmp, Types.OTHER);
+		}
+	}
+	
+	public Object deepCopy(Object value) throws HibernateException {
+		return value;
+	}
+	
+	public boolean isMutable() {
+		return false;
+	}
+	
+	@Override
+	public Object assemble(Serializable arg0, Object arg1)
+		throws HibernateException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Serializable disassemble(Object arg0) throws HibernateException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean equals(Object arg0, Object arg1) throws HibernateException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public int hashCode(Object arg0) throws HibernateException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public Object replace(Object arg0, Object arg1, Object arg2)
+		throws HibernateException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
