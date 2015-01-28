@@ -471,6 +471,66 @@ public abstract class ${entity.name}DAO
 #elseif($attribute.isHstore())
 			$attribute.type.fullyQualifiedName valor$attribute.name = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toMap(String.valueOf(raiz.valueOf("./$attribute.name")));
 			entidade.${attribute.setterName}(valor${attribute.name});
+#elseif($attribute.type.fullyQualifiedName == "java.lang.String[]")
+			for (Iterator iterator = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
+				
+				Element elementoI = (Element)iterator.next();
+				
+				ArrayList<String> lista = new ArrayList<String>();
+				
+				for (Iterator j=elementoJ.elementIterator(); j.hasNext(); ){
+					Element elementoJ = (Element)j.next();
+					lista.add(elementoJ.getText());
+				}
+
+				String[] strings = new String[lista.size()];
+				
+				for(int j = 0; j < lista.size(); j++){
+				
+					strings[j] = lista.get(j);
+				}
+				
+				entidade.${attribute.setterName}(strings);
+			}
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Integer[]")
+			for (Iterator i = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
+				
+				Element elementoI =(Element)i.next();
+
+				ArrayList<Integer> lista = new ArrayList<Integer>();
+
+				for (Iterator j=elementoI.elementIterator(); j.hasNext(); ){
+					Element elementoJ=(Element)j.next();
+					lista.add(Integer.parseInt(elementoJ.getText()));
+				}
+				
+				Integer[] integers = new Integer[lista.size()];
+
+				for(int j = 0; j < lista.size(); j++){
+					integers[j] = lista.get(j);
+				}
+				
+				entidade.${attribute.setterName}(integers);
+			}
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Boolean[]")
+			for (Iterator i = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
+				Element ei =(Element)i.next();
+
+				ArrayList<Boolean> lista = new ArrayList<Boolean>();
+
+				for (Iterator j=ei.elementIterator(); j.hasNext(); ){
+					Element ej=(Element)j.next();
+					lista.add(Boolean.parseBoolean(ej.getText()));
+				}
+
+				Boolean[] booleans = new Boolean[lista.size()];
+
+				for(int j = 0; j < lista.size(); j++){
+					booleans[j] = lista.get(j);
+				}
+				
+				entidade.${attribute.setterName}(booleans);
+			}
 #else
 			$attribute.type.fullyQualifiedName valor$attribute.name = ${attribute.type.fullyQualifiedName}.valueOf(raiz.valueOf("./$attribute.name"));		
 			entidade.${attribute.setterName}(valor${attribute.name});
@@ -595,6 +655,30 @@ public abstract class ${entity.name}DAO
 				String textvalue = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toString(obj.${attribute.getterName}());
 				
 				att${attribute.name}.addText(textvalue);
+			}
+#elseif($attribute.type.fullyQualifiedName == "java.lang.String[]")
+			if (obj.${attribute.getterName}() != null) {
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+				
+				for (String string : obj.${attribute.getterName}()) {
+					att${attribute.name}.addElement("value").addText(string);
+				}
+			}
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Integer[]")
+			if (obj.${attribute.getterName}() != null) {
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+
+				for (Integer i : obj.${attribute.getterName}()) {
+					att${attribute.name}.addElement("value").addText(i+"");
+				}
+			}
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Boolean[]")
+			if (obj.${attribute.getterName}() != null) {
+				Element att$attribute.name = raiz.addElement("$attribute.name");
+
+				for (Boolean b : obj.${attribute.getterName}()) {
+					att${attribute.name}.addElement("value").addText(b+"");
+				}
 			}
 #elseif (!$attribute.hasExactStereotype("Identifier"))
 			if (obj.${attribute.getterName}() != null) {
