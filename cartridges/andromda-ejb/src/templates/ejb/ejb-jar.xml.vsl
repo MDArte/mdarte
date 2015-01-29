@@ -195,7 +195,7 @@
 #end
                     <method-param>$argument</method-param>
 #end
-	            <method-param>${customTypesPackage}.${util}.PaginationStrategy;</method-param>
+	            <method-param>${customTypesPackage}.${util}.PaginationStrategy</method-param>
                 </method-params>
 #end
             </method>
