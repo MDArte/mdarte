@@ -1,4 +1,5 @@
 #parse("templates/ejb/Globals.vm")
+#set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 <?xml version="1.0" encoding="$xmlEncoding"?>
 #if($ejb3 == 'false')
 <!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN"
@@ -194,7 +195,7 @@
 #end
                     <method-param>$argument</method-param>
 #end
-	            <method-param>java.lang.Integer</method-param>
+	            <method-param>${customTypesPackage}.${util}.PaginationStrategy</method-param>
                 </method-params>
 #end
             </method>
