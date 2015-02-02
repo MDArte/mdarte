@@ -63,38 +63,38 @@ public class HibernateStringArrayUserType implements UserType
 	}
 
 	public boolean isMutable() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public Object assemble(Serializable arg0, Object arg1)
 		throws HibernateException {
 		// TODO Auto-generated method stub
-		return null;
+		return arg0;
 	}
 	
 	@Override
 	public Serializable disassemble(Object arg0) throws HibernateException {
 		// TODO Auto-generated method stub
-		return null;
+		return (Serializable)arg0;
 	}
 	
 	@Override
-	public boolean equals(Object arg0, Object arg1) throws HibernateException {
+	public boolean equals(Object object1, Object object2) throws HibernateException {
 		// TODO Auto-generated method stub
-		return false;
+		return object1.equals(object2);
 	}
 	
 	@Override
-	public int hashCode(Object arg0) throws HibernateException {
+	public int hashCode(Object object) throws HibernateException {
 		// TODO Auto-generated method stub
-		return 0;
+		return object.hashCode();
 	}
 	
 	@Override
-	public Object replace(Object arg0, Object arg1, Object arg2)
+	public Object replace(Object original, Object target, Object owner)
 		throws HibernateException {
 		// TODO Auto-generated method stub
-		return null;
+		return original;
 	}
 }

@@ -472,13 +472,13 @@ public abstract class ${entity.name}DAO
 			$attribute.type.fullyQualifiedName valor$attribute.name = org.andromda.persistence.hibernate.usertypes.HibernateHStoreHelper.toMap(String.valueOf(raiz.valueOf("./$attribute.name")));
 			entidade.${attribute.setterName}(valor${attribute.name});
 #elseif($attribute.type.fullyQualifiedName == "java.lang.String[]")
-			for (Iterator iterator = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
+			for (Iterator i = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
 				
-				Element elementoI = (Element)iterator.next();
+				Element elementoI = (Element)i.next();
 				
 				ArrayList<String> lista = new ArrayList<String>();
 				
-				for (Iterator j=elementoJ.elementIterator(); j.hasNext(); ){
+				for (Iterator j=elementoI.elementIterator(); j.hasNext(); ){
 					Element elementoJ = (Element)j.next();
 					lista.add(elementoJ.getText());
 				}
@@ -514,13 +514,13 @@ public abstract class ${entity.name}DAO
 			}
 #elseif($attribute.type.fullyQualifiedName == "java.lang.Boolean[]")
 			for (Iterator i = raiz.elementIterator("${attribute.name}"); i.hasNext(); ) {
-				Element ei =(Element)i.next();
+				Element elementoI =(Element)i.next();
 
 				ArrayList<Boolean> lista = new ArrayList<Boolean>();
 
-				for (Iterator j=ei.elementIterator(); j.hasNext(); ){
-					Element ej=(Element)j.next();
-					lista.add(Boolean.parseBoolean(ej.getText()));
+				for (Iterator j=elementoI.elementIterator(); j.hasNext(); ){
+					Element elementoJ = (Element)j.next();
+					lista.add(Boolean.parseBoolean(elementoJ.getText()));
 				}
 
 				Boolean[] booleans = new Boolean[lista.size()];
