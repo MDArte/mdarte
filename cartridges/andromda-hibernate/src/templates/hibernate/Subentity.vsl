@@ -1,0 +1,59 @@
+#if($subentity.subentity)
+#set($generatedFile = "${stringUtils.replace($subentity.packageName,'.','/')}/${subentity.name}.java")
+#if($subentity.packageName)
+package $subentity.packageName;
+#end
+
+public abstract class $subentity.name
+{
+
+#foreach($attribute in $subentity.attributes)
+	private $attribute.type.fullyQualifiedName $attribute.name;
+	
+	public void ${attribute.setterName}($attribute.type.fullyQualifiedName $attribute.name) {
+		this.${attribute.name} = $attribute.name;	
+	}
+	
+	public $attribute.type.fullyQualifiedName ${attribute.getterName}() {
+		return this.${attribute.name};
+	}
+#end
+
+	public ${subentity.name}(java.util.Map<String,String> map) throws Exception{
+#foreach($attribute in $subentity.attributes)
+#if($attribute.type.name.equals("String"))
+		this.${attribute.name} = map.get("$attribute.name");
+#elseif($attribute.type.name.equals("Integer"))
+		this.$attribute.name = Integer.valueOf(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Double"))
+		this.$attribute.name = Double.valueOf(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Boolean"))
+		this.$attribute.name = Boolean.valueOf(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Long"))
+		this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
+#else
+		this.$attribute.name = ${attribute.type.name}.valueOf(map.get("$attribute.name"));
+#end
+#end
+	}
+
+	public Endereco() {
+		
+	}
+
+#foreach($operation in $subentity.operations)
+	protected abstract $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception;
+	
+	$operation.visibility $operation.returnType.fullyQualifiedName ${operation.name}($operation.typedArgumentList) throws Exception{
+#if(!$operation.returnType.name.equals("void"))
+		Object value = this.handle${operation.name}($operation.argumentNames);
+#else
+		this.handle${operation.name}($operation.argumentNames);
+#end
+#if(!$operation.returnType.name.equals("void"))
+		return ($operation.returnType.fullyQualifiedName) value;
+#end
+	}
+#end
+}
+#end

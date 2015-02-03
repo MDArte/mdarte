@@ -1,0 +1,16 @@
+#if($subentity.subentity)
+#set($generatedFile = "${stringUtils.replace($subentity.packageName,'.','/')}/${subentity.name}Impl.java")
+#if($subentity.packageName)
+package $subentity.packageName;
+#end
+
+
+public class ${subentity.name}Impl extends ${subentity.name}
+{
+#foreach($operation in $subentity.operations)
+	protected $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception {
+
+	}
+#end
+}
+#end

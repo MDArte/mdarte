@@ -109,6 +109,28 @@
 			</modelElement>
 		</modelElements>
 	</template>
+	
+	<template path="templates/hibernate/Subentity.vsl"
+		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
+		<modelElements variable="subentity">
+			<modelElement>
+				<type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="subentity"></property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
+	
+	<template path="templates/hibernate/SubentityImpl.vsl"
+		outputPattern="$generatedFile" outlet="transfer-impls" overwrite="false">
+		<modelElements variable="subentity">
+			<modelElement>
+				<type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
+					<property name="subentity"></property>
+				</type>
+			</modelElement>
+		</modelElements>
+	</template>
 
 	<template path="templates/hibernate/VisitorAdapter.vsl"
 		outputPattern="{0}/{1}VisitorAdapter.java" outlet="entities"
