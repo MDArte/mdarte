@@ -77,4 +77,16 @@
 		<from>datatype::Hstore</from>
 		<to>HSTORE</to>
 	</mapping>
+	<mapping>
+		<from>datatype::String[]</from>
+		<to>CHARACTER VARYING[]</to>
+	</mapping>
+	 <mapping>
+        <from>datatype::Integer[]</from>
+        <to>INTEGER[]</to>
+    </mapping>
+     <mapping>
+        <from>datatype::Boolean[]</from>
+        <to>BOOLEAN[]</to>
+    </mapping>
 </mappings>

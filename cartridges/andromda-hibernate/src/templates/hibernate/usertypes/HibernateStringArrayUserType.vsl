@@ -1,0 +1,100 @@
+#set ($className = "HibernateStringArrayUserType")
+#set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
+package $userTypesPackage;
+
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.sql.Array;
+import java.util.ArrayList;
+import org.hibernate.*;
+import org.hibernate.usertype.UserType;
+
+public class HibernateStringArrayUserType implements UserType
+{
+	public int[] sqlTypes() {
+		return new int[] {Types.VARCHAR};
+	}
+
+	public Class returnedClass() {
+		return String[].class;
+	}
+
+	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws
+		HibernateException, SQLException {
+			Array array = (Array) resultSet.getArray(names[0]);
+			
+			String[] strings = null;
+
+			if(array!=null){
+				strings = (String[]) array.getArray();
+			}
+			
+			return strings;
+	}
+
+	public void nullSafeSet(PreparedStatement statement, Object value, int index) throws
+		HibernateException, SQLException {
+		
+		if (value == null){
+			statement.setNull(index, 0);
+		} else {
+			String[] strings = (String[]) value;
+			String tmp = "{";
+			
+			for(String string: strings){
+				if(string.contains(",")){
+					string = "\""+ string + "\"";
+				}
+			
+				tmp = tmp.concat(string+",");
+			}
+			
+			tmp = tmp.substring(0, tmp.length()-1)+"}";
+			
+			statement.setObject(index, tmp, Types.OTHER);
+		}
+	}
+
+	public Object deepCopy(Object value) throws HibernateException {
+		return value;
+	}
+
+	public boolean isMutable() {
+		return true;
+	}
+
+	@Override
+	public Object assemble(Serializable arg0, Object arg1)
+		throws HibernateException {
+		// TODO Auto-generated method stub
+		return arg0;
+	}
+	
+	@Override
+	public Serializable disassemble(Object arg0) throws HibernateException {
+		// TODO Auto-generated method stub
+		return (Serializable)arg0;
+	}
+	
+	@Override
+	public boolean equals(Object object1, Object object2) throws HibernateException {
+		// TODO Auto-generated method stub
+		return object1.equals(object2);
+	}
+	
+	@Override
+	public int hashCode(Object object) throws HibernateException {
+		// TODO Auto-generated method stub
+		return object.hashCode();
+	}
+	
+	@Override
+	public Object replace(Object original, Object target, Object owner)
+		throws HibernateException {
+		// TODO Auto-generated method stub
+		return original;
+	}
+}

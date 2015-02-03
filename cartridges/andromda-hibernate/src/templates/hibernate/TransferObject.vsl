@@ -124,7 +124,9 @@ $attribute.getDocumentation("     * ")
     }
 #elseif($attribute.hstore)
 	private $attribute.type.fullyQualifiedName<String,String> $attribute.name = new java.util.HashMap<String,String>(); 
-	
+	/**
+$attribute.getDocumentation("     * ")
+     */
 	$attribute.visibility String ${attribute.getterName}(String key)
     {
         return String.valueOf(this.${attribute.name}.get(key));
@@ -144,6 +146,83 @@ $attribute.getDocumentation("     * ")
     {
 		this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap)map).clone();
     }
+    
+    $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
+    	this.${attribute.name}.remove(key);
+    }
+#elseif($attribute.type.fullyQualifiedName == "java.lang.String[]")
+	private $attribute.type.fullyQualifiedName $attribute.name; 
+	/**
+$attribute.getDocumentation("     * ")
+     */
+	$attribute.visibility String ${attribute.getterName}(int index)
+    {
+        return this.${attribute.name}[index];
+    }
+
+	    $attribute.visibility java.lang.String[] ${attribute.getterName}()
+    {
+        return this.${attribute.name};
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(int index, String value)
+    {
+		this.${attribute.name}[index] = value;
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(java.lang.String[] strings)
+    {
+		this.${attribute.name} = strings;
+    }
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Integer[]")
+	private $attribute.type.fullyQualifiedName $attribute.name; 
+	/**
+$attribute.getDocumentation("     * ")
+     */
+	$attribute.visibility Integer ${attribute.getterName}(int index)
+    {
+        return this.${attribute.name}[index];
+    }
+    
+    $attribute.visibility $attribute.type.fullyQualifiedName ${attribute.getterName}()
+    {
+        return this.${attribute.name};
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(int index, Integer value)
+    {
+		this.${attribute.name}[index] = value;
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(java.lang.Integer[] integers)
+    {
+		this.${attribute.name} = integers;
+    }
+#elseif($attribute.type.fullyQualifiedName == "java.lang.Boolean[]")
+	private $attribute.type.fullyQualifiedName $attribute.name; 
+	/**
+$attribute.getDocumentation("     * ")
+     */
+	$attribute.visibility Boolean ${attribute.getterName}(int index)
+    {
+        return this.${attribute.name}[index];
+    }
+    
+    $attribute.visibility $attribute.type.fullyQualifiedName ${attribute.getterName}()
+    {
+        return this.${attribute.name};
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(int index, Boolean value)
+    {
+		this.${attribute.name}[index] = value;
+    }
+    
+    $attribute.visibility void ${attribute.setterName}(java.lang.Boolean[] booleans)
+    {
+		this.${attribute.name} = booleans;
+    }
+
 #else
     private $tipo $attribute.name;
 

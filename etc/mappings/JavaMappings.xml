@@ -167,4 +167,16 @@
         <from>datatype::TreeNode</from>
         <to>javax.swing.tree.TreeNode</to>
     </mapping>
+    <!-- <mapping>
+		<from>datatype::String[]</from>
+		<to>java.lang.String[]</to>
+	</mapping>
+	<mapping>
+        <from>datatype::Integer[]</from>
+        <to>java.lang.Integer[]</to>
+    </mapping>
+    <mapping>
+        <from>datatype::Boolean[]</from>
+        <to>java.lang.Boolean[]</to>
+    </mapping> -->
 </mappings>
