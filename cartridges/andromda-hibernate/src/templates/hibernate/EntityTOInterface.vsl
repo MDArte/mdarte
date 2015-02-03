@@ -7,8 +7,6 @@
 
 package $entity.packageName;
 
-import org.json.simple.JSONObject;
-
 /**
 $entity.getDocumentation(" * ")
  */
@@ -62,13 +60,9 @@ br.ufrj.coppetec.Entity
 ##if($target.one2One)
 #set($camelCaseName = $target.name.substring(0,1).toUpperCase().concat($target.name.substring(1)))
 ##set($camelCaseName = $target.name.substring)
-	public JSONObject get$camelCaseName ();
-	public void set$camelCaseName (JSONObject object);
-	public Object get${camelCaseName}Property(String property);
-	public void set${camelCaseName}DoubleProperty (String property, double value);
-	public void set${camelCaseName}BooleanProperty (String property, boolean value);
-	public void set${camelCaseName}StringProperty (String property, String value);
-	public void set${camelCaseName}ObjectProperty (String property, JSONObject value);
+	public void set${camelCaseName}(${target.getType().packageName}.${target.getType().name} $target.name);
+	
+	public ${target.getType().packageName}.${target.getType().name} get${camelCaseName}();
 ##end
 #else
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))
