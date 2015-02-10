@@ -258,6 +258,17 @@ $attribute.getDocumentation("     * ")
 	public ${target.getType().packageName}.${target.getType().name} get${targetUpperCaseName} () {
 		return this.${target.name};
 	}
+	
+/*	private String  $target.name = new String();
+	
+	public void set${targetUpperCaseName}(String $target.name) {
+		this.${target.name} = ${target.name};
+	}
+	
+	public String get${targetUpperCaseName}() {
+		return this.${target.name};
+	}*/
+	
 		
 #else
 #if ($target.navigable)

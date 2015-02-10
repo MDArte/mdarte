@@ -21,8 +21,8 @@ public class $className {
 		return json.startsWith("[") && json.endsWith("]");
 	}
 	
-	public static Map<String, Object> parseJSONObjectToMap(String json) {
-		Map<String,Object> map = new HashMap<String,Object>();
+	public static Map<String, String> parseJSONObjectToMap(String json) {
+		Map<String,String> map = new HashMap<String,Object>();
 
 		if(!isObject(json)) {
 			return null;
@@ -35,9 +35,9 @@ public class $className {
 				String[] attribute = attributes[i].split(":");
 				
 				if(attribute.length == 2) {
-					if(!attribute[1].startsWith("[")) {
+					//if(!attribute[1].startsWith("[")) {
 						map.put(attribute[0],attribute[1]);
-					} else {
+				/*	} else {
 						String value = attribute[1].substring(1,json.length()-2);
 						ArrayList<String> array = new ArrayList<String>();
 						String[] values = value.split(",");
@@ -47,7 +47,7 @@ public class $className {
 						}
 						
 						map.put(attribute[0], array);		
-					}
+					}*/
 				}
 			}
 		}

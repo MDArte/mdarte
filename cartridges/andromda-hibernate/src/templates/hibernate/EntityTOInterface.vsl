@@ -61,8 +61,12 @@ br.ufrj.coppetec.Entity
 #set($camelCaseName = $target.name.substring(0,1).toUpperCase().concat($target.name.substring(1)))
 ##set($camelCaseName = $target.name.substring)
 	public void set${camelCaseName}(${target.getType().packageName}.${target.getType().name} $target.name);
-	
 	public ${target.getType().packageName}.${target.getType().name} get${camelCaseName}();
+	public void set${camelCaseName}(java.util.Map<String,String> ${target.getType().name}); 
+	
+/*	public void set${camelCaseName}(String $target.name);
+	public String get${camelCaseName}();*/
+
 ##end
 #else
 #if ($target.navigable || ($associationEnd.child && $entity.foreignHibernateGeneratorClass))

@@ -28,6 +28,7 @@ import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}","
 import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}",".${transferPackageName}")}TOExample;
 import br.ufrj.coppetec.to.AbstractTO;
 import br.ufrj.coppetec.to.AbstractTOExample;
+import ${userTypesPackage}.HibernateJSONBHelper;
 #set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 import ${customTypesPackage}.${util}.PaginationStrategy;
 import $customTypesPackage.${modelPackageName}.TOUtil;
@@ -384,6 +385,38 @@ $attribute.getDocumentation("     * ")
 	public ${target.getType().packageName}.${target.getType().name} get${targetUpperCaseName} () {
 		return this.${target.name};
 	}
+	
+	public void set${targetUpperCaseName}(java.util.Map<String,String> ${target.name}) {
+#foreach($attribute in $target.getType().attributes)
+#if($attribute.type.name.equals("String"))
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${target.name}.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Integer"))
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Integer.valueOf(${target.name}.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Double"))
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Double.valueOf(${target.name}.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Boolean"))
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Boolean.valueOf(${target.name}.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Long"))
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(${target.name}.get("$attribute.name")));
+#else
+		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(${target.name}.get("$attribute.name")));
+#end
+#end
+	}
+	
+	public void set${targetUpperCaseName}(String ${target.name}) {
+		this.set${targetUpperCaseName}(HibernateJSONBHelper.parseJSONObjectToMap(${target.name}));
+	}	
+/*	private String  $target.name = new String();
+	
+	public void set${targetUpperCaseName}(String $target.name) {
+		this.${target.name} = ${target.name};
+	}
+	
+	public String get${targetUpperCaseName}() {
+		return this.${target.name};
+	} */
+	
 	
 #else
 #if ($target.many)
