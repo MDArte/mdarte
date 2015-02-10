@@ -1,4 +1,4 @@
-#set ($className = "HibernateJSONHelper")
+#set ($className = "HibernateJSONBHelper")
 #set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
 package $userTypesPackage;
 
@@ -9,57 +9,68 @@ import java.sql.Types;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class $className {
+	
+	public static boolean isObject(String json){
+		return json.startsWith("{") && json.endsWith("}");
+	}
+	
+	public static boolean isArray(String json){
+		return json.startsWith("[") && json.endsWith("]");
+	}
+	
+	public static Map<String, Object> parseJSONObjectToMap(String json) {
+		Map<String,Object> map = new HashMap<String,Object>();
 
-    private static final String K_V_SEPARATOR = "=>";
-
-    public static String toString(Map<String, String> map) {
-        if (map.isEmpty()) {
-            return "";
-        }
-        StringBuilder builder = new StringBuilder();
-        int n = map.size();
-        for (String key : map.keySet()) {
-			if(map.get(key) == null)
-				builder.append("\"" + key + "\"" + K_V_SEPARATOR  + "null");
-			else
-				builder.append("\"" + key + "\"" + K_V_SEPARATOR + "\"" + map.get(key) + "\"");
-			if (n > 1) {
-				builder.append(", ");
-				n--;
+		if(!isObject(json)) {
+			return null;
+		} else {
+			json = json.substring(1,json.length()-2);
+			
+			String[] attributes = json.split(",");
+			
+			for(int i = 0; i < attributes.length; i++){
+				String[] attribute = attributes[i].split(":");
+				
+				if(attribute.length == 2) {
+					if(!attribute[1].startsWith("[")) {
+						map.put(attribute[0],attribute[1]);
+					} else {
+						String value = attribute[1].substring(1,json.length()-2);
+						ArrayList<String> array = new ArrayList<String>();
+						String[] values = value.split(",");
+						
+						for(int j = 0; j < values.length; j++) {
+							array.add(values[j]);
+						}
+						
+						map.put(attribute[0], array);		
+					}
+				}
 			}
 		}
-        return builder.toString();
-    }
-
-    public static Map<String, String> toMap(String string) {
-
-		Map<String, String> map = new HashMap<String, String>();
-
-		if (string.isEmpty()) {
-			return map;
-		}
-
-		String[] tokens = string.split(", ");
-
-		for (String token : tokens) {
-			String[] kv = token.split(K_V_SEPARATOR);
-			String key = kv[0];
-
-			key = key.trim().substring(1, key.length() - 1);
-
-			String value = kv[1];
-			
-			if(!value.equalsIgnoreCase("NULL")) {
-				value = value.trim().substring(1, value.length() - 1);
-			} else {
-				value = null;
-			}
-			
-			map.put(key, value);
-		}
-
+		
 		return map;
+	}
+	
+	public static ArrayList<Map<String,Object>> parseJSONArrayToArrayList(String json) {
+		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+
+		if(!isArray(json)){
+			return null;
+		} else {
+			json = json.substring(1,json.length()-2);
+			
+			String[] elements = json.split(",");
+			
+			for(int i = 0; i < elements.length; i++) {
+				Map<String,Object> object = parseJSONObjectToMap(elements[i]);
+				list.add(object);
+			}
+		}
+		
+		return list;
 	}
 }

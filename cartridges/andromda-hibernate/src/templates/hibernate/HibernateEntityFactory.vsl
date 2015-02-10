@@ -50,9 +50,6 @@ import java.util.Collection;
 import accessControl.ControleAcesso;
 #end
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONObject;
-
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -561,12 +558,12 @@ public abstract class ${entity.name}DAO
 #set($camelCaseName = $target.name.substring(0,1).toUpperCase().concat($target.name.substring(1)))
 #if($target.subentity)
 		if (raiz.selectNodes("./${target.name}").size() != 0) {
-			java.lang.String valor${target.name} = java.lang.String.valueOf(raiz.valueOf("./${target.name}"));		
-			try {
-				entidade.set${camelCaseName}((JSONObject)new JSONParser().parse(valor${target.name}));
-			} catch (Exception e) {
-				entidade.set${camelCaseName}(new JSONObject());
-			}
+			java.lang.String valor${target.name} = java.lang.String.valueOf(raiz.valueOf("./${target.name}"));
+				//java.util.Map<String,String> map = org.andromda.persistence.hibernate.usertypes.HibernateJSONHelper.parseJSONObject
+				//$target.getType().fullyQualifiedName $target.name = new ${target.getType().fullyQualifiedName}Impl();
+				
+				 
+				//entidade.set${camelCaseName}(parse(valor${target.name}));
 		}
 #else
 #if ($target.navigable)	

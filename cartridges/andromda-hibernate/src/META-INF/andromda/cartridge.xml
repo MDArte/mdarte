@@ -297,12 +297,18 @@
 		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
 
 	<template path="templates/hibernate/usertypes/HibernateHStoreType.vsl"
-		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
 
-
-	<!--  inicio - statistics templates -->
 	<template path="templates/hibernate/HibernateHStoreHelper.java.vsl"
-		outputPattern="$generatedFile" outlet="entities" overwrite="false" />
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+
+		<template path="templates/hibernate/usertypes/HibernateJSONBType.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+
+	<template path="templates/hibernate/HibernateJSONBHelper.vsl"
+		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
+	
+	<!--  inicio - statistics templates -->
 
 	<template path="templates/hibernate/usertypes/HibernateStringClobType.vsl"
 		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
@@ -412,7 +418,6 @@
 
 	<template path="templates/hibernate/EntityInterface.vsl"
 		outputPattern="$generatedFile" outlet="transfers" overwrite="true" />
-
 
 	<template path="templates/hibernate/AbstractWS.vsl"
 		outputPattern="$generatedFile" outlet="entities" overwrite="true" />
