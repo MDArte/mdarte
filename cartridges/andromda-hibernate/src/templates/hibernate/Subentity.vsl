@@ -40,6 +40,8 @@ public abstract class $subentity.name
 	public Endereco() {
 		
 	}
+	
+	public abstract String toJson();
 
 #foreach($operation in $subentity.operations)
 	protected abstract $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception;
