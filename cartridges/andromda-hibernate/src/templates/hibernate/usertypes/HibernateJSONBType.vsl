@@ -36,9 +36,9 @@ public class $className implements UserType {
               throws HibernateException, SQLException {
           
           if(object != null) {
-          	String string = String.valueOf(object);
+          	Subentity sub = (Subentity) object;
           
-          	statement.setObject(i, string, Types.OTHER);
+          	statement.setObject(i, sub.toJson(), Types.OTHER);
           } else {
           	statement.setNull(i, Types.OTHER);
           }
@@ -49,7 +49,8 @@ public class $className implements UserType {
           String column = strings[0];
           String value = resultSet.getString(column);
      
-          return value;
+     	  return HibernateJSONBHelper.parseJSONObjectToMap(value);
+          //return value;
       }
 	  
 	  public Object deepCopy(Object object) throws HibernateException {        
