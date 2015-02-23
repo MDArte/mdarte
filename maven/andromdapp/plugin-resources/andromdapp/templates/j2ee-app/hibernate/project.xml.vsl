@@ -206,6 +206,16 @@
                 <jar.manifest.classpath>true</jar.manifest.classpath>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>${javax.jason.version}</version>
+            <type>jar</type>
+            <properties>
+                <application.dependency>true</application.dependency>
+                <jar.manifest.classpath>true</jar.manifest.classpath>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
