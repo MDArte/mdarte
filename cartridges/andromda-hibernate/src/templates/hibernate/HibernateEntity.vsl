@@ -322,7 +322,7 @@ $attribute.getDocumentation("     * ")
     
     $attribute.visibility java.util.Map<String,String> ${attribute.getterName}()
     {
-        return (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)this.${attribute.name}).clone();
+        return new java.util.HashMap<String,String>(this.${attribute.name});
     }
     
     $attribute.visibility void ${attribute.setterName}(String key, String value)
@@ -334,7 +334,7 @@ $attribute.getDocumentation("     * ")
     $attribute.visibility void ${attribute.setterName}(java.util.Map<String,String> map)
     {
     	if(map != null)
-			this.${attribute.name} = (java.util.HashMap<String,String>) ((java.util.HashMap<String,String>)map).clone();
+			this.${attribute.name} = new java.util.HashMap<String,String>(map);
     }
     
     $attribute.visibility void remove${attribute.name.substring(0,1).toUpperCase()}${attribute.name.substring(1)}(String key) {
@@ -378,6 +378,10 @@ $attribute.getDocumentation("     * ")
 #end
 #if($target.subentity)
 #set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+   /**
+$target.getDocumentation("     * ")
+     */
+
 	private ${target.getType().packageName}.${target.getType().name} $target.name = new ${target.getType().packageName}.${target.getType().name}Impl();
 	
 /*	public void set${targetUpperCaseName}(${target.getType().packageName}.${target.getType().name} $target.name) {
@@ -390,6 +394,7 @@ $attribute.getDocumentation("     * ")
 	
 	public void set${targetUpperCaseName}(java.util.Map<String,String> ${target.name}) {
 #foreach($attribute in $target.getType().attributes)
+#if(!$attribute.name.equalsIgnoreCase("id"))
 #if($attribute.type.name.equals("String"))
 		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${target.name}.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Integer"))
@@ -402,6 +407,7 @@ $attribute.getDocumentation("     * ")
 		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(${target.name}.get("$attribute.name")));
 #else
 		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(${target.name}.get("$attribute.name")));
+#end
 #end
 #end
 	}

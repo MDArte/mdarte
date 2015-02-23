@@ -2,70 +2,75 @@
 #set ($generatedFile = "$stringUtils.replace($userTypesPackage, '.', '/')/${className}.java")
 package $userTypesPackage;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
-import java.util.Map;
+import java.io.StringReader;
 import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.Map;
+
+import javax.json.Json;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
+
 
 public class $className {
 	
-	public static boolean isObject(String json){
-		return json.startsWith("{") && json.endsWith("}");
+	public static boolean isObject(Event event){
+		return event == Event.START_OBJECT;
 	}
 	
-	public static boolean isArray(String json){
-		return json.startsWith("[") && json.endsWith("]");
+	public static boolean isArray(Event event){
+		return event == Event.START_ARRAY;
 	}
 	
-	public static String removeFirstAndLastQuotes(String str) {
-		if(str.startsWith("\"") || str.startsWith("'"))
-			str = str.substring(0, str.length() -2);
+	public static boolean isValue(Event event) {
 		
-		return new String(str);
+		return !(event == Event.START_ARRAY) && 
+				!(event == Event.START_OBJECT) &&
+				!(event == Event.END_ARRAY) &&
+				!(event == Event.END_OBJECT) &&
+				!(event == Event.KEY_NAME);
 	}
 	
 	public static Map<String, String> parseJSONObjectToMap(String json) {
 		Map<String,String> map = new HashMap<String,String>();
+		
+		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(!isObject(json)) {
-			return null;
-		} else {
-			json = json.substring(1,json.length()-2);
+		if(isObject(parser.next())) {
 			
-			String[] attributes = json.split(", ");
-			
-			for(int i = 0; i < attributes.length; i++){
-				String[] attribute = attributes[i].split(": ");
+			while(parser.hasNext()){
+				Event firstEvent = parser.next();
 				
-				if(attribute.length == 2) {
-					//if(!attribute[1].startsWith("[")) {
-						String key = removeFirstAndLastQuotes(attribute[0]);
-						String value = removeFirstAndLastQuotes(attribute[1]);
+				if(firstEvent == Event.KEY_NAME) {
+					String key = parser.getString();
+					
+					System.out.println("Key: "+key);
+					
+					Event secondEvent = parser.next();
+					
+					if(isValue(secondEvent)) {
+						String value = new String();
 						
-						map.put(key,value);
-				/*	} else {
-						String value = attribute[1].substring(1,json.length()-2);
-						ArrayList<String> array = new ArrayList<String>();
-						String[] values = value.split(",");
+						if((secondEvent == Event.VALUE_STRING) || (secondEvent == Event.VALUE_NUMBER)) {
+							value = parser.getString();
+						} else if(secondEvent == Event.VALUE_TRUE) {
+							value = "true";
+						} else if(secondEvent == Event.VALUE_FALSE) {
+							value = "false";
+						} else
+							value = null;
 						
-						for(int j = 0; j < values.length; j++) {
-							array.add(values[j]);
-						}
-						
-						map.put(attribute[0], array);		
-					}*/
+						map.put(key, value);
+					}
 				}
-			}
+			}	
+		} else {
+			return null;
 		}
 		
 		return map;
 	}
 	
-	public static ArrayList<Map<String,String>> parseJSONArrayToArrayList(String json) {
+/*	public static ArrayList<Map<String,String>> parseJSONArrayToArrayList(String json) {
 		ArrayList<Map<String,String>> list = new ArrayList<Map<String,String>>();
 
 		if(!isArray(json)){
@@ -82,5 +87,5 @@ public class $className {
 		}
 		
 		return list;
-	}
+	} */
 }

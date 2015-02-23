@@ -7,7 +7,6 @@ import ${hibernateUtils.hibernateUserTypePackage}.UserType;
 import org.hibernate.HibernateException;
 
 import java.util.Map;
-import java.util.HashMap;
 
 import java.io.Serializable;
 
@@ -71,7 +70,7 @@ public class $className implements UserType {
       }
       
       public Class returnedClass() {
-          return String.class;
+          return Map.class;
       }
       
       public int[] sqlTypes() {
