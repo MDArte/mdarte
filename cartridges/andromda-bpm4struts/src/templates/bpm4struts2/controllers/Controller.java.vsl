@@ -237,7 +237,7 @@ $operation.getDocumentation("     * ")
 		$param.type.name $param.name = null;
 
 		try {
-			 $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null ? Double.valueOf(container.getParameter("${param.name}").toString()));
+			 $param.name = container.getParameter("${param.name}") == null ? null : (container.getParameter("${param.name}").toString().equals("")? null : Double.valueOf(container.getParameter("${param.name}").toString()));
 		} catch(java.lang.NumberFormatException e) {
 
 		}
@@ -253,7 +253,6 @@ $operation.getDocumentation("     * ")
 #end
 #end
 #end
-		
 		Collection rows = this.load${actionName}Table(strategy,propriedade,desc,#foreach($action in $page.getActions())#if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))#foreach($param in $action.getActionParameters())$param.name,#end#end#end container);
 		
 		String [] columns = {
