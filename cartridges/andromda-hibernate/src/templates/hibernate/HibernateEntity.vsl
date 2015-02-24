@@ -20,19 +20,28 @@ package $entity.packageName;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.FlushMode;
+
+import java.util.Map;
+import java.util.ArrayList;
+
 import $customTypesPackage.${modelPackageName}.AbstractDAO;
 import $customTypesPackage.${modelPackageName}.AbstractEntity;
 import ${customTypesPackage}.${modelPackageName}.DAOException;
+
 import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}",".${transferPackageName}")}TO;
 import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}",".${transferPackageName}")}TOImpl;
 import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}",".${transferPackageName}")}TOExample;
+
 import br.ufrj.coppetec.to.AbstractTO;
 import br.ufrj.coppetec.to.AbstractTOExample;
+
 import ${userTypesPackage}.HibernateJSONBHelper;
+
 #set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 import ${customTypesPackage}.${util}.PaginationStrategy;
 import $customTypesPackage.${modelPackageName}.TOUtil;
 #set ($sharp = "#")
+
 import org.json.simple.JSONObject;
 
 /**
@@ -377,6 +386,7 @@ $attribute.getDocumentation("     * ")
 #set($tipo = $target.getterSetterTypeName)
 #end
 #if($target.subentity)
+#if($target.one2One)
 #set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
    /**
 $target.getDocumentation("     * ")
@@ -384,48 +394,60 @@ $target.getDocumentation("     * ")
 
 	private ${target.getType().packageName}.${target.getType().name} $target.name = new ${target.getType().packageName}.${target.getType().name}Impl();
 	
-/*	public void set${targetUpperCaseName}(${target.getType().packageName}.${target.getType().name} $target.name) {
-		this.${target.name} =(${target.getType().packageName}.${target.getType().name}) ${target.name}.clone();
-	}
-	*/
 	public ${target.getType().packageName}.${target.getType().name} get${targetUpperCaseName} () {
 		return (${target.getType().packageName}.${target.getType().name}) this.${target.name}.clone();
 	}
 	
-	public void set${targetUpperCaseName}(java.util.Map<String,String> ${target.name}) {
+	public void set${targetUpperCaseName}(Object ${target.name}) {
+	
+		if(${target.name} instanceof Map<?,?>) {
+			java.util.Map<String,String> param = (Map<String,String>) ${target.name};
+		
 #foreach($attribute in $target.getType().attributes)
 #if(!$attribute.name.equalsIgnoreCase("id"))
 #if($attribute.type.name.equals("String"))
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${target.name}.get("$attribute.name"));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (param.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Integer"))
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Integer.valueOf(${target.name}.get("$attribute.name")));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Integer.valueOf(param.get("$attribute.name")));
 #elseif($attribute.type.name.equals("Double"))
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Double.valueOf(${target.name}.get("$attribute.name")));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Double.valueOf(param.get("$attribute.name")));
 #elseif($attribute.type.name.equals("Boolean"))
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Boolean.valueOf(${target.name}.get("$attribute.name")));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Boolean.valueOf(param.get("$attribute.name")));
 #elseif($attribute.type.name.equals("Long"))
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(${target.name}.get("$attribute.name")));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(param.get("$attribute.name")));
 #else
-		this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(${target.name}.get("$attribute.name")));
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(param.get("$attribute.name")));
 #end
 #end
 #end
+		}
 	}
-	
-/*	public void set${targetUpperCaseName}(String ${target.name}) {
-		this.set${targetUpperCaseName}(HibernateJSONBHelper.parseJSONObjectToMap(${target.name}));
-	}*/	
-/*	private String  $target.name = new String();
-	
-	public void set${targetUpperCaseName}(String $target.name) {
-		this.${target.name} = ${target.name};
-	}
-	
-	public String get${targetUpperCaseName}() {
-		return this.${target.name};
-	} */
-	
-	
+
+
+#elseif($target.many2One)
+ 	/**
+$target.getDocumentation("     * ")
+    */
+    
+    private ArrayList<${target.getType().packageName}.${target.getType().name}> ${target.name} = new ArrayList<${target.getType().packageName}.${target.getType().name}>();
+    
+    public ${target.getType().packageName}.${target.getType().name} ${target.getterName}(){
+    	return (${target.getType().packageName}.${target.getType().name}) this.${target.name}.clone();
+    }
+    
+    public void ${target.setterName}(Object ${target.name}) {
+    	if(${target.name} instanceof ArrayList<?>) {
+    		ArrayList<Map<String,String>> map = (ArrayList<Map<String,String>>) ${target.name};
+    		
+    		for(Map<String,String> objeto : map) {
+    			${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl(objeto);
+    		
+    			this.${target.name}.add(temp);
+    		}
+    	}
+    }
+    
+#end	
 #else
 #if ($target.many)
     private $tipo $target.name = $target.collectionTypeImplementation;

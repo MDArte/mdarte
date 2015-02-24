@@ -48,8 +48,7 @@ public class $className implements UserType {
           String column = strings[0];
           String value = resultSet.getString(column);
      
-     	  return HibernateJSONBHelper.parseJSONObjectToMap(value);
-          //return value;
+     	  return HibernateJSONBHelper.parse(value);
       }
 	  
 	  public Object deepCopy(Object object) throws HibernateException {        
@@ -70,7 +69,7 @@ public class $className implements UserType {
       }
       
       public Class returnedClass() {
-          return Map.class;
+          return Object.class;
       }
       
       public int[] sqlTypes() {
