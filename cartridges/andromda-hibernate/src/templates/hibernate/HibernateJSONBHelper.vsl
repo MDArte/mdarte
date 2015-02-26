@@ -122,6 +122,23 @@ public class $className {
 		return map;
 	}
 	
+	public static String parseArrayListToJSONArray(ArrayList list) {
+		int size = list.size(), i = 0;
+		StringBuffer buffer = new StringBuffer("[ ");
+		
+		for(Object obj : list) {
+			Subentity sub = (Subentity)obj;
+			buffer.append(sub.toJson());
+			if(i < size - 2) {
+				buffer.append(", ");
+			}
+			i++;
+		}
+		buffer.append(" ]");
+		
+		return buffer.toString();
+	}
+	
 	public static ArrayList<Map<String,String>> parseJSONArrayToArrayList(String json) {
 		ArrayList<Map<String,String>> list = new ArrayList<Map<String,String>>();
 		

@@ -101,7 +101,12 @@
 #end
 #end
 #if ($sourceEnd.one2Many)
-
+#if($sourceEnd.otherEnd.subentity)
+		<property name="${sourceEnd.otherEnd.getType().name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
+			<column name="${sourceEnd.otherEnd.name.toUpperCase()}" not-null="$sourceEnd.otherEnd.required" sql-type="JSONB" >
+			</column>
+		</property>
+#else
 #if ($otherEnd.set || $otherEnd.map)
 ####### De acordo com o fac do hibernate, em associacoes one2many deve-se usar fetch="subselect" ######
 ##<$otherEnd.collectionType name="$otherEnd.name" order-by="$otherEnd.orderByColumns"#if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end#if ($stringUtils.isNotBlank($otherEnd.sortType)) sort="$otherEnd.sortType"#end>
@@ -127,6 +132,7 @@
 #end
             <one-to-many class="$otherEnd.type.fullyQualifiedEntityImplementationName" embed-xml="false"/>
         </$otherEnd.collectionType>
+#end
 #elseif ($sourceEnd.many2One)
 
 ##<many-to-one name="$otherEnd.name" class="$otherEnd.type.fullyQualifiedEntityImplementationName"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end foreign-key="$otherEnd.foreignKeyConstraintName" index="IND_${entity.tableName}_${otherEnd.columnName}" #if($otherEnd.lazy) lazy="proxy" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end >
@@ -138,7 +144,6 @@
             </column>
         </many-to-one>
 #elseif ($sourceEnd.many2Many)
-
 ##if($otherEnd.list)
 ##  <$otherEnd.collectionType name="$otherEnd.name" table="$otherEnd.association.tableName" #if($otherEnd.lazy) lazy="true" fetch="select"#else lazy="false" fetch="$otherEnd.outerJoin"#end inverse="$otherEnd.hibernateInverse"#if ($otherEnd.hibernateCascade) cascade="$otherEnd.hibernateCascade"#end#if ($otherEnd.whereClause) where="$otherEnd.whereClause"#end>
 ##else

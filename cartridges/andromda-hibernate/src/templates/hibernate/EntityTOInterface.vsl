@@ -60,7 +60,11 @@ br.ufrj.coppetec.Entity
 ##if($target.one2One)
 #set($camelCaseName = $target.name.substring(0,1).toUpperCase().concat($target.name.substring(1)))
 ##set($camelCaseName = $target.name.substring)
+#if($target.one2One)
 	public ${target.getType().packageName}.${target.getType().name} get${camelCaseName}();
+#else
+	public java.util.ArrayList<${target.getType().packageName}.${target.getType().name}> get${camelCaseName}();
+#end
 	public void set${camelCaseName}(Object ${target.getType().name}); 
 
 ##end

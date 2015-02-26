@@ -17,62 +17,69 @@ import java.sql.Types;
 
 public class $className implements UserType {
 	  
-	  public Object assemble(Serializable cached, Object owner)
-              throws HibernateException {
-          return cached;
-      }
-      
-      public Serializable disassemble(Object object) throws HibernateException {
-          return (Serializable) object;
-      }
-	  
-	  public boolean equals(Object object1, Object object2) throws HibernateException {
-       
-          return object1.equals(object2);
-      }
-	  
-	  public void nullSafeSet(PreparedStatement statement, Object object, int i)
-              throws HibernateException, SQLException {
-          
-          if(object != null) {
-          	Subentity sub = (Subentity) object;
-          
-          	statement.setObject(i, sub.toJson(), Types.OTHER);
-          } else {
-          	statement.setNull(i, Types.OTHER);
-          }
-      }
-      
-      public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
-              throws HibernateException, SQLException {
-          String column = strings[0];
-          String value = resultSet.getString(column);
-     
-     	  return HibernateJSONBHelper.parse(value);
-      }
-	  
-	  public Object deepCopy(Object object) throws HibernateException {        
-         return object;
-      }
-	  
-	  public Object replace(Object original, Object target, Object owner)
-              throws HibernateException {
-          return original;
-      }
-      
-      public int hashCode(Object object) throws HibernateException {
-          return object.hashCode();
-      }
+	public Object assemble(Serializable cached, Object owner)
+			throws HibernateException {
+		return cached;
+	}
 
-      public boolean isMutable() {
-          return true;
-      }
-      
-      public Class returnedClass() {
-          return Object.class;
-      }
-      
-      public int[] sqlTypes() {
-          return new int[] { Types.JAVA_OBJECT };
-      }
+	public Serializable disassemble(Object object) throws HibernateException {
+		return (Serializable) object;
+	}
+
+	public boolean equals(Object object1, Object object2) throws HibernateException {
+
+		return object1.equals(object2);
+	}
+
+	public void nullSafeSet(PreparedStatement statement, Object object, int i)
+			throws HibernateException, SQLException {
+
+		if(object == null) {
+			statement.setNull(i, Types.OTHER);
+		} else {
+			if(object instanceof java.util.ArrayList) {
+				ArrayList list = (ArrayList) object;
+				String json = HibernateJSONBHelper.parseArrayListToJSONArray(list);
+				statement.setObject(i, json, Types.OTHER);
+			} else { 
+				Subentity sub = (Subentity) object;
+
+				statement.setObject(i, sub.toJson(), Types.OTHER);
+			} 				
+		}
+	}
+
+
+	public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
+			throws HibernateException, SQLException {
+		String column = strings[0];
+		String value = resultSet.getString(column);
+
+		return HibernateJSONBHelper.parse(value);
+	}
+
+	public Object deepCopy(Object object) throws HibernateException {        
+		return object;
+	}
+
+	public Object replace(Object original, Object target, Object owner)
+			throws HibernateException {
+		return original;
+	}
+
+	public int hashCode(Object object) throws HibernateException {
+		return object.hashCode();
+	}
+
+	public boolean isMutable() {
+		return true;
+	}
+
+	public Class returnedClass() {
+		return Object.class;
+	}
+
+	public int[] sqlTypes() {
+		return new int[] { Types.JAVA_OBJECT };
+	}
 }
