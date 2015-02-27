@@ -437,12 +437,18 @@ $target.getDocumentation("     * ")
     
     public void ${target.setterName}(Object ${target.name}) {
     	if(${target.name} instanceof ArrayList<?>) {
-    		ArrayList<Map<String,String>> map = (ArrayList<Map<String,String>>) ${target.name};
+    		Collection col = (Collection) ${target.name};
     		
-    		for(Map<String,String> objeto : map) {
-    			${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl(objeto);
+    		for(Object objeto : map) {
+    			if(objeto instanceof Map<?,?>){
+    				${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl((Map)objeto);
     		
-    			this.${target.name}.add(temp);
+    				this.${target.name}.add(temp);
+    			} else if (objeto instaceof ${target.getType().packageName}.${target.getType().name}) {
+    				${target.getType().packageName}.${target.getType().name} ${target.name} = (${target.getType().packageName}.${target.getType().name}) objeto;
+    				
+    				this.${target.name}.add(${target.name});
+    			}
     		}
     	}
     }

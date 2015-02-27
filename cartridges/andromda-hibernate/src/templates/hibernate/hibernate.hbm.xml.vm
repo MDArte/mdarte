@@ -78,7 +78,7 @@
 #if ($sourceEnd.one2One)
 #if($otherEnd.isSubentity())
 
-		<property name="${otherEnd.getType().name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
+		<property name="${otherEnd.name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
 			<column name="${otherEnd.name.toUpperCase()}" not-null="$otherEnd.required" sql-type="JSONB" >
 			</column>
 		</property>
@@ -102,7 +102,7 @@
 #end
 #if ($sourceEnd.one2Many)
 #if($sourceEnd.otherEnd.subentity)
-		<property name="${sourceEnd.otherEnd.getType().name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
+		<property name="${sourceEnd.otherEnd.name.toLowerCase()}" type="org.andromda.persistence.hibernate.usertypes.HibernateJSONBUserType">
 			<column name="${sourceEnd.otherEnd.name.toUpperCase()}" not-null="$sourceEnd.otherEnd.required" sql-type="JSONB" >
 			</column>
 		</property>
