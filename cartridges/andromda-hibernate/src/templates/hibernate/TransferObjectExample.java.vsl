@@ -6,8 +6,6 @@
 package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${transferPackageName}")};
 #end
 
-import org.json.simple.JSONObject;
-
 public class ${class.name}TOExample
 #if($class.generalization)
 #set ($generalizacao = ${class.generalization.fullyQualifiedName})
