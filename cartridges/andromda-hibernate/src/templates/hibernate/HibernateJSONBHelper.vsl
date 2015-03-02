@@ -128,10 +128,13 @@ public class $className {
 		
 		for(Object obj : list) {
 			Subentity sub = (Subentity)obj;
+			
 			buffer.append(sub.toJson());
-			if(i < size - 2) {
+			
+			if(i < size - 1) {
 				buffer.append(", ");
 			}
+			
 			i++;
 		}
 		buffer.append(" ]");
@@ -149,7 +152,10 @@ public class $className {
 		} else {
 			while(parser.hasNext()) {
 				Map<String,String> object = parseJSONObjectToMap(parser);
-				list.add(object);
+				
+				if(object != null) {
+					list.add(object);
+				}
 			}
 		}
 		

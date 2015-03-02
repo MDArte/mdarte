@@ -54,36 +54,73 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 #foreach ($associationEnd in $class.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
-#if($target.subentity)
-	private JSONObject $target.name = new JSONObject();
+#if($target.one2One)
+#set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+   /**
+$target.getDocumentation("     * ")
+     */
+
+	private ${target.getType().packageName}.${target.getType().name} $target.name = new ${target.getType().packageName}.${target.getType().name}Impl();
 	
-	public void set${targetUpperCaseName}DoubleProperty(String property, double number ){
-		this.${target.name}.put(property, number);
+	public ${target.getType().packageName}.${target.getType().name} get${targetUpperCaseName} () {
+		return (${target.getType().packageName}.${target.getType().name}) this.${target.name}.clone();
 	}
 	
-	public void set${targetUpperCaseName}StringProperty(String property, String string ){
-		this.${target.name}.put(property, string);
-	}
+	public void set${targetUpperCaseName}(Object ${target.name}) {
 	
-	public void set${targetUpperCaseName}BooleanProperty(String property, boolean bool ){
-		this.${target.name}.put(property, bool);
+		if(${target.name} instanceof Map<?,?>) {
+			java.util.Map<String,String> param = (Map<String,String>) ${target.name};
+		
+#foreach($attribute in $target.getType().attributes)
+#if(!$attribute.name.equalsIgnoreCase("id"))
+#if($attribute.type.name.equals("String"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (param.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Integer"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Integer.valueOf(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Double"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Double.valueOf(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Boolean"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Boolean.valueOf(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Long"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(param.get("$attribute.name")));
+#else
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(param.get("$attribute.name")));
+#end
+#end
+#end
+		}
 	}
-	
-	public void set${targetUpperCaseName}ObjectProperty(String property, JSONObject object ){
-		this.${target.name}.put(property, object);
-	}
-	
-	public Object get${targetUpperCaseName}Property(String property) {
-		return this.${target.name}.get(property);
-	}
-	
-	public JSONObject get${targetUpperCaseName} () {
-		return (JSONObject) this.${target.name}.clone();
-	}
-	
-	public void set${targetUpperCaseName} (JSONObject object) {
-		this.${target.name} = (JSONObject) object.clone(); 
-	}
+
+
+#elseif($target.many2One)
+ 	/**
+$target.getDocumentation("     * ")
+    */
+    
+    private ArrayList<${target.getType().packageName}.${target.getType().name}> ${target.name} = new ArrayList<${target.getType().packageName}.${target.getType().name}>();
+    
+    public ArrayList<${target.getType().packageName}.${target.getType().name}> ${target.getterName}(){
+    	return (ArrayList<${target.getType().packageName}.${target.getType().name}>) this.${target.name}.clone();
+    }
+    
+    public void ${target.setterName}(Object ${target.name}) {
+    	if(${target.name} instanceof ArrayList<?>) {
+    		Collection col = (Collection) ${target.name};
+    		
+    		for(Object objeto : map) {
+    			if(objeto instanceof Map<?,?>){
+    				${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl((Map)objeto);
+    		
+    				this.${target.name}.add(temp);
+    			} else if (objeto instaceof ${target.getType().packageName}.${target.getType().name}) {
+    				${target.getType().packageName}.${target.getType().name} ${target.name} = (${target.getType().packageName}.${target.getType().name}) objeto;
+    				
+    				this.${target.name}.add(${target.name});
+    			}
+    		}
+    	}
+    }
+    
 #else
 #if ($target.navigable)
 #set($rtipo = $target.type.fullyQualifiedName)
