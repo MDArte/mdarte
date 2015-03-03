@@ -19,20 +19,25 @@ public abstract class $subentity.name
 	}
 #end
 
-	public ${subentity.name}(java.util.Map<String,String> map) throws Exception{
+	public ${subentity.name}(java.util.Map<String,String> map) {
 #foreach($attribute in $subentity.attributes)
 #if($attribute.type.name.equals("String"))
 		this.${attribute.name} = map.get("$attribute.name");
 #elseif($attribute.type.name.equals("Integer"))
-		this.$attribute.name = Integer.valueOf(map.get("$attribute.name"));
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = Integer.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Double"))
-		this.$attribute.name = Double.valueOf(map.get("$attribute.name"));
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = Double.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Boolean"))
-		this.$attribute.name = Boolean.valueOf(map.get("$attribute.name"));
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = Boolean.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Long"))
-		this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
 #else
-		this.$attribute.name = ${attribute.type.name}.valueOf(map.get("$attribute.name"));
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = ${attribute.type.name}.valueOf(map.get("$attribute.name"));
 #end
 #end
 	}

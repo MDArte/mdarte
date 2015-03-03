@@ -6,6 +6,10 @@
 package ${stringUtils.replace($class.packageName,".${modelPackageName}",".${transferPackageName}")};
 #end
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+
 public class ${class.name}TOExample
 #if($class.generalization)
 #set ($generalizacao = ${class.generalization.fullyQualifiedName})
@@ -52,6 +56,7 @@ extends br.ufrj.coppetec.to.AbstractTOExample
 #foreach ($associationEnd in $class.associationEnds)
 #set ($target = $associationEnd.otherEnd)
 #set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
+#if($target.subentity)
 #if($target.one2One)
 #set($targetUpperCaseName = ${target.name.substring(0,1).toUpperCase().concat($target.name.substring(1))})
    /**
@@ -105,20 +110,20 @@ $target.getDocumentation("     * ")
     	if(${target.name} instanceof ArrayList<?>) {
     		Collection col = (Collection) ${target.name};
     		
-    		for(Object objeto : map) {
+    		for(Object objeto : col) {
     			if(objeto instanceof Map<?,?>){
     				${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl((Map)objeto);
     		
     				this.${target.name}.add(temp);
-    			} else if (objeto instaceof ${target.getType().packageName}.${target.getType().name}) {
-    				${target.getType().packageName}.${target.getType().name} ${target.name} = (${target.getType().packageName}.${target.getType().name}) objeto;
+    			} else if (objeto instanceof ${target.getType().packageName}.${target.getType().name}) {
+    				${target.getType().packageName}.${target.getType().name} temp = (${target.getType().packageName}.${target.getType().name}) objeto;
     				
-    				this.${target.name}.add(${target.name});
+    				this.${target.name}.add(temp);
     			}
     		}
     	}
     }
-    
+#end
 #else
 #if ($target.navigable)
 #set($rtipo = $target.type.fullyQualifiedName)

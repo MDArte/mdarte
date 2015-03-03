@@ -4,13 +4,26 @@
 package $subentity.packageName;
 #end
 
+import java.util.Map;
 
 public class ${subentity.name}Impl extends ${subentity.name}
 {
 #foreach($operation in $subentity.operations)
 	protected $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception {
-
+		return null;
 	}
 #end
+
+	public String toJson() {
+	
+	}
+	
+	public ${subentity.name}Impl (Map<String,String> obj) {
+		super(obj);
+	}
+	
+	public ${subentity.name}Impl() {
+		super();
+	}
 }
 #end

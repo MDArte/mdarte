@@ -23,6 +23,7 @@ import org.hibernate.FlushMode;
 
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import $customTypesPackage.${modelPackageName}.AbstractDAO;
 import $customTypesPackage.${modelPackageName}.AbstractEntity;
@@ -439,15 +440,15 @@ $target.getDocumentation("     * ")
     	if(${target.name} instanceof ArrayList<?>) {
     		Collection col = (Collection) ${target.name};
     		
-    		for(Object objeto : map) {
+    		for(Object objeto : col) {
     			if(objeto instanceof Map<?,?>){
     				${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl((Map)objeto);
     		
     				this.${target.name}.add(temp);
-    			} else if (objeto instaceof ${target.getType().packageName}.${target.getType().name}) {
-    				${target.getType().packageName}.${target.getType().name} ${target.name} = (${target.getType().packageName}.${target.getType().name}) objeto;
+    			} else if (objeto instanceof ${target.getType().packageName}.${target.getType().name}) {
+    				${target.getType().packageName}.${target.getType().name} temp = (${target.getType().packageName}.${target.getType().name}) objeto;
     				
-    				this.${target.name}.add(${target.name});
+    				this.${target.name}.add(temp);
     			}
     		}
     	}
