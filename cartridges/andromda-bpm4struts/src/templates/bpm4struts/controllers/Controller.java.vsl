@@ -258,7 +258,7 @@ $operation.getDocumentation("     * ")
 		if(request.getParameter("jtSorting") != null)
 		    desc = request.getParameter("jtSorting").split(" ")[1].equalsIgnoreCase("DESC");
 			
-		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas);
+		PaginationStrategy strategy = new ${packageUtil}.PaginationSimple(paginacao, linhas, 1);
 
 #foreach($action in $page.getActions())
 #if($action.ajaxAction && $action.ajaxTable.equals($parametro.name))
