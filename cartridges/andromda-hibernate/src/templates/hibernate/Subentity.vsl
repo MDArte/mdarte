@@ -4,7 +4,7 @@
 package $subentity.packageName;
 #end
 
-public abstract class $subentity.name
+public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 {
 
 #foreach($attribute in $subentity.attributes)
