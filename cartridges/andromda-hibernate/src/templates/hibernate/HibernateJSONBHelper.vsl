@@ -93,8 +93,6 @@ public class $className {
 				if(firstEvent == Event.KEY_NAME) {
 					String key = parser.getString();
 					
-					System.out.println("Key: "+key);
-					
 					Event secondEvent = parser.next();
 					
 					if(isValue(secondEvent)) {
