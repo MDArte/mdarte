@@ -440,17 +440,21 @@ $target.getDocumentation("     * ")
     	if(${target.name} instanceof ArrayList<?>) {
     		Collection col = (Collection) ${target.name};
     		
+    		ArrayList<${target.getType().packageName}.${target.getType().name}> list = new ArrayList<${target.getType().packageName}.${target.getType().name}>();
+    		
     		for(Object objeto : col) {
     			if(objeto instanceof Map<?,?>){
     				${target.getType().packageName}.${target.getType().name} temp = new ${target.getType().packageName}.${target.getType().name}Impl((Map)objeto);
     		
-    				this.${target.name}.add(temp);
+    				list.add(temp);
     			} else if (objeto instanceof ${target.getType().packageName}.${target.getType().name}) {
     				${target.getType().packageName}.${target.getType().name} temp = (${target.getType().packageName}.${target.getType().name}) objeto;
     				
-    				this.${target.name}.add(temp);
+    				list.add(temp);
     			}
     		}
+    		
+    		this.${target.name} = list;
     	}
     }
     
