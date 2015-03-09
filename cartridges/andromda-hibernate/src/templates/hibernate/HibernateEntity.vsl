@@ -458,6 +458,18 @@ $target.getDocumentation("     * ")
     	}
     }
     
+    public ${target.getType().packageName}.${target.getType().name} removeFrom${targetUpperCaseName}(int index) {
+    	return this.${target.name}.remove(index);
+    }
+    
+    public void addTo${targetUpperCaseName}(${target.getType().packageName}.${target.getType().name} param) {
+    	this.${target.name}.add(param);
+    }
+    
+    public void addTo${targetUpperCaseName}(int index, ${target.getType().packageName}.${target.getType().name} param) {
+    	this.${target.name}.add(index, param);
+    }
+    
 #end	
 #else
 #if ($target.many)
