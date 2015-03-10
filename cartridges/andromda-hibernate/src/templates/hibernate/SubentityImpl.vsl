@@ -6,8 +6,11 @@ package $subentity.packageName;
 
 import java.util.Map;
 
-public class ${subentity.name}Impl extends ${subentity.name}
+public class ${subentity.name}Impl extends ${subentity.name} implements java.io.Serializable
 {
+
+	private static final long serialVersionUID = ${subentity.serialVersionUID}L;
+	
 #foreach($operation in $subentity.operations)
 	protected $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception {
 		return null;
@@ -15,7 +18,7 @@ public class ${subentity.name}Impl extends ${subentity.name}
 #end
 
 	public String toJson() {
-	
+		return null;
 	}
 	
 	public ${subentity.name}Impl (Map<String,String> obj) {
