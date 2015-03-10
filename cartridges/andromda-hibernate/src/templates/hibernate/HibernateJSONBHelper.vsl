@@ -12,36 +12,55 @@ import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
+import br.mdarte.exemplo.academico.util.Util;
 
 public class $className {
 	
 	public static boolean isObject(Event event){
-		return event == Event.START_OBJECT;
+		if(event != null)
+				return event == Event.START_OBJECT;
+		
+		return false;
 	}
 	
 	public static boolean isObject(String json){
-		Event event  = Json.createParser(new StringReader(json)).next();
+		if(!Util.checkEmpty(json)) {
+			Event event  = Json.createParser(new StringReader(json)).next();
 		
-		return event == Event.START_OBJECT;
+			return event == Event.START_OBJECT;
+		}
+		
+		return false;
 	}
 	
 	public static boolean isArray(Event event){
-		return event == Event.START_ARRAY;
+		if(event != null) {
+			return event == Event.START_ARRAY;
+		}
+		
+		return false;
 	}
 	
 	public static boolean isArray(String json){
-		Event event  = Json.createParser(new StringReader(json)).next();
 		
-		return event == Event.START_ARRAY;
+		if(!Util.checkEmpty(json)) {
+			Event event  = Json.createParser(new StringReader(json)).next();
+		
+			return event == Event.START_ARRAY;
+		}
+		
+		return false;
 	}
 	
 	public static boolean isValue(Event event) {
+		if(event != null)
+			return !(event == Event.START_ARRAY) && 
+					!(event == Event.START_OBJECT) &&
+					!(event == Event.END_ARRAY) &&
+					!(event == Event.END_OBJECT) &&
+					!(event == Event.KEY_NAME);
 		
-		return !(event == Event.START_ARRAY) && 
-				!(event == Event.START_OBJECT) &&
-				!(event == Event.END_ARRAY) &&
-				!(event == Event.END_OBJECT) &&
-				!(event == Event.KEY_NAME);
+		return false;
 	}
 	
 	public static Map<String, String> parseJSONObjectToMap(String json) {
