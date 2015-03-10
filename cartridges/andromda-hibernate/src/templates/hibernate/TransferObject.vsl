@@ -258,7 +258,7 @@ $target.getDocumentation("     * ")
 	private ${target.getType().packageName}.${target.getType().name} $target.name = new ${target.getType().packageName}.${target.getType().name}Impl();
 	
 	public ${target.getType().packageName}.${target.getType().name} get${targetUpperCaseName} () {
-		return (${target.getType().packageName}.${target.getType().name}) this.${target.name}.clone();
+		return ((${target.getType().packageName}.${target.getType().name}) this.${target.name}).clone();
 	}
 	
 	public void set${targetUpperCaseName}(Object ${target.name}) {
@@ -283,6 +283,8 @@ $target.getDocumentation("     * ")
 #end
 #end
 #end
+		} else if(${target.name} instanceof ${target.getType().packageName}.${target.getType().name}) {
+			this.${target.name} = ((${target.getType().packageName}.${target.getType().name}) endereco).clone();
 		}
 	}
 
