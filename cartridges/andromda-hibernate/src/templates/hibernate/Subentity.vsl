@@ -43,10 +43,48 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 	}
 
 	public Endereco() {
-		
+
 	}
 	
-	public abstract String toJson();
+	public String toJson() {
+		StringBuffer buffer = new StringBuffer("{ ");
+
+#set($i = 0)
+#foreach($attribute in $subentity.attributes)
+#if($attribute.type.name == "String" || $attribute.type.name == "Date")	
+		if(this.${attribute.getterName}() != null) {
+			buffer.append("\"${attribute.name}\" : \""+this.${attribute.getterName}().toString()+"\"");
+#if($i < $subentity.attributes.size() - 2)
+			buffer.append(", ");
+#end
+		}
+		
+#set($i = $i + 1)
+#elseif($attribute.type.name == "Float" || $attribute.type.name == "Long" || $attribute.type.name == "Integer" || $attribute.type.name == "Boolean")		
+		if(this.${attribute.getterName}() != null) {
+			buffer.append("\"${attribute.name}\" : "+this.${attribute.getterName}().toString());
+#if($i < $subentity.attributes.size() - 2)
+			buffer.append(", ");
+#end
+		}
+		
+#set($i = $i + 1)
+#end
+#end
+		buffer.append(" }");
+		
+		return buffer.toString();
+	}
+
+	public $subentity.name clone () {
+		$subentity.name temp = new ${subentity.name}Impl();
+		
+#foreach($attribute in $subentity.attributes)
+		temp.${attribute.setterName}(this.${attribute.getterName}());
+#end
+
+		return temp;		
+	}
 
 #foreach($operation in $subentity.operations)
 	protected abstract $operation.returnType.fullyQualifiedName handle${operation.name}($operation.typedArgumentList) throws Exception;
