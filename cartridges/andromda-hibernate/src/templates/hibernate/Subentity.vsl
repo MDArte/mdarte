@@ -4,6 +4,8 @@
 package $subentity.packageName;
 #end
 
+import ${customTypesPackage}.util.JsonbUtils;
+
 public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 {
 
@@ -35,9 +37,27 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 #elseif($attribute.type.name.equals("Long"))
 		if(map.get("$attribute.name") != null)
 			this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
-#else
+#elseif($attribute.type.name.equals("Date"))
 		if(map.get("$attribute.name") != null)
-			this.$attribute.name = ${attribute.type.name}.valueOf(map.get("$attribute.name"));
+			this.$attribute.name = new Date(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Boolean[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToBooleanArray(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("String[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToStringArray(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Long[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToLongArray(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Double[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToDoubleArray(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Integer[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToIntegerArray(map.get("$attribute.name"));
+#elseif($attribute.type.name.equals("Date[]"))
+		if(map.get("$attribute.name") != null)
+			this.$attribute.name = JsonbUtils.parseJSONArrayToDateArray(map.get("$attribute.name"));
 #end
 #end
 	}
@@ -54,24 +74,36 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 #if($attribute.type.name == "String" || $attribute.type.name == "Date")	
 		if(this.${attribute.getterName}() != null) {
 			buffer.append("\"${attribute.name}\" : \""+this.${attribute.getterName}().toString()+"\"");
-#if($i < $subentity.attributes.size() - 2)
+#if($i < $subentity.attributes.size() - 1)
 			buffer.append(", ");
 #end
 		}
-		
 #set($i = $i + 1)
+		
+#elseif($attribute.type.name == "Float[]" || $attribute.type.name == "Long[]" || $attribute.type.name == "Integer[]" || $attribute.type.name == "Boolean[]" || $attribute.type.name == "String[]" || $attribute.type.name == "Date[]")
+		if(this.${attribute.getterName}() != null) {
+			buffer.append("\"${attribute.name}\" : " + JsonbUtils.parseArrayToJsonArray(this.${attribute.getterName}()).toString());
+#if($i < $subentity.attributes.size() - 1)
+			buffer.append(", ");
+#end
+		}
+#set($i = $i + 1)		
+
 #elseif($attribute.type.name == "Float" || $attribute.type.name == "Long" || $attribute.type.name == "Integer" || $attribute.type.name == "Boolean")		
 		if(this.${attribute.getterName}() != null) {
 			buffer.append("\"${attribute.name}\" : "+this.${attribute.getterName}().toString());
-#if($i < $subentity.attributes.size() - 2)
+#if($i < $subentity.attributes.size() - 1)
 			buffer.append(", ");
 #end
 		}
-		
 #set($i = $i + 1)
+		
 #end
-#end
-		buffer.append(" }");
+#end	
+		if(buffer.toString().endsWith(", "))
+			buffer.delete(buffer.length() - 2,buffer.length() - 1);
+			
+		buffer.append("}");
 		
 		return buffer.toString();
 	}
