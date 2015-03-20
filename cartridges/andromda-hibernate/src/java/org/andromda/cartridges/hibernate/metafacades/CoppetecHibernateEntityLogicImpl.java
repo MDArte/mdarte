@@ -1,8 +1,10 @@
 package org.andromda.cartridges.hibernate.metafacades;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.andromda.cartridges.hibernate.HibernateProfile;
+import org.andromda.metafacades.uml.AttributeFacade;
 import org.andromda.metafacades.uml.EntityMetafacadeUtils;
 import org.andromda.metafacades.uml.TypeMappings;
 import org.andromda.metafacades.uml.UMLMetafacadeProperties;
@@ -78,6 +80,34 @@ public class CoppetecHibernateEntityLogicImpl
             }
         }
         return true;
+    }
+    
+    protected boolean handleSubEntityHasIllegalAttributes() {
+    	if(isSubentity()) {
+    			Iterator iterator = getAttributes().iterator();
+        	
+        	while(iterator.hasNext()) {
+        		AttributeFacade attribute = (AttributeFacade) iterator.next();
+        		
+        		if(!attribute.getType().getName().equals("String")
+        				&& !attribute.getType().getName().equals("String[]")
+        				&& !attribute.getType().getName().equals("Float")
+        				&& !attribute.getType().getName().equals("Float[]")
+        				&& !attribute.getType().getName().equals("Date")
+        				&& !attribute.getType().getName().equals("Date[]")
+        				&& !attribute.getType().getName().equals("Integer")
+        				&& !attribute.getType().getName().equals("Integer[]")
+        				&& !attribute.getType().getName().equals("Boolean")
+        				&& !attribute.getType().getName().equals("Boolean[]")
+        				&& !attribute.getType().getName().equals("Long")
+        				&& !attribute.getType().getName().equals("Long[]")) {
+        			
+        			
+        			return true;
+        		}
+        	}
+    	}
+    	return false;
     }
     
     protected boolean handleIsAuditoria()

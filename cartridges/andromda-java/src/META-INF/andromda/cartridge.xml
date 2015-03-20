@@ -182,6 +182,13 @@
         outlet="util-impl"
         overwrite="false">
     </template>
+    
+    <template
+        path="templates/java/JsonbUtils.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="util-impl"
+        overwrite="false">
+    </template>
 
     <!-- cartridge-template merge-point -->
 
