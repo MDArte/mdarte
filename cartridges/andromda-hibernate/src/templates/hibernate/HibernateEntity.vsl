@@ -24,6 +24,7 @@ import org.hibernate.FlushMode;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import $customTypesPackage.${modelPackageName}.AbstractDAO;
 import $customTypesPackage.${modelPackageName}.AbstractEntity;
@@ -36,7 +37,7 @@ import ${stringUtils.replace($entity.fullyQualifiedName,".${modelPackageName}","
 import br.ufrj.coppetec.to.AbstractTO;
 import br.ufrj.coppetec.to.AbstractTOExample;
 
-import ${userTypesPackage}.HibernateJSONBHelper;
+import ${customTypesPackage}.util.JsonbUtils;
 
 #set ($util = "${stringUtils.replace($utilDir,'/','.')}")
 import ${customTypesPackage}.${util}.PaginationStrategy;
@@ -416,8 +417,22 @@ $target.getDocumentation("     * ")
 			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Boolean.valueOf(param.get("$attribute.name")));
 #elseif($attribute.type.name.equals("Long"))
 			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Long.valueOf(param.get("$attribute.name")));
-#else
-			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (${attribute.type.name}.valueOf(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Float"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (Float.valueOf(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Date"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (new Date(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("String[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToStringArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Integer[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToIntegerArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Double[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToDoubleArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Long[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToLongArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Date[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToDateArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Float[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToFloatArray(param.get("$attribute.name")));
 #end
 #end
 #end
