@@ -20,16 +20,19 @@ import javax.json.stream.JsonParser.Event;
 
 public class JsonbUtils {
 	
-	public static boolean isObject(Event event){
-		if(event != null)
+	public static boolean isObject(Event event)
+	{
+		if (event != null)
 			return event == Event.START_OBJECT;
 
 		return false;
 	}
 
-	public static boolean isObject(String json){
-		if(!Util.checkEmpty(json)) {
-			Event event  = Json.createParser(new StringReader(json)).next();
+	public static boolean isObject(String json)
+	{
+		if (!Util.checkEmpty(json))
+		{
+			Event event = Json.createParser(new StringReader(json)).next();
 
 			return event == Event.START_OBJECT;
 		}
@@ -37,18 +40,22 @@ public class JsonbUtils {
 		return false;
 	}
 
-	public static boolean isArray(Event event){
-		if(event != null) {
+	public static boolean isArray(Event event)
+	{
+		if (event != null)
+		{
 			return event == Event.START_ARRAY;
 		}
 
 		return false;
 	}
 
-	public static boolean isArray(String json){
+	public static boolean isArray(String json)
+	{
 
-		if(!Util.checkEmpty(json)) {
-			Event event  = Json.createParser(new StringReader(json)).next();
+		if (!Util.checkEmpty(json))
+		{
+			Event event = Json.createParser(new StringReader(json)).next();
 
 			return event == Event.START_ARRAY;
 		}
@@ -56,46 +63,57 @@ public class JsonbUtils {
 		return false;
 	}
 
-	public static boolean isValue(Event event) {
-		if(event != null)
-			return !(event == Event.START_ARRAY) && 
-					!(event == Event.START_OBJECT) &&
-					!(event == Event.END_ARRAY) &&
-					!(event == Event.END_OBJECT) &&
-					!(event == Event.KEY_NAME);
+	public static boolean isValue(Event event)
+	{
+		if (event != null)
+			return !(event == Event.START_ARRAY) && !(event == Event.START_OBJECT) && !(event == Event.END_ARRAY) && !(event == Event.END_OBJECT) && !(event == Event.KEY_NAME);
 
 		return false;
 	}
 
-	public static String parseArrayToJsonArray(Object [] array) {
+	public static String parseArrayToJsonArray(Object[] array)
+	{
 		StringBuffer buffer = new StringBuffer("[");
-		
-		for(int i =0; i < array.length; i++ ) {
-			buffer.append(" "+array[i].toString());
-			if(i < array.length -2)
+
+		for (int i = 0; i < array.length; i++)
+		{
+			if (array[i] instanceof String)
+			{
+				buffer.append(" \"" + array[i].toString()+"\"");
+			}
+			else
+				buffer.append(" " + array[i].toString());
+
+			if (i < array.length - 1)
 				buffer.append(", ");
 		}
-		
+
 		buffer.append("]");
-		
+
 		return buffer.toString();
 	}
 
-	public static Boolean[] parseJSONArrayToBooleanArray(String json) {
+	public static Boolean[] parseJSONArrayToBooleanArray(String json)
+	{
 		ArrayList<Boolean> list = new ArrayList<Boolean>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if( firstEvent == Event.VALUE_TRUE) {
+				if (firstEvent == Event.VALUE_TRUE)
+				{
 					Boolean temp = new Boolean(true);
 
 					list.add(temp);
-				} else {
+				}
+				else if (firstEvent == Event.VALUE_FALSE)
+				{
 					Boolean temp = new Boolean(false);
 
 					list.add(temp);
@@ -106,40 +124,50 @@ public class JsonbUtils {
 		return list.toArray(new Boolean[list.size()]);
 	}
 
-	public static Boolean[] parseJSONArrayToBooleanArray(JsonParser parser) {
+	public static Boolean[] parseJSONArrayToBooleanArray(JsonParser parser)
+	{
 		ArrayList<Boolean> list = new ArrayList<Boolean>();
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if( firstEvent == Event.VALUE_TRUE) {
+				if (firstEvent == Event.VALUE_TRUE)
+				{
 					Boolean temp = new Boolean(true);
 
 					list.add(temp);
-				} else {
+				}
+				else
+				{
 					Boolean temp = new Boolean(false);
 
 					list.add(temp);
-				}			
+				}
 			}
 		}
 
 		return list.toArray(new Boolean[list.size()]);
 	}
 
-	public static String[] parseJSONArrayToStringArray(String json) {
+	public static String[] parseJSONArrayToStringArray(String json)
+	{
 		ArrayList<String> list = new ArrayList<String>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_STRING) {
+				if (firstEvent == Event.VALUE_STRING)
+				{
 					String temp = new String(parser.getString());
 
 					list.add(temp);
@@ -150,15 +178,19 @@ public class JsonbUtils {
 		return list.toArray(new String[list.size()]);
 	}
 
-	public static String[] parseJSONArrayToStringArray(JsonParser parser) {
+	public static String[] parseJSONArrayToStringArray(JsonParser parser)
+	{
 		ArrayList<String> list = new ArrayList<String>();
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_STRING) {
+				if (firstEvent == Event.VALUE_STRING)
+				{
 					String temp = new String(parser.getString());
 
 					list.add(temp);
@@ -168,18 +200,22 @@ public class JsonbUtils {
 
 		return list.toArray(new String[list.size()]);
 	}
-	
-	public static Float[] parseJSONArrayToFloatArray(String json) {
+
+	public static Float[] parseJSONArrayToFloatArray(String json)
+	{
 		ArrayList<Float> list = new ArrayList<Float>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_NUMBER) {
+				if (firstEvent == Event.VALUE_NUMBER)
+				{
 					Float temp = new Float(parser.getString());
 
 					list.add(temp);
@@ -189,17 +225,20 @@ public class JsonbUtils {
 
 		return list.toArray(new Float[list.size()]);
 	}
-	
 
-	public static Float[] parseJSONArrayToFloatArray(JsonParser parser) {
+	public static Float[] parseJSONArrayToFloatArray(JsonParser parser)
+	{
 		ArrayList<Float> list = new ArrayList<Float>();
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_NUMBER) {
+				if (firstEvent == Event.VALUE_NUMBER)
+				{
 					Float temp = new Float(parser.getString());
 
 					list.add(temp);
@@ -208,19 +247,23 @@ public class JsonbUtils {
 		}
 
 		return list.toArray(new Float[list.size()]);
-	}	
+	}
 
-	public static Date[] parseJSONArrayToDateArray(String json) {
+	public static Date[] parseJSONArrayToDateArray(String json)
+	{
 		ArrayList<Date> list = new ArrayList<Date>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_STRING) {
+				if (firstEvent == Event.VALUE_STRING)
+				{
 					Date temp = new Date(parser.getString());
 
 					list.add(temp);
@@ -231,15 +274,19 @@ public class JsonbUtils {
 		return list.toArray(new Date[list.size()]);
 	}
 
-	public static Date[] parseJSONArrayToDateArray(JsonParser parser) {
+	public static Date[] parseJSONArrayToDateArray(JsonParser parser)
+	{
 		ArrayList<Date> list = new ArrayList<Date>();
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_STRING) {
+				if (firstEvent == Event.VALUE_STRING)
+				{
 					Date temp = new Date(parser.getString());
 
 					list.add(temp);
@@ -249,18 +296,29 @@ public class JsonbUtils {
 
 		return list.toArray(new Date[list.size()]);
 	}
-	
-	public static Integer[] parseJSONArrayToIntegerArray(String json) {
+
+	public static Integer[] parseJSONArrayToIntegerArray(String json)
+	{
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
-		JsonParser parser = Json.createParser(new StringReader(json));
+		JsonParser parser = null;
 
-		if(isArray(parser.next())) {
+		if (!Util.checkEmpty(json))
+		{
+			parser = Json.createParser(new StringReader(json));
+		}
+		else
+			return list.toArray(new Integer[0]);
 
-			while(parser.hasNext()){
+		if (isArray(parser.next()))
+		{
+
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_NUMBER) {
+				if (firstEvent == Event.VALUE_NUMBER)
+				{
 					Integer temp = new Integer(parser.getString());
 
 					list.add(temp);
@@ -271,36 +329,46 @@ public class JsonbUtils {
 		return list.toArray(new Integer[list.size()]);
 	}
 
-	public static Integer[] parseJSONArrayToIntegerArray(JsonParser parser) {
+	public static Integer[] parseJSONArrayToIntegerArray(JsonParser parser)
+	{
 		ArrayList<Integer> list = new ArrayList<Integer>();
+		if (parser != null)
+		{
+			if (isArray(parser.next()))
+			{
 
-		if(isArray(parser.next())) {
+				while (parser.hasNext())
+				{
+					Event firstEvent = parser.next();
 
-			while(parser.hasNext()){
-				Event firstEvent = parser.next();
+					if (firstEvent == Event.VALUE_NUMBER)
+					{
+						Integer temp = new Integer(parser.getString());
 
-				if(firstEvent == Event.VALUE_NUMBER) {
-					Integer temp = new Integer(parser.getString());
-
-					list.add(temp);
+						list.add(temp);
+					}
 				}
 			}
 		}
 
 		return list.toArray(new Integer[list.size()]);
 	}
-	
-	public static Double[] parseJSONArrayToDoubleArray(String json) {
+
+	public static Double[] parseJSONArrayToDoubleArray(String json)
+	{
 		ArrayList<Double> list = new ArrayList<Double>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_NUMBER) {
+				if (firstEvent == Event.VALUE_NUMBER)
+				{
 					Double temp = new Double(parser.getString());
 
 					list.add(temp);
@@ -311,15 +379,19 @@ public class JsonbUtils {
 		return list.toArray(new Double[list.size()]);
 	}
 
-	public static Double[] parseJSONArrayToDoubleArray(JsonParser parser) {
+	public static Double[] parseJSONArrayToDoubleArray(JsonParser parser)
+	{
 		ArrayList<Double> list = new ArrayList<Double>();
 
-		if(isArray(parser.next())) {
+		if (isArray(parser.next()))
+		{
 
-			while(parser.hasNext()){
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.VALUE_NUMBER) {
+				if (firstEvent == Event.VALUE_NUMBER)
+				{
 					Double temp = new Double(parser.getString());
 
 					list.add(temp);
@@ -329,95 +401,159 @@ public class JsonbUtils {
 
 		return list.toArray(new Double[list.size()]);
 	}
-	
-	public static Map<String, String> parseJSONObjectToMap(String json) {
-		Map<String,String> map = new HashMap<String,String>();
+
+	public static Map<String, String> parseJSONObjectToMap(String json)
+	{
+		Map<String, String> map = new HashMap<String, String>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(isObject(parser.next())) {
-
-			while(parser.hasNext()){
+		if (isObject(parser.next()))
+		{
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.KEY_NAME) {
+				if (firstEvent == Event.KEY_NAME)
+				{
 					String key = parser.getString();
 
 					Event secondEvent = parser.next();
 
-					if(isValue(secondEvent)) {
+					if (isValue(secondEvent))
+					{
 						String value = new String();
 
-						if((secondEvent == Event.VALUE_STRING) || (secondEvent == Event.VALUE_NUMBER)) {
+						if ((secondEvent == Event.VALUE_STRING) || (secondEvent == Event.VALUE_NUMBER))
+						{
 							value = parser.getString();
-						} else if(secondEvent == Event.VALUE_TRUE) {
+						}
+						else if (secondEvent == Event.VALUE_TRUE)
+						{
 							value = "true";
-						} else if(secondEvent == Event.VALUE_FALSE) {
+						}
+						else if (secondEvent == Event.VALUE_FALSE)
+						{
 							value = "false";
-						} else
+						}
+						else if (secondEvent == Event.START_ARRAY)
+						{
+							StringBuffer buffer = new StringBuffer("[");
+
+							while (parser.hasNext() && parser.next() != Event.END_ARRAY)
+							{
+								buffer.append(parser.getString() + ",");
+							}
+
+							if (buffer.toString().endsWith(","))
+								buffer.deleteCharAt(buffer.length() - 1);
+
+							buffer.append("]");
+
+							value = buffer.toString();
+						}
+						else
 							value = null;
 
 						map.put(key, value);
 					}
 				}
-			}	
-		} else {
+			}
+		}
+		else
+		{
 			return null;
 		}
 
 		return map;
 	}
 
-	public static Map<String, String> parseJSONObjectToMap(JsonParser parser) {
-		Map<String,String> map = new HashMap<String,String>();
+	public static Map<String, String> parseJSONObjectToMap(JsonParser parser)
+	{
+		Map<String, String> map = new HashMap<String, String>();
 
-		if(isObject(parser.next())) {
-
-			while(parser.hasNext()){
+		if (isObject(parser.next()))
+		{
+			while (parser.hasNext())
+			{
 				Event firstEvent = parser.next();
 
-				if(firstEvent == Event.KEY_NAME) {
+				if (firstEvent == Event.KEY_NAME)
+				{
 					String key = parser.getString();
 
 					Event secondEvent = parser.next();
 
-					if(isValue(secondEvent)) {
+					if (isValue(secondEvent))
+					{
 						String value = new String();
 
-						if((secondEvent == Event.VALUE_STRING) || (secondEvent == Event.VALUE_NUMBER)) {
+						if ((secondEvent == Event.VALUE_STRING) || (secondEvent == Event.VALUE_NUMBER))
+						{
 							value = parser.getString();
-						} else if(secondEvent == Event.VALUE_TRUE) {
+						}
+						else if (secondEvent == Event.VALUE_TRUE)
+						{
 							value = "true";
-						} else if(secondEvent == Event.VALUE_FALSE) {
+						}
+						else if (secondEvent == Event.VALUE_FALSE)
+						{
 							value = "false";
-						} else
+						}
+						else if (secondEvent == Event.START_ARRAY)
+						{
+							StringBuffer buffer = new StringBuffer("[");
+
+							while (parser.hasNext() && parser.next() != Event.END_ARRAY)
+							{
+								buffer.append(parser.getString() + ",");
+							}
+
+							if (buffer.toString().endsWith(","))
+								buffer.deleteCharAt(buffer.length() - 1);
+
+							buffer.append("]");
+
+							value = buffer.toString();
+						}
+						else
 							value = null;
 
 						map.put(key, value);
 					}
-				} else if(firstEvent == Event.END_OBJECT){
+				}
+				else if (firstEvent == Event.END_OBJECT)
+				{
 					break;
 				}
-			}	
-		} else {
+			}
+		}
+		else
+		{
 			return null;
 		}
 
 		return map;
 	}
 
-	public static ArrayList<Map<String,String>> parseJSONArrayToArrayList(String json) {
-		ArrayList<Map<String,String>> list = new ArrayList<Map<String,String>>();
+	public static ArrayList<Map<String, String>> parseJSONArrayToArrayList(String json)
+	{
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
 		JsonParser parser = Json.createParser(new StringReader(json));
 
-		if(!isArray(parser.next())){
+		if (!isArray(parser.next()))
+		{
 			return null;
-		} else {
-			while(parser.hasNext()) {
-				Map<String,String> object = parseJSONObjectToMap(parser);
+		}
+		else
+		{
+			while (parser.hasNext())
+			{
+				Map<String, String> object = parseJSONObjectToMap(parser);
 
-				if(object != null) {
+				if (object != null)
+				{
 					list.add(object);
 				}
 			}
@@ -426,11 +562,15 @@ public class JsonbUtils {
 		return list;
 	}
 
-	public static Object parse (String json) {
+	public static Object parse(String json)
+	{
 
-		if(isObject(json)) {
+		if (isObject(json))
+		{
 			return parseJSONObjectToMap(json);
-		} else if(isArray(json)) {
+		}
+		else if (isArray(json))
+		{
 			return parseJSONArrayToArrayList(json);
 		}
 
