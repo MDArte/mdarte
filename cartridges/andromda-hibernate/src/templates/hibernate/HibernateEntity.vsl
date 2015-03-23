@@ -433,6 +433,8 @@ $target.getDocumentation("     * ")
 			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToDateArray(param.get("$attribute.name")));
 #elseif($attribute.type.name.equals("Float[]"))
 			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToFloatArray(param.get("$attribute.name")));
+#elseif($attribute.type.name.equals("Boolean[]"))
+			this.endereco.set$attribute.name.substring(0,1).toUpperCase().concat("${attribute.name.substring(1)}") (JsonbUtils.parseJSONArrayToBooleanArray(param.get("$attribute.name")));
 #end
 #end
 #end
