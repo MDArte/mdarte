@@ -21,9 +21,7 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 	}
 #end
 
-	public ${subentity.name}(Object object) {	
-		if(object instanceof java.util.Map) {
-			java.util.Map<String,String> map = (java.util.Map<String,String>) object;
+	public ${subentity.name}(java.util.Map<String,String> map) {	
 #foreach($attribute in $subentity.attributes)
 #if($attribute.type.name.equals("String"))
 			this.${attribute.name} = map.get("$attribute.name");
@@ -63,7 +61,6 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 #end
 
 #end
-		} 
 	}
 
 	public Endereco() {
