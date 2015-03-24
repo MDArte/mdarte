@@ -21,45 +21,49 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 	}
 #end
 
-	public ${subentity.name}(java.util.Map<String,String> map) {
+	public ${subentity.name}(Object object) {	
+		if(object instanceof java.util.Map) {
+			java.util.Map<String,String> map = (java.util.Map<String,String>) object;
 #foreach($attribute in $subentity.attributes)
 #if($attribute.type.name.equals("String"))
-		this.${attribute.name} = map.get("$attribute.name");
+			this.${attribute.name} = map.get("$attribute.name");
 #elseif($attribute.type.name.equals("Integer"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = Integer.valueOf(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = Integer.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Double"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = Double.valueOf(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = Double.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Boolean"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = Boolean.valueOf(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = Boolean.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Long"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = Long.valueOf(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Date"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = new Date(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = new Date(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Boolean[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToBooleanArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToBooleanArray(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("String[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToStringArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToStringArray(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Long[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToLongArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToLongArray(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Double[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToDoubleArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToDoubleArray(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Integer[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToIntegerArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToIntegerArray(map.get("$attribute.name"));
 #elseif($attribute.type.name.equals("Date[]"))
-		if(map.get("$attribute.name") != null)
-			this.$attribute.name = JsonbUtils.parseJSONArrayToDateArray(map.get("$attribute.name"));
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseJSONArrayToDateArray(map.get("$attribute.name"));
 #end
+
 #end
+		} 
 	}
 
 	public Endereco() {

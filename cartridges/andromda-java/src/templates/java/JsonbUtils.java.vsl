@@ -79,7 +79,11 @@ public class JsonbUtils {
 		{
 			if (array[i] instanceof String)
 			{
-				buffer.append(" \"" + array[i].toString()+"\"");
+				buffer.append(" \"" + array[i].toString() + "\"");
+			}
+			else if (array[i] instanceof Date)
+			{
+				buffer.append(" \"" + ((Date) array[i]).toGMTString() + "\"");
 			}
 			else
 				buffer.append(" " + array[i].toString());
