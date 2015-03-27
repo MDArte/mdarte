@@ -99,6 +99,7 @@ public class CoppetecHibernateEntityLogicImpl
         				&& !attribute.getType().getName().equals("Integer[]")
         				&& !attribute.getType().getName().equals("Boolean")
         				&& !attribute.getType().getName().equals("Boolean[]")
+        				&& !attribute.getType().getName().equals("Hstore")
         				&& !attribute.getType().getName().equals("Long")
         				&& !attribute.getType().getName().equals("Long[]")) {
         			
