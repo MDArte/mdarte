@@ -21,7 +21,8 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 	}
 #end
 
-	public ${subentity.name}(java.util.Map<String,String> map) {	
+	public ${subentity.name}(java.util.Map<String,String> map) {
+		if(map!=null) {
 #foreach($attribute in $subentity.attributes)
 #if($attribute.type.name.equals("String"))
 			this.${attribute.name} = map.get("$attribute.name");
@@ -58,9 +59,12 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 #elseif($attribute.type.name.equals("Date[]"))
 			if(map.get("$attribute.name") != null)
 				this.$attribute.name = JsonbUtils.parseJSONArrayToDateArray(map.get("$attribute.name"));
+#elseif($attribute.isHstore())
+			if(map.get("$attribute.name") != null)
+				this.$attribute.name = JsonbUtils.parseHstoreStringToMap(map.get("$attribute.name"));
 #end
-
 #end
+		}
 	}
 
 	public Endereco() {
@@ -98,7 +102,14 @@ public abstract class $subentity.name implements ${userTypesPackage}.Subentity
 #end
 		}
 #set($i = $i + 1)
-		
+#elseif($attribute.isHstore())		
+		if(this.${attribute.getterName}() != null) {
+			buffer.append("\"${attribute.name}\" : "+JsonbUtils.parseHstoreMapToString(this.${attribute.getterName}()));
+#if($i < $subentity.attributes.size() - 1)
+			buffer.append(", ");
+#end
+		}
+#set($i = $i + 1)		
 #end
 #end	
 		if(buffer.toString().endsWith(", "))
