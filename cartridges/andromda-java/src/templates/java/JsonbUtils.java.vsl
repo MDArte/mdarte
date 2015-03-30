@@ -8,11 +8,10 @@
 package ${customTypesPackage}.${package};
 
 import java.io.StringReader;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
@@ -20,6 +19,8 @@ import javax.json.stream.JsonParser.Event;
 
 public class JsonbUtils {
 	
+	private static String K_V_SEPARATOR = "=>";
+
 	public static boolean isObject(Event event)
 	{
 		if (event != null)
@@ -66,7 +67,11 @@ public class JsonbUtils {
 	public static boolean isValue(Event event)
 	{
 		if (event != null)
-			return !(event == Event.START_ARRAY) && !(event == Event.START_OBJECT) && !(event == Event.END_ARRAY) && !(event == Event.END_OBJECT) && !(event == Event.KEY_NAME);
+			return !(event == Event.START_ARRAY) 
+					&& !(event == Event.START_OBJECT) 
+					&& !(event == Event.END_ARRAY) 
+					&& !(event == Event.END_OBJECT) 
+					&& !(event == Event.KEY_NAME);
 
 		return false;
 	}
@@ -95,6 +100,91 @@ public class JsonbUtils {
 		buffer.append("]");
 
 		return buffer.toString();
+	}
+
+	public static String parseHstoreMapToString(Map<String, String> map)
+	{
+		if (map == null)
+		{
+			return "";
+		}
+
+		if (map.isEmpty())
+		{
+			return "";
+		}
+
+		StringBuilder builder = new StringBuilder("\"");
+
+		int n = map.size();
+
+		for (String key : map.keySet())
+		{
+			if (map.get(key) == null) {
+				builder.append("\\\"" + key + "\\\"" + K_V_SEPARATOR + "null");
+			}
+			else {
+				builder.append("\\\"" + key + "\\\"" + K_V_SEPARATOR + "\\\"" + map.get(key) + "\\\"");
+			}
+			if (n > 1)
+			{
+				builder.append(", ");
+				n--;
+			}
+		}
+		builder.append("\"");
+
+		return builder.toString();
+	}
+
+	public static Map<String, String> parseHstoreStringToMap(String string)
+	{
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		if (Util.checkEmpty(string))
+		{
+			return map;
+		}
+
+		string.replaceAll("\"", new String("\""));
+
+		String[] tokens = string.split(",");
+
+		StringBuffer buffer = new StringBuffer("");
+
+		for (int i = 0; i < tokens.length; i++)
+		{
+			buffer.append(tokens[i] + " ");
+		}
+
+		for (String token : tokens)
+		{
+			String[] kv = token.split(K_V_SEPARATOR);
+
+			String key = kv[0];
+
+			if (key.startsWith("\"") && key.endsWith("\"")  && key.length() > 2)
+			{
+				key = key.substring(1, key.length() - 1);
+			}
+
+			String value = kv[1];
+
+			if (value.startsWith("\"") && value.endsWith("\"") &&  value.length() > 2)
+			{
+				value = value.substring(1, value.length() - 1);
+			}
+
+			if(value.equals("NULL"))
+			{
+				value = null;
+			}
+
+			map.put(key, value);
+		}
+
+		return map;
 	}
 
 	public static Boolean[] parseJSONArrayToBooleanArray(String json)
