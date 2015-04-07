@@ -383,7 +383,7 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
         
 #if($jboss6)
         <j:forEach var="dep" items="${pom.dependencies}">
-			<j:if test="${dep.getProperty('ear.module') == 'true'}">
+			<j:if test="${dep.getProperty('ear.module')} == 'true'">
 				<ant:copy todir="${earDirectory}">
 					<fileset dir="${maven.repo.local}/${dep.groupId}/${dep.type}s/">
 						<include name="${dep.artifact}" />
