@@ -118,14 +118,12 @@ maven help:install - Compila o modulo help e gera o war
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test= "${open}dep.type == 'jar'${end}">
                     <j:if test= "${open}dep.groupId != pom.groupId${end}">
-                        <j:if test= "${open}dep.getProperty('jar.manifest.classpath') == 'true'${end}">
-                            <ant:copy todir="${earDirectory}">
-                                <fileset dir="${maven.repo.local}/${dep.groupId}/jars/">
-                                    <include name="${dep.artifact}"/>
-                                    <exclude name="*commons-logging*"/>
-                                </fileset>
-                            </ant:copy>
-                        </j:if>
+                        <ant:copy todir="${earDirectory}/lib">
+                            <fileset dir="${maven.repo.local}/${dep.groupId}/jars/">
+                                <include name="${dep.artifact}"/>
+                                <exclude name="*commons-logging*"/>
+                            </fileset>
+                        </ant:copy>
                     </j:if>
                 </j:if>
             </j:forEach>

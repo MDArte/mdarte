@@ -107,7 +107,7 @@
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
-                    <ant:copy todir="${open}earDirectory${end}">
+                    <ant:copy todir="${open}earDirectory${end}/lib">
                         <fileset dir="${open}maven.repo.local${end}/${open}dep.groupId${end}/${open}dep.type${end}s/">
                             <include name="${open}dep.artifact${end}" />
                         </fileset>

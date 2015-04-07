@@ -19,7 +19,7 @@ import accessControl.ServicosSingleton;
  * Load the processes when the JBoss is started.
  * 
  */
-public class InitialService extends org.jboss.system.ServiceMBeanSupport implements InitialServiceMBean
+public class InitialService implements InitialServiceMBean
 {
 	/**
 	 * Log.
@@ -29,7 +29,7 @@ public class InitialService extends org.jboss.system.ServiceMBeanSupport impleme
 	/**
 	 * @see org.jboss.system.ServiceMBeanSupport${sharp}startService()
 	 */
-	public void startService() throws Exception
+	public void start() throws Exception
 	{
 #if ($securityRealm)
 		try
@@ -72,5 +72,11 @@ public class InitialService extends org.jboss.system.ServiceMBeanSupport impleme
 			s_log.error("Nao foi possivel listar os servicos", new RuntimeException(e));
 		}
 #end
+	}
+	
+	public void stop() throws Exception
+	{
+		s_log.info("Stopping InitialService");
+		//TODO: Nothing necessary to do here
 	}
 }

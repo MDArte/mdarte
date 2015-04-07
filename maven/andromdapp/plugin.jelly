@@ -625,6 +625,16 @@
         </j:while>
 -->
         <j:set var="projectType" value="jboss"/>
+        
+        <j:choose>
+            <j:when test="${projectType eq 'jboss'}">
+                <j:while test="${empty(jbossVersion) or (jbossVersion ne '6' and jbossVersion ne '4')}">
+                    <i:ask
+                        question="Would you use JBoss AS 4 or JBoss EAP 6? (enter '4' or '6')?"
+                        answer="jbossVersion"/>
+                </j:while>
+            </j:when>
+        </j:choose>
 
         <j:choose>
             <j:when test="${projectType eq 'jboss'}">
@@ -786,6 +796,7 @@
         <j:set var="oracle" value="${databaseType eq 'oracle'}"/>
         <j:set var="controleAcesso" value="${controleAcessoAnswer eq 'yes'}"/>
         <j:set var="oauth" value="${securityTypeAnswer eq 'yes'}"/>
+        <j:set var="jboss6" value="${jbossVersion eq '6'}"/>
 
         <j:new var="stringUtils" className="org.apache.commons.lang.StringUtils"/>
 

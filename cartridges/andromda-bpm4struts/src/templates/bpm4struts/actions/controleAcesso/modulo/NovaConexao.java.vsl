@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
+import org.jboss.security.util.MBeanServerLocator;
 import javax.management.ObjectName;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -39,23 +39,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import java.util.Map;
+import java.util.HashMap;
+import accessControl.AplicacoesSingleton;
+import accessControl.Aplicacao;
+
 public class NovaConexao extends Action {
 
 #if ($isPrincipal)
-	private final String NOME_SISTEMA_PRINCIPAL = "${stringUtils.substring($contextoPrincipal, 1)}";
-	private final String NOME_MODULO_PRINCIPAL = "$package.webModuleName";
-	private final String NOME_ATRIBUTO_MODULOS_FECHADOS = "SECURE_FECHAR_SESSAO_MODULOS_FECHADOS";
-	private final static List<String> modulosIgnorados = new ArrayList<String>();
-	static {
-		modulosIgnorados.add("layout");
-		modulosIgnorados.add("help");
-	}
+	private final String NOME_SISTEMA_PRINCIPAL = "${contextoPrincipal}";
 #end
-
-	private class SistemaModulo {
-		public String sistema;
-		public String modulo;
-	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
@@ -70,109 +63,72 @@ public class NovaConexao extends Action {
 #else
 		java.util.Properties ports = new java.util.Properties();
 
-		try
-		{
-			ports.load(new java.io.FileInputStream(new java.io.File((new java.net.URL(System.getProperty("jboss.server.config.url") + java.io.File.separator + "${projectId}-port.properties")).getFile())));
-			if(ports.getProperty("https.port") == null || ports.getProperty("http.port") == null)
-				throw new RuntimeException("error.port.configuration");
-		}
-		catch(java.io.IOException e){
-			throw new RuntimeException("port.file.not.found");
-		}
+		ports.setProperty("http.port","8080");
+		ports.setProperty("https.port","8443");
+		ports.setProperty("troca.de.porta.gerenciada.pela.aplicacao","false");
+		ports.setProperty("jboss.ip.local","127.0.0.1");
+		ports.setProperty("aplicacao.permite.uso.back.browser","true");
 
 		// busca modulos da aplicacao
-		boolean serverJbossEncontrado = false;
-		MBeanServer server = null;
-		for (Iterator i = MBeanServerFactory.findMBeanServer(null).iterator(); i.hasNext(); ) {
-			server = (MBeanServer) i.next();
-			if (server.getDefaultDomain().equals("jboss")) {
-				serverJbossEncontrado = true;
-				break;
-			}
-		}
+		MBeanServer server = MBeanServerLocator.locateJBoss();
 
-		if (!serverJbossEncontrado)
+		if (server == null)
 			throw new IllegalStateException("No 'jboss' MBeanServer found!");
 
-		String query = "jboss.web.deployment:*";
-		Set matches = server.queryNames( new ObjectName( query ), null );
-		Iterator it = matches.iterator();
+		String userSessionId = null;
+		Cookie[] cookies = request.getCookies();
 
-		List<SistemaModulo> sistemaModulos = new ArrayList<SistemaModulo>(); 
-
-		String sharedLoginPattern = ".*=(.*)-(.*)-web-.*";
-
-		if (ports.getProperty("shared.login.pattern") != null)
-			sharedLoginPattern = ports.getProperty("shared.login.pattern");
-
-		Pattern pattern = Pattern.compile(sharedLoginPattern);
-		Matcher matcher = null;
-
-		while( it.hasNext() ) {
-			ObjectName objName = (ObjectName) it.next();
-			String objectNameString = objName.toString();
-			matcher = pattern.matcher(objectNameString);
-			if (matcher.matches()) {
-				SistemaModulo sistemaModulo = new SistemaModulo();
-				sistemaModulo.sistema = matcher.group(1);
-				sistemaModulo.modulo = matcher.group(2);
-				sistemaModulos.add(sistemaModulo);
-			}
-		}
-
-		List <SistemaModulo> sistemaModulosFechados = (List) request.getSession().getAttribute(NOME_ATRIBUTO_MODULOS_FECHADOS);
-		if (sistemaModulosFechados == null)
-			sistemaModulosFechados = new ArrayList<SistemaModulo>();
-
-		// busca um modulo que ainda nao tenha sido fechado e o fecha (atraves da action NovaConexao.do)
-		for (SistemaModulo sistemaModulo : sistemaModulos) {
-			boolean moduloFechado = false;
-
-			for (SistemaModulo sistemaModuloFechado : sistemaModulosFechados) {
-				if (sistemaModuloFechado.modulo.equals(sistemaModulo.modulo) &&
-					sistemaModuloFechado.sistema.equals(sistemaModulo.sistema))
-					moduloFechado = true;
-			}
-
-			if (!moduloFechado && sistemaModulo.sistema.equals(NOME_SISTEMA_PRINCIPAL) && !sistemaModulo.modulo.equals(NOME_MODULO_PRINCIPAL) && !modulosIgnorados.contains(sistemaModulo.modulo)) {
+		for (Cookie cookie : cookies)
+			if(cookie.getName().equals("sessionkey"))
+				userSessionId = cookie.getValue();
+		
+		// Recupera mapa de aplicacoes do usuario no singleton
+		HashMap<String,HashMap<String,Aplicacao>> aplicacoes = AplicacoesSingleton.instance().getAplicacoes();
+		HashMap<String, Aplicacao> aplicacoesUsuario = aplicacoes.get(userSessionId);
+		
+		Iterator<Map.Entry<String,Aplicacao>> iterator = aplicacoesUsuario.entrySet().iterator();
+		
+		while(iterator.hasNext())
+		{
+			Map.Entry<String, Aplicacao> entry = iterator.next();
+			Aplicacao aplicacao = entry.getValue();
+			String modulo = entry.getKey();
+			if(!modulo.equals(NOME_SISTEMA_PRINCIPAL))
+			{
 				String uriForward = request.getScheme() + "://" + (request.getServerName() + (request.getServerPort( ) != 80 ? ":" + request.getServerPort( ) : "")).replace("//","/");
-				String modulo;
-
-				if (sistemaModulo.modulo.equals(NOME_MODULO_PRINCIPAL))
-					modulo = "";
-				else
-					modulo = sistemaModulo.modulo;
-
-				forward = new ActionForward(uriForward + ("/" + sistemaModulo.sistema + "/" + modulo + "/secure/ApagaSessao.do").replace("//","/"), true);
-				sistemaModulosFechados.add(sistemaModulo);
-				request.getSession().setAttribute(NOME_ATRIBUTO_MODULOS_FECHADOS, sistemaModulosFechados);
-
+				
+				forward = new ActionForward(uriForward + ("/" + modulo + "/secure/ApagaSessao.do").replace("//","/"), true);
+				
 				URL url = new URL(forward.getPath());
 				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-
+	
+				String jSessionId = aplicacao.getjSessionId();
+			
 				String cookiesString = "";
-				Cookie[] cookies = request.getCookies();
-
-				for (Cookie cookie : cookies) {
-					if (cookiesString != "") cookiesString = cookiesString + "; "; 
-					cookiesString = cookiesString + cookie.getName()+ "=" +cookie.getValue();
-				}
-
+				cookiesString += "JSESSIONID="+jSessionId;
+				cookiesString += "; sessionkey="+userSessionId;
+				
 				conn.setRequestProperty("Cookie",cookiesString);
-
+	
 				conn.connect();
-
+					
 				BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				String inputLine;
-
+	
 				while ((inputLine = in.readLine()) != null) 
 					System.out.println(inputLine);
 				in.close();
-
+	
 				conn.disconnect();
+				
+				iterator.remove();
 			}
 		}
-
+		
+		// Limpa a lista de aplicacoes de usuario no singleton
+		aplicacoes.remove(userSessionId);
+		AplicacoesSingleton.instance().setAplicacoes(aplicacoes);
+		 
 		// fecha o proprio modulo principal
 		request.getSession().invalidate();
 		

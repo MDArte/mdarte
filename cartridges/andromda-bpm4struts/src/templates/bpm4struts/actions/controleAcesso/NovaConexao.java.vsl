@@ -25,21 +25,19 @@ public class NovaConexao extends Action {
 	{
 		java.util.Properties ports = new java.util.Properties();
 
-		try
-		{
-			ports.load(new java.io.FileInputStream(new java.io.File((new java.net.URL(System.getProperty("jboss.server.config.url") + java.io.File.separator + "${projectId}-port.properties")).getFile())));
+		java.util.Properties ports = new java.util.Properties();
 
-			if (ports.getProperty("https.port") == null || ports.getProperty("http.port") == null)
-				throw new RuntimeException("error.port.configuration");
-		}
-		catch(java.io.IOException e)
-		{
-			throw new RuntimeException("port.file.not.found");
-		}
+		ports.setProperty("http.port","8080");
+		ports.setProperty("https.port","8443");
+		ports.setProperty("troca.de.porta.gerenciada.pela.aplicacao","false");
+		ports.setProperty("jboss.ip.local","127.0.0.1");
+		ports.setProperty("aplicacao.permite.uso.back.browser","true");
+
 
 		request.getSession().invalidate();
 		ActionForward forward = mapping.findForward("entrar.login");
 		response.sendRedirect("https://" + request.getServerName() + ":" + ports.getProperty("https.port") + "${contextoPrincipal}" + forward.getPath());
+		
 		return null;
 		//return forward;
 	}
