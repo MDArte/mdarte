@@ -96,12 +96,12 @@ public class $serviceLocatorName extends br.ufrj.coppetec.ServiceLocator
 			try
 			{
 				// for EJB 2
-				bi = super.getServiceLocal("${service.fullyQualifiedName}");
+				bi = super.getServiceLocal("java:global/${projectId}/${projectId}-${projectVersion}/${service.package}.${name}!${service.fullyQualifiedName}");
 			}
 			catch (Exception ex1)
 			{
 				// for EJB 3
-				bi = lookupLocalHome("${service.fullyQualifiedName}Local");
+				bi = lookupLocalHome("java:global/${projectId}/${projectId}-${projectVersion}/${service.package}.${name}!${service.fullyQualifiedName}Local");
 			}
 
 			return (${service.fullyQualifiedName}Local) bi;

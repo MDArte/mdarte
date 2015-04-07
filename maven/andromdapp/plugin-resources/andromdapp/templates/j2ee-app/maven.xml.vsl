@@ -379,6 +379,19 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
         <ant:mkdir dir="${earDirectory}"/>
         <ant:mkdir dir="${earDirectory}/META-INF"/>
         <ant:mkdir dir="${earDirectory}/temp"/>
+        <ant:mkdir dir="${earDirectory}/temp/lib"/>
+        
+#if($jboss6)
+        <j:forEach var="dep" items="${pom.dependencies}">
+			<j:if test="${dep.getProperty('ear.module') == 'true'}">
+				<ant:copy todir="${earDirectory}">
+					<fileset dir="${maven.repo.local}/${dep.groupId}/${dep.type}s/">
+						<include name="${dep.artifact}" />
+					</fileset>
+				</ant:copy>
+			</j:if>
+		</j:forEach>
+#end
 
         <j:set var="includesList" value="common/project.xml,core/cd/project.xml,core/cs/*/project.xml"/>
         <j:if test= "${packWar}">
@@ -405,6 +418,25 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
 
 <application>
     <display-name>${pom.artifactId}</display-name>
+	<library-directory>lib</library-directory>
+#if($jboss6)	 
+	<module>
+	  <ejb>ControleAcesso-common-1.0.jar</ejb> 
+	</module>
+	<module>
+	  <ejb>ControleAcesso-compartilhado-1.0.jar</ejb> 
+	</module>
+	<module>
+	  <ejb>ControleAcesso-dominio-core-1.0.jar</ejb> 
+	</module>
+	<module>
+	  <ejb>ControleAcesso-operador-1.0.jar</ejb> 
+	</module>
+	<module>
+	  <ejb>ControleAcesso-sistema-1.0.jar</ejb> 
+	</module>
+#end
+
 ]]></j:file>
 
         <j:file name="${earDirectory}/temp/temp-fim.xml"

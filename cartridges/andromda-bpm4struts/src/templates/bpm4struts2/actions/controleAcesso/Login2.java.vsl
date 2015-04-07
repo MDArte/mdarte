@@ -10,6 +10,7 @@ package $controleAcessoDir;
 #set ($generatedFile = "${stringUtils.replace($controleAcessoDir,'.','/')}/${generatedFile}")
 #end
 
+import javax.servlet.http.Cookie;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
+
+import java.util.Map;
+import java.util.HashMap;
+import accessControl.AplicacoesSingleton;
+import accessControl.Aplicacao;
 
 import java.util.Enumeration;
 
@@ -59,9 +65,80 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		this.request = request;
 	}
 
+	public void setSessionControlInfo()
+	{
+		String userSessionId = null;
+		Cookie[] cookies = request.getCookies();
+		if(cookies!=null)
+    		for (Cookie cookie : cookies)
+    			if(cookie.getName().equals("sessionkey"))
+    				userSessionId = cookie.getValue();
+
+		HashMap<String, HashMap<String, Aplicacao>> aplicacoes = AplicacoesSingleton.instance().getAplicacoes();
+	    		
+		if(aplicacoes == null)
+		{
+			aplicacoes = new HashMap<String, HashMap<String, Aplicacao>>();
+			AplicacoesSingleton.instance().setAplicacoes(aplicacoes);
+		}
+		
+		HashMap<String, Aplicacao> aplicacoesUsuario = null;
+
+		if(!aplicacoes.containsKey(userSessionId))
+		{
+			aplicacoes.put(userSessionId,new HashMap<String, Aplicacao>());
+		}
+
+		aplicacoesUsuario = aplicacoes.get(userSessionId);
+		
+		if(!aplicacoesUsuario.containsKey(request.getContextPath()))
+		{
+			Aplicacao aplicacao = new Aplicacao(request.getSession().getId());
+    		aplicacoesUsuario.put(request.getContextPath(),aplicacao);
+		}
+		
+	}
+
 	public String execute() throws Exception
 	{
 		loadUseCaseInfo();
+
+		setSessionControlInfo();
+
+		if(!request.isRequestedSessionIdValid())
+    	{
+    		String userSessionId = null;
+    		Cookie[] cookies = request.getCookies();
+    		if(cookies!=null)
+	    		for (Cookie cookie : cookies)
+	    			if(cookie.getName().equals("sessionkey"))
+	    				userSessionId = cookie.getValue();
+    		
+			if(userSessionId!=null)
+			{
+				
+				Aplicacao aplicacao = new Aplicacao(request.getSession().getId());
+	    		
+	    		HashMap<String, HashMap<String, Aplicacao>> aplicacoes = AplicacoesSingleton.instance().getAplicacoes();
+	    		
+	    		if(aplicacoes == null)
+	    		{
+	    			aplicacoes = new HashMap<String, HashMap<String, Aplicacao>>();
+	    		}
+	    		
+	    		if(!aplicacoes.containsKey(userSessionId))
+	    		{
+	    			aplicacoes.put(userSessionId,new HashMap<String, Aplicacao>());
+	    		}
+	    		
+	    		HashMap<String, Aplicacao> aplicacoesUsuario = aplicacoes.get(userSessionId);
+	    		
+	    		aplicacoesUsuario.put(request.getContextPath(),aplicacao);
+	    		aplicacoes.put(userSessionId,aplicacoesUsuario);
+	    		
+	    		AplicacoesSingleton.instance().setAplicacoes(aplicacoes);
+    		}
+    	}
 
 		//org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
 

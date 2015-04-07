@@ -5,7 +5,8 @@ package $customTypesPackage;
  * Load the processes when the JBoss is started.
  * 
  */
-public interface InitialServiceMBean extends org.jboss.system.ServiceMBean
+public interface InitialServiceMBean
 {
-	public void startService() throws Exception;
+	public void start() throws Exception;
+	public void stop() throws Exception;
 }
