@@ -13,6 +13,7 @@
 #if($table.tableType.equals("jtable"))
 <div id="${table.name}">
 </div>
+
 #else
 ## [MOISES-COPPETEC]
 ## Acaoo a ser utilizada no link "NEXT" na paginacao.
@@ -53,15 +54,17 @@
 		for(var i=0;i<boxes.length;i++) boxes[i].checked=setChecked;
 	}
 </script>
-
+## Acao a ser utilizada nos links na paginacao.
+<c:set var="acao" value='${pageContext.request.contextPath}${form.actionPath}'/>
+		   
 <div id="${table.name}" class="table">
 #if (!$table.tableGlobalActions.empty)
     <form id="${table.name}" name="${table.name}" action="" method="post" enctype="multipart/form-data">
 #end
 #set ($displayTableName = "form.${table.name}")
-    <display:table name="${${displayTableName}}" id="row"
+   <display:table name="${${displayTableName}}" id="row" class="table table-striped"
         ##requestURIAction -> acao a ser utilizada no link "NEXT" na paginacao
-        requestURI="${pageContext.request.requestURL}" requestURIAction="<%=acao_${table.name}%>" tableName="${table.name}"
+        requestURI="${pageContext.request.requestURL}" requestURIAction="${acao}" tableName="${table.name}"
 #if ($table.tableDecoratorRequired)
         decorator="${table.tableDecoratorFullyQualifiedName}"
 #end

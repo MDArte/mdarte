@@ -117,7 +117,7 @@ public class ${formBeanClassName}
 #foreach($field in $fields)
 #if($field.radioButton)
 #if($field.findTaggedValue("$radioSelected"))
-    	${field.setterName}(${field.findTaggedValue("$radioSelected")});	
+    	${field.setterName}(${field.findTaggedValue("$radioSelected")});
 #end
 #end
 #end
