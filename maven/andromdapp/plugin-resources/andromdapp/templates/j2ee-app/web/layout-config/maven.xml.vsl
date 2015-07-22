@@ -111,29 +111,26 @@
     </goal>
 
     <goal name="earInstall">
-        <j:set var="earDirectory" value="${open}basedir${end}/../../target/ear"/>
+        <j:set var="earDirectory" value="${basedir}/../../target/ear"/>
 
         <!-- Copia libs necessarias para o ear -->
-        <j:if test="${packDependencies}">
+        <!-- JBoss EAP 6.1 Deprecated
+        <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
-                <j:if test= "${open}dep.type == 'jar'${end}">
-                    <j:if test= "${open}dep.groupId != pom.groupId${end}">
-                        <j:if test= "${open}dep.getProperty('jar.manifest.classpath') == 'true'${end}">
-                            <ant:copy todir="${earDirectory}">
-                                <fileset dir="${maven.repo.local}/${dep.groupId}/jars/">
-                                    <include name="${dep.artifact}"/>
-                                    <exclude name="*commons-logging*"/>
-                                </fileset>
-                            </ant:copy>
-                        </j:if>
-                    </j:if>
+                <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
+                    <ant:copy todir="${open}earDirectory${end}">
+                        <fileset dir="${open}maven.repo.local${end}/${open}dep.groupId${end}/${open}dep.type${end}s/">
+                            <include name="$${open}dep.artifact${end}" />
+                        </fileset>
+                    </ant:copy>
                 </j:if>
             </j:forEach>
         </j:if>
+        -->
 
         <!-- Copia .war para a pasta do ear -->
         <ant:copy file="${maven.repo.local}/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"
-                    tofile="${earDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"/>
+            tofile="${earDirectory}/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"/>
 
         <!-- Gera trecho do arquivo application.xml -->
         <j:set var="earTempDirectory" value="${open}basedir${end}/../../target/ear/temp"/>
@@ -148,6 +145,22 @@
         <context-root>/${projectId}/layout</context-root>
     </web>
 </module>]]></j:file>
+    
+    	<!-- JBoss EAP 6.1 -->
+    	<!-- Gera trecho do arquivo jboss-deployment-structure.xml -->
+        <j:set var="earTempDirectory" value="${basedir}/../../target/ear/temp"/>
+        <j:file name="${earTempDirectory}/jboss-deployment-structure-layout.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+    <sub-deployment name="${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war">
+    	<dependencies>
+      		<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>]]></j:file>
+        
     </goal>
 
     <!-- ==================================================================

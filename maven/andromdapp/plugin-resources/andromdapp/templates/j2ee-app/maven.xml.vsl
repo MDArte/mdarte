@@ -392,6 +392,7 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
             basedir="${open}basedir${end}"/>
 
         <ant:concat destfile="${earDirectory}/temp/temp-meio.xml" binary="true">
+            <ant:exclude name="jboss-deployment-*"/>
             <ant:fileset dir="${earDirectory}/temp" includes="*"/>
         </ant:concat>
 
@@ -417,8 +418,73 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
         <ant:concat destfile="${earDirectory}/META-INF/application.xml" binary="true">
             <ant:filelist dir="${earDirectory}/temp" files="temp-inicio.xml,temp-meio.xml,temp-fim.xml"/>
         </ant:concat>
+        
+        <!-- cria arquivo jboss-deployment-structure.xml -->
+        
+        <ant:concat destfile="${earDirectory}/temp/temp-structure-meio.xml" binary="true">
+            <ant:fileset dir="${earDirectory}/temp" includes="jboss-deployment-*"/>
+        </ant:concat>
+        
+        <j:file name="${earDirectory}/temp/temp-structure-inicio.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<!-- Make sub deployments isolated by default, so they cannot see each others classes without a Class-Path entry -->
+	<ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+	<!-- This corresponds to the top level deployment. For a war this is the war's module, for an ear -->
+	<!-- This is the top level ear module, which contains all the classes in the EAR's lib folder     -->
+	<deployment>
+		<!-- This allows you to define additional dependencies, it is the same as using the Dependencies: manifest attribute -->
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+	</deployment>
+  
+	<sub-deployment name="ControleAcesso-common-1.0.jar">
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>
+	<sub-deployment name="ControleAcesso-compartilhado-1.0.jar">
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+    	<local-last value="true" />
+	</sub-deployment>
+	<sub-deployment name="ControleAcesso-dominio-core-1.0.jar">
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>
+	<sub-deployment name="ControleAcesso-operador-1.0.jar">
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>
+	<sub-deployment name="ControleAcesso-sistema-1.0.jar">
+		<dependencies>
+			<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>]]></j:file>
+	
+		<j:file name="${earDirectory}/temp/temp-structure-fim.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+</jboss-deployment-structure>]]></j:file>
+	
+	    <ant:concat destfile="${earDirectory}/META-INF/jboss-deployment-structure.xml" binary="true">
+	        <ant:filelist dir="${earDirectory}/temp" files="temp-structure-inicio.xml,temp-structure-meio.xml,temp-structure-fim.xml"/>
+	    </ant:concat>
 
         <!-- gera arquivo de configuracao do jboss para isolamento de classes -->
+        <!-- JBoss EAP 6.1 Deprecated
         <j:file name="${earDirectory}/META-INF/jboss-app.xml"
             outputMode="xml"
             omitXmlDeclaration="true"
@@ -435,6 +501,7 @@ maven drop-schema  - Executa o script da base de dados (schema-drop.sql gerado n
     </loader-repository>
 </jboss-app>
 ]]></j:file>
+		-->
 
         <ant:delete dir="${earDirectory}/temp"/>
         <ant:zip compress="false" basedir="${earDirectory}" destfile="${targetDirectory}/${pom.artifactId}.ear"/>

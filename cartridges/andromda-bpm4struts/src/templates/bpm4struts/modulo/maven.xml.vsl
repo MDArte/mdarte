@@ -378,6 +378,7 @@
         <j:set var="earDirectory" value="${basedir}/../../target/ear"/>
 
         <!-- Copia libs necessarias para o ear -->
+        <!-- JBoss EAP 6.1 Deprecated
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
@@ -389,6 +390,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
+        -->
 
         <!-- Copia .war para a pasta do ear -->
         <ant:copy file="${maven.repo.local}/${pom.groupId}/wars/${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war"
@@ -407,6 +409,22 @@
             <context-root>$package.contexto</context-root>
         </web>
     </module>]]></j:file>
+    
+    	<!-- JBoss EAP 6.1 -->
+    	<!-- Gera trecho do arquivo jboss-deployment-structure.xml -->
+        <j:set var="earTempDirectory" value="${basedir}/../../target/ear/temp"/>
+        <j:file name="${earTempDirectory}/jboss-deployment-structure-web-${package.name}.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+    <sub-deployment name="${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.war">
+    	<dependencies>
+      		<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>]]></j:file>
+    
     </goal>
 
     <!-- ==================================================================
