@@ -31,6 +31,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>${javax.json.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>servletapi</groupId>
             <artifactId>servletapi</artifactId>
             <version>${servletapi.version}</version>
