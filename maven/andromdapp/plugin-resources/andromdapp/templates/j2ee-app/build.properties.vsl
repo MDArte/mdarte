@@ -143,7 +143,7 @@ fastinfoset.version=1.0
 jsr.version=1.0
 jaxws.version=1.0
 java.tools=1.0
-javax.jason.version=1.0.2
+javax.json.version=1.0.2
 
 #if($jboss6)
 javassist.version=3.19.0-GA
