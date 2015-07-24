@@ -119,6 +119,7 @@
     <goal name="earInstall">
         <j:set var="earDirectory" value="${open}basedir${end}/../../../target/ear"/>
 
+		<!-- JBoss EAP 6.1 Deprecated
         <j:if test="${open}packDependencies${end}">
             <j:forEach var="dep" items="${open}pom.dependencies${end}">
                 <j:if test="${open}dep.getProperty('application.dependency') == 'true'${end}">
@@ -130,6 +131,7 @@
                 </j:if>
             </j:forEach>
         </j:if>
+        -->
 
         <ant:copy file="${maven.repo.local}/${pom.groupId}/ejbs/${pom.artifactId}-${pom.CurrentVersion}.jar"
             tofile="${earDirectory}/${pom.artifactId}-${pom.CurrentVersion}.jar"/>
@@ -145,6 +147,20 @@
         <ejb>${pom.artifactId}-${pom.CurrentVersion}.jar</ejb>
     </module>]]></j:file>
 
+		<!-- JBoss EAP 6.1 -->
+    	<!-- Gera trecho do arquivo jboss-deployment-structure.xml -->
+        <j:set var="earTempDirectory" value="${basedir}/../../target/ear/temp"/>
+        <j:file name="${earTempDirectory}/jboss-deployment-structure-ejb-${package.name}.xml"
+            outputMode="xml"
+            omitXmlDeclaration="true"
+            escapeText="false"
+            trim="false"><![CDATA[
+    <sub-deployment name="${pom.artifactId}${artifactIdSuffix}-${pom.CurrentVersion}.jar">
+    	<dependencies>
+      		<module name="br.mdarte" />
+		</dependencies>
+		<local-last value="true" />
+	</sub-deployment>]]></j:file>
     </goal>
 
     <!-- ==================================================================

@@ -22,6 +22,11 @@ import javax.security.auth.Subject;
 
 import java.util.Enumeration;
 
+import java.util.Map;
+import java.util.HashMap;
+import accessControl.AplicacoesSingleton;
+import accessControl.Aplicacao;
+
 /**
  * 
  */
@@ -32,9 +37,45 @@ public abstract class Login extends Action
     protected String __modulo = null;
     protected String __contexto = null;
 
+	public void setSessionControlInfo(HttpServletRequest request)
+	{
+		String userSessionId = null;
+		Cookie[] cookies = request.getCookies();
+		if(cookies!=null)
+    		for (Cookie cookie : cookies)
+    			if(cookie.getName().equals("sessionkey"))
+    				userSessionId = cookie.getValue();
+
+		HashMap<String, HashMap<String, Aplicacao>> aplicacoes = AplicacoesSingleton.instance().getAplicacoes();
+	    		
+		if(aplicacoes == null)
+		{
+			aplicacoes = new HashMap<String, HashMap<String, Aplicacao>>();
+			AplicacoesSingleton.instance().setAplicacoes(aplicacoes);
+		}
+		
+		HashMap<String, Aplicacao> aplicacoesUsuario = null;
+
+		if(!aplicacoes.containsKey(userSessionId))
+		{
+			aplicacoes.put(userSessionId,new HashMap<String, Aplicacao>());
+		}
+
+		aplicacoesUsuario = aplicacoes.get(userSessionId);
+		
+		if(!aplicacoesUsuario.containsKey(request.getContextPath()))
+		{
+			Aplicacao aplicacao = new Aplicacao(request.getSession().getId());
+    		aplicacoesUsuario.put(request.getContextPath(),aplicacao);
+		}
+		
+	}
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         loadUseCaseInfo();
+        
+        setSessionControlInfo(request);
 
         org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
 
@@ -210,7 +251,7 @@ public abstract class Login extends Action
 
         // we take the last action in case we have an invalid return value from the controller
         return mapping.findForward("troca.de.senha.obrigatoria");
-    }
+    }   
 
     /**
      * 

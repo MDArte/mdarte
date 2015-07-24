@@ -22,6 +22,11 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import java.util.Enumeration;
 
+import java.util.Map;
+import java.util.HashMap;
+import accessControl.AplicacoesSingleton;
+import accessControl.Aplicacao;
+
 #set($packageUtil = "${customTypesPackage}.${stringUtils.replace($utilDir,'/','.')}")
 import ${packageUtil}.Constantes;
 
@@ -58,11 +63,47 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 	{
 		this.request = request;
 	}
+	
+	public void setSessionControlInfo()
+	{
+		String userSessionId = null;
+		Cookie[] cookies = request.getCookies();
+		if(cookies!=null)
+    		for (Cookie cookie : cookies)
+    			if(cookie.getName().equals("sessionkey"))
+    				userSessionId = cookie.getValue();
+
+		HashMap<String, HashMap<String, Aplicacao>> aplicacoes = AplicacoesSingleton.instance().getAplicacoes();
+	    		
+		if(aplicacoes == null)
+		{
+			aplicacoes = new HashMap<String, HashMap<String, Aplicacao>>();
+			AplicacoesSingleton.instance().setAplicacoes(aplicacoes);
+		}
+		
+		HashMap<String, Aplicacao> aplicacoesUsuario = null;
+
+		if(!aplicacoes.containsKey(userSessionId))
+		{
+			aplicacoes.put(userSessionId,new HashMap<String, Aplicacao>());
+		}
+
+		aplicacoesUsuario = aplicacoes.get(userSessionId);
+		
+		if(!aplicacoesUsuario.containsKey(request.getContextPath()))
+		{
+			Aplicacao aplicacao = new Aplicacao(request.getSession().getId());
+    		aplicacoesUsuario.put(request.getContextPath(),aplicacao);
+		}
+		
+	}
 
 	public String execute() throws Exception
 	{
 		loadUseCaseInfo();
-
+		
+		setSessionControlInfo();
+		
 		//org.apache.commons.beanutils.BeanUtils.populate(form, request.getParameterMap());
 
 		String forward = null;
@@ -120,7 +161,7 @@ public abstract class ${className} extends ActionSupport implements ServletReque
 		// invalida sessao https ao trocar para http (passa a ter somente uma sessao para ambos)
 //		if (request.getScheme().equals("https") && forward != null && forward.getPath().startsWith("http://"))
 //			request.getSession().invalidate();
-
+		
 		return forward;
 	}
 

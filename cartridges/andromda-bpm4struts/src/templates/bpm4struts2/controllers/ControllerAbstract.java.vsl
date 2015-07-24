@@ -11,6 +11,8 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
+import org.apache.struts.util.MessageResources;
+
 
 public abstract class ControllerAbstract implements java.io.Serializable
 {
