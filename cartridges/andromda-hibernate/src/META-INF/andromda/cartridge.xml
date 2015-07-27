@@ -122,15 +122,7 @@
 	</template>
 	
 	<template path="templates/hibernate/usertypes/SubentityInterface.vsl"
-		outputPattern="$generatedFile" outlet="transfers" overwrite="true">
-		<modelElements variable="subentity">
-			<modelElement>
-				<type name="org.andromda.cartridges.hibernate.metafacades.CoppetecHibernateEntity">
-					<property name="subentity"></property>
-				</type>
-			</modelElement>
-		</modelElements>
-	</template>
+		outputPattern="$generatedFile" outlet="transfers" overwrite="false" />
 	
 	<template path="templates/hibernate/SubentityImpl.vsl"
 		outputPattern="$generatedFile" outlet="transfer-impls" overwrite="false">
