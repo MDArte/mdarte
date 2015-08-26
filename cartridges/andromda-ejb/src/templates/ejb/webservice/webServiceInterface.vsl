@@ -2,7 +2,7 @@
 package $service.packageName;
 #end
 
-import ${customTypesPackage}.${util}.PaginationStrategy;
+import ${customTypesPackage}.${utilDir}.PaginationStrategy;
 
 /**
 $service.getDocumentation(" * ")
